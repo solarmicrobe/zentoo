@@ -21,6 +21,10 @@ RDEPEND=""
 
 S=${WORKDIR}/gentoo-headers-base-${PV}
 
+src_unpack() {
+	unpack ${A}
+}
+
 src_prepare() {
 	[[ -n ${PATCH_VER} ]] && EPATCH_SUFFIX="patch" epatch "${WORKDIR}"/${PV%.1}
 }
