@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+
+# generate manifests for distribution and repoman sanity
+repoman manifest
+
+# update the metadata and use.local.desc files in the repo
+egencache --update --update-use-local-desc --jobs=3 --portdir=$(pwd)

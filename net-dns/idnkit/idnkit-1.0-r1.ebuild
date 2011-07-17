@@ -1,0 +1,35 @@
+# Copyright 1999-2011 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+EAPI="2"
+
+inherit autotools eutils fixheadtails
+
+DESCRIPTION="Toolkit for Internationalized Domain Names (IDN)"
+HOMEPAGE="http://www.nic.ad.jp/ja/idn/idnkit/download/"
+SRC_URI="http://www.nic.ad.jp/ja/idn/idnkit/download/sources/${P}-src.tar.gz"
+
+LICENSE="JNIC"
+SLOT="0"
+KEYWORDS="amd64 x86"
+IUSE=""
+
+DEPEND="sys-libs/glibc"
+RDEPEND="${DEPEND}"
+# non gnu systems need libiconv
+
+S=${WORKDIR}/${P}-src
+
+src_prepare() {
+	ht_fix_all
+	# Bug 263135, old broken libtool bundled
+	rm -f aclocal.m4 || die "rm failed"
+	epatch "${FILESDIR}/${P}-autotools.patch"
+	eautoreconf
+}
+
+src_install() {
+	emake DESTDIR="${D}" install || die
+	dodoc ChangeLog DISTFILES NEWS README README.ja
+}

@@ -1,0 +1,29 @@
+# do not pull in X11 management GUI
+sys-cluster/heartbeat management
+
+# do not pull matplotlib for debug foo
+sys-fs/btrfs-progs debug-utils
+
+# skip udev extras
+sys-fs/udev extras
+
+# dependency is not included in this tree
+dev-libs/ppl lpsol
+
+# skip zope dependencies
+dev-python/ipython smp
+
+# mask nagios plugins
+net-analyzer/nagios-plugins ups nagios-game nagios-ping
+
+# ctdb is not supported yet
+net-fs/samba cluster
+
+# disable some imagemagick modules
+media-gfx/imagemagick autotrace raw
+
+# do not pull X11 crap for SVG
+media-gfx/graphviz cairo
+
+# only neon is supported for now
+dev-vcs/subversion webdav-serf

@@ -1,0 +1,4 @@
+.promptignore
+distfiles/
+local/
+packages/

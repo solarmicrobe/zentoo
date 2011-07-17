@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+<herd>base-system</herd>
+<use>
+	<flag name='cramfs'>build mkfs/fsck helpers for cramfs filesystems</flag>
+	<flag name='perl'>install the chkdupexe helper script</flag>
+</use>
+</pkgmetadata>

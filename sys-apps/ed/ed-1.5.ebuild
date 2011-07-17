@@ -1,0 +1,38 @@
+# Copyright 1999-2011 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+EAPI="3"
+
+inherit eutils toolchain-funcs
+
+DESCRIPTION="Your basic line editor"
+HOMEPAGE="http://www.gnu.org/software/ed/"
+SRC_URI="mirror://gnu/ed/${P}.tar.gz"
+
+LICENSE="GPL-2"
+SLOT="0"
+KEYWORDS="amd64 x86"
+IUSE=""
+
+DEPEND="sys-apps/texinfo"
+RDEPEND=""
+
+src_prepare() {
+	epatch "${FILESDIR}"/${PN}-1.5-build.patch
+}
+
+src_configure() {
+	tc-export CC
+	# custom configure script ... econf wont work
+	./configure \
+		--prefix="${EPREFIX}"/ \
+		--datadir="${EPREFIX}"/usr/share \
+		${EXTRA_ECONF} \
+		|| die
+}
+
+src_install() {
+	emake install DESTDIR="${D}" || die
+	dodoc AUTHORS ChangeLog NEWS README TODO
+}
