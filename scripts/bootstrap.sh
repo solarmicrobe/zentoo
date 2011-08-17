@@ -1,8 +1,5 @@
 #!/bin/bash
 
-STAGE4_DATE="20110522"
-PORTAGE_DATE="20110523"
-
 # die on failure
 set -e
 
@@ -99,18 +96,18 @@ eexec mkdir -p /mnt/gentoo/{usr,var}
 eexec mount -o noatime -t xfs /dev/vg/usr /mnt/gentoo/usr
 eexec mount -o noatime -t xfs /dev/vg/var /mnt/gentoo/var
 
-einfo "download gentoo-lts stage4 ${STAGE4_DATE} ..."
+einfo "download zentoo stage4 ..."
 pushd /mnt/gentoo > /dev/null
-eexec wget -q http://bb.xnull.de/projects/gentoo/stage4-x86-64-gentoo-lts-${STAGE4_DATE}.tar.bz2
-eexec tar xpf stage4-x86-64-gentoo-lts-${STAGE4_DATE}.tar.bz2
-eexec rm stage4-x86-64-gentoo-lts-${STAGE4_DATE}.tar.bz2
+eexec wget -q http://www.zentoo.org/downloads/amd64/stage4-current.tar.bz2
+eexec tar xpf stage4-current.tar.bz2
+eexec rm stage4-current.tar.bz2
 popd > /dev/null
 
-einfo "download gentoo-lts portage snapshot ${PORTAGE_DATE} ..."
+einfo "download zentoo portage snapshot ..."
 pushd /mnt/gentoo/usr/ > /dev/null
-eexec wget -q http://bb.xnull.de/projects/gentoo/portage-${PORTAGE_DATE}.tar.bz2
-eexec tar xf portage-${PORTAGE_DATE}.tar.bz2
-eexec rm portage-${PORTAGE_DATE}.tar.bz2
+eexec wget -q http://www.zentoo.org/downloads/snapshots/portage-current.tar.bz2
+eexec tar xf portage-current.tar.bz2
+eexec rm portage-current.tar.bz2
 popd > /dev/null
 
 einfo "prepare chroot env ..."
