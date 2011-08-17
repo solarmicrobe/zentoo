@@ -26,7 +26,9 @@ eask() {
 	while [[ -z ${_ANSWER} ]]; do
 		echo -ne " \033[32m*\033[0m "
 		read -p "${1}" _ANSWER
-		[[ -z ${_ANSWER} && -n ${2} ]] && _ANSWER=$2
+		if [[ -z ${_ANSWER} && -n ${2} ]]; then
+			_ANSWER=$2
+		fi
 	done
 }
 
@@ -41,7 +43,9 @@ einfo
 einfo "disable swap & raid, so we can use all block devices ..."
 eexec swapoff -a
 for i in /dev/md?*; do
-	test -b $i && eexec mdadm -q -S $i
+	if test -b $i; then
+		eexec mdadm -q -S $i
+	fi
 done
 
 einfo "synchronize time with ntp ..."
@@ -128,6 +132,11 @@ cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 # set hostname
 echo "127.0.0.1 ${hostname}.${domainname} ${hostname} localhost" > /etc/hosts
 sed -i -e "s/^hostname.*/hostname=\"${hostname}\"/" /etc/conf.d/hostname
+
+# checkout 11.0 branch
+pushd /usr/portage > /dev/null
+git checkout 11.0
+popd > /dev/null
 
 # sync portage
 emerge --sync --quiet
