@@ -25,11 +25,12 @@ eask() {
 	_ANSWER=
 	while [[ -z ${_ANSWER} ]]; do
 		echo -ne " \033[32m*\033[0m "
-		read -p "$@" _ANSWER
+		read -p "${1}" _ANSWER
+		[[ -z ${_ANSWER} && -n ${2} ]] && _ANSWER=$2
 	done
 }
 
-eask "Please enter the hostname for this system: "
+eask "Please enter the hostname for this system [$(hostname)]: " $(hostname)
 hostname=${_ANSWER}
 eexec hostname ${hostname}
 
@@ -40,7 +41,7 @@ einfo
 einfo "disable swap & raid, so we can use all block devices ..."
 eexec swapoff -a
 for i in /dev/md?*; do
-	eexec mdadm -q -S $i
+	test -b $i && eexec mdadm -q -S $i
 done
 
 einfo "synchronize time with ntp ..."
@@ -53,7 +54,8 @@ einfo "This script will open a shell now. You need to do the following:"
 einfo
 einfo " - Partition your hard drives:"
 einfo
-einfo "   cfdisk /dev/sda"
+einfo "   sfdisk /dev/sda -N1 <<< '0,124,FD,*'"
+einfo "   sfdisk /dev/sda -N2 <<< ',,FD'"
 einfo "   sfdisk -q -d /dev/sda | sfdisk -q /dev/sdb"
 einfo "   sfdisk -q -d /dev/sda | sfdisk -q /dev/sdc"
 einfo "   ..."
