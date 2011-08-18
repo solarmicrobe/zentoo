@@ -14,7 +14,7 @@ PATCHVER="1.9" # Not used, just for tracking with main grub
 DESCRIPTION="GNU GRUB Legacy boot loader (static build)"
 
 HOMEPAGE="http://www.gnu.org/software/grub/"
-SRC_URI="mirror://gentoo/${PF}.tar.bz2"
+SRC_URI="mirror://gentoo/grub-static-${PVR}.tar.bz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="-* amd64 x86"
@@ -38,20 +38,6 @@ pkg_setup() {
 
 src_install() {
 	cp -a "${WORKDIR}"/* "${D}"/
-	if [[ -z "${I_KNOW_WHAT_I_AM_DOING}" ]]; then
-		run_test_grub "${D}"/sbin/grub && einfo "New grub can run on your system, good!"
-	fi
-}
-
-run_test_grub() {
-	local grub="$1"
-	local version="$(${grub} \
-		--read-only --no-pager --no-floppy --no-curses \
-		--no-config-file --batch --version)"
-	local error="grub test-run failed"
-	use amd64 && error="${error} Is IA32_EMULATION set?"
-	[ "${version/${PV}}" != "${version}" ] || die "${error}"
-	return 0
 }
 
 #
@@ -62,10 +48,6 @@ run_test_grub() {
 setup_boot_dir() {
 	local boot_dir=$1
 	local dir=${boot_dir}
-
-	if [[ -z "${I_KNOW_WHAT_I_AM_DOING}" ]]; then
-		run_test_grub /sbin/grub
-	fi
 
 	mkdir -p "${dir}"
 	[[ ! -L ${dir}/boot ]] && ln -s . "${dir}/boot"
@@ -162,15 +144,4 @@ pkg_postinst() {
 	elog "Alternately, you can export GRUB_ALT_INSTALLDIR=/path/to/use to tell"
 	elog "grub where to install in a non-interactive way."
 
-}
-
-pkg_config() {
-	local dir
-	if [ ! -d "${GRUB_ALT_INSTALLDIR}" ]; then
-		einfo "Enter the directory where you want to setup grub:"
-		read dir
-	else
-		dir="${GRUB_ALT_INSTALLDIR}"
-	fi
-	setup_boot_dir "${dir}"
 }
