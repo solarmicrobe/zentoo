@@ -36,7 +36,6 @@ DEPEND="dev-libs/popt
 		dev-libs/iniparser )
 	cluster? ( >=dev-db/ctdb-1.0.114_p1 )
 	cups? ( net-print/cups )
-	debug? ( dev-libs/dmalloc )
 	fam? ( virtual/fam )
 	ldap? ( net-nds/openldap )
 	pam? ( virtual/pam
@@ -122,6 +121,7 @@ src_prepare() {
 	epatch "${CONFDIR}"/${PN}-3.5.6-kerberos-dummy.patch
 	use smbtav2 && cd "${WORKDIR}/${P}" && epatch "${WORKDIR}"/smb_traffic_analyzer_v2.diff
 	cd "${WORKDIR}/${MY_P}" && epatch "${CONFDIR}"/${PN}-3.5.8-uclib-build.patch
+	epatch "${CONFDIR}"/smb.conf.default.patch
 }
 
 src_configure() {
@@ -153,7 +153,6 @@ src_configure() {
 		--enable-socket-wrapper \
 		--enable-nss-wrapper \
 		$(use_enable swat) \
-		$(use_enable debug dmalloc) \
 		$(use_enable cups) \
 		--disable-iprint \
 		$(use_enable fam) \
@@ -284,6 +283,9 @@ src_install() {
 		if use winbind ; then
 			newpamd "${CONFDIR}/system-auth-winbind.pam" system-auth-winbind
 			doman ../docs/manpages/pam_winbind.8
+			# bug #376853
+			insinto /etc/security
+			doins ../examples/pam_winbind/pam_winbind.conf || die
 		fi
 
 		newpamd "${CONFDIR}/samba.pam" samba
@@ -387,7 +389,7 @@ src_install() {
 
 	# install misc files
 	insinto /etc/samba
-	doins "${CONFDIR}"/smb.conf.default
+	doins ../examples/smb.conf.default
 	doman  ../docs/manpages/smb.conf.5
 
 	insinto /usr/"$(get_libdir)"/samba
