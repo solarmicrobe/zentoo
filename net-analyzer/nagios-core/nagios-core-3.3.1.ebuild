@@ -23,11 +23,12 @@ DEPEND="virtual/mailx
 	)
 	perl? ( >=dev-lang/perl-5.6.1-r7 )"
 RDEPEND="${DEPEND}
+	!net-analyzer/nagios-imagepack
 	vim-syntax? ( app-vim/nagios-syntax )"
 
 want_apache2
 
-S="${WORKDIR}/${MY_P}"
+S="${WORKDIR}/${PN/-core}"
 
 pkg_setup() {
 	depend.apache_pkg_setup
@@ -37,9 +38,9 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/nagios-3.3.1-htmlmakefile.patch"
 	local strip="$(echo '$(MAKE) strip-post-install')"
 	sed -i -e "s:${strip}::" {cgi,base}/Makefile.in || die "sed failed in Makefile.in"
-	epatch "${FILESDIR}"/nagios-3.2.3-escalation.patch
 }
 
 src_configure() {
@@ -103,6 +104,7 @@ src_install() {
 	emake DESTDIR="${D}" install
 	emake DESTDIR="${D}" install-config
 	emake DESTDIR="${D}" install-commandmode
+	emake DESTDIR="${D}" install-classicui
 
 	newinitd "${FILESDIR}"/nagios3 nagios
 	newconfd "${FILESDIR}"/conf.d nagios
@@ -126,6 +128,8 @@ src_install() {
 	for dir in etc/nagios var/nagios ; do
 		chown -R nagios:nagios "${D}/${dir}" || die "Failed chown of ${D}/${dir}"
 	done
+
+	dosbin p1.pl
 
 	chown -R root:root "${D}"/usr/$(get_libdir)/nagios
 	find "${D}"/usr/$(get_libdir)/nagios -type d -print0 | xargs -0 chmod 755

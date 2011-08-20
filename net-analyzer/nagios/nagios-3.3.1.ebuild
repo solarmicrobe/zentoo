@@ -14,7 +14,7 @@ IUSE=""
 
 RDEPEND="~net-analyzer/nagios-core-${PV}
 	>=net-analyzer/nagios-plugins-1.4.13-r1
-	>=net-analyzer/nagios-imagepack-1.0-r100"
+	!net-analyzer/nagios-imagepack"
 
 pkg_setup() {
 	# Avoid upgrading from Nagios <3 as the directory structure has changed
