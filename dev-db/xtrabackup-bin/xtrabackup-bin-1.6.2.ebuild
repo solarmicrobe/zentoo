@@ -9,7 +9,7 @@ inherit multilib eutils
 DESCRIPTION="Percona XtraBackup is an online (non-blocking) backup tool for InnoDB and XtraDB engines"
 HOMEPAGE="http://www.percona.com/docs/wiki/percona-xtrabackup:start"
 
-BASE_URI="http://www.percona.com/downloads/XtraBackup/XtraBackup-${PV}/Linux/binary"
+BASE_URI="http://www.percona.com/downloads/XtraBackup/xtrabackup-${PV}/Linux/binary"
 SRC_URI="amd64? ( ${BASE_URI}/x86_64/xtrabackup-${PV}.tar.gz -> ${P}_amd64.tar.gz )
 	x86? ( ${BASE_URI}/i686/xtrabackup-${PV}.tar.gz -> ${P}_x86.tar.gz )"
 
