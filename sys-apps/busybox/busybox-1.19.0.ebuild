@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI="3"
 inherit eutils flag-o-matic savedconfig toolchain-funcs
 
 ################################################################################
@@ -58,12 +58,13 @@ fi
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE="debug ipv6 make-symlinks +mdev -pam selinux static elibc_glibc"
+IUSE="debug ipv6 make-symlinks +mdev nfs -pam selinux static elibc_glibc"
 RESTRICT="test"
 
-DEPEND="selinux? ( sys-libs/libselinux )
+RDEPEND="selinux? ( sys-libs/libselinux )
 	pam? ( sys-libs/pam )"
-RDEPEND="${DEPEND}"
+DEPEND="${RDEPEND}
+	nfs? ( || ( <sys-libs/glibc-2.13 >=net-libs/libtirpc-0.2.2-r1 ) )"
 
 S=${WORKDIR}/${MY_P}
 
@@ -84,10 +85,11 @@ src_prepare() {
 	unset KBUILD_OUTPUT #88088
 	append-flags -fno-strict-aliasing #310413
 	use ppc64 && append-flags -mminimal-toc #130943
+	append-cppflags $($(tc-getPKG_CONFIG) libtirpc --cflags)
 
 	# patches go here!
-	epatch "${FILESDIR}"/busybox-1.17.0-bb.patch
-	#epatch "${FILESDIR}"/busybox-${PV}-*.patch
+	#epatch "${FILESDIR}"/busybox-1.19.0-bb.patch
+	epatch "${FILESDIR}"/busybox-${PV}-*.patch
 
 	# flag cleanup
 	sed -i -r \
@@ -100,7 +102,6 @@ src_prepare() {
 		-e "/^CROSS_COMPILE/s:=.*:= ${CHOST}-:" \
 		-e "/^AR\>/s:=.*:= $(tc-getAR):" \
 		-e "/^CC\>/s:=.*:= $(tc-getCC):" \
-		-e "/^LD\>/s:=.*:= $(tc-getLD):" \
 		-e "/^HOSTCC/s:=.*:= $(tc-getBUILD_CC):" \
 		Makefile || die
 }
@@ -141,6 +142,7 @@ src_configure() {
 	if use static && use pam ; then
 		ewarn "You cannot have USE='static pam'.  Assuming static is more important."
 	fi
+	busybox_config_option nfs FEATURE_MOUNT_NFS
 	use static \
 		&& busybox_config_option n PAM \
 		|| busybox_config_option pam PAM
@@ -156,16 +158,19 @@ src_configure() {
 	# default a bunch of uncommon options to off
 	local opt
 	for opt in \
+		ADD_SHELL \
+		BEEP BOOTCHARTD \
 		CRONTAB \
-		DC DEVFSD DNSD DPKG \
-		FAKEIDENTD FBSPLASH FOLD FTP{GET,PUT} \
+		DC DEVFSD DNSD DPKG{,_DEB} \
+		FAKEIDENTD FBSPLASH FOLD FSCK_MINIX FTP{GET,PUT} \
+		FEATURE_DEVFS \
 		HOSTID HUSH \
 		INETD INOTIFYD IPCALC \
 		LASH LOCALE_SUPPORT LOGNAME LPD \
-		MSH \
+		MAKEMIME MKFS_MINIX MSH \
 		OD \
-		RFKILL \
-		SLATTACH SULOGIN \
+		RDEV READPROFILE REFORMIME REMOVE_SHELL RFKILL RUN_PARTS RUNSV{,DIR} \
+		SLATTACH SMEMCAP SULOGIN SV{,LOGD} \
 		TASKSET TCPSVD \
 		RPM RPM2CPIO \
 		UDPSVD UUDECODE UUENCODE
@@ -207,7 +212,7 @@ src_install() {
 	if use mdev ; then
 		dodir /$(get_libdir)/mdev/
 		use make-symlinks || dosym /bin/bb /sbin/mdev
-		cp "${S}"/examples/mdev_fat.conf "${D}"/etc/mdev.conf
+		cp "${S}"/examples/mdev_fat.conf "${ED}"/etc/mdev.conf
 
 		exeinto /$(get_libdir)/mdev/
 		doexe "${FILESDIR}"/mdev/*
@@ -218,7 +223,7 @@ src_install() {
 	fi
 
 	# bundle up the symlink files for use later
-	emake install || die
+	emake DESTDIR="${ED}" install || die
 	rm _install/bin/busybox
 	tar cf busybox-links.tar -C _install . || : #;die
 	insinto /usr/share/${PN}
@@ -248,12 +253,12 @@ pkg_preinst() {
 		ewarn "setting USE=make-symlinks and emerging to / is very dangerous."
 		ewarn "it WILL overwrite lots of system programs like: ls bash awk grep (bug 60805 for full list)."
 		ewarn "If you are creating a binary only and not merging this is probably ok."
-		ewarn "set env VERY_BRAVE_OR_VERY_DUMB=yes if this is realy what you want."
+		ewarn "set env VERY_BRAVE_OR_VERY_DUMB=yes if this is really what you want."
 		die "silly options will destroy your system"
 	fi
 
 	if use make-symlinks ; then
-		mv "${D}"/usr/share/${PN}/busybox-links.tar "${T}"/ || die
+		mv "${ED}"/usr/share/${PN}/busybox-links.tar "${T}"/ || die
 	fi
 }
 
@@ -265,9 +270,7 @@ pkg_postinst() {
 		cp -vpPR _install/* "${ROOT}"/ || die "copying links for ${x} failed"
 	fi
 
-	echo
-	einfo "This ebuild has support for user defined configs"
-	einfo "Please read this ebuild for more details and re-emerge as needed"
-	einfo "if you want to add or remove functionality for ${PN}"
-	echo
+	elog "This ebuild has support for user defined configs"
+	elog "Please read this ebuild for more details and re-emerge as needed"
+	elog "if you want to add or remove functionality for ${PN}"
 }
