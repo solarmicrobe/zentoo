@@ -29,10 +29,11 @@ RDEPEND="
 
 DEPEND="
 	${RDEPEND}
-	app-arch/xz-utils
-	nls? ( sys-devel/gettext )
-	dev-lang/perl
 	=sys-devel/libtool-2*
+	app-arch/xz-utils
+	dev-lang/perl
+	dev-util/pkgconfig
+	nls? ( sys-devel/gettext )
 "
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-4.0.2.91-lafile.patch"
