@@ -4,7 +4,7 @@
 
 EAPI="2"
 
-inherit eutils flag-o-matic multilib scons-utils toolchain-funcs
+inherit eutils flag-o-matic multilib pax-utils scons-utils toolchain-funcs
 
 DESCRIPTION="Google's open source JavaScript engine"
 HOMEPAGE="http://code.google.com/p/v8"
@@ -47,13 +47,23 @@ src_configure() {
 }
 
 src_compile() {
-	# To make tests work, we compile with sample=shell.
+	# To make tests work, we compile with sample=shell and visibility=default.
 	# For more info see http://groups.google.com/group/v8-users/browse_thread/thread/61ca70420e4476bc
-	local myconf="library=shared soname=on sample=shell importenv=\"LINKFLAGS\""
+	# and http://groups.google.com/group/v8-users/browse_thread/thread/165f89728ed6f97d
+	local myconf="library=shared soname=on sample=shell visibility=default importenv=LINKFLAGS,PATH"
 
-	# Use target arch detection logic from bug #296917.
-	local myarch="$ABI"
-	[[ $myarch = "" ]] && myarch="$ARCH"
+	# Use target arch detection logic from bug #354601.
+	case ${CHOST} in
+		i?86-*) myarch=x86 ;;
+		x86_64-*)
+			if [[ $ABI = "" ]] ; then
+				myarch=amd64
+			else
+				myarch="$ABI"
+			fi ;;
+		arm*-*) myarch=arm ;;
+		*) die "Unrecognized CHOST: ${CHOST}"
+	esac
 
 	if [[ $myarch = amd64 ]] ; then
 		myconf+=" arch=x64"
@@ -66,6 +76,7 @@ src_compile() {
 	fi
 
 	escons $(use_scons readline console readline dumb) ${myconf} . || die
+	pax-mark -m obj/test/release/cctest shell d8
 }
 
 src_install() {
