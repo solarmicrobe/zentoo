@@ -27,6 +27,6 @@ RDEPEND="${DEPEND}
 S="${WORKDIR}"
 
 src_install() {
-	dobin "${S}"/bin/{innobackupex,xtrabackup_51,xtrabackup_55,xtrabackup,tar4ibd}
+	dobin "${S}"/bin/{innobackupex,xtrabackup_55,xtrabackup}
 	dosym /usr/bin/innobackupex /usr/bin/innobackupex-1.5.1
 }
