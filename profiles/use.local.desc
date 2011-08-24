@@ -96,6 +96,7 @@ dev-lang/php:mysqlnd - Use native driver for mysql, mysqli, PDO_Mysql
 dev-lang/php:pdo - Enable the bundled PDO extensions
 dev-lang/php:phar - Enables the phar extension to provide phar archive support
 dev-lang/php:pic - Force shared modules to build as PIC on x86 (speed tradeoff with memory usage)
+dev-lang/php:suhosin - Add the Suhosin patch from http://www.suhosin.org/
 dev-lang/php:xmlreader - Enable XMLReader support
 dev-lang/php:xmlwriter - Enable XMLWriter support
 dev-lang/php:zip - Enable ZIP file support

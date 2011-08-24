@@ -4,17 +4,19 @@
 
 EAPI="3"
 
-inherit autotools eutils flag-o-matic multilib versionator
+inherit eutils flag-o-matic multilib versionator
 
-MY_PV="$(printf "%u%02u%02u%02u" $(get_version_components))"
+SRC_PV="$(printf "%u%02u%02u%02u" $(get_version_components))"
+# DOC_PV="$(printf "%u%02u%02u00" $(get_version_components $(get_version_component_range 1-3)))"
+DOC_PV="${SRC_PV}"
 
 DESCRIPTION="A SQL Database Engine in a C Library"
 HOMEPAGE="http://sqlite.org/"
-SRC_URI="doc? ( http://sqlite.org/${PN}-doc-${MY_PV}.zip )
-	tcl? ( http://sqlite.org/${PN}-src-${MY_PV}.zip )
+SRC_URI="doc? ( http://sqlite.org/${PN}-doc-${DOC_PV}.zip )
+	tcl? ( http://sqlite.org/${PN}-src-${SRC_PV}.zip )
 	!tcl? (
-		test? ( http://sqlite.org/${PN}-src-${MY_PV}.zip )
-		!test? ( http://sqlite.org/${PN}-autoconf-${MY_PV}.tar.gz )
+		test? ( http://sqlite.org/${PN}-src-${SRC_PV}.zip )
+		!test? ( http://sqlite.org/${PN}-autoconf-${SRC_PV}.tar.gz )
 	)"
 
 LICENSE="as-is"
@@ -39,22 +41,17 @@ amalgamation() {
 
 pkg_setup() {
 	if amalgamation; then
-		S="${WORKDIR}/${PN}-autoconf-${MY_PV}"
+		S="${WORKDIR}/${PN}-autoconf-${SRC_PV}"
 	else
-		S="${WORKDIR}/${PN}-src-${MY_PV}"
+		S="${WORKDIR}/${PN}-src-${SRC_PV}"
 	fi
 }
 
 src_prepare() {
 	if amalgamation; then
-		epatch "${FILESDIR}/${PN}-3.6.22-interix-fixes-amalgamation.patch"
-	else
-		epatch "${FILESDIR}/${P}-utimes.patch"
-		epatch "${FILESDIR}/${PN}-3.6.22-dlopen.patch"
-		epatch "${FILESDIR}/${P}-SQLITE_OMIT_WAL.patch"
+		epatch "${FILESDIR}"/${P}-interix-amalgamation.patch
 	fi
 
-	eautoreconf
 	epunt_cxx
 }
 
@@ -155,6 +152,6 @@ src_install() {
 	doman sqlite3.1 || die "doman failed"
 
 	if use doc; then
-		dohtml -r "${WORKDIR}/${PN}-doc-${MY_PV}/"* || die "dohtml failed"
+		dohtml -r "${WORKDIR}/${PN}-doc-${DOC_PV}/"* || die "dohtml failed"
 	fi
 }

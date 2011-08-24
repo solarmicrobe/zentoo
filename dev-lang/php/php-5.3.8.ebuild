@@ -2,13 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=4
 
 PHPCONFUTILS_MISSING_DEPS="adabas birdstep db2 dbmaker empress empress-bcs esoob interbase oci8 sapdb solid"
 
 inherit eutils autotools flag-o-matic versionator depend.apache apache-module db-use phpconfutils php-common-r1 libtool
 
-SUHOSIN_VERSION=""
+SUHOSIN_VERSION="5.3.7-0.9.10"
 FPM_VERSION="builtin"
 EXPECTED_TEST_FAILURES=""
 
@@ -18,7 +18,7 @@ function php_get_uri ()
 {
 	case "${1}" in
 		"php-pre")
-			echo "http://downloads.php.net/johannes/${2}"
+			echo "http://downloads.php.net/ilia/${2}"
 		;;
 		"php")
 			echo "http://www.php.net/distributions/${2}"
@@ -53,6 +53,9 @@ PHP_SRC_URI="$(php_get_uri "${PHP_RELEASE}" "${PHP_P}.tar.bz2")"
 PHP_PATCHSET="0"
 PHP_PATCHSET_URI="
 	$(php_get_uri "${PHP_PATCHSET_LOC}" "php-patchset-${PV}-r${PHP_PATCHSET}.tar.bz2")"
+
+PHP_FPM_INIT_VER="4"
+PHP_FPM_CONF_VER="1"
 
 if [[ ${SUHOSIN_VERSION} == *-gentoo ]]; then
 	# in some cases we use our own suhosin patch (very recent version,
@@ -111,7 +114,7 @@ IUSE="${IUSE} adabas bcmath berkdb birdstep bzip2 calendar cdb cjk
 
 DEPEND="!dev-lang/php:5
 	>=app-admin/eselect-php-0.6.2
-	>=dev-libs/libpcre-8.11[unicode]
+	>=dev-libs/libpcre-8.12[unicode]
 	adabas? ( >=dev-db/unixODBC-1.8.13 )
 	apache2? ( www-servers/apache[threads=] )
 	berkdb? ( =sys-libs/db-4* )
@@ -169,8 +172,8 @@ DEPEND="!dev-lang/php:5
 	soap? ( >=dev-libs/libxml2-2.6.8 )
 	solid? ( >=dev-db/unixODBC-1.8.13 )
 	spell? ( >=app-text/aspell-0.50 )
-	sqlite? ( =dev-db/sqlite-2* pdo? ( >=dev-db/sqlite-3.7.4 ) )
-	sqlite3? ( >=dev-db/sqlite-3.7.4 )
+	sqlite? ( =dev-db/sqlite-2* pdo? ( >=dev-db/sqlite-3.7.7.1 ) )
+	sqlite3? ( >=dev-db/sqlite-3.7.7.1 )
 	ssl? ( >=dev-libs/openssl-0.9.7 )
 	sybase-ct? ( dev-db/freetds )
 	tidy? ( app-text/htmltidy )
@@ -198,56 +201,58 @@ DEPEND="!dev-lang/php:5
 "
 
 php="=${CATEGORY}/${PF}"
-RDEPEND="${DEPEND}
-	truetype? ( || ( $php[gd] $php[gd-external] ) )
-	cjk? ( || ( $php[gd] $php[gd-external] ) )
-	exif? ( || ( $php[gd] $php[gd-external] ) )
 
-	xpm? ( $php[gd] )
-	gd? ( $php[zlib,-gd-external] )
-	gd-external? ( $php[-gd] )
-	simplexml? ( $php[xml] )
-	soap? ( $php[xml] )
-	wddx? ( $php[xml] )
-	xmlrpc? ( || ( $php[xml] $php[iconv] ) )
-	xmlreader? ( $php[xml] )
-	xsl? ( $php[xml] )
-	ldap-sasl? ( $php[ldap,-oci8] )
-	adabas? ( $php[odbc] )
-	birdstep? ( $php[odbc] )
-	dbmaker? ( $php[odbc] )
-	empress-bcs? ( $php[empress] )
-	empress? ( $php[odbc] )
-	esoob? ( $php[odbc] )
-	db2? ( $php[odbc] )
-	sapdb? ( $php[odbc] )
-	solid? ( $php[odbc] )
-	kolab? ( $php[imap] )
-	mhash? ( $php[hash] )
-	phar? ( $php[hash] )
+REQUIRED_USE="
+	truetype? ( || ( gd gd-external ) )
+	cjk? ( || ( gd gd-external ) )
+	exif? ( || ( gd gd-external ) )
+
+	xpm? ( gd )
+	gd? ( zlib !gd-external )
+	gd-external? ( !gd )
+	simplexml? ( xml )
+	soap? ( xml )
+	wddx? ( xml )
+	xmlrpc? ( || ( xml iconv ) )
+	xmlreader? ( xml )
+	xsl? ( xml )
+	ldap-sasl? ( ldap !oci8 )
+	adabas? ( odbc )
+	birdstep? ( odbc )
+	dbmaker? ( odbc )
+	empress-bcs? ( empress )
+	empress? ( odbc )
+	esoob? ( odbc )
+	db2? ( odbc )
+	sapdb? ( odbc )
+	solid? ( odbc )
+	kolab? ( imap )
+	mhash? ( hash )
+	phar? ( hash )
 	mysqlnd? ( || (
-		$php[mysql]
-		$php[mysqli]
-		$php[pdo]
+		mysql
+		mysqli
+		pdo
 	) )
 
-	oci8? ( $php[-oci8-instant-client,-ldap-sasl] )
-	oci8-instant-client? ( $php[-oci8] )
+	oci8? ( !oci8-instant-client !ldap-sasl )
+	oci8-instant-client? ( !oci8 )
 
-	qdbm? ( $php[-gdbm] )
-	readline? ( $php[-libedit] )
-	recode? ( $php[-imap,-mysql,-mysqli] )
-	firebird? ( $php[-interbase] )
-	sharedmem? ( $php[-threads] )
+	qdbm? ( !gdbm )
+	readline? ( !libedit )
+	recode? ( !imap !mysql !mysqli )
+	firebird? ( !interbase )
+	sharedmem? ( !threads )
 
-	!cli? ( !cgi? ( !fpm? ( !apache2? ( !embed? ( $php[cli] ) ) ) ) )
+	!cli? ( !cgi? ( !fpm? ( !apache2? ( !embed? ( cli ) ) ) ) )"
 
-	enchant? ( !dev-php${PHP_MV}/pecl-enchant )
-	fileinfo? ( !<dev-php${PHP_MV}/pecl-fileinfo-1.0.4-r2 )
-	filter? ( !dev-php${PHP_MV}/pecl-filter )
-	json? ( !dev-php${PHP_MV}/pecl-json )
-	phar? ( !dev-php${PHP_MV}/pecl-phar )
-	zip? ( !dev-php${PHP_MV}/pecl-zip )"
+DEPEND="${DEPEND}
+	enchant? ( !dev-php5/pecl-enchant )
+	fileinfo? ( !<dev-php5/pecl-fileinfo-1.0.4-r2 )
+	filter? ( !dev-php5/pecl-filter )
+	json? ( !dev-php5/pecl-json )
+	phar? ( !dev-php5/pecl-phar )
+	zip? ( !dev-php5/pecl-zip )"
 
 [[ -n $SUHOSIN_VERSION ]] && RDEPEND="${RDEPEND} suhosin? (
 =${CATEGORY}/${PN}-${SLOT}*[unicode] )"
