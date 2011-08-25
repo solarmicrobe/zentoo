@@ -17,13 +17,14 @@ SRC_URI="mirror://berlios/${PN}/${P}.tar.bz2"
 LICENSE="GPL-2 public-domain"
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE="ssl nls kerberos hesiod tk"
+IUSE="ssl nls kerberos hesiod tk socks"
 
 RDEPEND="hesiod? ( net-dns/hesiod )
 	ssl? ( >=dev-libs/openssl-0.9.6 )
 	kerberos? ( virtual/krb5 >=dev-libs/openssl-0.9.6 )
 	nls? ( virtual/libintl )
-	elibc_FreeBSD? ( sys-libs/e2fsprogs-libs )"
+	elibc_FreeBSD? ( sys-libs/e2fsprogs-libs )
+	socks? ( net-proxy/dante )"
 DEPEND="${RDEPEND}
 	sys-devel/flex
 	nls? ( sys-devel/gettext )"
@@ -49,7 +50,6 @@ src_configure() {
 		export PYTHON=:
 	fi
 	econf \
-		--disable-dependency-tracking \
 		--enable-RPA \
 		--enable-NTLM \
 		--enable-SDPS \
@@ -58,14 +58,11 @@ src_configure() {
 		$(use kerberos && echo "--with-ssl" ) \
 		$(use_with kerberos gssapi) \
 		$(use_with kerberos kerberos5) \
-		$(use_with hesiod)
+		$(use_with hesiod) \
+		$(use_with socks)
 }
 
 src_install() {
-	# dir for pidfile
-	keepdir /var/run/${PN} || die
-	fowners ${PN}:${PN} /var/run/${PN} || die
-
 	# fetchmail's homedir (holds fetchmail's .fetchids)
 	keepdir /var/lib/${PN} || die
 	fowners ${PN}:${PN} /var/lib/${PN} || die
@@ -77,8 +74,8 @@ src_install() {
 
 	dodoc FAQ FEATURES NEWS NOTES README README.NTLM README.SSL* TODO || die
 
-	newinitd "${FILESDIR}"/fetchmail.new fetchmail || die
-	newconfd "${FILESDIR}"/conf.d-fetchmail fetchmail || die
+	newinitd "${FILESDIR}"/fetchmail.initd fetchmail || die
+	newconfd "${FILESDIR}"/fetchmail.confd fetchmail || die
 
 	docinto contrib
 	local f
