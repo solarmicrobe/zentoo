@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit eutils pam
+inherit eutils pam multilib libtool
 
 MY_P=${P/_/}
 MY_P=${MY_P/beta/b}
@@ -29,15 +29,15 @@ LICENSE="as-is BSD"
 
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE="pam skey offensive ldap selinux"
+IUSE="pam offensive ldap selinux skey"
 
 DEPEND="pam? ( virtual/pam )
+	skey? ( >=sys-auth/skey-1.1.5-r1 )
 	ldap? (
 		>=net-nds/openldap-2.1.30-r1
 		dev-libs/cyrus-sasl
 	)
-	!pam? ( skey? ( >=sys-auth/skey-1.1.5-r1 ) )
-	app-editors/gentoo-editor
+	>=app-misc/editor-wrapper-3
 	virtual/editor
 	virtual/mta"
 RDEPEND="selinux? ( sec-policy/selinux-sudo )
@@ -51,12 +51,10 @@ S=${WORKDIR}/${MY_P}
 
 REQUIRED_USE="pam? ( !skey ) skey? ( !pam )"
 
-src_prepare() {
-	# compatability fix.
-	epatch "${FILESDIR}"/${PN}-skeychallengeargs.diff
+MAKEOPTS="${MAKEOPTS} SAMPLES="
 
-	# prevent binaries from being stripped.
-	sed -i 's/\($(INSTALL).*\) -s \(.*[(sudo|visudo)]\)/\1 \2/g' Makefile.in
+src_prepare() {
+	elibtoolize
 }
 
 src_configure() {
@@ -112,35 +110,30 @@ src_configure() {
 
 	einfo "...done."
 
-	if use pam; then
-		myconf="--with-pam --without-skey"
-	elif use skey; then
-		myconf="--without-pam --with-skey"
-	else
-		myconf="--without-pam --without-skey"
-	fi
-
 	# audit: somebody got to explain me how I can test this before I
 	# enable it.. — Diego
 	econf --with-secure-path="${ROOTPATH}" \
-		--with-editor=/usr/libexec/gentoo-editor \
+		--with-editor=/usr/libexec/editor \
 		--with-env-editor \
 		$(use_with offensive insults) \
 		$(use_with offensive all-insults) \
 		$(use_with ldap ldap_conf_file /etc/ldap.conf.sudo) \
 		$(use_with ldap) \
+		$(use_with pam) \
+		$(use_with skey) \
+		--without-opie \
 		--without-linux-audit \
 		--with-timedir=/var/db/sudo \
-		--docdir=/usr/share/doc/${PF} \
-		${myconf}
+		--with-plugindir=/usr/$(get_libdir)/sudo \
+		--docdir=/usr/share/doc/${PF}
 }
 
 src_install() {
 	emake DESTDIR="${D}" install || die
 
 	if use ldap; then
-		dodoc README.LDAP schema.OpenLDAP
-		dosbin sudoers2ldif
+		dodoc README.LDAP doc/schema.OpenLDAP
+		dosbin plugins/sudoers/sudoers2ldif
 
 		cat - > "${T}"/ldap.conf.sudo <<EOF
 # See ldap.conf(5) and README.LDAP for details\n"
@@ -156,10 +149,6 @@ EOF
 	fi
 
 	pamd_mimic system-auth sudo auth account session
-
-	insinto /etc
-	doins "${S}"/sudoers
-	fperms 0440 /etc/sudoers
 
 	keepdir /var/db/sudo
 	fperms 0700 /var/db/sudo
