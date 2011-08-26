@@ -1,1 +1,2 @@
 move sys-boot/grub-static sys-boot/grub
+move app-editors/gentoo-editor app-misc/editor-wrapper
