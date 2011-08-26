@@ -20,7 +20,7 @@ net-analyzer/nagios-plugins ups nagios-game nagios-ping
 net-fs/samba cluster
 
 # disable some imagemagick modules
-media-gfx/imagemagick autotrace raw
+media-gfx/imagemagick autotrace raw opencl
 
 # do not pull X11 crap for SVG
 media-gfx/graphviz cairo

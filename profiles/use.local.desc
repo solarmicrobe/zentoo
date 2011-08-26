@@ -177,8 +177,11 @@ media-gfx/imagemagick:fpx - enable media-libs/libfpx support
 media-gfx/imagemagick:gs - enable ghostscript support
 media-gfx/imagemagick:hdri - enable High Dynamic Range Images formats
 media-gfx/imagemagick:lqr - enable experimental liquid rescale support
+media-gfx/imagemagick:opencl - Enable OpenCL support
 media-gfx/imagemagick:q32 - set quantum depth to 32
+media-gfx/imagemagick:q64 - set quantum depth to 64
 media-gfx/imagemagick:q8 - set quantum depth to 8
+media-gfx/imagemagick:webp - enable webp image format support
 media-libs/freetype:auto-hinter - Use the unpatented auto-hinter instead of the (recommended) TrueType bytecode interpreter
 media-libs/freetype:fontforge - Install internal headers required for TrueType debugger in media-gfx/fontforge (built with USE=truetype-debugger)
 media-libs/freetype:kpathsea - Enable TeX support (ttf2pk and ttf2pfb)
