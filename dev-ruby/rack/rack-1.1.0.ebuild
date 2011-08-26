@@ -3,11 +3,9 @@
 # $Header: $
 
 EAPI="2"
-USE_RUBY="ruby18 ree18 ruby19 jruby"
+USE_RUBY="ruby18 ree18 jruby"
 
 RUBY_FAKEGEM_DOCDIR="doc"
-
-RUBY_FAKEGEM_BINWRAP=""
 
 inherit ruby-fakegem eutils
 
@@ -25,9 +23,6 @@ IUSE=""
 # make them dependencies at all.
 ruby_add_bdepend test dev-ruby/test-spec
 
-USE_RUBY=ruby19 \
-	ruby_add_bdepend "ruby_targets_ruby19 test" '=dev-ruby/test-unit-1*'
-
 all_ruby_prepare() {
 	epatch "${FILESDIR}"/${P}-gentoo.patch
 }
@@ -39,4 +34,10 @@ each_ruby_test() {
 	${RUBY} -S specrb -Ilib:test -w -a \
 		-t '^(?!Rack::Handler|Rack::Adapter|Rack::Session::Memcache|rackup)' \
 		|| die "test failed for ${RUBY}"
+}
+
+all_ruby_install() {
+	all_fakegem_install
+
+	ruby_fakegem_binwrapper rackup
 }

@@ -153,7 +153,6 @@ dev-vcs/git:gtk - Include the gitview contrib tool.
 dev-vcs/git:ppcsha1 - Make use of a bundled routine that is optimized for the PPC arch.
 dev-vcs/git:subversion - Include git-svn for dev-vcs/subversion support.
 dev-vcs/git:webdav - Adds support for push'ing to HTTP repositories via DAV.
-dev-vcs/gitolite:contrib - Install user-contributed files
 dev-vcs/mercurial:bugzilla - Support bugzilla integration.
 dev-vcs/mercurial:gpg - Support signing with GnuPG.
 dev-vcs/mercurial:tk - Install dev-lang/tk for hgk script.
