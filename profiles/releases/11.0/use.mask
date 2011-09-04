@@ -20,7 +20,6 @@ blas
 bluetooth
 branding
 bsf
-calendar
 canna
 cdb
 cdda
