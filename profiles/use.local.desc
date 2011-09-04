@@ -26,6 +26,10 @@ app-editors/emacs:toolkit-scroll-bars - Use the selected toolkit's scrollbars in
 app-editors/vim:X - Link console vim against X11 libraries to enable title and clipboard features in xterm
 app-editors/vim:vim-pager - Install vimpager and vimmanpager links
 app-emacs/emacs-common-gentoo:emacs22icons - Install Emacs 22 style icons
+app-emulation/virtualbox-bin:additions - Install Guest System Tools ISO
+app-emulation/virtualbox-bin:rdesktop-vrdp - Install the rdesktop client integration
+app-emulation/virtualbox-bin:sdk - Enable building of SDK
+app-emulation/virtualbox-bin:vboxwebsrv - Install the VirtualBox webservice
 app-misc/mc:edit - Build mcedit application
 app-misc/screen:multiuser - Enable multiuser support (by setting correct permissions)
 app-misc/screen:nethack - Express error messages in nethack style
