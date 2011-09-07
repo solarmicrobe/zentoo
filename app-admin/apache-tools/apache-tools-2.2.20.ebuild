@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI="4"
 inherit flag-o-matic eutils
 
 DESCRIPTION="Useful Apache tools - htdigest, htpasswd, ab, htdbm"
@@ -24,28 +25,21 @@ DEPEND="${RDEPEND}"
 
 S="${WORKDIR}/httpd-${PV}"
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-
+src_prepare() {
 	# Apply these patches:
-	# (1)	apache-tools-Makefile.patch:
+	# (1)	apache-tools-2.2.20-Makefile.patch:
 	#		- fix up the `make install' for support/
 	#		- remove envvars from `make install'
-	epatch "${FILESDIR}"/${PN}-Makefile.patch
+	epatch "${FILESDIR}"/${PN}-2.2.20-Makefile.patch
 }
 
-src_compile() {
+src_configure() {
 	local myconf=""
-	cd "${S}"
 
 	# Instead of filtering --as-needed (bug #128505), append --no-as-needed
-	# Thanks to Harald van Dijk
 	append-ldflags $(no-as-needed)
 
-	if use ssl ; then
-		myconf="${myconf} --with-ssl=/usr --enable-ssl"
-	fi
+	use ssl && myconf+=" --with-ssl=/usr --enable-ssl"
 
 	# econf overwrites the stuff from config.layout, so we have to put them into
 	# our myconf line too
@@ -55,16 +49,18 @@ src_compile() {
 		--with-apr=/usr \
 		--with-apr-util=/usr \
 		--with-pcre=/usr \
-		${myconf} || die "econf failed!"
+		${myconf}
+}
 
-	cd support
-	emake || die "emake support/ failed!"
+src_compile() {
+	cd support || die
+	emake
 }
 
 src_install () {
-	cd "${S}"/support
+	cd support || die
 
-	make DESTDIR="${D}" install || die "make install failed!"
+	make DESTDIR="${D}" install
 
 	# install manpages
 	doman "${S}"/docs/man/{dbmmanage,htdigest,htpasswd,htdbm}.1 \
@@ -72,13 +68,14 @@ src_install () {
 
 	# Providing compatiblity symlinks for #177697 (which we'll stop to install
 	# at some point).
-
-	for i in $(ls "${D}"/usr/sbin 2>/dev/null); do
+	pushd "${D}"/usr/sbin/ >/dev/null
+	for i in *; do
 		dosym /usr/sbin/${i} /usr/sbin/${i}2
 	done
+	popd "${D}"/usr/sbin/ >/dev/null
 
 	# Provide a symlink for ab-ssl
-	if use ssl ; then
+	if use ssl; then
 		dosym /usr/sbin/ab /usr/sbin/ab-ssl
 		dosym /usr/sbin/ab /usr/sbin/ab2-ssl
 	fi
