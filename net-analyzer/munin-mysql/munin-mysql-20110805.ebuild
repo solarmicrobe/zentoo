@@ -29,7 +29,7 @@ src_prepare() {
 src_install() {
 	SITE_LIB=$(perl -V:installsitelib | cut -d\' -f2)
 
-	insinto /usr/libexec/munin/plugins
+	exeinto /usr/libexec/munin/plugins
 	doexe mysql
 
 	insinto /etc/munin/plugin-conf.d
