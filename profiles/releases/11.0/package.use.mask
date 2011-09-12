@@ -27,3 +27,6 @@ media-gfx/graphviz cairo
 
 # only neon is supported for now
 dev-vcs/subversion webdav-serf
+
+# use pythons builtin datetime
+dev-python/psycopg mxdatetime
