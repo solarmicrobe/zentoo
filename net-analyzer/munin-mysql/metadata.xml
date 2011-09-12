@@ -6,5 +6,7 @@
 		<email>hollow@gentoo.org</email>
 		<name>Benedikt Böhm</name>
 	</maintainer>
+	<use>
+		<flag name="contrib">Install graph modules from contributors</flag>
+	</use>
 </pkgmetadata>
-
