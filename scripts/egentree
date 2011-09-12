@@ -7,3 +7,6 @@ repoman manifest
 
 # update the metadata and use.local.desc files in the repo
 egencache --update --update-use-local-desc --jobs=3 --portdir=$(pwd)
+
+# update timestamps
+touch metadata/timestamp.chk
