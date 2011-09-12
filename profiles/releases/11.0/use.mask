@@ -291,6 +291,7 @@ pcsc-lite
 python3
 rpm
 sctp
+serial
 smbkrb5passwd
 vala
 vpopmail

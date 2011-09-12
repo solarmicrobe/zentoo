@@ -143,6 +143,7 @@ dev-python/docutils:glep - Install support for GLEPs
 dev-python/jinja:i18n - Enables support for i18n with dev-python/Babel
 dev-python/pyyaml:libyaml - enable libyaml support
 dev-python/pyzor:pyzord - enable support for pyzord
+dev-python/twisted:serial - include serial port support
 dev-ruby/rubygems:server - Install support for the rubygems server
 dev-util/ctags:ada - Enable Ada support
 dev-util/google-perftools:debug - Build a set of libraries with debug support (so-called debugalloc). These are available by default but are not needed unless you're actually developing using tcmalloc.

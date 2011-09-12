@@ -40,6 +40,7 @@ net-mail
 net-misc
 net-nds
 net-proxy
+net-zope
 perl-core
 sci-libs
 sys-apps
@@ -52,8 +53,8 @@ sys-fs
 sys-kernel
 sys-libs
 sys-process
+virtual
 www-apache
 www-client
 www-servers
 x11-libs
-virtual
