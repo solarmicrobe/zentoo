@@ -7,18 +7,11 @@
 
 EAPI="2"
 
-if [[ ${PV} == "9999" ]] ; then
-	EGIT_REPO_URI="git://ctrl.tukaani.org/xz.git"
-	inherit git autotools
-	SRC_URI=""
-	EXTRA_DEPEND="sys-devel/gettext dev-vcs/cvs >=sys-devel/libtool-2" #272880 286068
-else
-	MY_P="${PN/-utils}-${PV/_}"
-	SRC_URI="http://tukaani.org/xz/${MY_P}.tar.gz"
-	KEYWORDS="amd64 x86"
-	S=${WORKDIR}/${MY_P}
-	EXTRA_DEPEND=
-fi
+MY_P="${PN/-utils}-${PV/_}"
+SRC_URI="http://tukaani.org/xz/${MY_P}.tar.gz"
+KEYWORDS="amd64 x86"
+S=${WORKDIR}/${MY_P}
+EXTRA_DEPEND=
 
 inherit eutils multilib
 
@@ -41,10 +34,6 @@ src_prepare() {
 	eautoreconf
 }
 fi
-
-src_prepare() {
-	epatch "${FILESDIR}"/${PN}-5.0.1-xzgrep-typo.patch #356627
-}
 
 src_configure() {
 	econf \
