@@ -86,7 +86,7 @@ src_install() {
 
 	emake DESTDIR="${D}" LINGUAS="${LINGUAS}" install || die "emake install failed"
 	rm "${ED}"/usr/sbin/install-info || die "rm install-info failed"
-	dodoc ChangeLog INSTALL THANKS TODO
+	dodoc ChangeLog THANKS TODO
 	keepdir /usr/$(get_libdir)/db/methods/{mnt,floppy,disk}
 	keepdir /usr/$(get_libdir)/db/{alternatives,info,methods,parts,updates}
 }
