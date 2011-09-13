@@ -11,8 +11,6 @@
     <flag name="mudflap">Add support for mudflap, a pointer use checking library</flag>
     <flag name="multislot">Allow for SLOTs to include minor version (3.3.4
     instead of just 3.3)</flag>
-    <flag name="n32">Enable n32 ABI support on mips</flag>
-    <flag name="n64">Enable n64 ABI support on mips</flag>
     <flag name="nopie">Disable PIE support (NOT FOR GENERAL USE)</flag>
     <flag name="nossp">Disable SSP support (NOT FOR GENERAL USE)</flag>
     <flag name="objc">Build support for the Objective C code language</flag>
