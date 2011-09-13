@@ -159,7 +159,7 @@ src_install() {
 
 		# Special-case uglyness... For people updating from lib32 -> lib amd64
 		# profiles, keep lib32 in the search path while it's around
-		if has_multilib_profile && [ -d "${ROOT}"lib32 -o -d "${ROOT}"lib32 ] && ! hasq lib32 ${libdirs}; then
+		if has_multilib_profile && [ -d "${ROOT}"lib32 -o -d "${ROOT}"lib32 ] && ! has lib32 ${libdirs}; then
 			libdirs_env="${libdirs_env}:/lib32:/usr/lib32:/usr/local/lib32"
 		fi
 		echo "LDPATH=\"${libdirs_env}\"" > "${T}"/04multilib
@@ -168,6 +168,10 @@ src_install() {
 
 	# rc-scripts version for testing of features that *should* be present
 	echo "Gentoo Base System release ${PV}" > "${D}"/etc/gentoo-release
+
+	# globally set UTF-8 locale
+	echo 'LANG="en_US.UTF-8"' >> "${D}"/etc/env.d/00basic
+	echo 'LC_COLLATE="POSIX"' >> "${D}"/etc/env.d/00basic
 }
 
 pkg_postinst() {
