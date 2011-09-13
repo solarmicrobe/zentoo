@@ -37,7 +37,6 @@ catpkg="${1#=}"
 catpkg="${catpkg%-[0-9]*}"
 
 read CATEGORY PN PVR < <(
-export ACCEPT_KEYWORDS="amd64 ~amd64 x86 ~x86"
 eix --cache-file ${TOPDIR}/eix.cache.gentoo \
 	--exact \
 	--nocolor \
