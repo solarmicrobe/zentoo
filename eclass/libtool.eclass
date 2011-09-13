@@ -27,11 +27,14 @@ ELT_try_and_apply_patch() {
 	local file=$1
 	local patch=$2
 
+	echo -e "\nTrying $(basename "$(dirname "${patch}")")-${patch##*/}.patch on ${file}" \
+		>> "${T}/elibtool.log" 2>&1
+
 	# We only support patchlevel of 0 - why worry if its static patches?
-	if patch -p0 --dry-run "${file}" "${patch}" &> "${T}/elibtool.log" ; then
+	if patch -p0 --dry-run "${file}" "${patch}" >> "${T}/elibtool.log" 2>&1 ; then
 		einfo "  Applying $(basename "$(dirname "${patch}")")-${patch##*/}.patch ..."
 		patch -p0 -g0 --no-backup-if-mismatch "${file}" "${patch}" \
-			&> "${T}/elibtool.log"
+			>> "${T}/elibtool.log" 2>&1
 		ret=$?
 		export ELT_APPLIED_PATCHES="${ELT_APPLIED_PATCHES} ${patch##*/}"
 	else
@@ -160,6 +163,10 @@ elibtoolize() {
 		*-mint*)    elt_patches+=" mint-conf" ;;
 	esac
 
+	if $(tc-getLD) --version 2>&1 | grep -qs 'GNU gold'; then
+		elt_patches+=" gold-conf"
+	fi
+
 	# Reuse "$@" for dirs to patch
 	set --
 	if [[ ${do_shallow} == "yes" ]] ; then
@@ -215,7 +222,7 @@ elibtoolize() {
 						ret=$?
 					# ltmain.sh and co might be in a subdirectory ...
 					elif [[ ! -e ${d}/configure ]] && \
-					     grep -qs 'Transform linux' "${d}/../configure" ; then
+						 grep -qs 'Transform linux' "${d}/../configure" ; then
 						ELT_walk_patches "${d}/../configure" "${p}"
 						ret=$?
 					fi
@@ -233,7 +240,7 @@ elibtoolize() {
 						ret=$?
 					# ltmain.sh and co might be in a subdirectory ...
 					elif [[ ! -e ${d}/configure ]] && \
-					     grep -qs 'version_type=freebsd-' "${d}/../configure" ; then
+						 grep -qs 'version_type=freebsd-' "${d}/../configure" ; then
 						ELT_walk_patches "${d}/../configure" "${p}"
 						ret=$?
 					fi
@@ -250,7 +257,7 @@ elibtoolize() {
 						ret=$?
 					# ltmain.sh and co might be in a subdirectory ...
 					elif [[ ! -e ${d}/configure ]] && \
-					     grep -qs '&& echo \.so ||' "${d}/../configure" ; then
+						 grep -qs '&& echo \.so ||' "${d}/../configure" ; then
 						ELT_walk_patches "${d}/../configure" "${p}"
 						ret=$?
 					fi
@@ -292,15 +299,18 @@ elibtoolize() {
 						fi
 					done
 					;;
-				mint-conf)
+				mint-conf|gold-conf)
 					ret=1
 					local subret=1
 					if [[ -e ${d}/configure ]]; then
 						ELT_walk_patches "${d}/configure" "${p}"
 						subret=$?
 					# ltmain.sh and co might be in a subdirectory ...
-					elif [[ ! -e ${d}/configure && -e ${d}/../configure ]] ; then
+					elif [[ -e ${d}/../configure ]] ; then
 						ELT_walk_patches "${d}/../configure" "${p}"
+						subret=$?
+					elif [[ -e ${d}/../../configure ]] ; then
+						ELT_walk_patches "${d}/../../configure" "${p}"
 						subret=$?
 					fi
 					if [[ $subret -eq 0 ]]; then
@@ -352,7 +362,7 @@ elibtoolize() {
 							#	ewarn "  Please verify that it is not needed."
 								:
 							else
-							    local version=$(ELT_libtool_version "${d}"/ltmain.sh)
+								local version=$(ELT_libtool_version "${d}"/ltmain.sh)
 								echo
 								eerror "Portage patch failed to apply (ltmain.sh version ${version})!"
 								eerror "Please file a bug report to add a proper patch."

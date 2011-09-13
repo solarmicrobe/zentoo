@@ -69,7 +69,7 @@
 #						  order, so they are applied in the order passed
 
 inherit eutils toolchain-funcs versionator multilib
-EXPORT_FUNCTIONS pkg_setup src_unpack src_compile src_test src_install pkg_preinst pkg_postinst
+EXPORT_FUNCTIONS pkg_setup src_unpack src_compile src_test src_install pkg_preinst pkg_postinst pkg_postrm
 
 # Added by Daniel Ostrow <dostrow@gentoo.org>
 # This is an ugly hack to get around an issue with a 32-bit userland on ppc64.
@@ -105,7 +105,7 @@ RESTRICT="binchecks strip"
 debug-print-kernel2-variables() {
 	for v in PVR CKV OKV KV KV_FULL KV_MAJOR KV_MINOR KV_PATCH RELEASETYPE \
 			RELEASE UNIPATCH_LIST_DEFAULT UNIPATCH_LIST_GENPATCHES \
-			UNIPATCH_LIST S KERNEL_URI ; do
+			UNIPATCH_LIST S KERNEL_URI K_WANT_GENPATCHES ; do
 		debug-print "${v}: ${!v}"
 	done
 }
@@ -116,10 +116,30 @@ handle_genpatches() {
 	local tarball
 	[[ -z ${K_WANT_GENPATCHES} || -z ${K_GENPATCHES_VER} ]] && return 1
 
+	debug-print "Inside handle_genpatches"
+	local oldifs=${IFS}
+	export IFS="."
+	local OKV_ARRAY=( $OKV )
+	export IFS=${oldifs}
+
+	# for > 3.0 kernels, handle genpatches tarball name
+	# genpatches for 3.0 and 3.0.1 might be named
+	# genpatches-3.0-1.base.tar.bz2 and genpatches-3.0-2.base.tar.bz2
+	# respectively.  Handle this.
+
 	for i in ${K_WANT_GENPATCHES} ; do
+	if [[ ${KV_MAJOR} -ge 3 ]]; then
+		if [[ ${#OKV_ARRAY[@]} -ge 3 ]]; then
+			tarball="genpatches-${KV_MAJOR}.${KV_MINOR}-${K_GENPATCHES_VER}.${i}.tar.bz2"
+		else
+			tarball="genpatches-${KV_MAJOR}.${KV_PATCH}-${K_GENPATCHES_VER}.${i}.tar.bz2"
+		fi
+	else
 		tarball="genpatches-${OKV}-${K_GENPATCHES_VER}.${i}.tar.bz2"
-		GENPATCHES_URI="${GENPATCHES_URI} mirror://gentoo/${tarball}"
-		UNIPATCH_LIST_GENPATCHES="${UNIPATCH_LIST_GENPATCHES} ${DISTDIR}/${tarball}"
+	fi
+	debug-print "genpatches tarball: $tarball"
+	GENPATCHES_URI="${GENPATCHES_URI} mirror://gentoo/${tarball}"
+	UNIPATCH_LIST_GENPATCHES="${UNIPATCH_LIST_GENPATCHES} ${DISTDIR}/${tarball}"
 	done
 }
 
@@ -150,31 +170,83 @@ detect_version() {
 	OKV=${OKV/_p*}
 
 	KV_MAJOR=$(get_version_component_range 1 ${OKV})
-	KV_MINOR=$(get_version_component_range 2 ${OKV})
-	KV_PATCH=$(get_version_component_range 3 ${OKV})
+	# handle if OKV is X.Y or X.Y.Z (e.g. 3.0 or 3.0.1)
+	local oldifs=${IFS}
+	export IFS="."
+	local OKV_ARRAY=( $OKV )
+	export IFS=${oldifs}
 
-	if [[ ${KV_MAJOR}${KV_MINOR}${KV_PATCH} -ge 269 ]]; then
-		KV_EXTRA=$(get_version_component_range 4- ${OKV})
-		KV_EXTRA=${KV_EXTRA/[-_]*}
+	# if KV_MAJOR >= 3, then we have no more KV_MINOR
+	#if [[ ${KV_MAJOR} -lt 3 ]]; then
+	if [[ ${#OKV_ARRAY[@]} -ge 3 ]]; then
+		KV_MINOR=$(get_version_component_range 2 ${OKV})
+		KV_PATCH=$(get_version_component_range 3 ${OKV})
+		if [[ ${KV_MAJOR}${KV_MINOR}${KV_PATCH} -ge 269 ]]; then
+	        KV_EXTRA=$(get_version_component_range 4- ${OKV})
+	        KV_EXTRA=${KV_EXTRA/[-_]*}
+		else
+			KV_PATCH=$(get_version_component_range 3- ${OKV})
+		fi
 	else
-		KV_PATCH=$(get_version_component_range 3- ${OKV})
+		KV_PATCH=$(get_version_component_range 2 ${OKV})
+		KV_EXTRA=$(get_version_component_range 3- ${OKV})
+		KV_EXTRA=${KV_EXTRA/[-_]*}
 	fi
+
+	debug-print "KV_EXTRA is ${KV_EXTRA}"
+
 	KV_PATCH=${KV_PATCH/[-_]*}
 
 	local v n=0 missing
-	for v in CKV OKV KV_{MAJOR,MINOR,PATCH} ; do
-		[[ -z ${!v} ]] && n=1 && missing="${missing}${v} ";
-	done
+	#if [[ ${KV_MAJOR} -lt 3 ]]; then
+	if [[ ${#OKV_ARRAY[@]} -ge 3 ]]; then
+		for v in CKV OKV KV_{MAJOR,MINOR,PATCH} ; do
+			[[ -z ${!v} ]] && n=1 && missing="${missing}${v} ";
+		done
+	else
+		for v in CKV OKV KV_{MAJOR,PATCH} ; do
+			[[ -z ${!v} ]] && n=1 && missing="${missing}${v} ";
+		done
+	fi
+
 	[[ $n -eq 1 ]] && \
 		eerror "Missing variables: ${missing}" && \
 		die "Failed to extract kernel version (try explicit CKV in ebuild)!"
 	unset v n missing
 
-	KERNEL_BASE_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}"
-	[[ -n "${K_LONGTERM}" ]] &&
-		KERNEL_BASE_URI="${KERNEL_BASE_URI}/longterm/v${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}"
+#	if [[ ${KV_MAJOR} -ge 3 ]]; then
+	if [[ ${#OKV_ARRAY[@]} -lt 3 ]]; then
+		KV_PATCH_ARR=(${KV_PATCH//\./ })
 
-	KERNEL_URI="${KERNEL_BASE_URI}/linux-${OKV}.tar.bz2"
+		# at this point 080811, Linus is putting 3.1 kernels in 3.0 directory
+		# revisit when 3.1 is released
+		if [[ ${KV_PATCH} -gt 0 ]]; then
+			KERNEL_BASE_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.$((${KV_PATCH_ARR} - 1))"
+		else
+			KERNEL_BASE_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_PATCH_ARR}"
+		fi
+		# KERNEL_BASE_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_PATCH_ARR}"
+		[[ -n "${K_LONGTERM}" ]] &&
+			KERNEL_BASE_URI="${KERNEL_BASE_URI}/longterm/v${KV_MAJOR}.${KV_PATCH_ARR}"
+	else
+		#KERNEL_BASE_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.0"
+		KERNEL_BASE_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}"
+		[[ -n "${K_LONGTERM}" ]] &&
+			KERNEL_BASE_URI="${KERNEL_BASE_URI}/longterm/v${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}"
+	fi
+
+	debug-print "KERNEL_BASE_URI is ${KERNEL_BASE_URI}"
+
+	if [[ ${#OKV_ARRAY[@]} -ge 3 ]] && [[ ${KV_MAJOR} -ge 3 ]]; then
+		# handle non genpatch using sources correctly
+		if [[ -z ${K_WANT_GENPATCHES} && -z ${K_GENPATCHES_VER} && ${KV_PATCH} -gt 0 ]]; then
+			KERNEL_URI="${KERNEL_BASE_URI}/patch-${OKV}.bz2"
+			UNIPATCH_LIST_DEFAULT="${DISTDIR}/patch-${CKV}.bz2"
+		fi
+		KERNEL_URI="${KERNEL_URI} ${KERNEL_BASE_URI}/linux-${KV_MAJOR}.${KV_MINOR}.tar.bz2"
+	else
+		KERNEL_URI="${KERNEL_BASE_URI}/linux-${OKV}.tar.bz2"
+	fi
 
 	RELEASE=${CKV/${OKV}}
 	RELEASE=${RELEASE/_beta}
@@ -183,7 +255,7 @@ detect_version() {
 	# We cannot trivally call kernel_is here, because it calls us to detect the
 	# version
 	#kernel_is ge 2 6 && RELEASE=${RELEASE/-pre/-git}
-	[ $(($KV_MAJOR * 1000 + $KV_MINOR)) -ge 2006 ] && RELEASE=${RELEASE/-pre/-git}
+	[ $(($KV_MAJOR * 1000 + ${KV_MINOR:-0})) -ge 2006 ] && RELEASE=${RELEASE/-pre/-git}
 	RELEASETYPE=${RELEASE//[0-9]}
 
 	# Now we know that RELEASE is the -rc/-git
@@ -192,7 +264,7 @@ detect_version() {
 	# first of all, we add the release
 	EXTRAVERSION="${RELEASE}"
 	debug-print "0 EXTRAVERSION:${EXTRAVERSION}"
-	[[ -n ${KV_EXTRA} ]] && EXTRAVERSION=".${KV_EXTRA}${EXTRAVERSION}"
+	[[ -n ${KV_EXTRA} ]] && [[ ${KV_MAJOR} -lt 3 ]] && EXTRAVERSION=".${KV_EXTRA}${EXTRAVERSION}"
 
 	debug-print "1 EXTRAVERSION:${EXTRAVERSION}"
 	if [[ -n "${K_NOUSEPR}" ]]; then
@@ -220,8 +292,13 @@ detect_version() {
 	# The only messing around which should actually effect this is for KV_EXTRA
 	# since this has to limit OKV to MAJ.MIN.PAT and strip EXTRA off else
 	# KV_FULL evaluates to MAJ.MIN.PAT.EXT.EXT after EXTRAVERSION
+
 	if [[ -n ${KV_EXTRA} ]]; then
-		OKV="${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}"
+		if [[ -n ${KV_MINOR} ]]; then
+			OKV="${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}"
+		else
+			OKV="${KV_MAJOR}.${KV_PATCH}"
+		fi
 		KERNEL_URI="${KERNEL_BASE_URI}/patch-${CKV}.bz2
 					${KERNEL_BASE_URI}/linux-${OKV}.tar.bz2"
 		UNIPATCH_LIST_DEFAULT="${DISTDIR}/patch-${CKV}.bz2"
@@ -241,27 +318,65 @@ detect_version() {
 	# will pull:
 	#   linux-2.6.10.tar.bz2 & patch-2.6.11-rc3.bz2 & patch-2.6.11-rc3-git2.bz2
 
-	if [[ ${RELEASETYPE} == -rc ]] || [[ ${RELEASETYPE} == -pre ]]; then
-		OKV="${KV_MAJOR}.${KV_MINOR}.$((${KV_PATCH} - 1))"
-		KERNEL_URI="${KERNEL_BASE_URI}/testing/patch-${CKV//_/-}.bz2
-					${KERNEL_BASE_URI}/linux-${OKV}.tar.bz2"
-		UNIPATCH_LIST_DEFAULT="${DISTDIR}/patch-${CKV//_/-}.bz2"
+	if [[ ${KV_MAJOR}${KV_MINOR} -eq 26 ]]; then
+
+		if [[ ${RELEASETYPE} == -rc ]] || [[ ${RELEASETYPE} == -pre ]]; then
+			OKV="${KV_MAJOR}.${KV_MINOR}.$((${KV_PATCH} - 1))"
+			KERNEL_URI="${KERNEL_BASE_URI}/testing/patch-${CKV//_/-}.bz2
+						${KERNEL_BASE_URI}/linux-${OKV}.tar.bz2"
+			UNIPATCH_LIST_DEFAULT="${DISTDIR}/patch-${CKV//_/-}.bz2"
+		fi
+
+		if [[ ${RELEASETYPE} == -git ]]; then
+			KERNEL_URI="${KERNEL_BASE_URI}/snapshots/patch-${OKV}${RELEASE}.bz2
+						${KERNEL_BASE_URI}/linux-${OKV}.tar.bz2"
+			UNIPATCH_LIST_DEFAULT="${DISTDIR}/patch-${OKV}${RELEASE}.bz2"
+		fi
+
+		if [[ ${RELEASETYPE} == -rc-git ]]; then
+			OKV="${KV_MAJOR}.${KV_MINOR}.$((${KV_PATCH} - 1))"
+			KERNEL_URI="${KERNEL_BASE_URI}/snapshots/patch-${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}${RELEASE}.bz2
+						${KERNEL_BASE_URI}/testing/patch-${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}${RELEASE/-git*}.bz2
+						${KERNEL_BASE_URI}/linux-${OKV}.tar.bz2"
+
+			UNIPATCH_LIST_DEFAULT="${DISTDIR}/patch-${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}${RELEASE/-git*}.bz2 ${DISTDIR}/patch-${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}${RELEASE}.bz2"
+		fi
+	else
+		if [[ ${RELEASETYPE} == -rc ]] || [[ ${RELEASETYPE} == -pre ]]; then
+			if [[ ${KV_MAJOR}${KV_PATCH} -eq 30 ]]; then
+				OKV="2.6.39"
+			else
+				KV_PATCH_ARR=(${KV_PATCH//\./ })
+				OKV="${KV_MAJOR}.$((${KV_PATCH_ARR} - 1))"
+			fi
+			KERNEL_URI="${KERNEL_BASE_URI}/testing/patch-${CKV//_/-}.bz2
+						${KERNEL_BASE_URI}/testing/linux-${OKV}.tar.bz2"
+			UNIPATCH_LIST_DEFAULT="${DISTDIR}/patch-${CKV//_/-}.bz2"
+		fi
+
+		if [[ ${RELEASETYPE} == -git ]]; then
+			KERNEL_URI="${KERNEL_BASE_URI}/snapshots/patch-${OKV}${RELEASE}.bz2
+						${KERNEL_BASE_URI}/linux-${OKV}.tar.bz2"
+			UNIPATCH_LIST_DEFAULT="${DISTDIR}/patch-${OKV}${RELEASE}.bz2"
+		fi
+
+		if [[ ${RELEASETYPE} == -rc-git ]]; then
+			if [[ ${KV_MAJOR}${KV_PATCH} -eq 30 ]]; then
+				OKV="2.6.39"
+			else
+				KV_PATCH_ARR=(${KV_PATCH//\./ })
+				OKV="${KV_MAJOR}.$((${KV_PATCH_ARR} - 1))"
+			fi
+			KERNEL_URI="${KERNEL_BASE_URI}/snapshots/patch-${KV_MAJOR}.${KV_PATCH}${RELEASE}.bz2
+						${KERNEL_BASE_URI}/testing/patch-${KV_MAJOR}.${KV_PATCH}${RELEASE/-git*}.bz2
+						${KERNEL_BASE_URI}/linux-${OKV}.tar.bz2"
+
+			UNIPATCH_LIST_DEFAULT="${DISTDIR}/patch-${KV_MAJOR}.${KV_PATCH}${RELEASE/-git*}.bz2 ${DISTDIR}/patch-${KV_MAJOR}.${KV_PATCH}${RELEASE}.bz2"
+		fi
+
+
 	fi
 
-	if [[ ${RELEASETYPE} == -git ]]; then
-		KERNEL_URI="${KERNEL_BASE_URI}/snapshots/patch-${OKV}${RELEASE}.bz2
-					${KERNEL_BASE_URI}/linux-${OKV}.tar.bz2"
-		UNIPATCH_LIST_DEFAULT="${DISTDIR}/patch-${OKV}${RELEASE}.bz2"
-	fi
-
-	if [[ ${RELEASETYPE} == -rc-git ]]; then
-		OKV="${KV_MAJOR}.${KV_MINOR}.$((${KV_PATCH} - 1))"
-		KERNEL_URI="${KERNEL_BASE_URI}/snapshots/patch-${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}${RELEASE}.bz2
-					${KERNEL_BASE_URI}/testing/patch-${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}${RELEASE/-git*}.bz2
-					${KERNEL_BASE_URI}/linux-${OKV}.tar.bz2"
-
-		UNIPATCH_LIST_DEFAULT="${DISTDIR}/patch-${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}${RELEASE/-git*}.bz2 ${DISTDIR}/patch-${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}${RELEASE}.bz2"
-	fi
 
 	debug-print-kernel2-variables
 
@@ -324,7 +439,7 @@ if [[ ${ETYPE} == sources ]]; then
 	PDEPEND="!build? ( virtual/dev-manager )"
 
 	SLOT="${PVR}"
-	DESCRIPTION="Sources for the ${KV_MAJOR}.${KV_MINOR} linux kernel"
+	DESCRIPTION="Sources for the ${KV_MAJOR}.${KV_MINOR:-$KV_PATCH} linux kernel"
 	IUSE="symlink build"
 
 	# Bug #266157, deblob for libre support
@@ -340,7 +455,16 @@ if [[ ${ETYPE} == sources ]]; then
 			# stripped
 			LICENSE="${LICENSE} !deblob? ( freedist )"
 
-			DEBLOB_PV="${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}"
+			if [[ -n KV_MINOR ]]; then
+				DEBLOB_PV="${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}"
+			else
+				DEBLOB_PV="${KV_MAJOR}.${KV_PATCH}"
+			fi
+
+			if [[ ${KV_MAJOR} -ge 3 ]]; then
+				DEBLOB_PV="${KV_MAJOR}.${KV_MINOR}"
+			fi
+
 			DEBLOB_A="deblob-${DEBLOB_PV}"
 			DEBLOB_CHECK_A="deblob-check-${DEBLOB_PV}"
 			DEBLOB_HOMEPAGE="http://www.fsfla.org/svnwiki/selibre/linux-libre/"
@@ -442,13 +566,37 @@ unpack_2_6() {
 }
 
 universal_unpack() {
+	debug-print "Inside universal_unpack"
+
+	local oldifs=${IFS}
+	export IFS="."
+	local OKV_ARRAY=( $OKV )
+	export IFS=${oldifs}
+
 	cd "${WORKDIR}"
-	unpack linux-${OKV}.tar.bz2
+	if [[ ${#OKV_ARRAY[@]} -ge 3 ]] && [[ ${KV_MAJOR} -ge 3 ]]; then
+		unpack linux-${KV_MAJOR}.${KV_MINOR}.tar.bz2
+	else
+		unpack linux-${OKV}.tar.bz2
+	fi
+
 	if [[ -d "linux" ]]; then
+		debug-print "Moving linux to linux-${KV_FULL}"
 		mv linux linux-${KV_FULL} \
 			|| die "Unable to move source tree to ${KV_FULL}."
 	elif [[ "${OKV}" != "${KV_FULL}" ]]; then
-		mv linux-${OKV} linux-${KV_FULL} \
+		if [[ ${#OKV_ARRAY[@]} -ge 3 ]] && [[ ${KV_MAJOR} -ge 3 ]] &&
+			[[ "${ETYPE}" = "sources" ]]; then
+			debug-print "moving linux-${KV_MAJOR}.${KV_MINOR} to linux-${KV_FULL} "
+			mv linux-${KV_MAJOR}.${KV_MINOR} linux-${KV_FULL} \
+				|| die "Unable to move source tree to ${KV_FULL}."
+		else
+			debug-print "moving linux-${OKV} to linux-${KV_FULL} "
+			mv linux-${OKV} linux-${KV_FULL} \
+				|| die "Unable to move source tree to ${KV_FULL}."
+		fi
+	elif [[ ${#OKV_ARRAY[@]} -ge 3 ]] && [[ ${KV_MAJOR} -ge 3 ]]; then
+		mv linux-${KV_MAJOR}.${KV_MINOR} linux-${KV_FULL} \
 			|| die "Unable to move source tree to ${KV_FULL}."
 	fi
 	cd "${S}"
@@ -459,7 +607,7 @@ universal_unpack() {
 	# fix a problem on ppc where TOUT writes to /usr/src/linux breaking sandbox
 	# only do this for kernel < 2.6.27 since this file does not exist in later
 	# kernels
-	if [[ ${KV_MAJOR}.${KV_MINOR}.${KV_PATCH} < 2.6.27 ]]
+	if [[ -n ${KV_MINOR} &&  ${KV_MAJOR}.${KV_MINOR}.${KV_PATCH} < 2.6.27 ]]
 	then
 		sed -i \
 			-e 's|TOUT	:= .tmp_gas_check|TOUT	:= $(T).tmp_gas_check|' \
@@ -707,18 +855,19 @@ postinst_sources() {
 	KV_MAJOR=$(get_version_component_range 1 ${OKV})
 	KV_MINOR=$(get_version_component_range 2 ${OKV})
 	KV_PATCH=$(get_version_component_range 3 ${OKV})
-	if [[ "$(tc-arch)" = "sparc" ]] \
-		&& [[ ${KV_MAJOR}.${KV_MINOR}.${KV_PATCH} > 2.6.24 ]]
-	then
-		echo
-		elog "NOTE: Since 2.6.25 the kernel Makefile has changed in a way that"
-		elog "you now need to do"
-		elog "  make CROSS_COMPILE=sparc64-unknown-linux-gnu-"
-		elog "instead of just"
-		elog "  make"
-		elog "to compile the kernel. For more information please browse to"
-		elog "https://bugs.gentoo.org/show_bug.cgi?id=214765"
-		echo
+	if [[ "$(tc-arch)" = "sparc" ]]; then
+		if [[ ${KV_MAJOR} -ge 3 || ${KV_MAJOR}.${KV_MINOR}.${KV_PATCH} > 2.6.24 ]]
+		then
+			echo
+			elog "NOTE: Since 2.6.25 the kernel Makefile has changed in a way that"
+			elog "you now need to do"
+			elog "  make CROSS_COMPILE=sparc64-unknown-linux-gnu-"
+			elog "instead of just"
+			elog "  make"
+			elog "to compile the kernel. For more information please browse to"
+			elog "https://bugs.gentoo.org/show_bug.cgi?id=214765"
+			echo
+		fi
 	fi
 }
 
@@ -843,7 +992,7 @@ unipatch() {
 	# do not apply fbcondecor patch to sparc/sparc64 as it breaks boot
 	# bug #272676
 	if [[ "$(tc-arch)" = "sparc" || "$(tc-arch)" = "sparc64" ]]; then
-		if [[ ${KV_MAJOR}.${KV_MINOR}.${KV_PATCH} > 2.6.28 ]]; then
+		if [[ ${KV_MAJOR} -ge 3 || ${KV_MAJOR}.${KV_MINOR}.${KV_PATCH} > 2.6.28 ]]; then
 			UNIPATCH_DROP="${UNIPATCH_DROP} *_fbcondecor-0.9.6.patch"
 			echo
 			ewarn "fbcondecor currently prevents sparc/sparc64 from booting"
@@ -1147,3 +1296,14 @@ kernel-2_pkg_setup() {
 	[[ ${ETYPE} == headers ]] && setup_headers
 	[[ ${ETYPE} == sources ]] && echo ">>> Preparing to unpack ..."
 }
+
+kernel-2_pkg_postrm() {
+	echo
+	ewarn "Note: Even though you have successfully unmerged "
+	ewarn "your kernel package, directories in kernel source location: "
+	ewarn "${ROOT}usr/src/linux-${KV_FULL}"
+	ewarn "with modified files will remain behind. By design, package managers"
+	ewarn "will not remove these modified files and the directories they reside in."
+	echo
+}
+

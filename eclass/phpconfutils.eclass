@@ -1,17 +1,12 @@
-# Copyright 1999-2007 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-#
-# ########################################################################
-#
-# Based on Stuart's work on the original confutils eclass
-#
-# Author(s): Luca Longinotti <chtekk@gentoo.org>
-#
-# ========================================================================
 
 # @ECLASS: phpconfutils.eclass
 # @MAINTAINER:
 # Gentoo PHP team <php-bugs@gentoo.org>
+# @AUTHOR:
+# Based on Stuart's work on the original confutils eclass
+# Luca Longinotti <chtekk@gentoo.org>
 # @BLURB: Provides utility functions to help with configuring PHP.
 # @DESCRIPTION:
 # This eclass provides utility functions to help with configuring PHP.

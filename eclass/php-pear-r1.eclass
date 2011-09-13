@@ -1,12 +1,12 @@
-# Copyright 1999-2007 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-#
-# Author: Tal Peer <coredumb@gentoo.org>
-# Author: Luca Longinotti <chtekk@gentoo.org>
 
 # @ECLASS: php-pear-r1.eclass
 # @MAINTAINER:
 # Gentoo PHP Team <php-bugs@gentoo.org>
+# @AUTHOR:
+# Author: Tal Peer <coredumb@gentoo.org>
+# Author: Luca Longinotti <chtekk@gentoo.org>
 # @BLURB: Provides means for an easy installation of PEAR packages.
 # @DESCRIPTION:
 # This eclass provides means for an easy installation of PEAR packages.
@@ -19,7 +19,8 @@ inherit multilib
 EXPORT_FUNCTIONS src_install
 
 DEPEND="dev-lang/php
-	>=dev-php/pear-1.8.1"
+	|| ( ( >=dev-php/PEAR-PEAR-1.6.1 <dev-php/PEAR-PEAR-1.8.1 )
+		 >=dev-php/pear-1.8.1 )"
 RDEPEND="${DEPEND}"
 
 # @ECLASS-VARIABLE: PHP_PEAR_PKG_NAME

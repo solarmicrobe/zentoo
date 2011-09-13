@@ -1,9 +1,12 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-#
+
 # @ECLASS: xorg-2.eclass
 # @MAINTAINER:
 # x11@gentoo.org
+# @AUTHOR:
+# Author: Tomáš Chvátal <scarabeus@gentoo.org>
+# Author: Donnie Berkholz <dberkholz@gentoo.org>
 # @BLURB: Reduces code duplication in the modularized X11 ebuilds.
 # @DESCRIPTION:
 # This eclass makes trivial X ebuilds possible for apps, fonts, drivers,
@@ -15,9 +18,6 @@
 # DESCRIPTION, KEYWORDS and RDEPEND/DEPEND. If your package is hosted
 # with the other X packages, you don't need to set SRC_URI. Pretty much
 # everything else should be automatic.
-
-# Author: Tomáš Chvátal <scarabeus@gentoo.org>
-# Author: Donnie Berkholz <dberkholz@gentoo.org>
 
 GIT_ECLASS=""
 if [[ ${PV} == *9999* ]]; then
@@ -89,7 +89,7 @@ fi
 : ${XORG_PACKAGE_NAME:=${PN}}
 
 if [[ -n ${GIT_ECLASS} ]]; then
-	: ${EGIT_REPO_URI:="git://anongit.freedesktop.org/git/xorg/${XORG_MODULE}${XORG_PACKAGE_NAME}"}
+	: ${EGIT_REPO_URI:="git://anongit.freedesktop.org/git/xorg/${XORG_MODULE}${XORG_PACKAGE_NAME} http://anongit.freedesktop.org/git/xorg/${XORG_MODULE}${XORG_PACKAGE_NAME}"}
 elif [[ -n ${XORG_BASE_INDIVIDUAL_URI} ]]; then
 	SRC_URI="${XORG_BASE_INDIVIDUAL_URI}/${XORG_MODULE}${P}.tar.bz2"
 fi
@@ -103,12 +103,12 @@ fi
 
 # Set up autotools shared dependencies
 # Remember that all versions here MUST be stable
-XORG_EAUTORECONF_ARCHES=""
+XORG_EAUTORECONF_ARCHES="x86-interix ppc-aix x86-winnt"
 EAUTORECONF_DEPEND+="
 	>=sys-devel/libtool-2.2.6a
 	sys-devel/m4"
 if [[ ${PN} != util-macros ]] ; then
-	EAUTORECONF_DEPEND+=" >=x11-misc/util-macros-1.13.0"
+	EAUTORECONF_DEPEND+=" >=x11-misc/util-macros-1.14.0"
 	# Required even by xorg-server
 	[[ ${PN} == "font-util" ]] || EAUTORECONF_DEPEND+=" >=media-fonts/font-util-1.2.0"
 fi
@@ -409,8 +409,11 @@ xorg-2_src_configure() {
 	# @DEFAULT_UNSET
 	if [[ $(declare -p XORG_CONFIGURE_OPTIONS 2>&-) != "declare -a"* ]]; then
 		# fallback to CONFIGURE_OPTIONS, deprecated.
-		[[ -n "${CONFIGURE_OPTIONS}" ]] && \
-			ewarn "QA: CONFIGURE_OPTIONS are deprecated. Please migrate to XORG_CONFIGURE_OPTIONS to preserve namespace."
+		if [[ -n "${CONFIGURE_OPTIONS}" ]]; then
+			eqawarn "CONFIGURE_OPTIONS are deprecated. Please migrate to XORG_CONFIGURE_OPTIONS"
+			eqawarn "to preserve namespace."
+		fi
+
 		local xorgconfadd=(${CONFIGURE_OPTIONS})
 	else
 		local xorgconfadd=("${XORG_CONFIGURE_OPTIONS[@]}")

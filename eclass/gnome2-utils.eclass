@@ -1,8 +1,8 @@
-# Copyright 1999-2006 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: gnome2-utils.eclass
-# @MAINTAINER: 
+# @MAINTAINER:
 # gnome@gentoo.org
 # @BLURB: Auxiliary functions commonly used by Gnome packages.
 # @DESCRIPTION:

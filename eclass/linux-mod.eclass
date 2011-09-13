@@ -1,15 +1,12 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-# Author(s): John Mylchreest <johnm@gentoo.org>,
-#            Stefan Schweizer <genstef@gentoo.org>
-# Maintainer: kernel-misc@gentoo.org
-#
-# Please direct your bugs to the current eclass maintainer :)
-
 # @ECLASS: linux-mod.eclass
 # @MAINTAINER:
 # kernel-misc@gentoo.org
+# @AUTHOR:
+# John Mylchreest <johnm@gentoo.org>,
+# Stefan Schweizer <genstef@gentoo.org>
 # @BLURB: It provides the functionality required to install external modules against a kernel source tree.
 # @DESCRIPTION:
 # This eclass is used to interface with linux-info.eclass in such a way
@@ -124,11 +121,6 @@
 # @DESCRIPTION:
 # It's a read-only variable. It contains the extension of the kernel modules.
 
-# The order of these is important as both of linux-info and eutils contain
-# set_arch_to_kernel and set_arch_to_portage functions and the ones in eutils
-# are deprecated in favor of the ones in linux-info.
-# See http://bugs.gentoo.org/show_bug.cgi?id=127506
-
 inherit eutils linux-info multilib
 EXPORT_FUNCTIONS pkg_setup pkg_preinst pkg_postinst src_install src_compile pkg_postrm
 
@@ -194,6 +186,7 @@ use_m() {
 
 	# if the kernel version is greater than 2.6.6 then we should use
 	# M= instead of SUBDIRS=
+	[ ${KV_MAJOR} -eq 3 ] && return 0
 	[ ${KV_MAJOR} -eq 2 -a ${KV_MINOR} -gt 5 -a ${KV_PATCH} -gt 5 ] && \
 		return 0 || return 1
 }
@@ -327,7 +320,7 @@ remove_moduledb() {
 set_kvobj() {
 	debug-print-function ${FUNCNAME} $*
 
-	if kernel_is 2 6
+	if kernel_is ge 2 6
 	then
 		KV_OBJ="ko"
 	else
@@ -575,8 +568,15 @@ find_module_params() {
 linux-mod_pkg_setup() {
 	debug-print-function ${FUNCNAME} $*
 
+	local is_bin="${MERGE_TYPE}"
+
 	# If we are installing a binpkg, take a different path.
-	if [[ $EMERGE_FROM == binary ]]; then
+	# use MERGE_TYPE if available (eapi>=4); else use non-PMS EMERGE_FROM (eapi<4)
+	if has ${EAPI} 0 1 2 3; then
+		is_bin=${EMERGE_FROM}
+	fi
+
+	if [[ ${is_bin} == binary ]]; then
 		linux-mod_pkg_setup_binary
 		return
 	fi

@@ -1,11 +1,11 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: base.eclass
 # @MAINTAINER:
 # QA Team <qa@gentoo.org>
-#
-# Original author Dan Armak <danarmak@gentoo.org>
+# @AUTHOR:
+# Original author: Dan Armak <danarmak@gentoo.org>
 # @BLURB: The base eclass defines some default functions and variables.
 # @DESCRIPTION:
 # The base eclass defines some default functions and variables. Nearly

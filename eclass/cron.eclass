@@ -4,7 +4,7 @@
 # @ECLASS: cron
 # @MAINTAINER:
 # cron-bugs@gentoo.org
-#
+# @AUTHOR:
 # Original Author: Aaron Walker <ka0ttic@gentoo.org>
 # @BLURB: Some functions for cron
 # @DESCRIPTION:

@@ -12,7 +12,7 @@
 #
 # @CODE
 # inherit scons-utils toolchain-funcs
-# 
+#
 # src_compile() {
 # 	tc-export CC CXX
 # 	escons \

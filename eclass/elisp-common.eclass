@@ -1,16 +1,15 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
-# Copyright 2002-2004 Matthew Kennedy <mkennedy@gentoo.org>
-# Copyright 2003      Jeremy Maitin-Shepard <jbms@attbi.com>
-# Copyright 2004-2005 Mamoru Komachi <usata@gentoo.org>
-# Copyright 2007-2008 Christian Faulhammer <fauli@gentoo.org>
-# Copyright 2007-2011 Ulrich Müller <ulm@gentoo.org>
-#
 # @ECLASS: elisp-common.eclass
 # @MAINTAINER:
-# Feel free to contact the Emacs team through <emacs@gentoo.org> if you
-# have problems, suggestions or questions.
+# Gentoo Emacs team <emacs@gentoo.org>
+# @AUTHOR:
+# Matthew Kennedy <mkennedy@gentoo.org>
+# Jeremy Maitin-Shepard <jbms@attbi.com>
+# Mamoru Komachi <usata@gentoo.org>
+# Christian Faulhammer <fauli@gentoo.org>
+# Ulrich Müller <ulm@gentoo.org>
 # @BLURB: Emacs-related installation utilities
 # @DESCRIPTION:
 #
@@ -170,10 +169,16 @@ BYTECOMPFLAGS="-L ."
 # Output version of currently active Emacs.
 
 elisp-emacs-version() {
+	local ret
 	# The following will work for at least versions 18-23.
 	echo "(princ emacs-version)" >"${T}"/emacs-version.el
 	${EMACS} ${EMACSFLAGS} -l "${T}"/emacs-version.el
+	ret=$?
 	rm -f "${T}"/emacs-version.el
+	if [[ ${ret} -ne 0 ]]; then
+		eerror "elisp-emacs-version: Failed to run ${EMACS}"
+	fi
+	return ${ret}
 }
 
 # @FUNCTION: elisp-need-emacs
@@ -184,8 +189,8 @@ elisp-emacs-version() {
 # specified as argument.
 
 elisp-need-emacs() {
-	local need_emacs=$1
-	local have_emacs=$(elisp-emacs-version)
+	local need_emacs=$1 have_emacs
+	have_emacs=$(elisp-emacs-version) || return
 	einfo "Emacs version: ${have_emacs}"
 	if ! [[ ${have_emacs%%.*} -ge ${need_emacs%%.*} ]]; then
 		eerror "This package needs at least Emacs ${need_emacs%%.*}."
@@ -311,12 +316,12 @@ elisp-site-regen() {
 	local sf i line null="" page=$'\f'
 	local -a sflist
 
-	if [ ! -d "${sitelisp}" ]; then
+	if [[ ! -d ${sitelisp} ]]; then
 		eerror "elisp-site-regen: Directory ${sitelisp} does not exist"
 		return 1
 	fi
 
-	if [ ! -d "${T}" ]; then
+	if [[ ! -d ${T} ]]; then
 		eerror "elisp-site-regen: Temporary directory ${T} does not exist"
 		return 1
 	fi
@@ -330,7 +335,7 @@ elisp-site-regen() {
 	for sf in "${sitelisp}"/[0-9][0-9]*-gentoo.el \
 		"${sitelisp}"/site-gentoo.d/[0-9][0-9]*.el
 	do
-		[ -r "${sf}" ] || continue
+		[[ -r ${sf} ]] || continue
 		# sort files by their basename. straight insertion sort.
 		for ((i=${#sflist[@]}; i>0; i--)); do
 			[[ ${sf##*/} < ${sflist[i-1]##*/} ]] || break

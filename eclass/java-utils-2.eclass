@@ -62,7 +62,7 @@ export WANT_JAVA_CONFIG="2"
 # portage with phase hooks support but now we use a version with proper env
 # saving. For EAPI 2 we have new enough stuff so let's have cleaner deps.
 # -----------------------------------------------------------------------------
-hasq "${EAPI}" 0 1 && JAVA_PKG_PORTAGE_DEP=">=sys-apps/portage-2.1.2.7"
+has "${EAPI}" 0 1 && JAVA_PKG_PORTAGE_DEP=">=sys-apps/portage-2.1.2.7"
 
 # -----------------------------------------------------------------------------
 # @variable-internal JAVA_PKG_E_DEPEND
@@ -72,7 +72,7 @@ hasq "${EAPI}" 0 1 && JAVA_PKG_PORTAGE_DEP=">=sys-apps/portage-2.1.2.7"
 # so that ebuilds can use new features without depending on specific versions.
 # -----------------------------------------------------------------------------
 JAVA_PKG_E_DEPEND=">=dev-java/java-config-2.1.9-r1 ${JAVA_PKG_PORTAGE_DEP}"
-hasq source ${JAVA_PKG_IUSE} && JAVA_PKG_E_DEPEND="${JAVA_PKG_E_DEPEND} source? ( app-arch/zip )"
+has source ${JAVA_PKG_IUSE} && JAVA_PKG_E_DEPEND="${JAVA_PKG_E_DEPEND} source? ( app-arch/zip )"
 
 # -----------------------------------------------------------------------------
 # @variable-preinherit JAVA_PKG_WANT_BOOTCLASSPATH
@@ -1319,7 +1319,7 @@ java-pkg_get-bootclasspath() {
 	local version="${1}"
 
 	local bcp
-	case "${version}" in 
+	case "${version}" in
 		auto)
 			bcp="$(java-config -g BOOTCLASSPATH)"
 			;;
@@ -1557,7 +1557,7 @@ java-pkg_get-current-vm() {
 }
 
 java-pkg_current-vm-matches() {
-	hasq $(java-pkg_get-current-vm) ${@}
+	has $(java-pkg_get-current-vm) ${@}
 	return $?
 }
 
@@ -1682,8 +1682,8 @@ java-pkg_ensure-gcj() {
 }
 
 java-pkg_ensure-test() {
-	if hasq test ${FEATURES} && ! hasq -test ${FEATURES} \
-		&& hasq test ${IUSE} && ! use test;
+	if has test ${FEATURES} && ! has -test ${FEATURES} \
+		&& has test ${IUSE} && ! use test;
 	then
 		eerror "You specified FEATURES=test, but USE=test is needed"
 		eerror "to pull in the additional dependencies for testing"
@@ -1923,7 +1923,7 @@ eant() {
 		java-utils-2_src_prepare
 	fi
 
-	if ! hasq java-ant-2 ${INHERITED}; then
+	if ! has java-ant-2 ${INHERITED}; then
 		local msg="You should inherit java-ant-2 when using eant"
 		java-pkg_announce-qa-violation "${msg}"
 	fi
@@ -2516,6 +2516,10 @@ java-pkg_setup-vm() {
 	elif [[ "${vendor}" == "ibm" ]]; then
 		addpredict "/proc/self/maps"
 		addpredict "/proc/cpuinfo"
+		addpredict "/proc/self/coredump_filter"
+	elif [[ "${vendor}" == "oracle" ]]; then
+		addpredict "/dev/random"
+		addpredict "/proc/self/coredump_filter"
 	elif [[ "${vendor}" == "jrockit" ]]; then
 		addpredict "/proc/cpuinfo"
 	fi
@@ -2643,7 +2647,7 @@ java-pkg_switch-vm() {
 # useful for debugging bugs on bugzilla.
 # ------------------------------------------------------------------------------
 #register_die_hook java-pkg_die
-if ! hasq java-pkg_die ${EBUILD_DEATH_HOOKS}; then
+if ! has java-pkg_die ${EBUILD_DEATH_HOOKS}; then
 	EBUILD_DEATH_HOOKS="${EBUILD_DEATH_HOOKS} java-pkg_die"
 fi
 
@@ -2789,7 +2793,7 @@ java-pkg_check-versioned-jar() {
 }
 
 java-pkg_check-jikes() {
-	if hasq jikes ${IUSE}; then
+	if has jikes ${IUSE}; then
 		java-pkg_announce-qa-violation "deprecated USE flag 'jikes' in IUSE"
 	fi
 }

@@ -11,10 +11,10 @@
 #
 # -----------------------------------------------------------------------------
 
-inherit eutils fdo-mime multilib
+inherit eutils fdo-mime multilib prefix
 
 DEPEND="=dev-java/java-config-2*"
-hasq "${EAPI}" 0 1 && DEPEND="${DEPEND} >=sys-apps/portage-2.1"
+has "${EAPI}" 0 1 && DEPEND="${DEPEND} >=sys-apps/portage-2.1"
 
 RDEPEND="
 	=dev-java/java-config-2*"
@@ -53,9 +53,12 @@ java-vm_check-nsplugin() {
 	else
 		libdir=lib
 	fi
+
+	has ${EAPI:-0} 0 1 2 && ! use prefix && EPREFIX=
+
 	# Install a default nsplugin if we don't already have one
 	if has nsplugin ${IUSE} && use nsplugin; then
-		if [[ ! -f /usr/${libdir}/nsbrowser/plugins/javaplugin.so ]]; then
+		if [[ ! -f "${EPREFIX}"/usr/${libdir}/nsbrowser/plugins/javaplugin.so ]]; then
 			einfo "No system nsplugin currently set."
 			java-vm_set-nsplugin
 		else
@@ -110,9 +113,12 @@ get_system_arch() {
 # TODO rename to something more evident, like install_env_file
 set_java_env() {
 	debug-print-function ${FUNCNAME} $*
+
+	has ${EAPI:-0} 0 1 2 && ! use prefix && ED="${D}"
+
 	local platform="$(get_system_arch)"
-	local env_file="${D}${JAVA_VM_CONFIG_DIR}/${VMHANDLE}"
-	local old_env_file="${D}/etc/env.d/java/20${P}"
+	local env_file="${ED}${JAVA_VM_CONFIG_DIR}/${VMHANDLE}"
+	local old_env_file="${ED}/etc/env.d/java/20${P}"
 	if [[ ${1} ]]; then
 		local source_env_file="${1}"
 	else
@@ -140,12 +146,15 @@ set_java_env() {
 		echo "BUILD_ONLY=\"${JAVA_VM_BUILD_ONLY}\""
 	) >> "${env_file}"
 
+	eprefixify ${env_file}
+
 	[[ -n ${JAVA_PROVIDE} ]] && echo "PROVIDES=\"${JAVA_PROVIDE}\"" >> ${env_file}
 
 	local java_home=$(source "${env_file}"; echo ${JAVA_HOME})
 	[[ -z ${java_home} ]] && die "No JAVA_HOME defined in ${env_file}"
 
 	# Make the symlink
+	dodir "${JAVA_VM_DIR}"
 	dosym ${java_home} ${JAVA_VM_DIR}/${VMHANDLE} \
 		|| die "Failed to make VM symlink at ${JAVA_VM_DIR}/${VMHANDLE}"
 }
@@ -164,10 +173,15 @@ set_java_env() {
 # @param $1 - Path of the VM (defaults to /opt/${P} if not set)
 # ------------------------------------------------------------------------------
 java-vm_revdep-mask() {
-	local VMROOT="${1-/opt/${P}}"
+	if has ${EAPI:-0} 0 1 2 && ! use prefix; then
+		ED="${D}"
+		EPREFIX=
+	fi
+
+	local VMROOT="${1-"${EPREFIX}"/opt/${P}}"
 
 	dodir /etc/revdep-rebuild/
-	echo "SEARCH_DIRS_MASK=\"${VMROOT}\""> "${D}/etc/revdep-rebuild/61-${VMHANDLE}"
+	echo "SEARCH_DIRS_MASK=\"${VMROOT}\""> "${ED}/etc/revdep-rebuild/61-${VMHANDLE}"
 
 	elog "A revdep-rebuild control file was installed to prevent reinstalls due to"
 	elog "missing dependencies (see bug #177925 for more info). Note that some parts"
@@ -176,15 +190,17 @@ java-vm_revdep-mask() {
 }
 
 java_get_plugin_dir_() {
-	echo /usr/$(get_libdir)/nsbrowser/plugins
+	has ${EAPI:-0} 0 1 2 && ! use prefix && EPREFIX=
+	echo "${EPREFIX}"/usr/$(get_libdir)/nsbrowser/plugins
 }
 
 install_mozilla_plugin() {
 	local plugin="${1}"
 	local variant="${2}"
 
-	if [[ ! -f "${D}/${plugin}" ]]; then
-		die "Cannot find mozilla plugin at ${D}/${plugin}"
+	has ${EAPI:-0} 0 1 2 && ! use prefix && ED="${D}"
+	if [[ ! -f "${ED}/${plugin}" ]]; then
+		die "Cannot find mozilla plugin at ${ED}/${plugin}"
 	fi
 
 	if [[ -n "${variant}" ]]; then

@@ -487,7 +487,7 @@ apache-2_src_install() {
 	use doc && APACHE2_OPTS="${APACHE2_OPTS} -D MANUAL"
 	use ssl && APACHE2_OPTS="${APACHE2_OPTS} -D SSL -D SSL_DEFAULT_VHOST"
 	use suexec && APACHE2_OPTS="${APACHE2_OPTS} -D SUEXEC"
-	if hasq negotiation ${APACHE2_MODULES} && use apache2_modules_negotiation; then
+	if has negotiation ${APACHE2_MODULES} && use apache2_modules_negotiation; then
 		APACHE2_OPTS="${APACHE2_OPTS} -D LANGUAGE"
 	fi
 

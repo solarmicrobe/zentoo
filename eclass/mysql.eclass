@@ -1,12 +1,13 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: mysql.eclass
 # @MAINTAINER:
-# Author: Francesco Riosa (Retired) <vivo@gentoo.org>
-# Maintainers: MySQL Team <mysql-bugs@gentoo.org>
-#		- Luca Longinotti <chtekk@gentoo.org>
-#		- Robin H. Johnson <robbat2@gentoo.org>
+# MySQL Team <mysql-bugs@gentoo.org>
+# Luca Longinotti <chtekk@gentoo.org>
+# Robin H. Johnson <robbat2@gentoo.org>
+# @AUTHOR:
+# Francesco Riosa (Retired) <vivo@gentoo.org>
 # @BLURB: This eclass provides most of the functions for mysql ebuilds
 # @DESCRIPTION:
 # The mysql.eclass provides almost all the code to build the mysql ebuilds
@@ -143,6 +144,9 @@ done
 RDEPEND="${DEPEND}
 		!minimal? ( dev-db/mysql-init-scripts )
 		selinux? ( sec-policy/selinux-mysql )"
+
+DEPEND="${DEPEND}
+		virtual/yacc"
 
 if [ "${EAPI:-0}" = "2" ]; then
 	DEPEND="${DEPEND} static? ( || ( sys-libs/ncurses[static-libs] <=sys-libs/ncurses-5.7-r3 ) )"
@@ -614,7 +618,7 @@ configure_51() {
 	| xargs -0 sed -r -n \
 		-e '/^MYSQL_STORAGE_ENGINE/{
 			s~MYSQL_STORAGE_ENGINE\([[:space:]]*\[?([-_a-z0-9]+)\]?.*,~\1 ~g ;
-			s~^([^ ]+).*~\1~gp; 
+			s~^([^ ]+).*~\1~gp;
 		}' \
 	| tr -s '\n' ' '
 	)"
@@ -772,7 +776,7 @@ pbxt_src_install() {
 #   create new user and group for mysql
 #   warn about deprecated features
 mysql_pkg_setup() {
-	if hasq test ${FEATURES} ; then
+	if has test ${FEATURES} ; then
 		if ! use minimal ; then
 			if [[ $UID -eq 0 ]]; then
 				eerror "Testing with FEATURES=-userpriv is no longer supported by upstream. Tests MUST be run as non-root."

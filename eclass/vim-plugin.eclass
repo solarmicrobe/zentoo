@@ -138,7 +138,7 @@ display_vim_plugin_help() {
 		elog " "
 	fi
 
-	if hasq "filetype" "${VIM_PLUGIN_MESSAGES}" ; then
+	if has "filetype" "${VIM_PLUGIN_MESSAGES}" ; then
 		elog "This plugin makes use of filetype settings. To enable these,"
 		elog "add lines like:"
 		elog "    filetype plugin on"

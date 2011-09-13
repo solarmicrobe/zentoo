@@ -1,19 +1,18 @@
-# Copyright 1999-2007 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-
-# Author: Stuart Herbert <stuart@gentoo.org>
-# Author: Luca Longinotti <chtekk@gentoo.org>
-# Author: Jakub Moc <jakub@gentoo.org> (documentation)
 
 # @ECLASS: depend.php.eclass
 # @MAINTAINER:
 # Gentoo PHP team <php-bugs@gentoo.org>
+# @AUTHOR:
+# Author: Stuart Herbert <stuart@gentoo.org>
+# Author: Luca Longinotti <chtekk@gentoo.org>
+# Author: Jakub Moc <jakub@gentoo.org> (documentation)
 # @BLURB: Functions to allow ebuilds to depend on php5 and check for specific features.
 # @DESCRIPTION:
 # This eclass provides functions that allow ebuilds to depend on php5 and check
 # for specific PHP features, SAPIs etc. Also provides dodoc-php wrapper to install
 # documentation for PHP packages to php-specific location.
-
 
 inherit eutils phpconfutils
 

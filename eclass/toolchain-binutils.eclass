@@ -87,7 +87,8 @@ RDEPEND=">=sys-devel/binutils-config-1.9"
 DEPEND="${RDEPEND}
 	test? ( dev-util/dejagnu )
 	nls? ( sys-devel/gettext )
-	sys-devel/flex"
+	sys-devel/flex
+	virtual/yacc"
 
 S=${WORKDIR}/binutils
 [[ ${BVER} != "cvs" ]] && S=${S}-${BVER}

@@ -4,6 +4,7 @@
 # @ECLASS: autotools-utils.eclass
 # @MAINTAINER:
 # Maciej Mrozowski <reavertm@gentoo.org>
+# Michał Górny <mgorny@gentoo.org>
 # @BLURB: common ebuild functions for autotools-based packages
 # @DESCRIPTION:
 # autotools-utils.eclass is autotools.eclass(5) and base.eclass(5) wrapper
@@ -149,7 +150,7 @@ remove_libtool_files() {
 		local shouldnotlink=$(sed -ne '/^shouldnotlink=yes$/p' "${f}")
 		if [[  "$1" == 'all' || -z ${shouldnotlink} ]]; then
 			if [[ "$1" != 'none' ]]; then
-				echo "Removing unnecessary ${f}"
+				einfo "Removing unnecessary ${f}"
 				rm -f "${f}"
 			fi
 		fi
@@ -157,7 +158,7 @@ remove_libtool_files() {
 		if [[ -n ${shouldnotlink} ]]; then
 			local remove=${f/%.la/.a}
 			[[ "${f}" != "${remove}" ]] || die 'regex sanity check failed'
-			echo "Removing unnecessary ${remove}"
+			einfo "Removing unnecessary ${remove}"
 			rm -f "${remove}"
 		fi
 	done

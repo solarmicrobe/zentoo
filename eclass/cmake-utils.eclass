@@ -1,16 +1,14 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: cmake-utils.eclass
 # @MAINTAINER:
 # kde@gentoo.org
-#
-# @CODE
+# @AUTHOR:
 # Tomáš Chvátal <scarabeus@gentoo.org>
 # Maciej Mrozowski <reavertm@gentoo.org>
 # (undisclosed contributors)
 # Original author: Zephyrus (zephyrus@mirach.it)
-# @CODE
 # @BLURB: common ebuild functions for cmake-based packages
 # @DESCRIPTION:
 # The cmake-utils eclass is base.eclass(5) wrapper that makes creating ebuilds for
@@ -29,8 +27,19 @@ WANT_CMAKE="${WANT_CMAKE:-always}"
 
 # @ECLASS-VARIABLE: CMAKE_MIN_VERSION
 # @DESCRIPTION:
-# Specify the minimum required CMake version.  Default is 2.8.1
-CMAKE_MIN_VERSION="${CMAKE_MIN_VERSION:-2.8.1}"
+# Specify the minimum required CMake version.  Default is 2.8.4
+CMAKE_MIN_VERSION="${CMAKE_MIN_VERSION:-2.8.4}"
+
+# @ECLASS-VARIABLE: CMAKE_REMOVE_MODULES_LIST
+# @DESCRIPTION:
+# Space-separated list of CMake modules that will be removed in $S during src_prepare,
+# in order to force packages to use the system version.
+CMAKE_REMOVE_MODULES_LIST="${CMAKE_REMOVE_MODULES_LIST:-FindBLAS FindLAPACK}"
+
+# @ECLASS-VARIABLE: CMAKE_REMOVE_MODULES
+# @DESCRIPTION:
+# Do we want to remove anything? yes or whatever else for no
+CMAKE_REMOVE_MODULES="${CMAKE_REMOVE_MODULES:-yes}"
 
 CMAKEDEPEND=""
 case ${WANT_CMAKE} in
@@ -239,6 +248,9 @@ cmake-utils_use() { _use_me_now "" "$@" ; }
 _modify-cmakelists() {
 	debug-print-function ${FUNCNAME} "$@"
 
+	# Only edit the files once
+	grep -qs "<<< Gentoo configuration >>>" CMakeLists.txt && return 0
+
 	# Comment out all set (<some_should_be_user_defined_variable> value)
 	# TODO Add QA checker - inform when variable being checked for below is set in CMakeLists.txt
 	find "${CMAKE_USE_DIR}" -name CMakeLists.txt \
@@ -249,7 +261,7 @@ _modify-cmakelists() {
 		|| die "${LINENO}: failed to disable hardcoded settings"
 
 	# NOTE Append some useful summary here
-	cat >> CMakeLists.txt <<- _EOF_
+	cat >> "${CMAKE_USE_DIR}"/CMakeLists.txt <<- _EOF_
 
 		MESSAGE(STATUS "<<< Gentoo configuration >>>
 		Build type      \${CMAKE_BUILD_TYPE}
@@ -266,6 +278,13 @@ _modify-cmakelists() {
 
 enable_cmake-utils_src_configure() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	[[ "${CMAKE_REMOVE_MODULES}" == "yes" ]] && {
+		local name
+		for name in ${CMAKE_REMOVE_MODULES_LIST} ; do
+			find "${S}" -name ${name}.cmake -exec rm -v {} +
+		done
+	}
 
 	_check_build_dir
 
@@ -314,7 +333,7 @@ enable_cmake-utils_src_configure() {
 			SET(CMAKE_PREFIX_PATH "${EPREFIX}${PREFIX:-/usr}" CACHE STRING ""FORCE)
 			SET(CMAKE_SKIP_BUILD_RPATH OFF CACHE BOOL "" FORCE)
 			SET(CMAKE_SKIP_RPATH OFF CACHE BOOL "" FORCE)
-			SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE CACHE BOOL "" FORCE) 
+			SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE CACHE BOOL "" FORCE)
 			SET(CMAKE_INSTALL_RPATH "${EPREFIX}${PREFIX:-/usr}/lib;${EPREFIX}/usr/${CHOST}/lib/gcc;${EPREFIX}/usr/${CHOST}/lib;${EPREFIX}/usr/$(get_libdir);${EPREFIX}/$(get_libdir)" CACHE STRING "" FORCE)
 			SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE CACHE BOOL "" FORCE)
 			SET(CMAKE_INSTALL_NAME_DIR "${EPREFIX}${PREFIX:-/usr}/lib" CACHE STRING "" FORCE)
@@ -417,7 +436,21 @@ enable_cmake-utils_src_test() {
 	[[ -e CTestTestfile.cmake ]] || { echo "No tests found. Skipping."; return 0 ; }
 
 	[[ -n ${TEST_VERBOSE} ]] && ctestargs="--extra-verbose --output-on-failure"
-	ctest ${ctestargs} "$@" || die "Tests failed."
+
+	if ctest ${ctestargs} "$@" ; then
+		einfo "Tests succeeded."
+	else
+		if [[ -n "${CMAKE_YES_I_WANT_TO_SEE_THE_TEST_LOG}" ]] ; then
+			# on request from Diego
+			eerror "Tests failed. Test log ${CMAKE_BUILD_DIR}/Testing/Temporary/LastTest.log follows:"
+			eerror "--START TEST LOG--------------------------------------------------------------"
+			cat "${CMAKE_BUILD_DIR}/Testing/Temporary/LastTest.log"
+			eerror "--END TEST LOG----------------------------------------------------------------"
+			die "Tests failed."
+		else
+			die "Tests failed. When you file a bug, please attach the following file: \n\t${CMAKE_BUILD_DIR}/Testing/Temporary/LastTest.log"
+		fi
+	fi
 	popd > /dev/null
 }
 

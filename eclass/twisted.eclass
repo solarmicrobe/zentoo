@@ -1,6 +1,5 @@
 # Copyright 2005-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License, v2 or later
-# $Header: /var/cvsroot/gentoo-x86/eclass/twisted.eclass,v 1.8 2010/10/10 19:39:49 arfrever Exp $
 
 # @ECLASS: twisted.eclass
 # @MAINTAINER:

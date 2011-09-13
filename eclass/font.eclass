@@ -1,9 +1,9 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: font.eclass
 # @MAINTAINER:
-#  fonts@gentoo.org
+# fonts@gentoo.org
 # @BLURB: Eclass to make font installation uniform
 
 inherit eutils
@@ -44,7 +44,7 @@ FONT_CONF=( "" )
 # @DEFAULT_UNSET
 # @DESCRIPTION:
 # Space delimited list of docs to install.
-# We always install these: 
+# We always install these:
 # COPYRIGHT README{,.txt} NEWS AUTHORS BUGS ChangeLog FONTLOG.txt
 DOCS=${DOCS:-}
 
@@ -221,7 +221,7 @@ font_pkg_postinst() {
 # The font pkg_postrm function.
 font_pkg_postrm() {
 	font_cleanup_dirs
-	
+
 	# unreadable font files = fontconfig segfaults
 	find "${EROOT}"usr/share/fonts/ -type f '!' -perm 0644 -print0 \
 		| xargs -0 chmod -v 0644 2>/dev/null

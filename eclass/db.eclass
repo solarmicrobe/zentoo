@@ -147,7 +147,7 @@ db_src_test() {
 		return 0
 	fi
 
-	if useq tcl; then
+	if use tcl; then
 		einfo "Running sys-libs/db testsuite"
 		ewarn "This can take 6+ hours on modern machines"
 		# Fix stuff that fails with relative paths, and upstream moving files
@@ -170,7 +170,7 @@ db_src_test() {
 		for t in \
 			../test/test.tcl \
 			../test/tcl/test.tcl \
-			; do 
+			; do
 			[[ -f "${t}" ]] && testbase="${t}" && break
 		done
 		echo "source ${t}" > testrunner.tcl
@@ -178,7 +178,7 @@ db_src_test() {
 				sed -e "s/.*-j\([0-9]\+\).*/\1/"`
 		if [[ ${testJobs} =~ [[:digit:]]+ ]]; then
 			echo "run_parallel ${testJobs} run_std" >> testrunner.tcl
-		else 
+		else
 			echo 'run_std' >>testrunner.tcl
 		fi
 

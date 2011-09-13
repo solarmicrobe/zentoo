@@ -13,7 +13,7 @@ inherit multilib flag-o-matic
 dopamd() {
 	[[ -z $1 ]] && die "dopamd requires at least one argument"
 
-	if hasq pam ${IUSE} && ! use pam; then
+	if has pam ${IUSE} && ! use pam; then
 		return 0;
 	fi
 
@@ -31,7 +31,7 @@ dopamd() {
 newpamd() {
 	[[ $# -ne 2 ]] && die "newpamd requires two arguments"
 
-	if hasq pam ${IUSE} && ! use pam; then
+	if has pam ${IUSE} && ! use pam; then
 		return 0;
 	fi
 
@@ -49,7 +49,7 @@ newpamd() {
 dopamsecurity() {
 	[[ $# -lt 2 ]] && die "dopamsecurity requires at least two arguments"
 
-	if hasq pam ${IUSE} && ! use pam; then
+	if has pam ${IUSE} && ! use pam; then
 		return 0
 	fi
 
@@ -66,7 +66,7 @@ dopamsecurity() {
 newpamsecurity() {
 	[[ $# -ne 3 ]] && die "newpamsecurity requires three arguments"
 
-	if hasq pam ${IUSE} && ! use pam; then
+	if has pam ${IUSE} && ! use pam; then
 		return 0;
 	fi
 
@@ -114,7 +114,7 @@ EOF
 dopammod() {
 	[[ -z $1 ]] && die "dopammod requires at least one argument"
 
-	if hasq pam ${IUSE} && ! use pam; then
+	if has pam ${IUSE} && ! use pam; then
 		return 0;
 	fi
 
@@ -129,7 +129,7 @@ dopammod() {
 newpammod() {
 	[[ $# -ne 2 ]] && die "newpammod requires two arguements"
 
-	if hasq pam ${IUSE} && ! use pam; then
+	if has pam ${IUSE} && ! use pam; then
 		return 0;
 	fi
 
@@ -153,7 +153,7 @@ pamd_mimic_system() {
 pamd_mimic() {
 	[[ $# -lt 3 ]] && die "pamd_mimic requires at least three argments"
 
-	if hasq pam ${IUSE} && ! use pam; then
+	if has pam ${IUSE} && ! use pam; then
 		return 0;
 	fi
 
@@ -174,7 +174,7 @@ pamd_mimic() {
 	shift; shift
 
 	while [[ -n $1 ]]; do
-		hasq $1 ${authlevels} || die "unknown level type"
+		has $1 ${authlevels} || die "unknown level type"
 
 		echo -e "$1${mimic}" >> ${pamdfile}
 
