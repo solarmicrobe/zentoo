@@ -1,5 +1,9 @@
 .promptignore
+difftree.log
 distfiles/
 eix.cache.*
 local/
+metadata/cache/
+metadata/timestamp.chk
 packages/
+repoman.log

@@ -2,15 +2,11 @@
 
 TOPDIR=$(realpath $(dirname $0)/..)
 
-# update gentoo eix cache
-export PORTDIR=/usr/portage
-export PORTDIR_OVERLAY=
-eix-update -o ${TOPDIR}/eix.cache.gentoo
+# sync gentoo cache
+${TOPDIR}/scripts/sync-gentoo-cache
 
-# update local eix cache
-export PORTDIR=${TOPDIR}
-export PORTDIR_OVERLAY=
-eix-update -o ${TOPDIR}/eix.cache.zentoo
+# sync local cache
+${TOPDIR}/scripts/sync-local-cache
 
 # output simplified eix-diff
 export DIFF_FORMAT_ALL_NEW=
@@ -18,4 +14,4 @@ export CHAR_UPGRADE="\\>"
 export CHAR_DOWNGRADE="\\<"
 export DIFF_FORMATLINE_INSTALLEDVERSIONS=
 
-eix-diff ${TOPDIR}/eix.cache.{zentoo,gentoo} | grep -v '^\[<\]'
+eix-diff ${TOPDIR}/eix.cache.{zentoo,gentoo} | grep -v '^\[<\]   ==' > ${TOPDIR}/difftree.log
