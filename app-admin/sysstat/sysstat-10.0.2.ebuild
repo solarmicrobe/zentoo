@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
 
 inherit eutils multilib
 
@@ -15,8 +15,10 @@ SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE="cron debug +doc isag nls lm_sensors"
 
-SYSSTAT_LINGUAS="af cs da de es eu fi fr id it ja ky lv mt nb nl nn pl pt pt_BR
-	ro ru sk sv uk vi zh_CN zh_TW"
+SYSSTAT_LINGUAS="
+	af cs da de eo es eu fi fr id it ja ky lv mt nb nl nn pl pt pt_BR ro ru sk
+	sv uk vi zh_CN zh_TW
+"
 
 for SYSSTAT_LINGUA in ${SYSSTAT_LINGUAS}; do
 	IUSE="${IUSE} linguas_${SYSSTAT_LINGUA}"
@@ -36,16 +38,22 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-nls.patch"
-	local lingua NLSDIR="${S}/nls"
+	local po_count li_count lingua NLSDIR="${S}/nls"
+
+	count() { echo ${#}; }
+	po_count=$(count ${NLSDIR}/*.po)
+	li_count=$(count ${SYSSTAT_LINGUAS})
+	[[ ${po_count} = ${li_count} ]] \
+		|| die "Number of LINGUAS does not match number of .po files"
+	unset count
+
 	einfo "Keeping these locales: ${LINGUAS}."
 	for lingua in ${SYSSTAT_LINGUAS}; do
 		if ! use linguas_${lingua}; then
-			rm -f "${NLSDIR}/${lingua}.po"
+			rm -f "${NLSDIR}/${lingua}.po" || die
 		fi
 	done
-
-	epatch "${FILESDIR}"/${P}-flags.patch
+	epatch "${FILESDIR}"/${PN}-10.0.0-flags.patch
 }
 
 src_configure() {
@@ -59,11 +67,11 @@ src_configure() {
 			$(use_enable isag install-isag) \
 			$(use_enable nls) \
 			$(use_enable lm_sensors sensors) \
-			conf_dir=/etc || die "econf failed"
+			conf_dir=/etc
 }
 
 src_compile() {
-	emake LFLAGS="${LDFLAGS}" || die "emake failed"
+	emake LFLAGS="${LDFLAGS}"
 }
 
 src_install() {
@@ -74,16 +82,11 @@ src_install() {
 	emake \
 		DESTDIR="${D}" \
 		DOC_DIR=/usr/share/doc/${PF} \
-		install || die "make install failed"
+		install
 
 	dodoc contrib/sargraph/sargraph
 
 	newinitd "${FILESDIR}"/sysstat.init.d sysstat
 
 	use doc && rm -f "${D}"usr/share/doc/${PF}/COPYING
-}
-
-pkg_postinst() {
-	ewarn "This version breaks the format of sar daily data files"
-	ewarn "to enable the recording of average CPU clock frequency."
 }
