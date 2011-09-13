@@ -19,8 +19,8 @@ IUSE=""
 
 DEPEND=""
 RDEPEND="|| (
-	app-editors/emacs
 	app-editors/vim
+	app-editors/emacs
 	app-misc/mc[edit]
 )"
 
