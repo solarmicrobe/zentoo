@@ -9,15 +9,14 @@ inherit autotools elisp-common eutils flag-o-matic multilib
 
 DESCRIPTION="The extensible, customizable, self-documenting real-time display editor"
 HOMEPAGE="http://www.gnu.org/software/emacs/"
-SRC_URI="mirror://gnu/emacs/${P}.tar.bz2
+SRC_URI="mirror://gnu/emacs/${P}a.tar.bz2
 	mirror://gentoo/${P}-patches-1.tar.bz2"
 
-LICENSE="GPL-3 FDL-1.3 BSD as-is MIT W3C unicode"
+LICENSE="GPL-3 FDL-1.3 BSD as-is MIT W3C unicode PSF-2"
 SLOT="23"
 KEYWORDS="amd64 x86"
-IUSE="alsa aqua dbus gconf gif gpm gtk gzip-el hesiod jpeg kerberos m17n-lib motif png sound source svg tiff toolkit-scroll-bars X Xaw3d xft +xpm"
+IUSE="alsa aqua dbus gconf gif gpm gtk gzip-el hesiod jpeg kerberos livecd m17n-lib motif png sound source svg tiff toolkit-scroll-bars X Xaw3d xft +xpm"
 REQUIRED_USE="aqua? ( !X )"
-RESTRICT="strip"
 
 RDEPEND="sys-libs/ncurses
 	>=app-admin/eselect-emacs-1.2
@@ -49,7 +48,7 @@ RDEPEND="sys-libs/ncurses
 		)
 		gtk? ( x11-libs/gtk+:2 )
 		!gtk? (
-			Xaw3d? ( x11-libs/Xaw3d )
+			Xaw3d? ( x11-libs/libXaw3d )
 			!Xaw3d? ( motif? ( >=x11-libs/openmotif-2.3:0 ) )
 		)
 	)"
@@ -128,15 +127,16 @@ src_configure() {
 		myconf="${myconf} $(use_with gif) $(use_with jpeg)"
 		myconf="${myconf} $(use_with png) $(use_with svg rsvg)"
 		myconf="${myconf} $(use_with tiff) $(use_with xpm)"
-		myconf="${myconf} $(use_with xft)"
 
 		if use xft; then
+			myconf="${myconf} --with-xft"
 			myconf="${myconf} $(use_with m17n-lib libotf)"
 			myconf="${myconf} $(use_with m17n-lib m17n-flt)"
 		else
+			myconf="${myconf} --without-xft"
 			myconf="${myconf} --without-libotf --without-m17n-flt"
 			use m17n-lib && ewarn \
-				"USE flag \"m17n-lib\" has no effect because xft is not set."
+				"USE flag \"m17n-lib\" has no effect if \"xft\" is not set."
 		fi
 
 		# GTK+ is the default toolkit if USE=gtk is chosen with other
@@ -147,7 +147,7 @@ src_configure() {
 			myconf="${myconf} --with-x-toolkit=gtk"
 		elif use Xaw3d; then
 			einfo "Configuring to build with Xaw3d (Athena/Lucid) toolkit"
-			myconf="${myconf} --with-x-toolkit=athena"
+			myconf="${myconf} --with-x-toolkit=lucid"
 		elif use motif; then
 			einfo "Configuring to build with Motif toolkit"
 			myconf="${myconf} --with-x-toolkit=motif"
@@ -192,6 +192,8 @@ src_configure() {
 
 src_compile() {
 	export SANDBOX_ON=0			# for the unbelievers, see Bug #131505
+	# set last component of emacs-version to (package revision + 1)
+	touch src/emacs-${FULL_VERSION}.${PR#r}
 	emake CC="$(tc-getCC)"
 }
 
@@ -289,7 +291,14 @@ pkg_postinst() {
 	chown "${GAMES_USER_DED:-games}" "${EROOT}"/var/lib/games/emacs
 
 	elisp-site-regen
-	eselect emacs update ifunset
+
+	if use livecd; then
+		# force an update of the emacs symlink for the livecd/dvd,
+		# because some microemacs packages set it with USE=livecd
+		eselect emacs update
+	else
+		eselect emacs update ifunset
+	fi
 
 	if use X; then
 		echo
