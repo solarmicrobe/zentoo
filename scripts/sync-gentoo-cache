@@ -3,7 +3,7 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 
 # update gentoo cache
-export PORTDIR=~/cache/gentoo-portage
+export PORTDIR=${HOME}/cache/gentoo-portage
 export PORTDIR_OVERLAY=
 
 if test $(find ${PORTDIR}/metadata/timestamp.chk -mmin +180); then
