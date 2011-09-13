@@ -6,4 +6,5 @@ local/
 metadata/cache/
 metadata/timestamp.chk
 packages/
+profiles/use.local.desc
 repoman.log

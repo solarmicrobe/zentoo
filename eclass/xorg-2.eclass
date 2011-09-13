@@ -103,7 +103,6 @@ fi
 
 # Set up autotools shared dependencies
 # Remember that all versions here MUST be stable
-XORG_EAUTORECONF_ARCHES="x86-interix ppc-aix x86-winnt"
 EAUTORECONF_DEPEND+="
 	>=sys-devel/libtool-2.2.6a
 	sys-devel/m4"
@@ -114,9 +113,6 @@ if [[ ${PN} != util-macros ]] ; then
 fi
 WANT_AUTOCONF="latest"
 WANT_AUTOMAKE="latest"
-for arch in ${XORG_EAUTORECONF_ARCHES}; do
-	EAUTORECONF_DEPENDS+=" ${arch}? ( ${EAUTORECONF_DEPEND} )"
-done
 DEPEND+=" ${EAUTORECONF_DEPENDS}"
 [[ ${XORG_EAUTORECONF} != no ]] && DEPEND+=" ${EAUTORECONF_DEPEND}"
 unset EAUTORECONF_DEPENDS
