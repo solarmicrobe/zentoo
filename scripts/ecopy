@@ -59,15 +59,44 @@ mkdir -p "${TOPDIR}/${catpkg}"
 pushd "${TOPDIR}/${catpkg}" > /dev/null
 
 # (re)fetch metadata.xml
-cp "${CACHE_PATH}/${catpkg}/metadata.xml" "metadata.xml"
+if [[ ! -e metadata.xml ]]; then
+	einfo "  - ${catpkg}/metadata.xml"
+	cp "${CACHE_PATH}/${catpkg}/metadata.xml" "metadata.xml"
+fi
 
 # get the ebuild
+einfo "  - ${catpkg}/${ebuild}"
 cp -i "${CACHE_PATH}/${catpkg}/${ebuild}" "${ebuild}"
+
+# source ebuild to get metadata
+PF="${ebuild/.ebuild}"
+P="${PF%-r[1-9]*}"
+PN="${P%-*}"
+PV="${P/${PN}-}"
+
+inherit() {
+	INHERIT="$@"
+}
+
+source "${ebuild}"
 
 # get the patches. assumed that every patch has FILESDIR in the line.
 for i in $(eval echo $(grep FILESDIR ${ebuild} | sed -e 's:.*FILESDIR[}"]*/::' -e 's:"::g' -e "s:'::" -e "s:#.*::" -e "s: .*::")); do
 	mkdir -p "files/$(dirname ${i})"
+	einfo "  - ${catpkg}/files/${i}"
 	cp "${CACHE_PATH}/${catpkg}/files/${i}" "files/${i}"
+done
+
+# (re)fetch used eclasses/licenses
+for i in ${INHERIT}; do
+	einfo "  - eclass/${i}.eclass"
+	cp "${CACHE_PATH}/eclass/${i}.eclass" "${TOPDIR}/eclass/${i}.eclass"
+	sed -i -e '/\$Header:/d' "${TOPDIR}/eclass/${i}.eclass"
+done
+
+for i in ${LICENSE}; do
+	einfo "  - licenses/${i}"
+	cp "${CACHE_PATH}/licenses/${i}" "${TOPDIR}/licenses/${i}"
 done
 
 # force the user's keyword on the ebuild. Less work for the user.
@@ -81,6 +110,9 @@ sed -i -e '2a# $Header: $' ${ebuild}
 # update manifest for changes made to the ebuild above
 einfo "Updating metadata ..."
 ${TOPDIR}/scripts/sync-local-cache
+
+# add ebuilds so repoman doesn't complain about it
+git add -A
 
 einfo
 einfo "Running repoman to check for QA problems ..."
