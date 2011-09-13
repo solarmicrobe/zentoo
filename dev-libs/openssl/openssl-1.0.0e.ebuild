@@ -32,10 +32,10 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-0.9.7e-gentoo.patch
 	epatch "${FILESDIR}"/${PN}-0.9.8l-binutils.patch #289130
 	epatch "${FILESDIR}"/${PN}-1.0.0a-ldflags.patch #327421
-	epatch "${FILESDIR}"/${PN}-1.0.0d-alpha-typo.patch #364699
+	epatch "${FILESDIR}"/${PN}-1.0.0d-fbsd-amd64.patch #363089
+	epatch "${FILESDIR}"/${PN}-1.0.0d-windres.patch #373743
 	epatch_user #332661
 
 	# disable fips in the build
@@ -58,7 +58,7 @@ src_prepare() {
 	chmod a+rx gentoo.config
 
 	append-flags -fno-strict-aliasing
-	append-flags -Wa,--noexecstack
+	append-flags $(test-flags-CC -Wa,--noexecstack)
 
 	sed -i '1s,^:$,#!/usr/bin/perl,' Configure #141906
 	./config --test-sanity || die "I AM NOT SANE"
@@ -68,7 +68,7 @@ src_configure() {
 	unset APPS #197996
 	unset SCRIPTS #312551
 
-	tc-export CC AR RANLIB
+	tc-export CC AR RANLIB RC
 
 	# Clean out patent-or-otherwise-encumbered code
 	# Camellia: Royalty Free            http://en.wikipedia.org/wiki/Camellia_(cipher)
