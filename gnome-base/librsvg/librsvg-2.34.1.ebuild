@@ -2,10 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="4"
+GNOME2_LA_PUNT="yes"
 GCONF_DEBUG="no"
 
-inherit gnome2 multilib
+inherit gnome2 multilib eutils autotools
 
 DESCRIPTION="Scalable Vector Graphics (SVG) rendering library"
 HOMEPAGE="http://librsvg.sourceforge.net/"
@@ -27,7 +28,8 @@ RDEPEND=">=media-libs/fontconfig-1.0.1
 	gtk? ( >=x11-libs/gtk+-2.16:2 )"
 DEPEND="${RDEPEND}
 	>=dev-util/pkgconfig-0.12
-	doc? ( >=dev-util/gtk-doc-1.13 )"
+	doc? ( >=dev-util/gtk-doc-1.13 )
+	>=dev-util/gtk-doc-am-1.13"
 # >=dev-util/gtk-doc-am-1.13 needed by eautoreconf
 
 pkg_setup() {
@@ -37,16 +39,17 @@ pkg_setup() {
 		$(use_enable tools)
 		$(use_enable gtk gtk-theme)
 		--with-croco
-		--enable-pixbuf-loader"
+		--enable-pixbuf-loader
+		--with-gtk=2.0"
 	DOCS="AUTHORS ChangeLog README NEWS TODO"
 }
 
-src_install() {
-	gnome2_src_install
+src_prepare() {
+	gnome2_src_prepare
 
-	# Remove .la files, these libraries are dlopen()-ed.
-	rm -vf "${ED}"/usr/lib*/gtk-2.0/*/engines/libsvg.la
-	rm -vf "${ED}"/usr/lib*/gdk-pixbuf-2.0/*/loaders/libpixbufloader-svg.la
+	# Fix automagic gtk+ dependency, bug #371290
+	epatch "${FILESDIR}/${PN}-2.34.0-automagic-gtk.patch"
+	eautoreconf
 }
 
 pkg_postinst() {

@@ -84,8 +84,12 @@ gnome2_src_unpack() {
 
 # @FUNCTION: gnome2_src_prepare
 # @DESCRIPTION:
-# Fix build of scrollkeeper documentation and run elibtoolize.
+# Prepare environment for build, fix build of scrollkeeper documentation,
+# run elibtoolize.
 gnome2_src_prepare() {
+	# GST_REGISTRY is to work around gst utilities trying to read/write /root
+	export GST_REGISTRY="${T}/registry.xml"
+
 	# Prevent scrollkeeper access violations
 	gnome2_omf_fix
 
@@ -111,15 +115,14 @@ gnome2_src_configure() {
 	fi
 
 	# Prevent a QA warning
-	if hasq doc ${IUSE} ; then
+	if has doc ${IUSE} ; then
 		G2CONF="${G2CONF} $(use_enable doc gtk-doc)"
 	fi
 
-	# Avoid sandbox violations caused by misbehaving packages (bug #128289)
-	addwrite "/root/.gnome2"
+	# Avoid sandbox violations caused by gnome-vfs (bug #128289 and #345659)
+	addwrite "$(unset HOME; echo ~)/.gnome2"
 
-	# GST_REGISTRY is to work around gst-inspect trying to read/write /root
-	GST_REGISTRY="${S}/registry.xml" econf "$@" ${G2CONF}
+	econf "$@" ${G2CONF}
 }
 
 # @FUNCTION: gnome2_src_compile
@@ -174,7 +177,9 @@ gnome2_src_install() {
 	# Delete all .la files
 	if [[ "${GNOME2_LA_PUNT}" != "no" ]]; then
 		ebegin "Removing .la files"
-		find "${D}" -name '*.la' -exec rm -f {} + || die "la file removal failed"
+		if ! { has static-libs ${IUSE//+} && use static-libs; }; then
+			find "${D}" -name '*.la' -exec rm -f {} + || die "la file removal failed"
+		fi
 		eend
 	fi
 }

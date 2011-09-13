@@ -174,15 +174,15 @@ get_install_abis() {
 	if [[ ${EMULTILIB_PKG} == "true" ]] ; then
 		for x in ${MULTILIB_ABIS} ; do
 			if [[ ${x} != "${DEFAULT_ABI}" ]] ; then
-				hasq ${x} ${ABI_DENY} || order="${order} ${x}"
+				has ${x} ${ABI_DENY} || order="${order} ${x}"
 			fi
 		done
-		hasq ${DEFAULT_ABI} ${ABI_DENY} || order="${order} ${DEFAULT_ABI}"
+		has ${DEFAULT_ABI} ${ABI_DENY} || order="${order} ${DEFAULT_ABI}"
 
 		if [[ -n ${ABI_ALLOW} ]] ; then
 			local ordera=""
 			for x in ${order} ; do
-				if hasq ${x} ${ABI_ALLOW} ; then
+				if has ${x} ${ABI_ALLOW} ; then
 					ordera="${ordera} ${x}"
 				fi
 			done
@@ -201,7 +201,7 @@ get_install_abis() {
 }
 
 # @FUNCTION: get_all_abis
-# @DESCRIPTION: 
+# @DESCRIPTION:
 # Return a list of the ABIs supported by this profile.
 # the last one in the list being the default.
 get_all_abis() {
