@@ -78,7 +78,7 @@ inherit() {
 	INHERIT="$@"
 }
 
-source "${ebuild}"
+source "${ebuild}" 2> /dev/null
 
 # get the patches. assumed that every patch has FILESDIR in the line.
 for i in $(eval echo $(grep FILESDIR ${ebuild} | sed -e 's:.*FILESDIR[}"]*/::' -e 's:"::g' -e "s:'::" -e "s:#.*::" -e "s: .*::")); do

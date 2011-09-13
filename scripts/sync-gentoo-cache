@@ -6,7 +6,7 @@ TOPDIR=$(realpath $(dirname $0)/..)
 export PORTDIR=~/cache/gentoo-portage
 export PORTDIR_OVERLAY=
 
-if test $(find ${PORTDIR}/metadata/timestamp.chk -mmin +60); then
+if test $(find ${PORTDIR}/metadata/timestamp.chk -mmin +180); then
 	rsync --verbose \
 		--recursive \
 		--links \
