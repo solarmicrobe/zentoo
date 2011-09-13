@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI="4"
+
 DESCRIPTION="Extracts files from Microsoft .cab files"
 HOMEPAGE="http://www.cabextract.org.uk/"
 SRC_URI="http://www.cabextract.org.uk/${P}.tar.gz"
@@ -19,10 +21,10 @@ RDEPEND="extra-tools? ( dev-lang/perl )"
 export ac_cv_func_fnmatch_works=yes
 
 src_install() {
-	emake DESTDIR="${D}" install || die "emake failed"
+	emake DESTDIR="${D}" install
 	dodoc AUTHORS ChangeLog INSTALL NEWS README TODO doc/magic
 	dohtml doc/wince_cab_format.html
 	if use extra-tools; then
-		dobin src/{wince_info,wince_rename,cabinfo} || die
+		dobin src/{wince_info,wince_rename,cabinfo}
 	fi
 }
