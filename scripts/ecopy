@@ -62,7 +62,7 @@ pushd "${TOPDIR}/${catpkg}" > /dev/null
 cp "${CACHE_PATH}/${catpkg}/metadata.xml" "metadata.xml"
 
 # get the ebuild
-cp "${CACHE_PATH}/${catpkg}/${ebuild}" "${ebuild}"
+cp -i "${CACHE_PATH}/${catpkg}/${ebuild}" "${ebuild}"
 
 # get the patches. assumed that every patch has FILESDIR in the line.
 for i in $(eval echo $(grep FILESDIR ${ebuild} | sed -e 's:.*FILESDIR[}"]*/::' -e 's:"::g' -e "s:'::" -e "s:#.*::" -e "s: .*::")); do
