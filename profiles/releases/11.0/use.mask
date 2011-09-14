@@ -5,6 +5,7 @@ Xaw3d
 accessibility
 acpi
 adabas
+adns
 afs
 aim
 alsa

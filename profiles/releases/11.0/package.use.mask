@@ -1,9 +1,3 @@
-# do not pull in X11 management GUI
-sys-cluster/heartbeat management
-
-# do not pull matplotlib for debug foo
-sys-fs/btrfs-progs debug-utils
-
 # skip udev extras
 sys-fs/udev extras
 
@@ -30,3 +24,12 @@ dev-vcs/subversion webdav-serf
 
 # use pythons builtin datetime
 dev-python/psycopg mxdatetime
+
+# do not support SQL for syslog-ng
+app-admin/syslog-ng sql
+
+# do not support opendbx backend
+net-dns/pdns opendbx
+
+# do not support c-ares
+net-misc/curl ares
