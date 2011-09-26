@@ -1,0 +1,32 @@
+diff --git a/SConstruct b/SConstruct
+index 4e46052..4520551 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -670,7 +670,7 @@ if nix:
+         env["CXX"] = "distcc " + env["CXX"]
+         
+     # -Winvalid-pch Warn if a precompiled header (see Precompiled Headers) is found in the search path but can't be used. 
+-    env.Append( CPPFLAGS="-fPIC -fno-strict-aliasing -ggdb -pthread -Wall -Wsign-compare -Wno-unknown-pragmas -Winvalid-pch" )
++    env.Append( CPPFLAGS="-fPIC -fno-strict-aliasing -pthread -Wall -Wsign-compare -Wno-unknown-pragmas -Winvalid-pch" )
+     # env.Append( " -Wconversion" ) TODO: this doesn't really work yet
+     if linux:
+         env.Append( CPPFLAGS=" -Werror " )
+@@ -678,7 +678,9 @@ if nix:
+             env.Append( CPPFLAGS=" -fno-builtin-memcmp " ) # glibc's memcmp is faster than gcc's
+ 
+     env.Append( CPPDEFINES="_FILE_OFFSET_BITS=64" )
++    env.Append( CXXFLAGS=os.environ.get('CXXFLAGS', ''))
+     env.Append( CXXFLAGS=" -Wnon-virtual-dtor " )
++    env.Append( LINKFLAGS=os.environ.get('LDFLAGS', ''))
+     env.Append( LINKFLAGS=" -fPIC -pthread -rdynamic" )
+     env.Append( LIBS=[] )
+ 
+@@ -692,8 +694,6 @@ if nix:
+     if debugBuild:
+         env.Append( CPPFLAGS=" -O0 -fstack-protector " );
+         env['ENV']['GLIBCXX_FORCE_NEW'] = 1; # play nice with valgrind
+-    else:
+-        env.Append( CPPFLAGS=" -O3 " )
+         #env.Append( CPPFLAGS=" -fprofile-generate" )
+         #env.Append( LINKFLAGS=" -fprofile-generate" )
+         # then:
