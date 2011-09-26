@@ -36,17 +36,38 @@ fi
 catpkg="${1#=}"
 catpkg="${catpkg%-[0-9]*}"
 
-read CATEGORY PN PVR < <(
+# try to find atom regardless of keywords
+read CATEGORY PN < <(
+env ACCEPT_KEYWORDS="amd64 ~amd64 x86 ~x86" \
 eix --cache-file ${TOPDIR}/eix.cache.gentoo \
 	--exact \
 	--nocolor \
 	--pure-packages \
-	--format "<category> <name> <bestversion:VERSION>\n" \
+	--format "<category> <name>\n" \
 	${catpkg}
 )
 
+if [[ -z ${PN} ]]; then
+	eerror "Cannot find package ${catpkg}"
+	exit 1
+fi
+
 if [[ ${1:0:1} == "=" ]]; then
 	PVR="${1#=${catpkg}-}"
+else
+	read PVR < <(
+	eix --cache-file ${TOPDIR}/eix.cache.gentoo \
+		--exact \
+		--nocolor \
+		--pure-packages \
+		--format "<bestversion:VERSION>\n" \
+		${catpkg}
+	)
+
+	if [[ -z ${PVR} ]]; then
+		eerror "No atom found for ${catpkg} and ACCEPT_KEYWORDS=${ACCEPT_KEYWORDS}"
+		exit 1
+	fi
 fi
 
 ebuild="${PN}-${PVR}.ebuild"
