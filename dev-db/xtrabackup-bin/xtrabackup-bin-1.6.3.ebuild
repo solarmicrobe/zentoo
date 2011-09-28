@@ -23,7 +23,7 @@ RDEPEND="${DEPEND}
 	dev-libs/libaio
 	sys-libs/zlib"
 
-S="${WORKDIR}"
+S="${WORKDIR}/xtrabackup-${PV}"
 
 src_install() {
 	dobin "${S}"/bin/{innobackupex,xtrabackup_51,xtrabackup_55,xtrabackup,tar4ibd}
