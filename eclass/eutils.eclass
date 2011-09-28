@@ -2027,3 +2027,20 @@ path_exists() {
 		-o) return $(( r == $# )) ;;
 	esac
 }
+
+# @FUNCTION: in_iuse
+# @USAGE: <flag>
+# @DESCRIPTION:
+# Determines whether the given flag is in IUSE. Strips IUSE default prefixes
+# as necessary.
+#
+# Note that this function should not be used in the global scope.
+in_iuse() {
+	debug-print-function ${FUNCNAME} "${@}"
+	[[ ${#} -eq 1 ]] || die "Invalid args to ${FUNCNAME}()"
+
+	local flag=${1}
+	local liuse=( ${IUSE} )
+
+	has "${flag}" "${liuse[@]#[+-]}"
+}

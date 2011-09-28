@@ -15,7 +15,7 @@ KEYWORDS="amd64 x86"
 DESCRIPTION="PostgreSQL libraries and clients"
 HOMEPAGE="http://www.postgresql.org/"
 SRC_URI="mirror://postgresql/source/v${PV}/postgresql-${PV}.tar.bz2
-		 http://dev.gentoo.org/~titanofold/postgresql-patches-${SLOT}.tbz2"
+		 http://dev.gentoo.org/~titanofold/postgresql-patches-${SLOT}-r2.tbz2"
 LICENSE="POSTGRESQL"
 
 S="${WORKDIR}/postgresql-${PV}"
@@ -23,7 +23,7 @@ S="${WORKDIR}/postgresql-${PV}"
 # No tests to be done for clients and libraries
 RESTRICT="test"
 
-LINGUAS="af cs de es fa fr hr hu it ko nb pl pt_BR ro ru sk sl sv tr zh_CN zh_TW"
+LINGUAS="af cs de en es fa fr hr hu it ko nb pl pt_BR ro ru sk sl sv tr zh_CN zh_TW"
 IUSE="doc kerberos ldap nls pam pg_legacytimestamp readline ssl threads zlib"
 
 for lingua in ${LINGUAS} ; do
@@ -62,9 +62,8 @@ DEPEND="${RDEPEND}
 PDEPEND="doc? ( ~dev-db/postgresql-docs-${PV} )"
 
 src_prepare() {
-	epatch "${WORKDIR}/autoconf.patch" \
-		"${WORKDIR}/base.patch"
-	epatch "${FILESDIR}"/${P}-stdbool.patch
+	epatch "${WORKDIR}/autoconf.patch" "${WORKDIR}/base.patch" \
+		"${WORKDIR}/bool.patch"
 
 	eprefixify src/include/pg_config_manual.h
 
@@ -85,13 +84,13 @@ src_configure() {
 	esac
 	export LDFLAGS_SL="${LDFLAGS}"
 	export LDFLAGS_EX="${LDFLAGS}"
-	econf --prefix=${EROOT%/}/usr/$(get_libdir)/postgresql-${SLOT} \
-		--datadir=${EROOT%/}/usr/share/postgresql-${SLOT} \
-		--docdir=${EROOT%/}/usr/share/doc/postgresql-${SLOT} \
-		--includedir=${EROOT%/}/usr/include/postgresql-${SLOT} \
-		--mandir=${EROOT%/}/usr/share/postgresql-${SLOT}/man \
-		--sysconfdir=${EROOT%/}/etc/postgresql-${SLOT} \
-		--enable-depend \
+	local PO="${EPREFIX%/}"
+	econf --prefix="${PO}/usr/$(get_libdir)/postgresql-${SLOT}" \
+		--datadir="${PO}/usr/share/postgresql-${SLOT}" \
+		--docdir="${PO}/usr/share/doc/postgresql-${SLOT}" \
+		--includedir="${PO}/usr/include/postgresql-${SLOT}" \
+		--mandir="${PO}/usr/share/postgresql-${SLOT}/man" \
+		--sysconfdir="${PO}/etc/postgresql-${SLOT}" \
 		--without-tcl \
 		--without-perl \
 		--without-python \
