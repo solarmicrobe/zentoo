@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit autotools eutils multilib toolchain-funcs flag-o-matic
+inherit eutils multilib toolchain-funcs flag-o-matic
 
 # Official patches
 # See ftp://ftp.cwru.edu/pub/bash/readline-6.0-patches/
@@ -50,7 +50,6 @@ src_unpack() {
 	[[ ${PLEVEL} -gt 0 ]] && epatch $(patches -s)
 	epatch "${FILESDIR}"/${PN}-5.0-no_rpath.patch
 	epatch "${FILESDIR}"/${PN}-5.2-no-ignore-shlib-errors.patch #216952
-	epatch "${FILESDIR}"/${PN}-6.1-rlfe-freebsd.patch # 301508
 
 	# force ncurses linking #71420
 	sed -i -e 's:^SHLIB_LIBS=:SHLIB_LIBS=-lncurses:' support/shobj-conf || die "sed"
@@ -63,7 +62,10 @@ src_unpack() {
 }
 
 src_compile() {
+	# fix implicit decls with widechar funcs
 	append-cppflags -D_GNU_SOURCE
+	# http://lists.gnu.org/archive/html/bug-readline/2010-07/msg00013.html
+	append-cppflags -Dxrealloc=_rl_realloc -Dxmalloc=_rl_malloc -Dxfree=_rl_free
 
 	econf --with-curses || die
 	emake || die
