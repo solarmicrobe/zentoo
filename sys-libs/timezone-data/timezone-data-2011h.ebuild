@@ -4,7 +4,7 @@
 
 inherit eutils toolchain-funcs flag-o-matic
 
-code_ver=${PV}
+code_ver=${PV%h}g
 data_ver=${PV}
 DESCRIPTION="Timezone data (/usr/share/zoneinfo) and utilities (tzselect/zic/zdump)"
 HOMEPAGE="http://www.twinsun.com/tz/tz-link.htm"
