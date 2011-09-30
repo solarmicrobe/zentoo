@@ -43,7 +43,8 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/symlink-attack-fix.patch"
+	cd PEAR-${PV}
+	epatch "${FILESDIR}/gentoo-libtool-mismatch-fix.patch"
 
 }
 
