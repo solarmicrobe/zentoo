@@ -40,7 +40,7 @@ src_prepare() {
 	sed -i \
 		-e 's:$(LN) -f $(DESTDIR).*/:$(LN_S) -f :' \
 		{e2fsck,misc}/Makefile.in || die
-	epatch "${FILESDIR}"/${P}-darwin-makefile.patch
+	epatch "${FILESDIR}"/${PN}-1.41.12-darwin-makefile.patch
 	if [[ ${CHOST} == *-mint* ]] ; then
 		epatch "${FILESDIR}"/${PN}-1.41-mint.patch
 		epatch "${FILESDIR}"/${PN}-1.41.12-mint-blkid.patch
