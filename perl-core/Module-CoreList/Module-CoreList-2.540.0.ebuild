@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=4
 
 MODULE_AUTHOR=BINGOS
-MODULE_VERSION=2.43
+MODULE_VERSION=2.54
 inherit perl-module
 
 DESCRIPTION="what modules shipped with versions of perl"
