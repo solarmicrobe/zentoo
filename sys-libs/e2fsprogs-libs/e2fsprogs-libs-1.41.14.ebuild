@@ -23,7 +23,7 @@ DEPEND="nls? ( sys-devel/gettext )
 	dev-util/pkgconfig"
 
 src_prepare() {
-	echo 'all %:' > doc/Makefile.in # don't bother with docs #305613
+	printf 'all:\n%%:;@:\n' > doc/Makefile.in # don't bother with docs #305613
 }
 
 src_configure() {
