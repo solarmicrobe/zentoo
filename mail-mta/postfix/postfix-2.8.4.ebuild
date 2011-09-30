@@ -9,7 +9,7 @@ inherit eutils multilib ssl-cert toolchain-funcs flag-o-matic pam
 MY_PV="${PV/_rc/-RC}"
 MY_SRC="${PN}-${MY_PV}"
 MY_URI="ftp://ftp.porcupine.org/mirrors/postfix-release/official"
-VDA_PV="2.8.1"
+VDA_PV="2.8.3"
 VDA_P="${PN}-vda-v10-${VDA_PV}"
 RC_VER="2.5"
 
@@ -25,6 +25,7 @@ IUSE="cdb doc dovecot-sasl hardened ipv6 ldap ldap-bind mbox mysql nis pam postg
 
 DEPEND=">=sys-libs/db-3.2
 	>=dev-libs/libpcre-3.4
+	dev-lang/perl
 	cdb? ( || ( >=dev-db/tinycdb-0.76 >=dev-db/cdb-0.75-r1 ) )
 	ldap? ( net-nds/openldap )
 	ldap-bind? ( net-nds/openldap[sasl] )
@@ -50,7 +51,8 @@ RDEPEND="${DEPEND}
 	!mail-mta/qmail-ldap
 	!mail-mta/sendmail
 	!<mail-mta/ssmtp-2.64-r2
-	!>=mail-mta/ssmtp-2.64-r2[mta]"
+	!>=mail-mta/ssmtp-2.64-r2[mta]
+	!net-mail/fastforward"
 
 REQUIRED_USE="ldap-bind? ( ldap sasl )"
 
@@ -238,9 +240,10 @@ src_install () {
 	use mysql || sed -i -e "s/mysql //" "${D}/etc/init.d/postfix"
 	use postgres || sed -i -e "s/postgresql //" "${D}/etc/init.d/postfix"
 
-	mv "${S}"/examples "${D}"/usr/share/doc/${PF}/
-
 	dodoc *README COMPATIBILITY HISTORY INSTALL PORTING RELEASE_NOTES*
+
+	mv "${S}"/examples "${D}"/usr/share/doc/${PF}/
+	mv "${D}"/etc/postfix/{*.default,makedefs.out} "${D}"/usr/share/doc/${PF}/
 
 	pamd_mimic_system smtp auth account
 
@@ -250,7 +253,8 @@ src_install () {
 	fi
 
 	# Remove unnecessary files
-	rm -f "${D}"/usr/$(get_libdir)/postfix/*.cf
+	rm -f "${D}"/etc/postfix/{*LICENSE,access,aliases,canonical,generic}
+	rm -f "${D}"/etc/postfix/{header_checks,relocated,transport,virtual}
 }
 
 pkg_postinst() {
