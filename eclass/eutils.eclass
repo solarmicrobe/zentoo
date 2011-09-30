@@ -2044,3 +2044,10 @@ in_iuse() {
 
 	has "${flag}" "${liuse[@]#[+-]}"
 }
+
+# @FUNCTION: usex
+# @USAGE: <USE flag> [true output] [false output] [true suffix] [false suffix]
+# @DESCRIPTION:
+# If USE flag is set, echo [true output][true suffix] (defaults to "yes"),
+# otherwise echo [false output][false suffix] (defaults to "no").
+usex() { use "$1" && echo "${2-yes}$4" || echo "${3-no}$5" ; } #382963

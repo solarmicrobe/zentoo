@@ -3,7 +3,7 @@
 # $Header: $
 
 # latest gentoo apache files
-GENTOO_PATCHSTAMP="20110901"
+GENTOO_PATCHSTAMP="20110915"
 GENTOO_DEVELOPER="pva"
 # We want the patch from r0
 GENTOO_PATCHNAME="gentoo-${P}"
