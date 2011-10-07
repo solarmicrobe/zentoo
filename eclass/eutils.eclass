@@ -918,7 +918,8 @@ enewgroup() {
 # is a script based solution.  Just give it a list of files to convert and
 # they will all be changed from the DOS CRLF format to the UNIX LF format.
 edos2unix() {
-	echo "$@" | xargs sed -i 's/\r$//'
+	[[ $# -eq 0 ]] && return 0
+	sed -i 's/\r$//' -- "$@" || die
 }
 
 # Make a desktop file !
