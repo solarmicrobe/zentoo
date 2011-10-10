@@ -55,6 +55,7 @@ sys-libs
 sys-process
 virtual
 www-apache
+www-apps
 www-client
 www-servers
 x11-libs

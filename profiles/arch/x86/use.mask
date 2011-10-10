@@ -82,10 +82,6 @@ video_cards_newport
 -win32codecs
 -x264
 
-# lvm2 cluster
--clvm
--gulm
-
 # psyco works on x86
 -psyco
 
