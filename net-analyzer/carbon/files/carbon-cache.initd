@@ -1,0 +1,26 @@
+#!/sbin/runscript
+
+CONFIG_FILE="${CONFIG_FILE:-/etc/carbon/carbon.conf}"
+INSTANCE="${INSTANCE:-a}"
+
+start() {
+	einfo "Starting carbon-cache"
+	start-stop-daemon --start --quiet \
+		--pidfile /var/run/carbon-cache-${INSTANCE}.pid \
+		--exec /usr/bin/carbon-cache.py -- \
+		--config="${CONFIG_FILE}" \
+		--instance=${INSTANCE} \
+		start
+	eend $?
+}
+
+stop() {
+	einfo "Stopping carbon-cache"
+	start-stop-daemon --stop --quiet \
+		--pidfile /var/run/carbon-cache-${INSTANCE}.pid \
+		--exec /usr/bin/carbon-cache.py -- \
+		--config="${CONFIG_FILE}" \
+		--instance=${INSTANCE} \
+		stop
+	eend $?
+}
