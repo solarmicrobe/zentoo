@@ -12,7 +12,7 @@ DESCRIPTION="Enterprise scalable realtime graphing"
 HOMEPAGE="http://graphite.wikidot.com/"
 #SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 
-SRC_SHA1="240a798"
+SRC_SHA1="81b839d"
 SRC_URI="https://github.com/zentoo/graphite/tarball/${SRC_SHA1} -> zentoo-graphite-${PVR}.tar.gz"
 
 LICENSE="Apache-2.0"
@@ -52,8 +52,8 @@ src_install() {
 	insinto /usr/share/graphite
 	doins -r "${S}"/webapp/content "${S}"/webapp/graphite/templates
 
-	insinto /usr/libexec/graphite
-	doins bin/build-index.sh
+	exeinto /usr/libexec/graphite
+	doexe bin/build-index.sh
 
 	keepdir /var/{lib,log,run}/graphite
 	fowners graphite:graphite /var/{lib,log,run}/graphite

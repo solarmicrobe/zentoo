@@ -47,5 +47,10 @@ src_install() {
 	newinitd "${FILESDIR}"/carbon-cache.initd carbon-cache
 
 	keepdir /var/{lib,log}/carbon
+	keepdir /var/lib/carbon/{whisper,rrd}
+
+	fperms 0775 /var/lib/carbon
+
 	fowners carbon:carbon /var/{lib,log}/carbon
+	fowners carbon:carbon /var/lib/carbon/{whisper,rrd}
 }
