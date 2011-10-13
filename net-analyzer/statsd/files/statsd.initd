@@ -1,0 +1,19 @@
+#!/sbin/runscript
+
+start() {
+	ebegin "Starting StatsD"
+	start-stop-daemon --start --quiet \
+		--pidfile /var/run/statsd.pid \
+		--background --make-pidfile \
+		--user nobody --group nobody \
+		--exec /usr/bin/statsd -- \
+		-c /etc/statsd/config.yml
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping StatsD"
+	start-stop-daemon --stop --quiet \
+		--pidfile /var/run/statsd.pid
+	eend $?
+}

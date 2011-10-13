@@ -36,4 +36,6 @@ all_ruby_install() {
 
 	insinto /etc/statsd
 	doins config.yml
+
+	newinitd "${FILESDIR}"/statsd.initd statsd
 }
