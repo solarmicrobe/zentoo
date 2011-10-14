@@ -657,11 +657,13 @@ filter-ldflags() {
 }
 
 # @FUNCTION: raw-ldflags
-# @USAGE: <flags>
+# @USAGE: [flags]
 # @DESCRIPTION:
 # Turn C style ldflags (-Wl,-foo) into straight ldflags - the results
 # are suitable for passing directly to 'ld'; note LDFLAGS is usually passed
 # to gcc where it needs the '-Wl,'.
+#
+# If no flags are specified, then default to ${LDFLAGS}.
 raw-ldflags() {
 	local x input="$@"
 	[[ -z ${input} ]] && input=${LDFLAGS}

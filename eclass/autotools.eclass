@@ -271,7 +271,7 @@ eautomake() {
 		fi
 	fi
 
-	[[ -f INSTALL && -f AUTHORS && -f ChangeLog && -f NEWS ]] \
+	[[ -f INSTALL && -f AUTHORS && -f ChangeLog && -f NEWS && -f README ]] \
 		|| extra_opts="${extra_opts} --foreign"
 
 	# --force-missing seems not to be recognized by some flavours of automake
