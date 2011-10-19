@@ -17,7 +17,7 @@ HOMEPAGE="http://www.xmlsoft.org/"
 LICENSE="MIT"
 SLOT="2"
 KEYWORDS="amd64 x86"
-IUSE="debug doc examples icu ipv6 python readline test"
+IUSE="debug doc examples icu ipv6 python readline static-libs test"
 
 XSTS_HOME="http://www.w3.org/XML/2004/xml-schema-test-suite"
 XSTS_NAME_1="xmlschema2002-01-16"
@@ -34,7 +34,8 @@ RDEPEND="sys-libs/zlib
 	icu? ( dev-libs/icu )
 	readline? ( sys-libs/readline )"
 
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	hppa? ( >=sys-devel/binutils-2.15.92.0.2 )"
 
 pkg_setup() {
 	if use python; then
@@ -80,6 +81,12 @@ src_prepare() {
 
 	epatch "${FILESDIR}/${P}-disable_static_modules.patch"
 
+	# Hardening of XPath evaluation
+	epatch "${FILESDIR}/${P}-hardening-xpath.patch"
+
+	# Fix missing error status in XPath evaluation
+	epatch "${FILESDIR}/${P}-error-xpath.patch"
+
 	# Please do not remove, as else we get references to PORTAGE_TMPDIR
 	# in /usr/lib/python?.?/site-packages/libxml2mod.la among things.
 	# We now need to run eautoreconf at the end to prevent maintainer mode.
@@ -101,18 +108,20 @@ src_configure() {
 
 	# --with-mem-debug causes unusual segmentation faults (bug #105120).
 
-	# filter seemingly problematic CFLAGS (#26320)
-	filter-flags -fprefetch-loop-arrays -funroll-loops
-
-	econf \
-		--with-html-subdir=${PF}/html \
-		--docdir="${EPREFIX}"/usr/share/doc/${PF} \
+	local myconf="--with-html-subdir=${PF}/html
+		--docdir=${EPREFIX}/usr/share/doc/${PF}
 		$(use_with debug run-debug)
 		$(use_with icu)
 		$(use_with python)
 		$(use_with readline)
 		$(use_with readline history)
 		$(use_enable ipv6)
+		$(use_enable static-libs static)"
+
+	# filter seemingly problematic CFLAGS (#26320)
+	filter-flags -fprefetch-loop-arrays -funroll-loops
+
+	econf ${myconf}
 }
 
 src_compile() {
@@ -182,6 +191,11 @@ src_install() {
 	if ! use examples; then
 		rm -rf "${ED}/usr/share/doc/${PF}/examples"
 		rm -rf "${ED}/usr/share/doc/${PF}/python/examples"
+	fi
+
+	if ! use static-libs; then
+		# Remove useless .la files
+		find "${D}" -name '*.la' -exec rm -f {} + || die "la file removal failed"
 	fi
 }
 

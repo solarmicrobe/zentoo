@@ -56,40 +56,10 @@ get_libdir() {
 	fi
 }
 
-# @FUNCTION: get_multilibdir
-# @RETURN: Returns the multilibdir
-get_multilibdir() {
-	if has_multilib_profile; then
-		eerror "get_multilibdir called, but it shouldn't be needed with the new multilib approach.  Please file a bug at http://bugs.gentoo.org and assign it to eradicator@gentoo.org"
-		exit 1
-	fi
-	echo ${CONF_MULTILIBDIR:=lib32}
-}
-
-# @FUNCTION: get_libdir_override
-# @DESCRIPTION:
-# Sometimes you need to override the value returned by get_libdir. A good
-# example of this is xorg-x11, where lib32 isnt a supported configuration,
-# and where lib64 -must- be used on amd64 (for applications that need lib
-# to be 32bit, such as adobe acrobat). Note that this override also bypasses
-# portage version sanity checking.
-# get_libdir_override expects one argument, the result get_libdir should
-# return:
-#
-#   get_libdir_override lib64
-get_libdir_override() {
-	if has_multilib_profile; then
-		eerror "get_libdir_override called, but it shouldn't be needed with the new multilib approach.  Please file a bug at http://bugs.gentoo.org and assign it to eradicator@gentoo.org"
-		exit 1
-	fi
-	CONF_LIBDIR="$1"
-	CONF_LIBDIR_OVERRIDE="$1"
-	LIBDIR_default="$1"
-}
-
 # @FUNCTION: get_abi_var
 # @USAGE: <VAR> [ABI]
 # @RETURN: returns the value of ${<VAR>_<ABI>} which should be set in make.defaults
+# @INTERNAL
 # @DESCRIPTION:
 # ex:
 # CFLAGS=$(get_abi_var CFLAGS sparc32) # CFLAGS=-m32
@@ -102,17 +72,7 @@ get_libdir_override() {
 # If <ABI> is not specified and ${ABI} and ${DEFAULT_ABI} are not defined, we return an empty string.
 get_abi_var() {
 	local flag=$1
-	local abi
-	if [ $# -gt 1 ]; then
-		abi=${2}
-	elif [ -n "${ABI}" ]; then
-		abi=${ABI}
-	elif [ -n "${DEFAULT_ABI}" ]; then
-		abi=${DEFAULT_ABI}
-	else
-		abi="default"
-	fi
-
+	local abi=${2:-${ABI:-${DEFAULT_ABI:-default}}}
 	local var="${flag}_${abi}"
 	echo ${!var}
 }
@@ -122,12 +82,6 @@ get_abi_var() {
 # @DESCRIPTION:
 # Alias for 'get_abi_var CFLAGS'
 get_abi_CFLAGS() { get_abi_var CFLAGS "$@"; }
-
-# @FUNCTION: get_abi_ASFLAGS
-# @USAGE: [ABI]
-# @DESCRIPTION:
-# Alias for 'get_abi_var ASFLAGS'
-get_abi_ASFLAGS() { get_abi_var ASFLAGS "$@"; }
 
 # @FUNCTION: get_abi_LDFLAGS
 # @USAGE: [ABI]

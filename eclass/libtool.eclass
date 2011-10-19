@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: libtool.eclass
@@ -15,7 +15,7 @@
 
 DESCRIPTION="Based on the ${ECLASS} eclass"
 
-inherit toolchain-funcs
+inherit multilib toolchain-funcs
 
 ELT_PATCH_DIR="${ECLASSDIR}/ELT-patches"
 
@@ -26,17 +26,22 @@ ELT_try_and_apply_patch() {
 	local ret=0
 	local file=$1
 	local patch=$2
+	local src=$3
+	local disp="${src} patch"
+	local log="${T}/elibtool.log"
 
-	echo -e "\nTrying $(basename "$(dirname "${patch}")")-${patch##*/}.patch on ${file}" \
-		>> "${T}/elibtool.log" 2>&1
+	if [[ -z ${__ELT_NOTED_TMP} ]] ; then
+		__ELT_NOTED_TMP=true
+		printf 'temp patch: %s\n' "${patch}" > "${log}"
+	fi
+	printf '\nTrying %s\n' "${disp}" >> "${log}"
 
 	# We only support patchlevel of 0 - why worry if its static patches?
-	if patch -p0 --dry-run "${file}" "${patch}" >> "${T}/elibtool.log" 2>&1 ; then
-		einfo "  Applying $(basename "$(dirname "${patch}")")-${patch##*/}.patch ..."
-		patch -p0 -g0 --no-backup-if-mismatch "${file}" "${patch}" \
-			>> "${T}/elibtool.log" 2>&1
+	if patch -p0 --dry-run "${file}" "${patch}" >> "${log}" 2>&1 ; then
+		einfo "  Applying ${disp} ..."
+		patch -p0 -g0 --no-backup-if-mismatch "${file}" "${patch}" >> "${log}" 2>&1
 		ret=$?
-		export ELT_APPLIED_PATCHES="${ELT_APPLIED_PATCHES} ${patch##*/}"
+		export ELT_APPLIED_PATCHES="${ELT_APPLIED_PATCHES} ${src}"
 	else
 		ret=1
 	fi
@@ -60,7 +65,7 @@ ELT_libtool_version() {
 # apply to $1 ...
 #
 ELT_walk_patches() {
-	local patch
+	local patch tmp
 	local ret=1
 	local file=$1
 	local patch_set=$2
@@ -70,20 +75,21 @@ ELT_walk_patches() {
 	[[ -z ${patch_set} ]] && return 1
 	[[ ! -d ${patch_dir} ]] && return 1
 
-	pushd "${ELT_PATCH_DIR}" >/dev/null
+	# Allow patches to use @GENTOO_LIBDIR@ replacements
+	local sed_args=( -e "s:@GENTOO_LIBDIR@:$(get_libdir):g" )
+	if [[ -n ${rem_int_dep} ]] ; then
+		# replace @REM_INT_DEP@ with what was passed
+		# to --remove-internal-dep
+		sed_args+=( -e "s|@REM_INT_DEP@|${rem_int_dep}|g" )
+	fi
+
+	pushd "${ELT_PATCH_DIR}" >/dev/null || die
 
 	# Go through the patches in reverse order (newer version to older)
 	for patch in $(find "${patch_set}" -maxdepth 1 -type f | LC_ALL=C sort -r) ; do
-		# For --remove-internal-dep ...
-		if [[ -n ${rem_int_dep} ]] ; then
-			# For replace @REM_INT_DEP@ with what was passed
-			# to --remove-internal-dep
-			local tmp="${T}/$$.rem_int_deps.patch"
-			sed -e "s|@REM_INT_DEP@|${rem_int_dep}|g" "${patch}" > "${tmp}"
-			patch=${tmp}
-		fi
-
-		if ELT_try_and_apply_patch "${file}" "${patch}" ; then
+		tmp="${T}/libtool-elt.patch"
+		sed "${sed_args[@]}" "${patch}" > "${tmp}" || die
+		if ELT_try_and_apply_patch "${file}" "${tmp}" "${patch}" ; then
 			# Break to unwind w/popd rather than return directly
 			ret=0
 			break
