@@ -3,10 +3,10 @@
 # $Header: $
 
 # latest gentoo apache files
-GENTOO_PATCHSTAMP="20110915"
+GENTOO_PATCHSTAMP="20111018"
 GENTOO_DEVELOPER="pva"
 # We want the patch from r0
-GENTOO_PATCHNAME="gentoo-${P}"
+GENTOO_PATCHNAME="gentoo-${P}-r1"
 
 # IUSE/USE_EXPAND magic
 IUSE_MPMS_FORK="itk peruser prefork"
@@ -95,6 +95,8 @@ DEPEND="${DEPEND}
 	>=dev-libs/openssl-0.9.8m
 	apache2_modules_deflate? ( sys-libs/zlib )"
 
+# dependency on >=dev-libs/apr-1.4.5 for bug #368651
 RDEPEND="${RDEPEND}
+	>=dev-libs/apr-1.4.5
 	>=dev-libs/openssl-0.9.8m
 	apache2_modules_mime? ( app-misc/mime-types )"
