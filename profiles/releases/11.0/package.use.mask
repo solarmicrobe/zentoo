@@ -33,3 +33,21 @@ net-dns/pdns opendbx
 
 # do not support c-ares
 net-misc/curl ares
+
+# virtualbox
+app-emulation/virtualbox extensions vboxwebsrv
+
+# collectd
+app-admin/collectd collectd_plugins_dbi
+app-admin/collectd collectd_plugins_gmond
+app-admin/collectd collectd_plugins_ipmi
+app-admin/collectd collectd_plugins_libvirt
+app-admin/collectd collectd_plugins_notify_desktop
+app-admin/collectd collectd_plugins_notify_email
+app-admin/collectd collectd_plugins_nut
+app-admin/collectd collectd_plugins_onewire
+app-admin/collectd collectd_plugins_oracle
+app-admin/collectd collectd_plugins_ping
+app-admin/collectd collectd_plugins_sensors
+app-admin/collectd collectd_plugins_tokyotyrant
+app-admin/collectd collectd_plugins_varnish

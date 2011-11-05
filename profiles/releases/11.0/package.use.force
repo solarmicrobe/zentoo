@@ -1,0 +1,2 @@
+# only headless mode is supported
+app-emulation/virtualbox headless
