@@ -230,7 +230,8 @@ detect_version() {
 			KERNEL_BASE_URI="${KERNEL_BASE_URI}/longterm/v${KV_MAJOR}.${KV_PATCH_ARR}"
 	else
 		#KERNEL_BASE_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.0"
-		KERNEL_BASE_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}"
+		#KERNEL_BASE_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.${KV_MINOR}"
+		KERNEL_BASE_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.x"
 		[[ -n "${K_LONGTERM}" ]] &&
 			KERNEL_BASE_URI="${KERNEL_BASE_URI}/longterm/v${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}"
 	fi
