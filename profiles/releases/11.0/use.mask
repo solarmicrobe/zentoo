@@ -260,6 +260,7 @@ zsh-completion
 ada
 ads
 aspell
+asterisk
 audit
 authdaemond
 consolekit

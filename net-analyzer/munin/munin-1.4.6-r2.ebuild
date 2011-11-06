@@ -13,13 +13,14 @@ SRC_URI="mirror://sourceforge/munin/${P}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE="doc irc java memcached minimal mysql postgres ssl"
+IUSE="asterisk doc irc java memcached minimal mysql postgres ssl"
 
 # Upstream's listing of required modules is NOT correct!
 # Some of the postgres plugins use DBD::Pg, while others call psql directly.
 # The mysql plugins use mysqladmin directly.
 DEPEND_COM="dev-lang/perl
 			sys-process/procps
+			asterisk? ( dev-perl/Net-Telnet )
 			irc? ( dev-perl/Net-IRC )
 			java? ( >=virtual/jdk-1.5 )
 			mysql? ( virtual/mysql dev-perl/Cache-Cache )
@@ -61,6 +62,10 @@ src_prepare() {
 	# and Gentoo location support
 	epatch "${FILESDIR}"/${PN}-1.4.4-Makefile.patch
 
+	epatch "${FILESDIR}"/${PN}-1.4.6-apc-temp.patch
+	epatch "${FILESDIR}"/${PN}-1.4.6-munin-version-identifier.patch
+	epatch "${FILESDIR}"/${PN}-1.4.6-fix-asterisk-plugins.patch
+
 	# Don't build java plugins if not requested via USE.
 	if ! use java; then
 		# sed is needed so the java plugins aren't automagically built.
@@ -71,6 +76,9 @@ src_prepare() {
 	# Bug 304447, fix for gentoo PS location
 	sed -i -e 's,/usr/bin/ps,/bin/ps,g' \
 		"${S}"/plugins/node.d/ifx_concurrent_sessions_.in || die
+
+	# bug 367785, cleanup make output by disabling HP-UX cruft
+	sed -i -e "/plugins\/\*\.adv/d" Makefile || die
 }
 
 src_compile() {
@@ -114,8 +122,8 @@ src_install() {
 	# make sure we've got everything in the correct directory
 	insinto /var/lib/munin
 	newins "${FILESDIR}"/${PN}-1.3.3-crontab crontab || die
-	newinitd "${FILESDIR}"/munin-node_init.d_1.4.5-r3 munin-node || die
-	newconfd "${FILESDIR}"/munin-node_conf.d_1.4.5-r3 munin-node || die
+	newinitd "${FILESDIR}"/munin-node_init.d_1.4.6-r2 munin-node || die
+	newconfd "${FILESDIR}"/munin-node_conf.d_1.4.6-r2 munin-node || die
 	dodoc README ChangeLog INSTALL logo.eps logo.svg build/resources/apache* \
 		|| die
 
@@ -137,10 +145,9 @@ pkg_config() {
 pkg_postinst() {
 	elog "Please follow the munin documentation to set up the plugins you"
 	elog "need, afterwards start munin-node via /etc/init.d/munin-node."
-	elog "To have munin's cronjob automatically configured for you if this is"
-	elog "your munin master installation, please:"
-	elog "emerge --config net-analyzer/munin"
-	elog ""
-	elog "Please note that the crontab has undergone some modifications"
-	elog "since 1.3.2, and you should update to it!"
+	if ! use minimal; then
+		elog "To have munin's cronjob automatically configured for you if this is"
+		elog "your munin master installation, please:"
+		elog "emerge --config net-analyzer/munin"
+	fi
 }
