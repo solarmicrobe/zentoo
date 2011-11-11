@@ -21,18 +21,18 @@ DEPEND="${RDEPEND}
 	sys-kernel/linux-headers"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-2.20-build-system-fixes.patch
+	epatch "${FILESDIR}"/${PN}-2.22-build-system-fixes.patch
 	epatch "${FILESDIR}"/${PN}-2.20-ignore-RAISE_SETFCAP-install-failures.patch
+	epatch "${FILESDIR}"/${PN}-2.21-include.patch
 	sed -i \
-		-e "/^PAM_CAP/s:=.*:=$(use pam && echo yes || echo no):" \
+		-e "/^PAM_CAP/s:=.*:=$(usex pam):" \
 		-e '/^DYNAMIC/s:=.*:=yes:' \
 		-e "/^lib=/s:=.*:=/usr/$(get_libdir):" \
 		Make.Rules
 }
 
-src_compile() {
+src_configure() {
 	tc-export BUILD_CC CC AR RANLIB
-	emake || die
 }
 
 src_install() {
@@ -40,6 +40,7 @@ src_install() {
 
 	gen_usr_ldscript -a cap
 
+	rm -rf "${D}"/usr/$(get_libdir)/security
 	dopammod pam_cap/pam_cap.so
 	dopamsecurity '' pam_cap/capability.conf
 

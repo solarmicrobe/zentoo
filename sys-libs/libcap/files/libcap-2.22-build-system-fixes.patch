@@ -32,7 +32,7 @@ index 011aa14..6e432a6 100644
 -IPATH += -fPIC -I$(topdir)/libcap/include -I$(KERNEL_HEADERS)
 -
 -CC := gcc
--CFLAGS := -O2
+-CFLAGS := -O2 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
 -BUILD_CC := $(CC)
 -BUILD_CFLAGS := $(CFLAGS) $(IPATH)
 -AR := ar
@@ -55,7 +55,7 @@ index 011aa14..6e432a6 100644
 -SYSTEM_HEADERS = /usr/include
 +KERNEL_HEADERS = $(topdir)/libcap/include
 +LIBCAP_CPPFLAGS = -I$(topdir)/libcap/include -I$(KERNEL_HEADERS)
-+CPPFLAGS += $(LIBCAP_CPPFLAGS)
++CPPFLAGS += $(LIBCAP_CPPFLAGS) -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
 +BUILD_CPPFLAGS += $(LIBCAP_CPPFLAGS)
  INCS=$(topdir)/libcap/include/sys/capability.h
  LDFLAGS += -L$(topdir)/libcap
