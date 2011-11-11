@@ -5,7 +5,7 @@
 EAPI=4
 
 MODULE_AUTHOR=SULLR
-MODULE_VERSION=1.43
+MODULE_VERSION=1.44
 inherit perl-module
 
 DESCRIPTION="Nearly transparent SSL encapsulation for IO::Socket::INET"

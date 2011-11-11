@@ -2,9 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=4
 
 MODULE_AUTHOR=GAAS
+MODULE_VERSION=6.03
 inherit perl-module
 
 DESCRIPTION="A collection of Perl Modules for the WWW"
@@ -13,15 +14,29 @@ SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE="ssl"
 
-DEPEND="virtual/perl-libnet
-	>=dev-perl/HTML-Parser-3.34
-	>=dev-perl/URI-1.10
+RDEPEND="
+	>=dev-perl/File-Listing-6.0.0
+	>=dev-perl/HTTP-Cookies-6.0.0
+	>=dev-perl/HTTP-Daemon-6.0.0
+	>=dev-perl/HTTP-Date-6.0.0
+	>=dev-perl/HTTP-Negotiate-6.0.0
+	>=dev-perl/HTTP-Message-6.0.0
+	>=dev-perl/LWP-MediaTypes-6.0.0
+	>=dev-perl/Net-HTTP-6.0.0
+	>=dev-perl/WWW-RobotRules-6.0.0
 	>=virtual/perl-Digest-MD5-2.12
-	dev-perl/HTML-Tree
+	dev-perl/Encode-Locale
+	>=dev-perl/HTML-Parser-3.34
 	>=virtual/perl-MIME-Base64-2.12
-	>=virtual/perl-IO-Compress-1.10
-	ssl? ( dev-perl/Crypt-SSLeay )"
-RDEPEND="${DEPEND}"
+	virtual/perl-libnet
+	>=dev-perl/URI-1.10
+"
+DEPEND="${RDEPEND}"
+PDEPEND="
+	ssl? (
+		dev-perl/LWP-Protocol-https
+	)
+"
 
 src_install() {
 	perl-module_src_install
