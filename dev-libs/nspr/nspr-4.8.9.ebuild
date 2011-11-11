@@ -36,6 +36,13 @@ src_prepare() {
 	# Respect LDFLAGS
 	sed -i -e 's/\$(MKSHLIB) \$(OBJS)/\$(MKSHLIB) \$(LDFLAGS) \$(OBJS)/g' \
 		mozilla/nsprpub/config/rules.mk
+
+	if [[ ${CHOST} == *-darwin* ]] ; then
+		# Fix pkgconfig for Darwin (no RPATH stuff)
+		sed -i -e 's/-Wl,-R${\?libdir}\?//' \
+			"${S}"/mozilla/nsprpub/config/nspr-config.in \
+			"${S}"/mozilla/nsprpub/config/nspr.pc.in || die
+	fi
 }
 
 src_configure() {

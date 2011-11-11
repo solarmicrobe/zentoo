@@ -398,7 +398,6 @@ multilib_toolchain_setup() {
 		# Set the CHOST native first so that we pick up the native
 		# toolchain and not a cross-compiler by accident #202811.
 		export CHOST=$(get_abi_CHOST ${DEFAULT_ABI})
-		export AS="$(tc-getAS) $(get_abi_ASFLAGS)"
 		export CC="$(tc-getCC) $(get_abi_CFLAGS)"
 		export CXX="$(tc-getCXX) $(get_abi_CFLAGS)"
 		export LD="$(tc-getLD) $(get_abi_LDFLAGS)"
