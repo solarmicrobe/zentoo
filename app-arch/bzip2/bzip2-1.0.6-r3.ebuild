@@ -2,6 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+# XXX: atm, libbz2.a is always PIC :(, so it is always built quickly
+#      (since we're building shared libs) ...
+
 EAPI="2"
 
 inherit eutils multilib toolchain-funcs flag-o-matic
@@ -13,7 +16,7 @@ SRC_URI="http://www.bzip.org/${PV}/${P}.tar.gz"
 LICENSE="BZIP2"
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE="static"
+IUSE="static static-libs"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.0.4-makefile-CFLAGS.patch
@@ -63,6 +66,9 @@ src_install() {
 
 	if ! use static ; then
 		newbin bzip2-shared bzip2 || die
+	fi
+	if ! use static-libs ; then
+		rm -f "${D}"/usr/lib*/libbz2.a || die
 	fi
 
 	# move "important" bzip2 binaries to /bin and use the shared libbz2.so
