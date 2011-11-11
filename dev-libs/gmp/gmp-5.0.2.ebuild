@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit flag-o-matic eutils libtool flag-o-matic
+inherit flag-o-matic eutils libtool toolchain-funcs
 
 DESCRIPTION="Library for arithmetic on arbitrary precision integers, rational numbers, and floating-point numbers"
 HOMEPAGE="http://gmplib.org/"
@@ -14,19 +14,32 @@ SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE="nocxx" #doc
 
+DEPEND="sys-devel/m4"
+RDEPEND=""
+
 src_unpack() {
 	unpack ${A}
 	cd "${S}"
 	[[ -d ${FILESDIR}/${PV} ]] && EPATCH_SUFFIX="diff" EPATCH_FORCE="yes" epatch "${FILESDIR}"/${PV}
 	epatch "${FILESDIR}"/${PN}-4.1.4-noexecstack.patch
-	epatch "${FILESDIR}"/${PN}-4.3.2-ABI-multilib.patch
-	epatch "${FILESDIR}"/${PN}-4.2.1-s390.diff
+	epatch "${FILESDIR}"/${PN}-5.0.0-s390.diff
 
-	sed -i -e 's:ABI = @ABI@:GMPABI = @GMPABI@:' \
-		Makefile.in */Makefile.in */*/Makefile.in
+	# disable -fPIE -pie in the tests for x86  #236054
+	if use x86 && gcc-specs-pie ; then
+		epatch "${FILESDIR}"/${PN}-5.0.1-x86-nopie-tests.patch
+	fi
 
 	# note: we cannot run autotools here as gcc depends on this package
 	elibtoolize
+
+	# GMP uses the "ABI" env var during configure as does Gentoo (econf).
+	# So, to avoid patching the source constantly, wrap things up.
+	mv configure configure.wrapped || die
+	cat <<-\EOF > configure
+	#!/bin/sh
+	exec env ABI="$GMPABI" "${0}.wrapped" "$@"
+	EOF
+	chmod a+rx configure
 }
 
 src_compile() {
@@ -38,15 +51,15 @@ src_compile() {
 
 	# ABI mappings (needs all architectures supported)
 	case ${ABI} in
-		32|x86)       export GMPABI=32;;
-		64|amd64|n64) export GMPABI=64;;
-		o32|n32)      export GMPABI=${ABI};;
+		32|x86)       GMPABI=32;;
+		64|amd64|n64) GMPABI=64;;
+		o32|n32)      GMPABI=${ABI};;
 	esac
+	export GMPABI
 
 	tc-export CC
 	econf \
 		--localstatedir=/var/state/gmp \
-		--disable-mpfr \
 		--disable-mpbsd \
 		$(use_enable !nocxx cxx) \
 		|| die "configure failed"
@@ -62,4 +75,12 @@ src_install() {
 	dohtml -r doc
 
 	#use doc && cp "${DISTDIR}"/gmp-man-${PV}.pdf "${D}"/usr/share/doc/${PF}/
+}
+
+pkg_preinst() {
+	preserve_old_lib /usr/$(get_libdir)/libgmp.so.3
+}
+
+pkg_postinst() {
+	preserve_old_lib_notify /usr/$(get_libdir)/libgmp.so.3
 }
