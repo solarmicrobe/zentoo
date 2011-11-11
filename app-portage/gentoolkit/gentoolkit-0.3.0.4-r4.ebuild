@@ -36,6 +36,14 @@ distutils_src_compile_pre_hook() {
 		|| die "setup.py set_version failed"
 }
 
+src_prepare() {
+	epatch "${FILESDIR}/${PV}-euse-376393.patch"
+	epatch "${FILESDIR}/${PV}-euse-379599.patch"
+	epatch "${FILESDIR}/${PV}-gentoolkit-375293.patch"
+	epatch "${FILESDIR}/${PV}-equery-380573.patch"
+	epatch "${FILESDIR}/${PV}-euse-382219.patch"
+}
+
 src_install() {
 	python_convert_shebangs -r "" build-*/scripts-*
 	distutils_src_install
