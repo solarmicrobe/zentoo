@@ -7,7 +7,7 @@ VIM_VERSION="7.3"
 inherit vim
 
 VIM_CORE_GENTOO_PATCHES="vim-core-${VIM_VERSION}-gentoo-patches.tar.bz2"
-VIM_ORG_PATCHES="vim-patches-${PV}.tar.bz2"
+VIM_ORG_PATCHES="vim-patches-${PV}.patch.bz2"
 VIMRC_FILE_SUFFIX="-r4"
 
 SRC_URI="ftp://ftp.vim.org/pub/vim/unix/vim-${VIM_VERSION}.tar.bz2

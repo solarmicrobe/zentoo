@@ -6,7 +6,7 @@ EAPI=3
 VIM_VERSION="7.3"
 inherit vim
 
-VIM_ORG_PATCHES="vim-patches-${PV}.tar.bz2"
+VIM_ORG_PATCHES="vim-patches-${PV}.patch.bz2"
 
 SRC_URI="ftp://ftp.vim.org/pub/vim/unix/vim-${VIM_VERSION}.tar.bz2
 	http://dev.gentoo.org/~lack/vim/${VIM_ORG_PATCHES}"
