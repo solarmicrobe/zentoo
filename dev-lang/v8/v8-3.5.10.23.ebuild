@@ -2,13 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="3"
 
 inherit eutils flag-o-matic multilib pax-utils scons-utils toolchain-funcs
 
 DESCRIPTION="Google's open source JavaScript engine"
 HOMEPAGE="http://code.google.com/p/v8"
-SRC_URI="mirror://gentoo/${P}.tar.gz"
+SRC_URI="http://commondatastorage.googleapis.com/chromium-browser-official/${P}.tar.bz2"
 LICENSE="BSD"
 
 SLOT="0"
@@ -31,14 +31,6 @@ src_prepare() {
 
 	# Respect the user's CFLAGS, including the optimization level.
 	epatch "${FILESDIR}"/${PN}-no-O3-r0.patch
-
-	# Remove a test that is known to fail:
-	# http://groups.google.com/group/v8-users/browse_thread/thread/b8a3f42b5aa18d06
-	rm test/mjsunit/debug-script.js || die
-
-	# Remove a test that behaves differently depending on FEATURES="userpriv",
-	# see bug #348558.
-	rm test/mjsunit/d8-os.js || die
 }
 
 src_configure() {
@@ -47,10 +39,7 @@ src_configure() {
 }
 
 src_compile() {
-	# To make tests work, we compile with sample=shell and visibility=default.
-	# For more info see http://groups.google.com/group/v8-users/browse_thread/thread/61ca70420e4476bc
-	# and http://groups.google.com/group/v8-users/browse_thread/thread/165f89728ed6f97d
-	local myconf="library=shared soname=on sample=shell visibility=default importenv=LINKFLAGS,PATH"
+	local myconf="library=shared soname=on importenv=LINKFLAGS,PATH"
 
 	# Use target arch detection logic from bug #354601.
 	case ${CHOST} in
@@ -75,25 +64,21 @@ src_compile() {
 		die "Failed to determine target arch, got '$myarch'."
 	fi
 
-	escons $(use_scons readline console readline dumb) ${myconf} . || die
-	pax-mark -m obj/test/release/cctest shell d8
+	escons $(use_scons readline console readline dumb) ${myconf} || die
 }
 
 src_install() {
 	insinto /usr
 	doins -r include || die
 
-	dobin d8 || die
+	if [[ ${CHOST} == *-darwin* ]] ; then
+		install_name_tool \
+			-id "${EPREFIX}"/usr/$(get_libdir)/libv8-${PV}$(get_libname) \
+			libv8-${PV}$(get_libname) || die
+	fi
 
-	dolib libv8-${PV}.so || die
-	dosym libv8-${PV}.so /usr/$(get_libdir)/libv8.so || die
+	dolib libv8-${PV}$(get_libname) || die
+	dosym libv8-${PV}$(get_libname) /usr/$(get_libdir)/libv8$(get_libname) || die
 
 	dodoc AUTHORS ChangeLog || die
-}
-
-src_test() {
-	# Make sure we use the libv8.so from our build directory,
-	# and not the /usr/lib one (it may be missing if we are
-	# installing for the first time or upgrading), see bug #352374.
-	LD_LIBRARY_PATH="${S}" tools/test.py --no-build -p dots || die
 }

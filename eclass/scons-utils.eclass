@@ -13,11 +13,21 @@
 # @CODE
 # inherit scons-utils toolchain-funcs
 #
+# EAPI=4
+#
+# src_configure() {
+# 	myesconsargs=(
+# 		CC="$(tc-getCC)"
+#		$(use_scons nls ENABLE_NLS)
+# 	)
+# }
+#
 # src_compile() {
-# 	tc-export CC CXX
-# 	escons \
-# 		$(use_scons nls ENABLE_NLS) \
-# 		|| die
+# 	escons
+# }
+#
+# src_install() {
+# 	escons install
 # }
 # @CODE
 
@@ -27,6 +37,12 @@
 # @DEFAULT_UNSET
 # @DESCRIPTION:
 # The minimal version of SCons required for the build to work.
+
+# @VARIABLE: myesconsargs
+# @DEFAULT_UNSET
+# @DESCRIPTION:
+# List of package-specific options to pass to all SCons calls. Supposed to be
+# set in src_configure().
 
 # @ECLASS-VARIABLE: SCONSOPTS
 # @DEFAULT_UNSET
@@ -72,16 +88,17 @@ fi
 # @FUNCTION: escons
 # @USAGE: [scons-arg] ...
 # @DESCRIPTION:
-# Call scons, passing the supplied arguments, ${MAKEOPTS} and
-# ${EXTRA_ESCONS}. Similar to emake. Like emake, this function does die
-# on failure in EAPI 4 (unless called nonfatal).
+# Call scons, passing the supplied arguments, ${myesconsargs[@]},
+# filtered ${MAKEOPTS}, ${EXTRA_ESCONS}. Similar to emake. Like emake,
+# this function does die on failure in EAPI 4 (unless called nonfatal).
 escons() {
 	local ret
 
 	debug-print-function ${FUNCNAME} "${@}"
 
 	# if SCONSOPTS are _unset_, use cleaned MAKEOPTS
-	set -- scons ${SCONSOPTS-$(scons_clean_makeopts)} ${EXTRA_ESCONS} "${@}"
+	set -- scons ${SCONSOPTS-$(scons_clean_makeopts)} ${EXTRA_ESCONS} \
+		"${myesconsargs[@]}" "${@}"
 	echo "${@}" >&2
 	"${@}"
 	ret=${?}
@@ -128,7 +145,7 @@ scons_clean_makeopts() {
 				;;
 			# need to take a look at the next arg and guess
 			--jobs)
-				if [[ ${#} -gt 1 && ${2} =~ [0-9]+ ]]; then
+				if [[ ${#} -gt 1 && ${2} =~ ^[0-9]+$ ]]; then
 					new_makeopts="${new_makeopts+${new_makeopts} }${1} ${2}"
 					shift
 				else
@@ -152,7 +169,7 @@ scons_clean_makeopts() {
 							;;
 						# -j needs to come last
 						j)
-							if [[ ${#} -gt 1 && ${2} =~ [0-9]+ ]]; then
+							if [[ ${#} -gt 1 && ${2} =~ ^[0-9]+$ ]]; then
 								new_optstr="${new_optstr}j ${2}"
 								shift
 							else
