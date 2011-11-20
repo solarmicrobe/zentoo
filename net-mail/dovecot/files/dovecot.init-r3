@@ -1,9 +1,9 @@
 #!/sbin/runscript
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License, v2 or later
-# $Header: /var/cvsroot/gentoo-x86/net-mail/dovecot/files/dovecot-1.2.init,v 1.1 2010/06/20 10:29:06 patrick Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-mail/dovecot/files/dovecot.init-r3,v 1.1 2011/09/17 10:33:38 eras Exp $
 
-opts="${opts} reload"
+extra_started_commands="reload"
 
 depend() {
 	need localmount net
@@ -24,16 +24,13 @@ checkconfig() {
 		return 1
 	fi
 	if [ -x /usr/sbin/dovecot ]; then
-		DOVECOT_BASEDIR=$(/usr/sbin/dovecot -c ${DOVECOT_CONF} -a | grep '^base_dir: ' | sed 's/^base_dir: //')
+		DOVECOT_BASEDIR=$(/usr/sbin/dovecot -c ${DOVECOT_CONF} -a | grep '^base_dir = ' | sed 's/^base_dir = //')
 	else
 		eerror "dovecot not executable"
 		return 1
 	fi
 	DOVECOT_BASEDIR=${DOVECOT_BASEDIR:-/var/run/dovecot}
 	DOVECOT_PIDFILE=${DOVECOT_BASEDIR}/master.pid
-	if [ ! -d "${DOVECOT_BASEDIR}" ]; then
-		install -d -o root -g root -m 0755 "${DOVECOT_BASEDIR}"
-	fi 
 }
 
 start() {
@@ -55,7 +52,7 @@ stop() {
 reload() {
 	checkconfig || return 1
 	ebegin "Reloading ${SVCNAME} configs and restarting auth/login processes"
-	start-stop-daemon --stop --oknodo --exec /usr/sbin/dovecot \
-		--pidfile "${DOVECOT_PIDFILE}" --signal HUP
+	start-stop-daemon --signal HUP --exec /usr/sbin/dovecot \
+		--pidfile "${DOVECOT_PIDFILE}"
 	eend $?
 }

@@ -2,13 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI=4
 
-inherit eutils versionator ssl-cert
+inherit eutils versionator ssl-cert autotools-utils
 
 MY_P="${P/_/.}"
 major_minor="$( get_version_component_range 1-2 )"
-sieve_version="0.2.3"
+sieve_version="0.2.4"
 SRC_URI="http://dovecot.org/releases/${major_minor}/${MY_P}.tar.gz
 	sieve? (
 	http://www.rename-it.nl/dovecot/${major_minor}/dovecot-${major_minor}-pigeonhole-${sieve_version}.tar.gz
@@ -23,7 +23,8 @@ SLOT="0"
 LICENSE="LGPL-2.1 MIT"
 KEYWORDS="amd64 x86"
 
-IUSE="bzip2 caps cydir sdbox doc ipv6 kerberos ldap +maildir managesieve mbox mdbox mysql pam postgres sieve sqlite +ssl suid vpopmail zlib"
+IUSE="bzip2 caps cydir sdbox doc ipv6 kerberos ldap +maildir managesieve mbox
+mdbox mysql pam postgres sieve sqlite +ssl static-libs suid vpopmail zlib"
 
 DEPEND="caps? ( sys-libs/libcap )
 	kerberos? ( virtual/krb5 )
@@ -87,6 +88,7 @@ src_configure() {
 		$( use_with ssl ) \
 		$( use_with vpopmail ) \
 		$( use_with zlib ) \
+		$( use_enable static-libs static ) \
 		--with-storages="${storages}" \
 		--disable-rpath \
 		--without-systemdsystemunitdir \
@@ -98,6 +100,7 @@ src_configure() {
 		emake dovecot-config || die "emake dovecot-config failed"
 		cd "../dovecot-${major_minor}-pigeonhole-${sieve_version}" || die "cd failed"
 		econf \
+			$( use_enable static-libs static ) \
 			--localstatedir="${EPREFIX}/var" \
 			--enable-shared \
 			--with-dovecot="../${MY_P}" \
@@ -106,11 +109,11 @@ src_configure() {
 }
 
 src_compile() {
-	emake CC="$(tc-getCC)" CFLAGS="${CFLAGS}" || die "make failed"
+	emake CC="$(tc-getCC)" CFLAGS="${CFLAGS}"
 
 	if use sieve || use managesieve ; then
 		cd "../dovecot-${major_minor}-pigeonhole-${sieve_version}" || die "cd failed"
-		emake CC="$(tc-getCC)" CFLAGS="${CFLAGS}" || die "make sieve failed"
+		emake CC="$(tc-getCC)" CFLAGS="${CFLAGS}"
 	fi
 }
 
@@ -123,29 +126,29 @@ src_test() {
 }
 
 src_install () {
-	emake DESTDIR="${ED}" install || die "make install failed"
+	emake DESTDIR="${ED}" install
 
 	# insecure:
 	# use suid && fperms u+s /usr/libexec/dovecot/deliver
 	# better:
 	if use suid;then
 		einfo "Changing perms to allow deliver to be suided"
-		fowners root:mail "${ED}"/usr/libexec/dovecot/deliver
-		fperms 4750 "${ED}"/usr/libexec/dovecot/deliver
+		fowners root:mail "${EPREFIX}/usr/libexec/dovecot/dovecot-lda"
+		fperms 4750 "${EPREFIX}/usr/libexec/dovecot/dovecot-lda"
 	fi
 
-	newinitd "${FILESDIR}"/dovecot.init-r2 dovecot
+	newinitd "${FILESDIR}"/dovecot.init-r3 dovecot
 
 	rm -rf "${ED}"/usr/share/doc/dovecot
 
-	dodoc AUTHORS NEWS README TODO || die "basic dodoc failed"
-	dodoc doc/*.{txt,cnf,xml,sh} || die "dodoc doc failed"
+	dodoc AUTHORS NEWS README TODO
+	dodoc doc/*.{txt,cnf,xml,sh}
 	docinto example-config
-	dodoc doc/example-config/*.{conf,ext} || die "dodoc example failed"
+	dodoc doc/example-config/*.{conf,ext}
 	docinto example-config/conf.d
-	dodoc doc/example-config/conf.d/*.{conf,ext} || die "dodoc conf.d failed"
+	dodoc doc/example-config/conf.d/*.{conf,ext}
 	docinto wiki
-	dodoc doc/wiki/* || die "dodoc wiki failed"
+	dodoc doc/wiki/*
 	doman doc/man/*.{1,7}
 
 	# Create the dovecot.conf file from the dovecot-example.conf file that
@@ -158,8 +161,7 @@ src_install () {
 	insinto /etc/dovecot/conf.d
 	doins doc/example-config/conf.d/*.{conf,ext}
 	fperms 0600 "${EPREFIX}"/etc/dovecot/dovecot-{ldap,sql}.conf.ext
-	sed -i -e "s:/usr/share/doc/dovecot/:/usr/share/doc/${PF}/:" \
-		"${confd}/../README" || die "sed failed"
+	rm -f "${confd}/../README"
 
 	# .maildir is the Gentoo default
 	local mail_location="maildir:~/.maildir"
@@ -233,7 +235,7 @@ src_install () {
 
 	if use sieve || use managesieve ; then
 		cd "../dovecot-${major_minor}-pigeonhole-${sieve_version}" || die "cd failed"
-		emake DESTDIR="${ED}" install || die "make install failed (sieve)"
+		emake DESTDIR="${ED}" install
 		sed -i -e \
 			's/^[[:space:]]*#mail_plugins = $mail_plugins/mail_plugins = sieve/' "${confd}/15-lda.conf" \
 			|| die "failed to update sieve settings in 15-lda.conf"
@@ -250,6 +252,8 @@ src_install () {
 		dodoc doc/devel/DESIGN
 		doman doc/man/*.{1,7}
 	fi
+
+	use static-libs || remove_libtool_files
 }
 
 pkg_preinst() {
