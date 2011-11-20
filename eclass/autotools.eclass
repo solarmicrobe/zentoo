@@ -145,7 +145,7 @@ eautoreconf() {
 
 	# Call it here to prevent failures due to elibtoolize called _before_
 	# eautoreconf.  We set $S because elibtoolize runs on that #265319
-	S=${PWD} elibtoolize
+	S=${PWD} elibtoolize --force
 
 	return 0
 }

@@ -142,7 +142,7 @@ filter-lfs-flags() {
 # @DESCRIPTION:
 # Add extra <flags> to the current CPPFLAGS.
 append-cppflags() {
-	[[ -z $* ]] && return 0
+	[[ $# -eq 0 ]] && return 0
 	export CPPFLAGS="${CPPFLAGS} $*"
 	return 0
 }
@@ -152,8 +152,8 @@ append-cppflags() {
 # @DESCRIPTION:
 # Add extra <flags> to the current CFLAGS.
 append-cflags() {
-	[[ -z $* ]] && return 0
-	export CFLAGS=$(test-flags-CC ${CFLAGS} $*)
+	[[ $# -eq 0 ]] && return 0
+	export CFLAGS=$(test-flags-CC ${CFLAGS} "$@")
 	return 0
 }
 
@@ -162,8 +162,8 @@ append-cflags() {
 # @DESCRIPTION:
 # Add extra <flags> to the current CXXFLAGS.
 append-cxxflags() {
-	[[ -z $* ]] && return 0
-	export CXXFLAGS=$(test-flags-CXX ${CXXFLAGS} $*)
+	[[ $# -eq 0 ]] && return 0
+	export CXXFLAGS=$(test-flags-CXX ${CXXFLAGS} "$@")
 	return 0
 }
 
@@ -172,9 +172,9 @@ append-cxxflags() {
 # @DESCRIPTION:
 # Add extra <flags> to the current {F,FC}FLAGS.
 append-fflags() {
-	[[ -z $* ]] && return 0
-	export FFLAGS=$(test-flags-F77 ${FFLAGS} $*)
-	export FCFLAGS=$(test-flags-FC ${FCFLAGS} $*)
+	[[ $# -eq 0 ]] && return 0
+	export FFLAGS=$(test-flags-F77 ${FFLAGS} "$@")
+	export FCFLAGS=$(test-flags-FC ${FCFLAGS} "$@")
 	return 0
 }
 
@@ -192,7 +192,7 @@ append-lfs-flags() {
 # @DESCRIPTION:
 # Add extra <flags> to your current {C,CXX,F,FC}FLAGS.
 append-flags() {
-	[[ -z $* ]] && return 0
+	[[ $# -eq 0 ]] && return 0
 	append-cflags "$@"
 	append-cxxflags "$@"
 	append-fflags "$@"
@@ -449,7 +449,6 @@ test-flags-PROG() {
 
 	[[ -z ${comp} ]] && return 1
 
-	x=""
 	for x in "$@" ; do
 		test-flag-${comp} "${x}" && flags="${flags}${flags:+ }${x}"
 	done
@@ -621,7 +620,7 @@ replace-sparc64-flags() {
 # @DESCRIPTION:
 # Add extra <libs> to the current LIBS.
 append-libs() {
-	[[ -z $* ]] && return 0
+	[[ $# -eq 0 ]] && return 0
 	local flag
 	for flag in "$@"; do
 		[[ ${flag} == -l* ]] && flag=${flag#-l}
@@ -636,7 +635,7 @@ append-libs() {
 # @DESCRIPTION:
 # Add extra <flags> to the current LDFLAGS.
 append-ldflags() {
-	[[ -z $* ]] && return 0
+	[[ $# -eq 0 ]] && return 0
 	local flag
 	for flag in "$@"; do
 		[[ ${flag} == -l* ]] && \
