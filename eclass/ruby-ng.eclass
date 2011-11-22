@@ -18,6 +18,7 @@
 #  * ruby19 - Ruby (MRI) 1.9.x
 #  * ree18  - Ruby Enterprise Edition 1.8.x
 #  * jruby  - JRuby
+#  * rbx    - Rubinius
 #
 # This eclass does not define the implementation of the configure,
 # compile, test, or install phases. Instead, the default phases are
@@ -67,7 +68,7 @@
 # (e.g. selenium's firefox driver extension). When set this argument is
 # passed to "grep -E" to remove reporting of these shared objects.
 
-inherit eutils toolchain-funcs
+inherit eutils java-utils-2 toolchain-funcs
 
 EXPORT_FUNCTIONS src_unpack src_prepare src_configure src_compile src_test src_install pkg_setup
 
@@ -112,6 +113,10 @@ ruby_implementation_depend() {
 			;;
 		jruby)
 			rubypn="dev-java/jruby"
+			rubyslot=""
+			;;
+		rbx)
+			rubypn="dev-lang/rubinius"
 			rubyslot=""
 			;;
 		*) die "$1: unknown Ruby implementation"
@@ -393,6 +398,8 @@ ruby-ng_pkg_setup() {
 	# before doing anything; by leaving the parameters empty we know
 	# it's a special case.
 	_ruby_each_implementation
+
+	has ruby_targets_jruby ${IUSE} && use ruby_targets_jruby && java-pkg_setup-vm
 }
 
 # @FUNCTION: ruby-ng_src_unpack
@@ -499,10 +506,10 @@ _each_ruby_check_install() {
 
 	has "${EAPI}" 2 && ! use prefix && EPREFIX=
 
-	local libruby_basename=$(${RUBY} -rrbconfig -e 'puts Config::CONFIG["LIBRUBY_SO"]')
+	local libruby_basename=$(${RUBY} -rrbconfig -e 'puts RbConfig::CONFIG["LIBRUBY_SO"]')
 	local libruby_soname=$(basename $(${scancmd} -F "%S#F" -qS "${EPREFIX}/usr/$(get_libdir)/${libruby_basename}") 2>/dev/null)
-	local sitedir=$(${RUBY} -rrbconfig -e 'puts Config::CONFIG["sitedir"]')
-	local sitelibdir=$(${RUBY} -rrbconfig -e 'puts Config::CONFIG["sitelibdir"]')
+	local sitedir=$(${RUBY} -rrbconfig -e 'puts RbConfig::CONFIG["sitedir"]')
+	local sitelibdir=$(${RUBY} -rrbconfig -e 'puts RbConfig::CONFIG["sitelibdir"]')
 
 	# Look for wrong files in sitedir
 	# if [[ -d "${D}${sitedir}" ]]; then
@@ -552,7 +559,7 @@ ruby-ng_src_install() {
 # @USAGE: rbconfig item
 # @RETURN: Returns the value of the given rbconfig item of the Ruby interpreter in ${RUBY}.
 ruby_rbconfig_value() {
-	echo $(${RUBY} -rrbconfig -e "puts Config::CONFIG['$1']")
+	echo $(${RUBY} -rrbconfig -e "puts RbConfig::CONFIG['$1']")
 }
 
 # @FUNCTION: doruby
@@ -573,7 +580,7 @@ doruby() {
 # @FUNCTION: ruby_get_libruby
 # @RETURN: The location of libruby*.so belonging to the Ruby interpreter in ${RUBY}.
 ruby_get_libruby() {
-	${RUBY} -rrbconfig -e 'puts File.join(Config::CONFIG["libdir"], Config::CONFIG["LIBRUBY"])'
+	${RUBY} -rrbconfig -e 'puts File.join(RbConfig::CONFIG["libdir"], RbConfig::CONFIG["LIBRUBY"])'
 }
 
 # @FUNCTION: ruby_get_hdrdir
@@ -607,6 +614,9 @@ ruby_get_implementation() {
 			;;
 		*jruby*)
 			echo "jruby"
+			;;
+		*rubinius*)
+			echo "rbx"
 			;;
 		*)
 			echo "mri"
