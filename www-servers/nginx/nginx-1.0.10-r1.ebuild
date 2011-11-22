@@ -2,60 +2,73 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
 
 # Maintainer notes:
 # - http_rewrite-independent pcre-support makes sense for matching locations without an actual rewrite
 # - any http-module activates the main http-functionality and overrides USE=-http
-# - keep the following 3 requirements in mind before adding external modules:
+# - keep the following requirements in mind before adding external modules:
 #   * alive upstream
 #   * sane packaging
 #   * builds cleanly
+#   * does not need a patch for nginx core
 # - TODO: test the google-perftools module (included in vanilla tarball)
 
 # prevent perl-module from adding automagic perl DEPENDs
 GENTOO_DEPEND_ON_PERL="no"
 
+# http_cache_purge (http://labs.frickle.com/nginx_ngx_cache_purge/, BSD-2 license)
+HTTP_CACHE_PURGE_MODULE_PV="1.4"
+HTTP_CACHE_PURGE_MODULE_P="ngx_cache_purge-${HTTP_CACHE_PURGE_MODULE_PV}"
+HTTP_CACHE_PURGE_MODULE_URI="http://labs.frickle.com/files/${HTTP_CACHE_PURGE_MODULE_P}.tar.gz"
+
 # http_headers_more (http://github.com/agentzh/headers-more-nginx-module, BSD license)
-HTTP_HEADERS_MORE_MODULE_PV="0.13"
-HTTP_HEADERS_MORE_MODULE_P="ngx-http-headers-more-${HTTP_HEADERS_MORE_MODULE_PV}"
-HTTP_HEADERS_MORE_MODULE_SHA1="9508330"
+HTTP_HEADERS_MORE_MODULE_PV="0.15"
+HTTP_HEADERS_MORE_MODULE_P="ngx_http_headers_more-${HTTP_HEADERS_MORE_MODULE_PV}"
+HTTP_HEADERS_MORE_MODULE_SHA1="137855d"
+HTTP_HEADERS_MORE_MODULE_URI="http://github.com/agentzh/headers-more-nginx-module/tarball/v${HTTP_HEADERS_MORE_MODULE_PV}"
 
 # http_push (http://pushmodule.slact.net/, MIT license)
 HTTP_PUSH_MODULE_PV="0.692"
 HTTP_PUSH_MODULE_P="nginx_http_push_module-${HTTP_PUSH_MODULE_PV}"
+HTTP_PUSH_MODULE_URI="http://pushmodule.slact.net/downloads/${HTTP_PUSH_MODULE_P}.tar.gz"
 
-# http_cache_purge (http://labs.frickle.com/nginx_ngx_cache_purge/, BSD-2 license)
-HTTP_CACHE_PURGE_MODULE_PV="1.2"
-HTTP_CACHE_PURGE_MODULE_P="ngx_cache_purge-${HTTP_CACHE_PURGE_MODULE_PV}"
+# http_redis2 (https://github.com/agentzh/redis2-nginx-module, BSD license)
+HTTP_REDIS2_MODULES_PV="0.08rc1"
+HTTP_REDIS2_MODULE_P="ngx_http_redis2-${HTTP_REDIS2_MODULES_PV}"
+HTTP_REDIS2_MODULE_SHA1="23cf589"
+HTTP_REDIS2_MODULE_URI="https://github.com/agentzh/redis2-nginx-module/tarball/v${HTTP_REDIS2_MODULES_PV}"
+
+# http_slowfs_cache (http://labs.frickle.com/nginx_ngx_slowfs_cache/, BSD-2 license)
+HTTP_SLOWFS_CACHE_MODULE_PV="1.6"
+HTTP_SLOWFS_CACHE_MODULE_P="ngx_slowfs_cache-${HTTP_SLOWFS_CACHE_MODULE_PV}"
+HTTP_SLOWFS_CACHE_MODULE_URI="http://labs.frickle.com/files/${HTTP_SLOWFS_CACHE_MODULE_P}.tar.gz"
 
 # HTTP Upload module from Valery Kholodkov
 # (http://www.grid.net.ru/nginx/upload.en.html, BSD license)
 HTTP_UPLOAD_MODULE_PV="2.2.0"
 HTTP_UPLOAD_MODULE_P="nginx_upload_module-${HTTP_UPLOAD_MODULE_PV}"
+HTTP_UPLOAD_MODULE_URI="http://www.grid.net.ru/nginx/download/${HTTP_UPLOAD_MODULE_P}.tar.gz"
 
-# ey-balancer/maxconn module (https://github.com/ry/nginx-ey-balancer, as-is)
-HTTP_EY_BALANCER_MODULE_PV="0.0.6"
-HTTP_EY_BALANCER_MODULE_P="nginx-ey-balancer-${HTTP_EY_BALANCER_MODULE_PV}"
-HTTP_EY_BALANCER_MODULE_SHA1="d373670"
-
-# http_slowfs_cache (http://labs.frickle.com/nginx_ngx_slowfs_cache/, BSD-2 license)
-HTTP_SLOWFS_CACHE_MODULE_PV="1.5"
-HTTP_SLOWFS_CACHE_MODULE_P="ngx_slowfs_cache-${HTTP_SLOWFS_CACHE_MODULE_PV}"
+# http_uploadprogress (https://github.com/masterzen/nginx-upload-progress-module, BSD-2 license)
+HTTP_UPLOAD_PROGRESS_MODULE_PV="0.8.3"
+HTTP_UPLOAD_PROGRESS_MODULE_P="ngx_upload_progress-${HTTP_UPLOAD_PROGRESS_MODULE_PV}"
+HTTP_UPLOAD_PROGRESS_MODULE_SHA1="c7c663f"
+HTTP_UPLOAD_PROGRESS_MODULE_URI="http://github.com/masterzen/nginx-upload-progress-module/tarball/v${HTTP_UPLOAD_PROGRESS_MODULE_PV}"
 
 inherit eutils ssl-cert toolchain-funcs perl-module flag-o-matic
 
 DESCRIPTION="Robust, small and high performance http and reverse proxy server"
-HOMEPAGE="http://nginx.net/
-	http://pushmodule.slact.net/
-	http://labs.frickle.com/nginx_ngx_cache_purge/"
-SRC_URI="http://sysoev.ru/nginx/${P}.tar.gz
-	nginx_modules_http_headers_more? ( http://github.com/agentzh/headers-more-nginx-module/tarball/v${HTTP_HEADERS_MORE_MODULE_PV} -> ${HTTP_HEADERS_MORE_MODULE_P}.tar.gz )
-	nginx_modules_http_push? ( http://pushmodule.slact.net/downloads/${HTTP_PUSH_MODULE_P}.tar.gz )
-	nginx_modules_http_cache_purge? ( http://labs.frickle.com/files/${HTTP_CACHE_PURGE_MODULE_P}.tar.gz )
-	nginx_modules_http_upload? ( http://www.grid.net.ru/nginx/download/${HTTP_UPLOAD_MODULE_P}.tar.gz )
-	nginx_modules_http_ey_balancer? ( https://github.com/ry/nginx-ey-balancer/tarball/v${HTTP_EY_BALANCER_MODULE_PV} -> ${HTTP_EY_BALANCER_MODULE_P}.tar.gz )
-	nginx_modules_http_slowfs_cache? ( http://labs.frickle.com/files/${HTTP_SLOWFS_CACHE_MODULE_P}.tar.gz )"
+HOMEPAGE="http://nginx.org"
+SRC_URI="http://nginx.org/download/${P}.tar.gz
+	nginx_modules_http_cache_purge? ( ${HTTP_CACHE_PURGE_MODULE_URI} -> ${HTTP_CACHE_PURGE_MODULE_P}.tar.gz )
+	nginx_modules_http_headers_more? ( ${HTTP_HEADERS_MORE_MODULE_URI} -> ${HTTP_HEADERS_MORE_MODULE_P}.tar.gz )
+	nginx_modules_http_push? ( ${HTTP_PUSH_MODULE_URI} -> ${HTTP_PUSH_MODULE_P}.tar.gz )
+	nginx_modules_http_redis2? ( ${HTTP_REDIS2_MODULE_URI} -> ${HTTP_REDIS2_MODULE_P}.tar.gz )
+	nginx_modules_http_slowfs_cache? ( ${HTTP_SLOWFS_CACHE_MODULE_URI} -> ${HTTP_SLOWFS_CACHE_MODULE_P}.tar.gz )
+	nginx_modules_http_upload? ( ${HTTP_UPLOAD_MODULE_URI} -> ${HTTP_UPLOAD_MODULE_P}.tar.gz )
+	nginx_modules_http_upload_progress? ( ${HTTP_UPLOAD_PROGRESS_MODULE_URI} -> ${HTTP_UPLOAD_PROGRESS_MODULE_P}.tar.gz )
+"
 
 LICENSE="as-is BSD BSD-2 GPL-2 MIT"
 SLOT="0"
@@ -67,8 +80,15 @@ split_clients upstream_ip_hash userid uwsgi"
 NGINX_MODULES_OPT="addition dav degradation flv geoip gzip_static image_filter
 perl random_index realip secure_link stub_status sub xslt"
 NGINX_MODULES_MAIL="imap pop3 smtp"
-NGINX_MODULES_3RD="http_cache_purge http_headers_more http_passenger http_push
-http_upload http_ey_balancer http_slowfs_cache"
+NGINX_MODULES_3RD="
+	http_cache_purge
+	http_headers_more
+	http_push
+	http_redis2
+	http_slowfs_cache
+	http_upload
+	http_upload_progress
+"
 
 IUSE="aio debug +http +http-cache ipv6 libatomic +pcre ssl vim-syntax"
 
@@ -95,45 +115,22 @@ CDEPEND="
 	nginx_modules_http_geo? ( dev-libs/geoip )
 	nginx_modules_http_gzip? ( sys-libs/zlib )
 	nginx_modules_http_gzip_static? ( sys-libs/zlib )
-	nginx_modules_http_image_filter? ( media-libs/gd )
+	nginx_modules_http_image_filter? ( media-libs/gd[jpeg,png] )
 	nginx_modules_http_perl? ( >=dev-lang/perl-5.8 )
 	nginx_modules_http_rewrite? ( >=dev-libs/libpcre-4.2 )
 	nginx_modules_http_secure_link? ( userland_GNU? ( dev-libs/openssl ) )
 	nginx_modules_http_xslt? ( dev-libs/libxml2 dev-libs/libxslt )"
 RDEPEND="${CDEPEND}"
 DEPEND="${CDEPEND}
+	arm? ( dev-libs/libatomic_ops )
 	libatomic? ( dev-libs/libatomic_ops )"
 PDEPEND="vim-syntax? ( app-vim/nginx-syntax )"
 
 pkg_setup() {
-	if use nginx_modules_http_passenger; then
-		einfo
-		einfo "Passenger support has been removed from the nginx ebuild to"
-		einfo "get rid of file collisions, its broken build system and"
-		einfo "incompatibilities between passenger 2 and 3."
-		einfo
-		einfo "Please switch to passenger-3 standalone or use the"
-		einfo "unicorn gem which provides a sane nginx-like architecture"
-		einfo "out of the box."
-		einfo
-		einfo "For more information on sane ruby deployments with"
-		einfo "passenger-3/unicorn go to:"
-		einfo
-		einfo "https://rvm.beginrescueend.com"
-		einfo
-		die "nginx_modules_http_passenger still in IUSE"
-	fi
-
 	ebegin "Creating nginx user and group"
 	enewgroup ${PN}
 	enewuser ${PN} -1 -1 -1 ${PN}
-	eend ${?}
-
-	if use ipv6; then
-		ewarn "Note that ipv6 support in nginx is still experimental."
-		ewarn "Be sure to read comments on gentoo bug #274614"
-		ewarn "http://bugs.gentoo.org/show_bug.cgi?id=274614"
-	fi
+	eend $?
 
 	if use libatomic; then
 		ewarn "GCC 4.1+ features built-in atomic operations."
@@ -156,70 +153,71 @@ pkg_setup() {
 
 src_prepare() {
 	sed -i 's/ make/ \\$(MAKE)/' "${S}"/auto/lib/perl/make
-
-	if use nginx_modules_http_ey_balancer; then
-		epatch "${FILESDIR}"/nginx-0.8.32-ey-balancer.patch
-	fi
 }
 
 src_configure() {
 	local myconf= http_enabled= mail_enabled=
 
-	use aio && myconf="${myconf} --with-file-aio --with-aio_module"
-	use debug && myconf="${myconf} --with-debug"
-	use ipv6 && myconf="${myconf} --with-ipv6"
-	use libatomic && myconf="${myconf} --with-libatomic"
-	use pcre && myconf="${myconf} --with-pcre"
+	use aio       && myconf+=" --with-file-aio --with-aio_module"
+	use debug     && myconf+=" --with-debug"
+	use ipv6      && myconf+=" --with-ipv6"
+	use libatomic && myconf+=" --with-libatomic"
+	use pcre      && myconf+=" --with-pcre"
 
 	# HTTP modules
 	for mod in $NGINX_MODULES_STD; do
 		if use nginx_modules_http_${mod}; then
 			http_enabled=1
 		else
-			myconf="${myconf} --without-http_${mod}_module"
+			myconf+=" --without-http_${mod}_module"
 		fi
 	done
 
 	for mod in $NGINX_MODULES_OPT; do
 		if use nginx_modules_http_${mod}; then
 			http_enabled=1
-			myconf="${myconf} --with-http_${mod}_module"
+			myconf+=" --with-http_${mod}_module"
 		fi
 	done
 
 	if use nginx_modules_http_fastcgi; then
-		myconf="${myconf} --with-http_realip_module"
+		myconf+=" --with-http_realip_module"
 	fi
 
 	# third-party modules
+	if use nginx_modules_http_cache_purge; then
+		http_enabled=1
+		myconf+=" --add-module=${WORKDIR}/${HTTP_CACHE_PURGE_MODULE_P}"
+	fi
+
 	if use nginx_modules_http_headers_more; then
 		http_enabled=1
-		myconf="${myconf} --add-module=${WORKDIR}/agentzh-headers-more-nginx-module-${HTTP_HEADERS_MORE_MODULE_SHA1}"
+		myconf+=" --add-module=${WORKDIR}/agentzh-headers-more-nginx-module-${HTTP_HEADERS_MORE_MODULE_SHA1}"
 	fi
 
 	if use nginx_modules_http_push; then
 		http_enabled=1
-		myconf="${myconf} --add-module=${WORKDIR}/${HTTP_PUSH_MODULE_P}"
+		myconf+=" --add-module=${WORKDIR}/${HTTP_PUSH_MODULE_P}"
 	fi
 
-	if use nginx_modules_http_cache_purge; then
+	if use nginx_modules_http_redis2; then
 		http_enabled=1
-		myconf="${myconf} --add-module=${WORKDIR}/${HTTP_CACHE_PURGE_MODULE_P}"
-	fi
-
-	if use nginx_modules_http_upload; then
-		http_enabled=1
-		myconf="${myconf} --add-module=${WORKDIR}/${HTTP_UPLOAD_MODULE_P}"
-	fi
-
-	if use nginx_modules_http_ey_balancer; then
-		http_enabled=1
-		myconf="${myconf} --add-module=${WORKDIR}/ry-nginx-ey-balancer-${HTTP_EY_BALANCER_MODULE_SHA1}"
+		myconf+=" --add-module=${WORKDIR}/agentzh-redis2-nginx-module-${HTTP_REDIS2_MODULE_SHA1}"
 	fi
 
 	if use nginx_modules_http_slowfs_cache; then
 		http_enabled=1
-		myconf="${myconf} --add-module=${WORKDIR}/${HTTP_SLOWFS_CACHE_MODULE_P}"
+		myconf+=" --add-module=${WORKDIR}/${HTTP_SLOWFS_CACHE_MODULE_P}"
+	fi
+
+	if use nginx_modules_http_upload; then
+		http_enabled=1
+		myconf+=" --add-module=${WORKDIR}/${HTTP_UPLOAD_MODULE_P}"
+	fi
+
+	if use nginx_modules_http_upload_progress; then
+		http_enabled=1
+		myconf+=" --add-module=${WORKDIR}/masterzen-nginx-upload-progress-module-${HTTP_UPLOAD_PROGRESS_MODULE_SHA1}"
 	fi
 
 	if use http || use http-cache; then
@@ -227,10 +225,10 @@ src_configure() {
 	fi
 
 	if [ $http_enabled ]; then
-		use http-cache || myconf="${myconf} --without-http-cache"
-		use ssl && myconf="${myconf} --with-http_ssl_module"
+		use http-cache || myconf+=" --without-http-cache"
+		use ssl && myconf+=" --with-http_ssl_module"
 	else
-		myconf="${myconf} --without-http --without-http-cache"
+		myconf+=" --without-http --without-http-cache"
 	fi
 
 	# MAIL modules
@@ -238,18 +236,18 @@ src_configure() {
 		if use nginx_modules_mail_${mod}; then
 			mail_enabled=1
 		else
-			myconf="${myconf} --without-mail_${mod}_module"
+			myconf+=" --without-mail_${mod}_module"
 		fi
 	done
 
 	if [ $mail_enabled ]; then
-		myconf="${myconf} --with-mail"
-		use ssl && myconf="${myconf} --with-mail_ssl_module"
+		myconf+=" --with-mail"
+		use ssl && myconf+=" --with-mail_ssl_module"
 	fi
 
 	# custom modules
 	for mod in $NGINX_ADD_MODULES; do
-		myconf="${myconf} --add-module=${mod}"
+		myconf+=" --add-module=${mod}"
 	done
 
 	# https://bugs.gentoo.org/286772
@@ -283,6 +281,7 @@ src_compile() {
 
 src_install() {
 	keepdir /var/log/${PN} /var/tmp/${PN}/{client,proxy,fastcgi,scgi,uwsgi}
+	keepdir /var/www/localhost/htdocs
 
 	dosbin objs/nginx
 	newinitd "${FILESDIR}"/nginx.init-r2 nginx
@@ -307,29 +306,29 @@ src_install() {
 		fixlocalpod
 	fi
 
+	if use nginx_modules_http_cache_purge; then
+		docinto ${HTTP_CACHE_PURGE_MODULE_P}
+		dodoc "${WORKDIR}"/${HTTP_CACHE_PURGE_MODULE_P}/{CHANGES,README.md,TODO.md}
+	fi
+
 	if use nginx_modules_http_push; then
 		docinto ${HTTP_PUSH_MODULE_P}
 		dodoc "${WORKDIR}"/${HTTP_PUSH_MODULE_P}/{changelog.txt,protocol.txt,README}
 	fi
 
-	if use nginx_modules_http_cache_purge; then
-		docinto ${HTTP_CACHE_PURGE_MODULE_P}
-		dodoc "${WORKDIR}"/${HTTP_CACHE_PURGE_MODULE_P}/{CHANGES,README}
-	fi
-
-	if use nginx_modules_http_upload; then
-		docinto ${HTTP_UPLOAD_MODULE_P}
-		dodoc "${WORKDIR}"/${HTTP_UPLOAD_MODULE_P}/{Changelog,README}
-	fi
-
-	if use nginx_modules_http_ey_balancer; then
-		docinto ${HTTP_EY_BALANCER_MODULE_P}
-		dodoc "${WORKDIR}"/ry-nginx-ey-balancer-${HTTP_EY_BALANCER_MODULE_SHA1}/README
+	if use nginx_modules_http_redis2; then
+		docinto ${HTTP_REDIS2_MODULE_P}
+		dodoc "${WORKDIR}"/agentzh-redis2-nginx-module-${HTTP_REDIS2_MODULE_SHA1}/{Changes,README}
 	fi
 
 	if use nginx_modules_http_slowfs_cache; then
 		docinto ${HTTP_SLOWFS_CACHE_MODULE_P}
 		dodoc "${WORKDIR}"/${HTTP_SLOWFS_CACHE_MODULE_P}/{CHANGES,README}
+	fi
+
+	if use nginx_modules_http_upload; then
+		docinto ${HTTP_UPLOAD_MODULE_P}
+		dodoc "${WORKDIR}"/${HTTP_UPLOAD_MODULE_P}/{Changelog,README}
 	fi
 }
 
