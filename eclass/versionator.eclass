@@ -3,7 +3,8 @@
 
 # @ECLASS: versionator.eclass
 # @MAINTAINER:
-# Jonathan Callen <abcd@gentoo.org>, base-system@gentoo.org
+# Jonathan Callen <abcd@gentoo.org>
+# base-system@gentoo.org
 # @BLURB: functions which simplify manipulation of ${PV} and similar version strings
 # @DESCRIPTION:
 # This eclass provides functions which simplify manipulating $PV and similar
@@ -115,7 +116,7 @@ get_major_version() {
 }
 
 # @FUNCTION: get_version_component_range
-# @USAGE: [version]
+# @USAGE: <range> [version]
 # @DESCRIPTION:
 # Get a particular component or range of components from the version. If no
 # version parameter is supplied, defaults to $PV.
