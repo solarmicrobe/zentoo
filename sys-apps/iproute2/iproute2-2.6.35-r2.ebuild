@@ -35,6 +35,7 @@ RDEPEND="!net-misc/arpd
 	atm? ( net-dialup/linux-atm )"
 DEPEND="${RDEPEND}
 	elibc_glibc? ( >=sys-libs/glibc-2.7 )
+	sys-devel/bison
 	sys-devel/flex
 	>=sys-kernel/linux-headers-2.6.27"
 
