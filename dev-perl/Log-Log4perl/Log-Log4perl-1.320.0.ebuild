@@ -12,7 +12,7 @@ DESCRIPTION="Log::Log4perl is a Perl port of the widely popular log4j logging pa
 HOMEPAGE="http://log4perl.sourceforge.net/"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 RDEPEND="virtual/perl-Time-HiRes"

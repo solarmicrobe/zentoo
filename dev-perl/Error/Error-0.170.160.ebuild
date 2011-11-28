@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="Error/exception handling in an OO-ish way"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 RDEPEND=""

@@ -8,5 +8,5 @@ DESCRIPTION="class interface to TCP sockets"
 
 LICENSE="PHP-2.02"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""

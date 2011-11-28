@@ -13,7 +13,7 @@ SRC_URI=""
 
 LICENSE=""
 SLOT="${USE_RUBY}"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="dev-lang/ruby:1.8[ssl]"

@@ -21,7 +21,7 @@ SRC_URI="doc? ( http://sqlite.org/${PN}-doc-${DOC_PV}.zip )
 
 LICENSE="as-is"
 SLOT="3"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="debug doc +extensions +fts3 icu +readline secure-delete soundex tcl test +threadsafe unlock-notify"
 
 RDEPEND="icu? ( dev-libs/icu )

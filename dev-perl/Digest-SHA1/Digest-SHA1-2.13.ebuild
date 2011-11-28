@@ -10,7 +10,7 @@ inherit perl-module
 DESCRIPTION="NIST SHA message digest algorithm"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="virtual/perl-digest-base"

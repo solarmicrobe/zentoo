@@ -11,7 +11,7 @@ SRC_URI="ftp://sources.redhat.com/pub/dm/${PN}.${PV}.tgz
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="selinux"
 
 DEPEND="selinux? ( sys-libs/libselinux )"

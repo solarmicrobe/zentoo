@@ -17,7 +17,7 @@ HOMEPAGE="http://www.sinatrarb.com/"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_rdepend '=dev-ruby/rack-1.1* =dev-ruby/tilt-1*'

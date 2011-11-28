@@ -9,7 +9,7 @@ DESCRIPTION="Standard en/decode of ASN.1 structures"
 
 LICENSE="|| ( Artistic GPL-2 )"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 SRC_TEST="do"

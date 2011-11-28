@@ -4,7 +4,7 @@
 
 inherit depend.php
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 DESCRIPTION="PEAR - PHP Extension and Application Repository"
 HOMEPAGE="http://pear.php.net/"

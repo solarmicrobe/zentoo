@@ -17,7 +17,7 @@ RESTRICT="test"
 
 SRC_URI="mirror://rubyforge/${PN}/${P}.tgz"
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 SLOT="0"
 IUSE="doc server"
 

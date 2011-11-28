@@ -15,7 +15,7 @@ SRC_URI="http://pyyaml.org/download/${PN}/${MY_P}.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="examples libyaml"
 
 DEPEND="libyaml? ( dev-libs/libyaml dev-python/pyrex )"

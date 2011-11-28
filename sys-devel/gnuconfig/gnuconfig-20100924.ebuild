@@ -8,7 +8,7 @@ if [[ ${PV} == "99999999" ]] ; then
 	inherit git
 else
 	SRC_URI="mirror://gentoo/${P}.tar.bz2"
-	KEYWORDS="amd64 x86"
+	KEYWORDS="amd64"
 fi
 
 DESCRIPTION="Updated config.sub and config.guess file from GNU"

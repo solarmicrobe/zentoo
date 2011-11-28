@@ -17,7 +17,7 @@ SRC_URI="!bindist? ( djvu? ( mirror://sourceforge/djvu/gsdjvu-${GSDJVU_PV}.tar.g
 
 LICENSE="GPL-3 CPL-1.0"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="bindist cairo cups djvu gtk jpeg2k X"
 
 COMMON_DEPEND="app-text/libpaper

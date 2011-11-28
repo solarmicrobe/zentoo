@@ -10,7 +10,7 @@ SRC_URI="http://jumpgate.sourceforge.net/${P}.tar.gz"
 LICENSE="as-is"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 DEPEND=""
 RDEPEND=""

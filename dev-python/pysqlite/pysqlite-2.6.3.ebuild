@@ -15,7 +15,7 @@ SRC_URI="http://${PN}.googlecode.com/files/${P}.tar.gz"
 
 LICENSE="pysqlite"
 SLOT="2"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="examples"
 
 DEPEND=">=dev-db/sqlite-3.3.8:3[extensions]"

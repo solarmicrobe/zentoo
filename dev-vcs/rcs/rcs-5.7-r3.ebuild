@@ -13,7 +13,7 @@ SRC_URI="mirror://gnu/rcs/${P}.tar.gz
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="sys-apps/diffutils"

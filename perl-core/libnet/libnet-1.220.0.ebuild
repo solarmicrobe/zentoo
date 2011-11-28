@@ -11,7 +11,7 @@ inherit eutils perl-module
 DESCRIPTION="A URI Perl Module"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="sasl"
 
 RDEPEND="sasl? ( dev-perl/Authen-SASL )"

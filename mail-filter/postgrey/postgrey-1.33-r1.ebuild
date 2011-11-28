@@ -14,7 +14,7 @@ SRC_URI="http://postgrey.schweikert.ch/pub/${P}.tar.gz
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="targrey"
 
 DEPEND=""

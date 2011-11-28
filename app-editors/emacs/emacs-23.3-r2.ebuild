@@ -14,7 +14,7 @@ SRC_URI="mirror://gnu/emacs/${P}a.tar.bz2
 
 LICENSE="GPL-3 FDL-1.3 BSD as-is MIT W3C unicode PSF-2"
 SLOT="23"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="alsa aqua dbus gconf gif gpm gtk gzip-el hesiod jpeg kerberos livecd m17n-lib motif png sound source svg tiff toolkit-scroll-bars X Xaw3d xft +xpm"
 REQUIRED_USE="aqua? ( !X )"
 

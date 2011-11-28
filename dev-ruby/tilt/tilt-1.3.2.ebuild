@@ -17,7 +17,7 @@ HOMEPAGE="http://github.com/rtomayko/tilt"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RUBY_PATCHES=( "${P}-thread_id.patch" )

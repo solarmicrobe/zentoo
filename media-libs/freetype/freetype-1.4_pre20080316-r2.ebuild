@@ -10,7 +10,7 @@ SRC_URI="mirror://gentoo/${P}.tar.bz2"
 
 LICENSE="FTL"
 SLOT="1"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc nls kpathsea"
 
 COMMON_DEPEND="kpathsea? ( virtual/tex-base )"

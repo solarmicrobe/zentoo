@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="A Perl module for parsing and creating MIME entities"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 RDEPEND=">=virtual/perl-MIME-Base64-3.05

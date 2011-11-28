@@ -11,7 +11,7 @@ SRC_URI="http://www.tcpdump.org/release/${P}.tar.gz
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="chroot ssl ipv6 samba"
 
 DEPEND="net-libs/libpcap

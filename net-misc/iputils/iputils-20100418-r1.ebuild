@@ -11,7 +11,7 @@ SRC_URI="http://www.skbuff.net/iputils/iputils-s${PV}.tar.bz2
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc idn ipv6 SECURITY_HAZARD ssl static"
 
 # sysfsutils is needed for libsysfs which is used by arping only

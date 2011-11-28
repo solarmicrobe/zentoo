@@ -10,7 +10,7 @@ inherit perl-module
 DESCRIPTION="Self Contained RDBMS in a DBI Driver"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 RDEPEND=">=dev-perl/DBI-1.57

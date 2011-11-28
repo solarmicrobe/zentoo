@@ -16,7 +16,7 @@ HOMEPAGE="http://www.xmlsoft.org/"
 
 LICENSE="MIT"
 SLOT="2"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="debug doc examples icu ipv6 python readline static-libs test"
 
 XSTS_HOME="http://www.w3.org/XML/2004/xml-schema-test-suite"

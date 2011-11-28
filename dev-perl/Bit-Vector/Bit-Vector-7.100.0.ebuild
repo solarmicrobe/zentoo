@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="Efficient bit vector, set of integers and big int math library"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="dev-perl/Carp-Clan

@@ -21,7 +21,7 @@ SRC_URI="http://www1.shorewall.net/pub/${PN}/${MY_PV_TREE}/${MY_P}/${P}${MY_P_BE
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc"
 
 DEPEND=">=net-firewall/iptables-1.2.4

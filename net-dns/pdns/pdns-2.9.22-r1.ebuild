@@ -11,7 +11,7 @@ HOMEPAGE="http://www.powerdns.com/"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="debug doc ldap mysql postgres sqlite sqlite3 static opendbx"
 
 RDEPEND="mysql? ( virtual/mysql )

@@ -21,7 +21,7 @@ LICENSE="as-is" # truly
 SRC_URI="http://github.com/luislavena/${PN}/tarball/v${PV} -> ${P}.tar.gz"
 S="${WORKDIR}/luislavena-${PN}-*"
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 SLOT="0"
 IUSE=""
 

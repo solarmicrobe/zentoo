@@ -8,7 +8,7 @@ DESCRIPTION="SOAP Client/Server for PHP 4"
 
 LICENSE="PHP-2.02"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="minimal"
 
 RDEPEND=">=dev-php/PEAR-HTTP_Request-1.2.4-r1

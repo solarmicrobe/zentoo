@@ -19,7 +19,7 @@ HOMEPAGE="http://github.com/celldee/bunny"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 all_ruby_install() {

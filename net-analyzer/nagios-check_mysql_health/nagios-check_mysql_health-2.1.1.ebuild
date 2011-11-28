@@ -12,7 +12,7 @@ SRC_URI="http://labs.consol.de/wp-content/uploads/2010/03/check_mysql_health-${P
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=">=net-analyzer/nagios-plugins-1.4.13-r1"

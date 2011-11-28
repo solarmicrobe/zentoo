@@ -8,7 +8,7 @@ DESCRIPTION="An implementation of the SMTP protocol"
 
 LICENSE="PHP-2.02"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="sasl"
 
 RDEPEND=">=dev-php/PEAR-Net_Socket-1.0.7

@@ -16,7 +16,7 @@ HOMEPAGE="http://json.rubyforge.org/"
 LICENSE="|| ( Ruby GPL-2 )"
 SRC_URI="mirror://rubygems/${P}.gem"
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 SLOT="0"
 IUSE=""
 

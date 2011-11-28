@@ -18,7 +18,7 @@ HOMEPAGE="http://github.com/igrigorik/em-http-request"
 
 LICENSE="Ruby"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 # Tests depend on em-websocket which we don't have packaged yet.

@@ -10,7 +10,7 @@ SRC_URI=""
 
 LICENSE=""
 SLOT="5.3"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="|| ( =dev-lang/php-5.3*[apache2]

@@ -16,7 +16,7 @@ SRC_URI="http://ftp.edgewall.com/pub/babel/${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="dev-python/pytz

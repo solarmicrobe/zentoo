@@ -9,7 +9,7 @@ DESCRIPTION="Perl module for using and building Perl SAX2 XML parsers, filters, 
 
 LICENSE="|| ( Artistic GPL-2 )"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=">=dev-perl/XML-NamespaceSupport-1.04

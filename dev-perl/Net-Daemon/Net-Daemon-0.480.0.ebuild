@@ -11,5 +11,5 @@ inherit perl-module
 DESCRIPTION="Abstract base class for portable servers"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""

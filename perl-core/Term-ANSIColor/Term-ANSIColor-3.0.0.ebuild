@@ -12,7 +12,7 @@ inherit perl-module
 DESCRIPTION="Color screen output using ANSI escape sequences."
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 RDEPEND=""

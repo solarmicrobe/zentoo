@@ -13,7 +13,7 @@ SRC_URI="http://${PN}.googlecode.com/files/${P}.tar.gz
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="static static-libs acl xattr kernel_linux +bzip2 +lzma +zlib expat"
 
 COMPRESS_LIBS_DEPEND="lzma? ( app-arch/xz-utils )

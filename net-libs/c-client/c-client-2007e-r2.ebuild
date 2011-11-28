@@ -16,7 +16,7 @@ SRC_URI="ftp://ftp.cac.washington.edu/imap/${MY_P}.tar.Z"
 
 LICENSE="as-is"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc kernel_linux kernel_FreeBSD pam ssl"
 
 RDEPEND="ssl? ( dev-libs/openssl )

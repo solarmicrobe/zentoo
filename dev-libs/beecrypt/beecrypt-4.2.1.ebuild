@@ -12,7 +12,7 @@ SRC_URI="mirror://sourceforge/beecrypt/${P}.tar.gz"
 
 LICENSE="GPL-2 LGPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="java nocxx python threads doc"
 
 COMMONDEPEND="python? ( >=dev-lang/python-2.2 )

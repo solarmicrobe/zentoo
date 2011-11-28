@@ -11,7 +11,7 @@ HOMEPAGE="http://www.gtk.org/"
 
 LICENSE="LGPL-2"
 SLOT="2"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="+X debug doc +introspection jpeg jpeg2k svg tiff test"
 
 # librsvg blocker is for the new pixbuf loader API, you lose icons otherwise

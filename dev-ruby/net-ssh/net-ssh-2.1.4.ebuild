@@ -18,7 +18,7 @@ HOMEPAGE="http://net-ssh.rubyforge.org/"
 
 LICENSE="GPL-2"
 SLOT="2"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 # Explicit dependency on test-unit should be avoided but currently test

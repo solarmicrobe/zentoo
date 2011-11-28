@@ -9,7 +9,7 @@ DESCRIPTION="module for compiling and altering fonts"
 
 LICENSE="Artistic"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="virtual/perl-IO-Compress

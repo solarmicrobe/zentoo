@@ -9,7 +9,7 @@ HOMEPAGE="http://code.google.com/p/innotop/"
 SRC_URI="http://innotop.googlecode.com/files/${P}.tar.gz"
 
 LICENSE="|| ( Artistic GPL-2 )"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 SLOT="0"
 IUSE=""
 

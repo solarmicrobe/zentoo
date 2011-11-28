@@ -12,7 +12,7 @@ SRC_URI="http://download.tangent.org/${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="debug hsieh"
 
 DEPEND="net-misc/memcached

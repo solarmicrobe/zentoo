@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 MY_PV="${PV/_/}"
 MY_PV="${MY_PV/rc/RC}"

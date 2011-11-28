@@ -11,7 +11,7 @@ HOMEPAGE="http://code.google.com/p/django-tagging/"
 SRC_URI="http://django-tagging.googlecode.com/files/${P}.tar.gz"
 
 LICENSE="MIT"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 SLOT="0"
 IUSE=""
 

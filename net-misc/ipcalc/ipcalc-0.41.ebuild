@@ -8,7 +8,7 @@ SRC_URI="http://jodies.de/ipcalc-archive/${P}.tar.gz"
 
 LICENSE="as-is"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND=">=dev-lang/perl-5.6.0"

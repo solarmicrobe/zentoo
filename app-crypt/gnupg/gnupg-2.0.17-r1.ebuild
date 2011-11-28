@@ -13,7 +13,7 @@ SRC_URI="mirror://gnupg/gnupg/${P}.tar.bz2"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="adns bzip2 caps doc ldap nls static selinux smartcard usb"
 
 COMMON_DEPEND_LIBS="

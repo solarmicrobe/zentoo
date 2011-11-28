@@ -19,7 +19,7 @@ else
 	fi
 	MY_P="${PN}-${MY_PV}"
 	SRC_URI="http://developer.osdl.org/dev/iproute2/download/${MY_P}.tar.bz2"
-	KEYWORDS="amd64 x86"
+	KEYWORDS="amd64"
 	S=${WORKDIR}/${MY_P}
 fi
 

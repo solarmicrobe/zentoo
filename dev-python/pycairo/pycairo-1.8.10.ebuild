@@ -16,7 +16,7 @@ SRC_URI="http://cairographics.org/releases/py2cairo-${PV}.tar.gz"
 
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc examples svg"
 
 RDEPEND=">=x11-libs/cairo-1.8.10[svg?]"

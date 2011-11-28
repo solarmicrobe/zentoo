@@ -12,5 +12,5 @@ DESCRIPTION="Change terminal modes, and perform non-blocking reads"
 
 LICENSE="as-is"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""

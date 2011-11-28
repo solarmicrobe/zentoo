@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="Text utilities for use with GD"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="dev-perl/GD"

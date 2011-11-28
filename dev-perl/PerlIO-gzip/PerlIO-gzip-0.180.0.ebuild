@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="PerlIO::Gzip - PerlIO layer to gzip/gunzip"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="sys-libs/zlib"

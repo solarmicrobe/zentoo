@@ -8,7 +8,7 @@ SRC_URI="http://dev.gentoo.org/~flameeyes/${PN}/${P}.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="|| ( sys-apps/util-linux app-misc/getopt )

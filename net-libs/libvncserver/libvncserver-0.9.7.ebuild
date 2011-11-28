@@ -13,7 +13,7 @@ SRC_URI="http://libvncserver.sourceforge.net/LibVNCServer-${PV/_}.tar.gz
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="no24bpp +jpeg test threads +zlib"
 
 DEPEND="jpeg? ( virtual/jpeg )

@@ -10,7 +10,7 @@ SRC_URI="https://fedorahosted.org/releases/e/l/elfutils/${PV}/${P}.tar.bz2"
 
 LICENSE="GPL-2-with-exceptions"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="bzip2 lzma nls zlib elibc_glibc"
 
 # This pkg does not actually seem to compile currently in a uClibc

@@ -13,7 +13,7 @@ SRC_URI="http://argparse.googlecode.com/files/${P}.tar.gz"
 
 LICENSE="PSF-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="dev-python/setuptools"

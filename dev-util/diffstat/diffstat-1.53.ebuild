@@ -8,7 +8,7 @@ SRC_URI="ftp://invisible-island.net/diffstat/${P}.tgz"
 
 LICENSE="as-is"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""

@@ -4,7 +4,7 @@
 
 inherit eutils alternatives toolchain-funcs
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 DESCRIPTION="SQLite: an SQL Database Engine in a C Library."
 HOMEPAGE="http://www.sqlite.org/"

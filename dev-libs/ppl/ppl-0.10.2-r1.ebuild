@@ -13,7 +13,7 @@ SRC_URI="http://www.cs.unipr.it/ppl/Download/ftp/releases/${PV}/${P}.tar.bz2
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc lpsol pch test watchdog"
 
 RDEPEND=">=dev-libs/gmp-4.1.3[-nocxx]

@@ -14,7 +14,7 @@ SRC_URI="mirror://sourceforge/nc110/${MY_P}.tgz
 
 LICENSE="as-is"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="crypt ipv6 static"
 
 DEPEND="crypt? ( dev-libs/libmix )"

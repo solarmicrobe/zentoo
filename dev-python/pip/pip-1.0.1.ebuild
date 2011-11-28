@@ -13,7 +13,7 @@ HOMEPAGE="http://www.pip-installer.org/ http://pypi.python.org/pypi/pip/"
 SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 
 LICENSE="MIT"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 SLOT="0"
 IUSE="bash-completion zsh-completion"
 

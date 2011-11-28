@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="Get number of occupied columns of a string on terminal"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 SRC_TEST="do"

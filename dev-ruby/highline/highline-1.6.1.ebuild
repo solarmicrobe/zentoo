@@ -17,7 +17,7 @@ HOMEPAGE="http://rubyforge.org/projects/highline/"
 IUSE=""
 LICENSE="|| ( GPL-2 Ruby )"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 all_ruby_prepare() {
 	sed -i -e '/AUTHORS/s:^:#:' Rakefile || die "Fixing the Rakefile failed"

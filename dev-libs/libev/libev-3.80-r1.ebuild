@@ -12,7 +12,7 @@ SRC_URI="http://dist.schmorp.de/libev/${MY_P}.tar.gz
 
 LICENSE="|| ( BSD GPL-2 )"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 # Bug #283558

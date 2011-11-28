@@ -10,7 +10,7 @@ inherit perl-module
 DESCRIPTION="Convert between most 8bit encodings"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND=">=dev-perl/Unicode-String-2.06"

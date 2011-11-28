@@ -14,7 +14,7 @@ HOMEPAGE="http://www.boost.org/doc/tools/build/index.html"
 SRC_URI="mirror://sourceforge/boost/boost_${MY_PV}.tar.bz2"
 LICENSE="Boost-1.0"
 SLOT="$(get_version_component_range 1-2)"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="examples python"
 
 DEPEND="!<dev-libs/boost-1.34.0

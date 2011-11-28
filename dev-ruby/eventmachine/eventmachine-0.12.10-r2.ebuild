@@ -17,7 +17,7 @@ HOMEPAGE="http://rubyeventmachine.com"
 
 LICENSE="|| ( GPL-2 Ruby )"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="${DEPEND}

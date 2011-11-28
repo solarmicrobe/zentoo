@@ -27,7 +27,7 @@ LICENSE="DB"
 SLOT="3"
 # This ebuild is to be the compatibility ebuild for when db4 is put
 # in the tree.
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc"
 
 RDEPEND=""

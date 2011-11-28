@@ -14,7 +14,7 @@ SRC_URI="http://www.thekelleys.org.uk/dnsmasq/${MY_P}.tar.lzma"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="dbus +dhcp idn ipv6 nls tftp"
 
 RDEPEND="dbus? ( sys-apps/dbus )

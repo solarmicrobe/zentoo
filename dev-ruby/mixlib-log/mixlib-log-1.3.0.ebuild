@@ -16,7 +16,7 @@ HOMEPAGE="http://github.com/opscode/mixlib-log"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_bdepend "test? ( dev-ruby/rspec:0 dev-util/cucumber )"

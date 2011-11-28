@@ -12,7 +12,7 @@ DESCRIPTION="LM/NT hashing, for Samba's smbpasswd entries"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="dev-perl/Digest-MD4"

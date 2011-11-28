@@ -10,7 +10,7 @@ DOCS="README"
 
 inherit php-ext-pecl-r2
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 DESCRIPTION="PHP extension for using memcached."
 LICENSE="PHP-3"

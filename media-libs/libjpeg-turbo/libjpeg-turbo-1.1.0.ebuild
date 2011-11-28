@@ -12,7 +12,7 @@ SRC_URI="mirror://sourceforge/${PN}/${P}.tar.gz
 
 LICENSE="as-is LGPL-2.1 wxWinLL-3.1"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="static-libs"
 
 NASM_DEPEND="dev-lang/nasm"

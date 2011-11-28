@@ -13,7 +13,7 @@ HOMEPAGE="http://librsvg.sourceforge.net/"
 
 LICENSE="LGPL-2"
 SLOT="2"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc +gtk tools"
 
 RDEPEND=">=media-libs/fontconfig-1.0.1

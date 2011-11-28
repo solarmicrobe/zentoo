@@ -10,7 +10,7 @@ SRC_URI="mirror://sourceforge/${PN}/${P}.tar.bz2"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="idea ipv6 pam rc5 readline selinux ldap kerberos nat hybrid iconv selinux"
 
 DEPEND_COMMON="

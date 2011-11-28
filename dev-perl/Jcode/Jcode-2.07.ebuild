@@ -9,7 +9,7 @@ DESCRIPTION="Japanese transcoding module for Perl"
 
 LICENSE="|| ( Artistic GPL-2 )"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=">=virtual/perl-MIME-Base64-2.1

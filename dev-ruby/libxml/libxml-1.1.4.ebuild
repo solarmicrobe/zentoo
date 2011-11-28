@@ -18,7 +18,7 @@ HOMEPAGE="http://libxml.rubyforge.org"
 
 LICENSE="as-is"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="${RDEPEND} dev-libs/libxml2"

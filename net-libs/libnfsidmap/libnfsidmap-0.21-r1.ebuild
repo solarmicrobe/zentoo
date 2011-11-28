@@ -10,7 +10,7 @@ SRC_URI="http://www.citi.umich.edu/projects/nfsv4/linux/libnfsidmap/${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="ldap"
 
 DEPEND="ldap? ( net-nds/openldap )"

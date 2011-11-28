@@ -8,5 +8,5 @@ DESCRIPTION="The PEAR::Net_DIME class implements DIME encoding"
 
 LICENSE="PHP-2.02"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""

@@ -15,7 +15,7 @@ HOMEPAGE="http://amqp.rubyforge.org/"
 
 LICENSE="Ruby"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_rdepend ">=dev-ruby/eventmachine-0.12.4"

@@ -17,7 +17,7 @@ SRC_URI="amd64? ( http://download.adaptec.com/raid/storage_manager/${PN}_linux_x
 
 LICENSE="Adaptec"
 SLOT="0"
-KEYWORDS="-* amd64 x86"
+KEYWORDS="-* amd64"
 IUSE=""
 
 RDEPEND="virtual/libstdc++:3.3"

@@ -14,7 +14,7 @@ SRC_URI="http://www.lsi.com/downloads/Public/SATA/SATA%20Common%20Files/cli_linu
 
 LICENSE="3ware"
 SLOT="0"
-KEYWORDS="-* amd64 x86"
+KEYWORDS="-* amd64"
 IUSE=""
 
 DEPEND="app-arch/unzip"

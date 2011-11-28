@@ -8,7 +8,7 @@ SRC_URI=""
 
 LICENSE=""
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="|| ( ~dev-lang/perl-5.12.3 ~dev-lang/perl-5.12.2 ~perl-core/Compress-Raw-Zlib-${PV} )"

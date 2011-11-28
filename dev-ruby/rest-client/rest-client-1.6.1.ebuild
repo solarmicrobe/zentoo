@@ -16,7 +16,7 @@ HOMEPAGE="http://github.com/archiloque/rest-client"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_bdepend "doc? ( dev-ruby/jeweler )"

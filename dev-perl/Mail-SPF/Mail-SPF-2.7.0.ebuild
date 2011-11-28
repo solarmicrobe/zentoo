@@ -13,7 +13,7 @@ DESCRIPTION="Sender Permitted From - Object Oriented"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="dev-perl/Error

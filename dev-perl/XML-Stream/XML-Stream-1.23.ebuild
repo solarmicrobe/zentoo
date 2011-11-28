@@ -11,7 +11,7 @@ DESCRIPTION="Creates and XML Stream connection and parses return data"
 
 SLOT="0"
 LICENSE="LGPL-2"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="ssl"
 
 DEPEND="dev-perl/Authen-SASL

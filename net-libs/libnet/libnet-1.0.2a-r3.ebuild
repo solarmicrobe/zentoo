@@ -10,7 +10,7 @@ SRC_URI="http://www.packetfactory.net/libnet/dist/deprecated/${P}.tar.gz"
 
 LICENSE="LGPL-2"
 SLOT="1.0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 S=${WORKDIR}/Libnet-${PV}

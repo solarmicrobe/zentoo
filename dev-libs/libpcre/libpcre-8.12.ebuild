@@ -20,7 +20,7 @@ else
 fi
 LICENSE="BSD"
 SLOT="3"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="bzip2 +cxx unicode zlib static-libs +recursion-limit"
 
 RDEPEND="bzip2? ( app-arch/bzip2 )

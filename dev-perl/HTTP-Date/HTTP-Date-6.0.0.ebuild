@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="Date conversion for HTTP date formats"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="

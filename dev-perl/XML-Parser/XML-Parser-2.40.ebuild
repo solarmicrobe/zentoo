@@ -10,7 +10,7 @@ inherit perl-module multilib
 DESCRIPTION="A Perl extension interface to James Clark's XML parser, expat"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND=">=dev-libs/expat-1.95.1-r1"

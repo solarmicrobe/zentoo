@@ -15,7 +15,7 @@ HOMEPAGE="http://www.twistedmatrix.com/ http://pypi.python.org/pypi/Twisted"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="crypt gtk serial"
 
 DEPEND=">=net-zope/zope-interface-3.0.1

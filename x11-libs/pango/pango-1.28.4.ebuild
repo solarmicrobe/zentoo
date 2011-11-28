@@ -13,7 +13,7 @@ HOMEPAGE="http://www.pango.org/"
 
 LICENSE="LGPL-2 FTL"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="X doc +introspection test"
 
 RDEPEND=">=dev-libs/glib-2.24:2

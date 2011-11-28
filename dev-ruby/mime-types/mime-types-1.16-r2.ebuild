@@ -17,7 +17,7 @@ HOMEPAGE="http://rubyforge.org/projects/mime-types"
 
 LICENSE="Ruby Artistic GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_bdepend "doc? ( dev-ruby/hoe )

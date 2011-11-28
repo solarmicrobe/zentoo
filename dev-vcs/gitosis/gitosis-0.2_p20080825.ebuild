@@ -16,7 +16,7 @@ MY_P="${MY_PN}-${MY_PV}"
 SRC_URI="mirror://gentoo/${MY_P}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 DEPEND_GIT=">=dev-vcs/git-1.5.5.4"
 DEPEND="${DEPEND_GIT}

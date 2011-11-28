@@ -8,7 +8,7 @@ DESCRIPTION="Provides a class to decode mime messages (split from PEAR-Mail_Mime
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 # >=PEAR-Mail_Mime-1.5.2 in in DEPEND to avoid blockers and circular deps

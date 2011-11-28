@@ -10,7 +10,7 @@ HOMEPAGE="http://www.gecode.org/"
 
 SLOT="0"
 LICENSE="MIT"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""

@@ -19,7 +19,7 @@ HOMEPAGE="http://github.com/brianmario/yajl-ruby"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 RDEPEND="${RDEPEND} dev-libs/yajl"

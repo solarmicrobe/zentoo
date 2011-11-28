@@ -12,7 +12,7 @@ SRC_URI="mirror://sourceforge/ntop/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="ipv6 ssl"
 #snmp support is disabled
 

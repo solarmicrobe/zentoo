@@ -11,7 +11,7 @@ SRC_URI="ftp://ftp.remotesensing.org/pub/libtiff/${P}.tar.gz"
 
 LICENSE="as-is"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="+cxx jbig jpeg static-libs zlib"
 
 RDEPEND="jpeg? ( virtual/jpeg )

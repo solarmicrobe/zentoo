@@ -17,7 +17,7 @@ SRC_URI="x86? ( ${URL_BASE}/${X86_AT} )
 		amd64? ( ${URL_BASE}/${AMD64_AT} )"
 SLOT="1.6"
 LICENSE="dlj-1.1"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 RESTRICT="strip"
 IUSE="X alsa derby doc examples jce nsplugin odbc"
 

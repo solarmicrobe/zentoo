@@ -10,7 +10,7 @@ SRC_URI="http://www.fastcgi.com/dist/fcgi-2.4.1-SNAP-0311112127.tar.gz"
 
 LICENSE="FastCGI"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="html"
 
 DEPEND=""

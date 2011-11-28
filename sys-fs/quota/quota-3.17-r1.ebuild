@@ -10,7 +10,7 @@ SRC_URI="mirror://sourceforge/linuxquota/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="nls tcpd ldap rpc"
 
 RDEPEND="ldap? ( >=net-nds/openldap-2.3.35 )

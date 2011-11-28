@@ -12,7 +12,7 @@ SRC_URI="http://www.balabit.com/downloads/files/syslog-ng/sources/${PV}/source/s
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="caps hardened ipv6 +pcre selinux spoof-source sql ssl static tcpd"
 RESTRICT="test"
 

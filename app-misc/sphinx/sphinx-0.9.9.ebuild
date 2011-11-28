@@ -18,7 +18,7 @@ SRC_URI="http://sphinxsearch.com/downloads/${MY_P}.tar.gz
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="debug id64 mysql postgres stemmer test"
 
 RDEPEND="mysql? ( virtual/mysql )

@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="The Perl DBD::Pg Module"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="virtual/perl-version

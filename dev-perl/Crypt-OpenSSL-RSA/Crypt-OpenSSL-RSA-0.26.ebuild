@@ -10,7 +10,7 @@ inherit perl-module
 DESCRIPTION="Crypt::OpenSSL::RSA module for perl"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="dev-perl/Crypt-OpenSSL-Bignum

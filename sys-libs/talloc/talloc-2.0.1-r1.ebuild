@@ -12,7 +12,7 @@ SRC_URI="http://samba.org/ftp/${PN}/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="compat doc static-libs swig"
 
 RDEPEND=""

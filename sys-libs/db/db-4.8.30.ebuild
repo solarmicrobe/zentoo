@@ -26,7 +26,7 @@ done
 
 LICENSE="OracleDB"
 SLOT="4.8"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc java nocxx tcl test"
 
 # the entire testsuite needs the TCL functionality

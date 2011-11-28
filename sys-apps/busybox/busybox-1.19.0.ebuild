@@ -57,7 +57,7 @@ else
 fi
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="debug ipv6 make-symlinks +mdev nfs -pam selinux static elibc_glibc"
 RESTRICT="test"
 

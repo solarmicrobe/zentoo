@@ -16,5 +16,5 @@ SRC_URI="ftp://ftp.vim.org/pub/vim/unix/vim-${VIM_VERSION}.tar.bz2
 
 S="${WORKDIR}/vim${VIM_VERSION/.}"
 DESCRIPTION="vim and gvim shared files"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""

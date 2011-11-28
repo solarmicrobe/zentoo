@@ -12,7 +12,7 @@ SRC_URI="mirror://gentoo/pax-utils-${PV}.tar.xz
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="caps"
 #RESTRICT="mirror"
 

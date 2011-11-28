@@ -16,7 +16,7 @@ HOMEPAGE="http://rubyforge.org/projects/abstract"
 
 LICENSE="Ruby"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 each_ruby_test() {

@@ -7,7 +7,7 @@ HOMEPAGE="http://freequaos.host.sk/schedtool"
 SRC_URI="http://freequaos.host.sk/${PN}/${P}.tar.bz2"
 LICENSE="GPL-2"
 SLOT=0
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 src_unpack() {

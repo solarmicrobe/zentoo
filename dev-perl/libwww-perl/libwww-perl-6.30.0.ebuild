@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="A collection of Perl Modules for the WWW"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="ssl"
 
 RDEPEND="

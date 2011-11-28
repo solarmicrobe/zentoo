@@ -10,7 +10,7 @@ SRC_URI="http://www.hpl.hp.com/research/linux/atomic_ops/download/${P}.tar.gz"
 
 LICENSE="GPL-2 MIT as-is"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""

@@ -113,7 +113,7 @@ SRC_URI="ftp://gcc.gnu.org/pub/gcc/releases/gcc-${PV}/gcc-${PV}.tar.bz2
 
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="5"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="multilib nls"
 
 S=${WORKDIR}/gcc-${PV}

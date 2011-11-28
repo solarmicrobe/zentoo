@@ -15,7 +15,7 @@ HOMEPAGE="http://toland.github.com/patron/"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 #ruby_add_bdepend "test? ( dev-ruby/rspec:2 )"

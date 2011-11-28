@@ -9,7 +9,7 @@ EAPI="2"
 
 MY_P="${PN/-utils}-${PV/_}"
 SRC_URI="http://tukaani.org/xz/${MY_P}.tar.gz"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 S=${WORKDIR}/${MY_P}
 EXTRA_DEPEND=
 

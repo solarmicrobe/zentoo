@@ -40,7 +40,7 @@ LICENSE="GPL-2 LGPL-2"
 is_cross \
 	&& SLOT="${CTARGET}" \
 	|| SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="expat multitarget nls python test vanilla"
 
 RDEPEND=">=sys-libs/ncurses-5.2-r2

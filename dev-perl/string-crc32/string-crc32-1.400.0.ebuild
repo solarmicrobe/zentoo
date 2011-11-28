@@ -13,7 +13,7 @@ DESCRIPTION="Perl interface for cyclic redundancy check generation"
 
 LICENSE="public-domain"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 SRC_TEST=do

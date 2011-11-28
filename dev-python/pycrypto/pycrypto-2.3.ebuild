@@ -16,7 +16,7 @@ SRC_URI="http://ftp.dlitz.net/pub/dlitz/crypto/pycrypto/${P}.tar.gz"
 
 LICENSE="public-domain PSF-2.2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc +gmp"
 
 RDEPEND="gmp? ( dev-libs/gmp )"

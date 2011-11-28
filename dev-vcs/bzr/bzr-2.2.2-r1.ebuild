@@ -19,7 +19,7 @@ SRC_URI="http://launchpad.net/bzr/${SERIES}/${PV}/+download/${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="curl doc emacs +sftp test"
 
 # Disable until https://bugs.launchpad.net/bzr/+bug/392127 is released.

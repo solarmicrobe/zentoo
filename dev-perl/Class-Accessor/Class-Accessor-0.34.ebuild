@@ -10,7 +10,7 @@ inherit perl-module
 DESCRIPTION="Automated accessor generation"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="dev-perl/Sub-Name"

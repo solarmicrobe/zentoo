@@ -15,7 +15,7 @@ SRC_URI="http://www.lag.net/paramiko/download/${P}.tar.gz"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc examples"
 
 RDEPEND=">=dev-python/pycrypto-1.9_alpha6"

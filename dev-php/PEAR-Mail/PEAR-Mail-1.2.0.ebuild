@@ -8,7 +8,7 @@ DESCRIPTION="Class that provides multiple interfaces for sending emails"
 
 LICENSE="PHP-2.02 BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND=">=dev-php/PEAR-Net_SMTP-1.4.1"

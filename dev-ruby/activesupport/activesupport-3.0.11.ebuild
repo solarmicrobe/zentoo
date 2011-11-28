@@ -21,7 +21,7 @@ SRC_URI="https://github.com/rails/rails/tarball/v${PV} -> rails-${PV}.tgz"
 
 LICENSE="MIT"
 SLOT="3.0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RUBY_S="rails-rails-*/${PN}"

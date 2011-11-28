@@ -32,7 +32,7 @@ SRC_URI="http://lynx.isc.org/current/${MY_P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="bzip2 cjk gnutls ipv6 nls ssl unicode"
 
 RDEPEND="sys-libs/ncurses[unicode?]

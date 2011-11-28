@@ -30,7 +30,7 @@ DESCRIPTION="free good quality fonts gpl'd by URW++"
 HOMEPAGE="http://www.urwpp.de/"
 SRC_URI="mirror://gentoo/${PN}-${MY_PV}.fc13.src.rpm"
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 LICENSE="GPL-2"
 SLOT="0"

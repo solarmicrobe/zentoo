@@ -12,7 +12,7 @@ inherit perl-module
 DESCRIPTION="YAML Ain't Markup Language (tm)"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 SRC_TEST="do"

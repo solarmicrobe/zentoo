@@ -17,7 +17,7 @@ SRC_URI="https://fedorahosted.org/releases/l/i/linux-pam/${MY_P}.tar.bz2
 
 LICENSE="|| ( BSD GPL-2 )"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="cracklib nls elibc_FreeBSD selinux vim-syntax audit test elibc_glibc debug berkdb nis"
 
 RDEPEND="nls? ( virtual/libintl )

@@ -8,7 +8,7 @@ inherit xorg-2 toolchain-funcs versionator
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/pixman"
 DESCRIPTION="Low-level pixel manipulation routines"
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="altivec mmx neon sse2"
 
 pkg_setup() {

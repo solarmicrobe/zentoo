@@ -16,7 +16,7 @@ SRC_URI="mirror://rubyforge/${PN}/${P}.tgz"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="bash-completion doc"
 
 #ruby_add_bdepend test dev-ruby/flexmock

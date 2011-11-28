@@ -15,7 +15,7 @@ S=${WORKDIR}/shadow-${PV}
 
 LICENSE="Ruby"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RUBY_PATCHES=( "${P}-debian.patch" )

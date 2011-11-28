@@ -10,7 +10,7 @@ SRC_URI="http://www.debath.co.uk/dev86/Dev86src-${PV}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="sys-devel/bin86"

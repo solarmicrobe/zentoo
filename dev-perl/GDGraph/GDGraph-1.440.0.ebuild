@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="Perl5 module to create charts using the GD module"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="dev-perl/GDTextUtil

@@ -14,7 +14,7 @@ SRC_URI="${REL_URI}/${MY_PV}/source/firefox-${MY_PV}.source.tar.bz2"
 
 LICENSE="NPL-1.1"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="threadsafe"
 
 S="${WORKDIR}/mozilla-1.9.2"

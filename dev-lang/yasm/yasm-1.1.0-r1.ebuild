@@ -13,7 +13,7 @@ SRC_URI="http://www.tortall.net/projects/yasm/releases/${P}.tar.gz"
 
 LICENSE="Artistic BSD GPL-2 LGPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="nls python"
 
 RDEPEND="nls? ( virtual/libintl )"

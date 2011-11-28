@@ -8,7 +8,7 @@ PYTHON_DEPEND="python? 2"
 WANT_AUTOMAKE="none"
 inherit autotools eutils flag-o-matic multilib pam prefix python versionator
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 SLOT="$(get_version_component_range 1-2)"
 S="${WORKDIR}/postgresql-${PV}"

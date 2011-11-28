@@ -13,7 +13,7 @@ HOMEPAGE="http://ndevilla.free.fr/iniparser/"
 SRC_URI="http://ndevilla.free.fr/iniparser/${MY_P}.tar.gz"
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="examples static-libs"
 
 DEPEND=""

@@ -11,7 +11,7 @@ SRC_URI="mirror://gnu/${PN}/${P}.tar.bz2
 
 LICENSE="GPL-3"
 SLOT="2.5"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="emacs"
 
 DEPEND=">=sys-apps/texinfo-4.3

@@ -14,7 +14,7 @@ SRC_URI="mirror://gnu/ncurses/${MY_P}.tar.gz"
 
 LICENSE="MIT"
 SLOT="5"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="ada +cxx debug doc gpm minimal profile static-libs trace unicode"
 
 DEPEND="gpm? ( sys-libs/gpm )"

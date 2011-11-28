@@ -50,7 +50,7 @@ else
 		${COMMON_URI}"
 	# Please don't touch individual KEYWORDS.  Since this is maintained/tested by
 	# Release Engineering, it's easier for us to deal with all arches at once.
-	KEYWORDS="amd64 x86"
+	KEYWORDS="amd64"
 fi
 
 DESCRIPTION="Gentoo automatic kernel building scripts"

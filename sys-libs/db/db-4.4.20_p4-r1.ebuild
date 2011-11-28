@@ -27,7 +27,7 @@ done
 
 LICENSE="OracleDB BSD"
 SLOT="4.4"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="tcl java doc nocxx"
 
 DEPEND="tcl? ( >=dev-lang/tcl-8.4 )

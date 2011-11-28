@@ -13,7 +13,7 @@ SRC_URI="http://oss.oetiker.ch/rrdtool/pub/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc lua perl python ruby rrdcgi tcl"
 
 # This versions are minimal versions upstream tested with.

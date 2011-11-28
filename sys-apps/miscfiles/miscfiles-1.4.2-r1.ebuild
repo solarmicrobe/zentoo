@@ -16,7 +16,7 @@ SRC_URI="mirror://gnu/miscfiles/${P}.tar.gz
 
 LICENSE="GPL-2 unicode"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="minimal"
 # Collides with older versions/revisions
 RDEPEND="!<sys-freebsd/freebsd-share-7.2-r1"

@@ -17,7 +17,7 @@ SLOT="2.1"
 LICENSE="GPL-2"
 IUSE="doc float fortran mpi openmp threads"
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 pkg_setup() {
 	# this one is reported to cause trouble on pentium4 m series

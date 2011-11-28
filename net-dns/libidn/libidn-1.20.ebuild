@@ -10,7 +10,7 @@ SRC_URI="mirror://gnu/libidn/${P}.tar.gz"
 
 LICENSE="LGPL-2.1 GPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc emacs java mono nls static-libs"
 
 COMMON_DEPEND="emacs? ( virtual/emacs )

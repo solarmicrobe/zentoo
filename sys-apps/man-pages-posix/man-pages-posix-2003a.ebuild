@@ -13,7 +13,7 @@ SRC_URI="mirror://kernel/linux/docs/man-pages/${PN}/${MY_P}.tar.bz2"
 
 LICENSE="man-pages-posix"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 RESTRICT="binchecks"
 

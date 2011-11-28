@@ -13,7 +13,7 @@ inherit perl-module
 DESCRIPTION="Compile and link C code for Perl modules"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 SRC_TEST="do"

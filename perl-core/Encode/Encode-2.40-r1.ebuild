@@ -10,7 +10,7 @@ inherit perl-module
 DESCRIPTION="character encodings"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="!!<dev-lang/perl-5.8.8-r8"

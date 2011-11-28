@@ -20,7 +20,7 @@ IUSE=""
 
 # Drop "~m68k ~s390 ~sh ~sparc-fbsd ~x86-fbsd" due to dev-python/argparse dependency
 # Note: argparse is provided in python 2.7 and 3.2 (Bug 346005)
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 DEPEND="sys-apps/portage"
 RDEPEND="${DEPEND}

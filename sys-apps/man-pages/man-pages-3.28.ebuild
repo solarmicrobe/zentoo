@@ -14,7 +14,7 @@ SRC_URI="mirror://kernel/linux/docs/manpages/Archive/${P}.tar.bz2
 
 LICENSE="as-is GPL-2 BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 RESTRICT="binchecks"
 

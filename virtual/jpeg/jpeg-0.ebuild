@@ -10,7 +10,7 @@ SRC_URI=""
 
 LICENSE=""
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="static-libs"
 
 RDEPEND="|| ( media-libs/libjpeg-turbo:0[static-libs?] media-libs/jpeg:0[static-libs?] )"

@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="A collection of perl modules which provide an object-oriented interface to LDAP servers."
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="sasl xml ssl"
 
 RDEPEND="dev-perl/Convert-ASN1

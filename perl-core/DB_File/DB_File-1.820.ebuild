@@ -8,7 +8,7 @@ inherit perl-module multilib eutils
 DESCRIPTION="A Berkeley DB Support Perl Module"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="dev-lang/perl

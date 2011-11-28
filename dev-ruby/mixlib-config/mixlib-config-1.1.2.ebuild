@@ -15,5 +15,5 @@ HOMEPAGE="http://github.com/opscode/mixlib-config"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""

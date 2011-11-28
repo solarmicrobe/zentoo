@@ -12,7 +12,7 @@ SRC_URI="http://www.fftw.org/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="3.0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="altivec doc fortran openmp sse sse2 threads"
 
 pkg_setup() {

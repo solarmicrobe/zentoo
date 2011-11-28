@@ -23,7 +23,7 @@ HOMEPAGE="http://blog.evanweaver.com/files/doc/fauna/echoe/files/"
 
 LICENSE="AFL-3.0 MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_rdepend "dev-ruby/highline dev-ruby/rubyforge"

@@ -17,7 +17,7 @@ HOMEPAGE="http://extlib.rubyforge.org"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_bdepend "doc? ( dev-ruby/yard )"

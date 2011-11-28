@@ -19,7 +19,7 @@ if [[ ${PV} == "9999" ]] ; then
 	#KEYWORDS=""
 else
 	SRC_URI="mirror://kernel/linux/utils/util-linux/v${PV:0:4}/${MY_P}.tar.bz2"
-	KEYWORDS="amd64 x86"
+	KEYWORDS="amd64"
 fi
 
 LICENSE="GPL-2"

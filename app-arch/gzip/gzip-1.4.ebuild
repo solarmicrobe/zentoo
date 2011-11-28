@@ -12,7 +12,7 @@ SRC_URI="ftp://alpha.gnu.org/gnu/gzip/${P}.tar.gz
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="nls pic static"
 
 RDEPEND=""

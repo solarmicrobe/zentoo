@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="Perl bindings for GNU Libidn"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="net-dns/libidn"

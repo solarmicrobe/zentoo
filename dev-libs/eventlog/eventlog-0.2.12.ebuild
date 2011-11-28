@@ -11,7 +11,7 @@ SRC_URI="http://www.balabit.com/downloads/files/eventlog/0.2//eventlog_${PV}.tar
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="static-libs"
 
 src_prepare() {

@@ -7,7 +7,7 @@ HOMEPAGE=""
 SRC_URI=""
 LICENSE=""
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="elibc_glibc elibc_uclibc"
 DEPEND=""
 

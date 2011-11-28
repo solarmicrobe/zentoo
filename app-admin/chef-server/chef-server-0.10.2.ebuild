@@ -15,7 +15,7 @@ HOMEPAGE="http://wiki.opscode.com/display/chef"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_rdepend "~app-admin/chef-server-api-${PV}

@@ -12,7 +12,7 @@ SRC_URI="http://www.openinfo.co.uk/apache/extract_forwarded-${PV}.tar.gz"
 
 LICENSE="Apache-1.1"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="mod_proxy"
 
 DEPEND=""

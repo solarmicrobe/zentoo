@@ -16,7 +16,7 @@ SRC_SHA1="81b839d"
 SRC_URI="https://github.com/zentoo/graphite/tarball/${SRC_SHA1} -> zentoo-graphite-${PVR}.tar.gz"
 
 LICENSE="Apache-2.0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 SLOT="0"
 IUSE=""
 

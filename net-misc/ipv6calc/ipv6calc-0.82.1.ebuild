@@ -11,7 +11,7 @@ SRC_URI="ftp://ftp.bieringer.de/pub/linux/IPv6/ipv6calc/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="geoip"
 
 DEPEND="geoip? ( >=dev-libs/geoip-1.4.1 )"

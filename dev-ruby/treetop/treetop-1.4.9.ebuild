@@ -18,7 +18,7 @@ DESCRIPTION="Treetop is a language for describing languages."
 HOMEPAGE="http://treetop.rubyforge.org/"
 LICENSE="Ruby"
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 SLOT="0"
 IUSE=""
 

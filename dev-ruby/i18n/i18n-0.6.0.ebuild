@@ -22,7 +22,7 @@ S="${WORKDIR}/svenfuchs-${PN}-*"
 
 LICENSE="MIT"
 SLOT="$(get_version_component_range 1-2)"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""

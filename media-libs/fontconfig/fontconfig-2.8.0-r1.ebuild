@@ -12,7 +12,7 @@ SRC_URI="http://fontconfig.org/release/${P}.tar.gz"
 
 LICENSE="MIT"
 SLOT="1.0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc"
 
 # Purposefully dropped the xml USE flag and libxml2 support.  Expat is the

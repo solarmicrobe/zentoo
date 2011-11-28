@@ -10,7 +10,7 @@ inherit perl-module
 DESCRIPTION="A base64/quoted-printable encoder/decoder Perl Modules"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 SRC_TEST="do"

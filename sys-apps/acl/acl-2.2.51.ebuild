@@ -13,7 +13,7 @@ SRC_URI="http://download.savannah.gnu.org/releases/${PN}/${P}.src.tar.gz
 
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="nfs nls static-libs"
 
 RDEPEND=">=sys-apps/attr-2.4

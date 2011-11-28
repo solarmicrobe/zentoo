@@ -11,7 +11,7 @@ HOMEPAGE="http://people.suug.ch/~tgr/libnl/"
 SRC_URI="http://people.suug.ch/~tgr/libnl/files/${P}.tar.gz"
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc"
 
 DEPEND="doc? ( app-doc/doxygen )"

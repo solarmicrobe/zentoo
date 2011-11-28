@@ -12,7 +12,7 @@ SRC_URI="http://ftp.yars.free.net/pub/source/${PN}/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="ssl gnutls socks5 nls"
 
 RDEPEND="

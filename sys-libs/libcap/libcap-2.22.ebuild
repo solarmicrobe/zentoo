@@ -12,7 +12,7 @@ SRC_URI="mirror://kernel/linux/libs/security/linux-privs/libcap${PV:0:1}/${P}.ta
 
 LICENSE="GPL-2 BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="pam"
 
 RDEPEND="sys-apps/attr

@@ -12,7 +12,7 @@ SRC_URI="http://jonas.nitro.dk/tig/releases/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="sys-libs/ncurses"

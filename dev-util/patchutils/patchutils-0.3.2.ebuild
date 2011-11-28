@@ -10,7 +10,7 @@ SRC_URI="http://cyberelk.net/tim/data/patchutils/stable/${P}.tar.bz2"
 
 SLOT="0"
 LICENSE="GPL-2"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 RDEPEND=""

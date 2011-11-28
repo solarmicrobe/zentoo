@@ -17,7 +17,7 @@ HOMEPAGE="http://github.com/opscode/mixlib-authentication"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 # Tests fail. Not clear if this is a regression since the previous

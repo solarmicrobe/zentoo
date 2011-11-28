@@ -23,7 +23,7 @@ HOMEPAGE="http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="selinux devfs-compat old-hd-rules -extras test"
 
 COMMON_DEPEND="selinux? ( sys-libs/libselinux )

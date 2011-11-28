@@ -6,5 +6,5 @@ PATCHVER="1.1"
 ELF2FLT_VER=""
 inherit toolchain-binutils
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="${IUSE}"

@@ -12,5 +12,5 @@ inherit perl-module
 DESCRIPTION="Manipulate netblock lists in CIDR notation"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""

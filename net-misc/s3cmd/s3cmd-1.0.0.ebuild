@@ -8,7 +8,7 @@ PYTHON_USE_WITH="xml"
 
 inherit distutils
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 DESCRIPTION="Command line client for Amazon S3"
 HOMEPAGE="http://s3tools.org/s3cmd"
 SRC_URI="mirror://sourceforge/s3tools/${P}.tar.gz"

@@ -17,7 +17,7 @@ HOMEPAGE="http://daemons.rubyforge.org/"
 
 LICENSE="|| ( Ruby GPL-2 ) MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="examples"
 
 all_ruby_install() {

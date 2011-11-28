@@ -19,7 +19,7 @@ HOMEPAGE="http://addressable.rubyforge.org/"
 LICENSE="as-is"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_bdepend "test? ( dev-ruby/rspec:0 )"

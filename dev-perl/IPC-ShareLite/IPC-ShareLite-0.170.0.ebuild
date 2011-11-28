@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="IPC::ShareLite module for perl"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 DEPEND="test? ( dev-perl/Test-Pod )"

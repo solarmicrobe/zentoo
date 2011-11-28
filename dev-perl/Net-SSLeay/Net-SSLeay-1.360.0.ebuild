@@ -12,7 +12,7 @@ DESCRIPTION="Net::SSLeay module for perl"
 
 LICENSE="openssl"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="dev-libs/openssl"

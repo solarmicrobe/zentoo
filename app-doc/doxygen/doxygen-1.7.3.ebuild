@@ -11,7 +11,7 @@ HOMEPAGE="http://www.doxygen.org/"
 SRC_URI="ftp://ftp.stack.nl/pub/users/dimitri/${P}.src.tar.gz
 	tcl? ( mirror://gentoo/${PN}-1.7-tcl_support.patch.bz2 )"
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 IUSE="debug doc nodot qt4 latex tcl elibc_FreeBSD"
 LICENSE="GPL-2"

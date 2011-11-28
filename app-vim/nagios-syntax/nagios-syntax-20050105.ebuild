@@ -7,7 +7,7 @@ inherit vim-plugin
 DESCRIPTION="vim plugin: Nagios configuration files syntax"
 HOMEPAGE="http://dev.gentoo.org/~ramereth/vim/syntax/nagios.vim"
 LICENSE="as-is"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 VIM_PLUGIN_HELPTEXT=\

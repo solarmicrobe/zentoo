@@ -15,7 +15,7 @@ SRC_URI="mirror://sourceforge/pysqlite/pysqlite-${PV}.tar.gz"
 
 LICENSE="pysqlite"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="dev-db/sqlite:0"

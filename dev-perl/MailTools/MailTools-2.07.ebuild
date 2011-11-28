@@ -10,7 +10,7 @@ inherit perl-module
 DESCRIPTION="Manipulation of electronic mail addresses"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 RDEPEND=">=virtual/perl-libnet-1.0703

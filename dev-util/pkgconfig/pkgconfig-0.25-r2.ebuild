@@ -13,7 +13,7 @@ SRC_URI="http://pkgconfig.freedesktop.org/releases/${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="elibc_FreeBSD hardened"
 
 DEPEND=">=dev-libs/popt-1.15"

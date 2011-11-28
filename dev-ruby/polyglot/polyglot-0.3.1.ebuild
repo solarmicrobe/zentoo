@@ -16,7 +16,7 @@ DESCRIPTION="Polyglot provides support for fully-custom DSLs."
 HOMEPAGE="http://polyglot.rubyforge.org/"
 LICENSE="MIT"
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 SLOT="0"
 IUSE=""
 

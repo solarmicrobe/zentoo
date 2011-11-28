@@ -16,7 +16,7 @@ SRC_URI="mirror://berlios/${PN}/${P}.tar.bz2"
 
 LICENSE="GPL-2 public-domain"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="ssl nls kerberos hesiod tk socks"
 
 RDEPEND="hesiod? ( net-dns/hesiod )

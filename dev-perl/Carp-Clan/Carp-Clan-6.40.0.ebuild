@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="Report errors from perspective of caller of a clan of modules"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 RDEPEND=""

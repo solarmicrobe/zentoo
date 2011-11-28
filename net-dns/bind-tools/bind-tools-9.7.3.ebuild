@@ -16,7 +16,7 @@ SRC_URI="ftp://ftp.isc.org/isc/bind9/${MY_PV}/${MY_P}.tar.gz"
 
 LICENSE="as-is"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc idn ipv6 ssl urandom xml"
 
 DEPEND="ssl? ( dev-libs/openssl )

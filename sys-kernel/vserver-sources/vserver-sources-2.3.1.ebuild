@@ -11,7 +11,7 @@ K_NOSETEXTRAVERSION=1
 inherit kernel-2
 detect_version
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 DESCRIPTION="Full sources including Linux-VServer patchsets for the ${KV_MAJOR}.${KV_MINOR} kernel tree."

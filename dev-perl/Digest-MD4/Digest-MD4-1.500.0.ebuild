@@ -12,7 +12,7 @@ inherit perl-module
 DESCRIPTION="MD4 message digest algorithm"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 SRC_TEST="do"

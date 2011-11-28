@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="Parse /robots.txt file"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="

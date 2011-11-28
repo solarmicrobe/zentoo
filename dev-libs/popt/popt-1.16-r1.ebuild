@@ -11,7 +11,7 @@ SRC_URI="http://rpm5.org/files/popt/${P}.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="nls static-libs"
 
 RDEPEND="nls? ( virtual/libintl )"

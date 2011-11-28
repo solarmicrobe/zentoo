@@ -9,7 +9,7 @@ PHP_EXT_ZENDEXT="yes"
 EAPI="2"
 inherit php-ext-source-r2
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 MY_PV="${PV/_/}"
 MY_PV="${MY_PV/rc/RC}"

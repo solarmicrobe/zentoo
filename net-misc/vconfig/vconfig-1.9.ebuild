@@ -12,7 +12,7 @@ HOMEPAGE="http://www.candelatech.com/~greear/vlan.html"
 SRC_URI="http://www.candelatech.com/~greear/vlan/${MY_PN}.${PV}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="static"
 
 src_compile() {

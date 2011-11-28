@@ -16,7 +16,7 @@ HOMEPAGE="http://roy.marples.name/projects/dhcpcd/"
 SRC_URI="http://roy.marples.name/downloads/${PN}/${MY_P}.tar.bz2"
 LICENSE="BSD-2"
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 SLOT="0"
 IUSE="+zeroconf elibc_glibc"

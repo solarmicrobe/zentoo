@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="Low-calorie MIME generator"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test"
 
 RDEPEND="dev-perl/Email-Date-Format

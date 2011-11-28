@@ -10,7 +10,7 @@ inherit perl-module
 DESCRIPTION="load various IO modules"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 SRC_TEST=do

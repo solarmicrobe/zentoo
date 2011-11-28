@@ -15,7 +15,7 @@ HOMEPAGE="https://github.com/zenops/livestatus"
 
 LICENSE="MIT"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64"
 IUSE=""
 
 ruby_add_rdepend ">=dev-ruby/activesupport-3

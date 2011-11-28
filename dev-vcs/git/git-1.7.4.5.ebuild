@@ -24,7 +24,7 @@ if [[ ${PV} != *9999 ]]; then
 	SRC_URI="mirror://kernel/software/scm/git/${MY_P}.tar.bz2
 			mirror://kernel/software/scm/git/${PN}-manpages-${DOC_VER}.tar.bz2
 			doc? ( mirror://kernel/software/scm/git/${PN}-htmldocs-${DOC_VER}.tar.bz2 )"
-	KEYWORDS="amd64 x86"
+	KEYWORDS="amd64"
 else
 	SRC_URI=""
 	KEYWORDS=""

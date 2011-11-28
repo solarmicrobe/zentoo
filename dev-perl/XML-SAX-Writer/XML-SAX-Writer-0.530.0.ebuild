@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="SAX2 Writer"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="dev-perl/XML-Filter-BufferText

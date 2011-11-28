@@ -15,7 +15,7 @@ LICENSE="Boost-1.0"
 SLOT="$(get_version_component_range 1-2)"
 IUSE="debug doc +eselect icu mpi python static-libs test tools"
 
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 RDEPEND="icu? ( >=dev-libs/icu-3.3 )
 	mpi? ( || ( sys-cluster/openmpi[cxx] sys-cluster/mpich2[cxx,threads] ) )

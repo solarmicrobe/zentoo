@@ -10,7 +10,7 @@ SRC_URI="http://neil.brown.name/portmap/${P}.tgz"
 
 LICENSE="as-is"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="selinux tcpd"
 
 DEPEND="selinux? ( sec-policy/selinux-portmap )

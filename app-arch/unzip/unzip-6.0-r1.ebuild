@@ -12,7 +12,7 @@ SRC_URI="mirror://sourceforge/infozip/${MY_P}.tar.gz"
 
 LICENSE="Info-ZIP"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="bzip2 unicode"
 
 DEPEND="bzip2? ( app-arch/bzip2 )"

@@ -9,7 +9,7 @@ DESCRIPTION="IPv6 related part of the C socket.h defines and structure manipulat
 
 LICENSE="|| ( Artistic GPL-2 )"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 SRC_TEST="do"

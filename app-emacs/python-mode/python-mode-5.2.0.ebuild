@@ -12,7 +12,7 @@ SRC_URI="http://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 S="${WORKDIR}/${PN}"

@@ -12,7 +12,7 @@ SRC_URI="mirror://sourceforge/project/${PN}-dev/${P}.tar.gz"
 
 LICENSE="LGPL-2"
 SLOT="1.1"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc"
 
 DEPEND="sys-devel/autoconf"

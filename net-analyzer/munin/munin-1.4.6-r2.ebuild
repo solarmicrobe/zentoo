@@ -12,7 +12,7 @@ SRC_URI="mirror://sourceforge/munin/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="asterisk doc irc java memcached minimal mysql postgres ssl"
 
 # Upstream's listing of required modules is NOT correct!

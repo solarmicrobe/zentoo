@@ -21,7 +21,7 @@ HOMEPAGE="http://www.dovecot.org/"
 
 SLOT="0"
 LICENSE="LGPL-2.1 MIT"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 IUSE="bzip2 caps cydir sdbox doc ipv6 kerberos ldap +maildir managesieve mbox
 mdbox mysql pam postgres sieve sqlite +ssl static-libs suid vpopmail zlib"

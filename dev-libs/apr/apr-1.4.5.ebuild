@@ -12,7 +12,7 @@ SRC_URI="mirror://apache/apr/${P}.tar.bz2"
 
 LICENSE="Apache-2.0"
 SLOT="1"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="doc elibc_FreeBSD older-kernels-compatibility +urandom +uuid"
 RESTRICT="test"
 

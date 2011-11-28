@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="String manipulation for Unicode strings"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND=">=virtual/perl-MIME-Base64-2.11"

@@ -26,7 +26,7 @@ fi
 # GPL-3 for the gnutls-extras library and LGPL for the gnutls library.
 LICENSE="LGPL-2.1 GPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="bindist +cxx doc examples guile lzo nls test zlib"
 
 RDEPEND=">=dev-libs/libgcrypt-1.4.0

@@ -19,7 +19,7 @@ inherit toolchain-funcs mysql
 IUSE="$IUSE"
 
 # REMEMBER: also update eclass/mysql*.eclass before committing!
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 
 # When MY_EXTRAS is bumped, the index should be revised to exclude these.
 # This is often broken still

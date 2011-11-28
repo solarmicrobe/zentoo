@@ -13,7 +13,7 @@ SRC_URI="mirror://${PN}/${MY_P}.tar.xz"
 
 LICENSE="imagemagick"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="autotrace bzip2 +corefonts cxx djvu fftw fontconfig fpx graphviz gs hdri jbig jpeg jpeg2k lcms lqr lzma opencl openexr openmp perl png q32 q64 q8 raw static-libs svg tiff truetype webp wmf X xml zlib"
 
 # libtool is required for loading plugins

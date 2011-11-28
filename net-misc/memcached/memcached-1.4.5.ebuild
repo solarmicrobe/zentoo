@@ -14,7 +14,7 @@ SRC_URI="http://memcached.googlecode.com/files/${MY_P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE="test slabs-reassign debug sasl" # hugetlbfs later
 
 RDEPEND=">=dev-libs/libevent-1.4

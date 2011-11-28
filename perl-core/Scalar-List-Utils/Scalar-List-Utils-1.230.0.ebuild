@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="Scalar-List-Utils module for perl"
 
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64"
 IUSE=""
 
 SRC_TEST=do
