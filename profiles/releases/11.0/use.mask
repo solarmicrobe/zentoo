@@ -2,6 +2,7 @@
 3dfx
 X
 Xaw3d
+a52
 accessibility
 acpi
 adabas
@@ -281,7 +282,9 @@ libproxy
 libssh2
 lighttpd
 mktemp
+mms
 multislot
+mythtv
 nopie
 nossp
 openct
@@ -296,6 +299,7 @@ serial
 smbkrb5passwd
 vala
 vpopmail
+vpx
 webkit
 zemberek
 
