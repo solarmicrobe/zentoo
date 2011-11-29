@@ -51,3 +51,18 @@ app-admin/collectd collectd_plugins_ping
 app-admin/collectd collectd_plugins_sensors
 app-admin/collectd collectd_plugins_tokyotyrant
 app-admin/collectd collectd_plugins_varnish
+
+# do not support X11 with these applications
+app-editors/emacs X
+app-editors/vim X
+app-misc/mc X
+app-text/ghostscript-gpl X
+dev-java/sun-jdk X
+dev-python/imaging X
+media-gfx/imagemagick X
+media-libs/giflib X
+media-libs/t1lib X
+net-analyzer/net-snmp X
+net-misc/openssh X
+sys-apps/groff X
+sys-fs/mtools X

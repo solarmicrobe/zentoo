@@ -385,8 +385,6 @@ _python_set_color_variables() {
 	fi
 }
 
-unset PYTHON_PKG_SETUP_EXECUTED
-
 _python_check_python_pkg_setup_execution() {
 	[[ " ${FUNCNAME[@]:1} " =~ " "(python_set_active_version|python_pkg_setup)" " ]] && return
 
