@@ -336,7 +336,7 @@ epatch() {
 			STDERR_TARGET="${T}/${patchname}-$$.out"
 		fi
 
-		printf "***** %s *****\n\n" "${patchname}" > "${STDERR_TARGET}"
+		printf "***** %s *****\nPWD: %s\n\n" "${patchname}" "${PWD}" > "${STDERR_TARGET}"
 
 		# Decompress the patch if need be
 		local count=0

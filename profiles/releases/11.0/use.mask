@@ -80,6 +80,7 @@ fortran
 freetds
 freewnn
 frontbase
+gallium
 gcj
 gconf
 ggi
