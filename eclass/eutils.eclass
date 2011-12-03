@@ -71,6 +71,7 @@ fi
 if ! declare -F eqawarn >/dev/null ; then
 	eqawarn() {
 		has qa ${PORTAGE_ELOG_CLASSES} && ewarn "$@"
+		:
 	}
 fi
 
