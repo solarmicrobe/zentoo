@@ -12,4 +12,4 @@ KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""
-RDEPEND="|| ( ~dev-lang/perl-5.12.3 ~dev-lang/perl-5.12.2 ~perl-core/ExtUtils-MakeMaker-${PV} )"
+RDEPEND="|| ( ~dev-lang/perl-5.12.4 ~dev-lang/perl-5.12.3 ~dev-lang/perl-5.12.2 ~perl-core/ExtUtils-MakeMaker-${PV} )"

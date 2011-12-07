@@ -12,4 +12,4 @@ KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""
-RDEPEND="|| ( ~dev-lang/perl-5.12.3 ~dev-lang/perl-5.12.2 ~dev-lang/perl-5.10.1 ~perl-core/net-ping-${PV} )"
+RDEPEND="|| ( ~dev-lang/perl-5.12.4 ~dev-lang/perl-5.12.3 ~dev-lang/perl-5.12.2 ~dev-lang/perl-5.10.1 ~perl-core/net-ping-${PV} )"
