@@ -50,7 +50,7 @@ setup-allowed-flags() {
 		-mieee -mieee-with-inexact -mschedule -mfloat-gprs -mspe -mno-spe \
 		-mtls-direct-seg-refs -mno-tls-direct-seg-refs \
 		-mflat -mno-flat -mno-faster-structs -mfaster-structs \
-		-m32 -m64 -mabi -mlittle-endian -mbig-endian -EL -EB -fPIC \
+		-m32 -m64 -mx32 -mabi -mlittle-endian -mbig-endian -EL -EB -fPIC \
 		-mlive-g0 -mcmodel -mstack-bias -mno-stack-bias \
 		-msecure-plt -m*-toc -D* -U*"
 
