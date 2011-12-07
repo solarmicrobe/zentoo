@@ -87,8 +87,8 @@ gnome2_src_unpack() {
 # Prepare environment for build, fix build of scrollkeeper documentation,
 # run elibtoolize.
 gnome2_src_prepare() {
-	# GST_REGISTRY is to work around gst utilities trying to read/write /root
-	export GST_REGISTRY="${T}/registry.xml"
+	# Prevent assorted access violations and test failures
+	gnome2_environment_reset
 
 	# Prevent scrollkeeper access violations
 	gnome2_omf_fix
