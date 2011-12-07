@@ -7,10 +7,10 @@ EAPI="2"
 inherit eutils multilib
 
 DESCRIPTION="A library for applications dealing with netlink socket"
-HOMEPAGE="http://people.suug.ch/~tgr/libnl/"
-SRC_URI="http://people.suug.ch/~tgr/libnl/files/${P}.tar.gz"
+HOMEPAGE="http://www.infradead.org/~tgr/libnl/"
+SRC_URI="http://www.infradead.org/~tgr/libnl/files/${P}.tar.gz"
 LICENSE="LGPL-2.1"
-SLOT="0"
+SLOT="1.1"
 KEYWORDS="amd64"
 IUSE="doc"
 
