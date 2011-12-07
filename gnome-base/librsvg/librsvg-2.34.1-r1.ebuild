@@ -14,7 +14,7 @@ HOMEPAGE="http://librsvg.sourceforge.net/"
 LICENSE="LGPL-2"
 SLOT="2"
 KEYWORDS="amd64"
-IUSE="doc +gtk tools"
+IUSE="doc +gtk gtk3 tools"
 
 RDEPEND=">=media-libs/fontconfig-1.0.1
 	>=media-libs/freetype-2
@@ -25,7 +25,8 @@ RDEPEND=">=media-libs/fontconfig-1.0.1
 	>=dev-libs/libcroco-0.6.1
 	|| ( x11-libs/gdk-pixbuf:2
 		x11-libs/gtk+:2 )
-	gtk? ( >=x11-libs/gtk+-2.16:2 )"
+	gtk? ( >=x11-libs/gtk+-2.16:2 )
+	gtk3? ( >=x11-libs/gtk+-2.90.0:3 )"
 DEPEND="${RDEPEND}
 	>=dev-util/pkgconfig-0.12
 	doc? ( >=dev-util/gtk-doc-1.13 )
@@ -39,8 +40,11 @@ pkg_setup() {
 		$(use_enable tools)
 		$(use_enable gtk gtk-theme)
 		--with-croco
-		--enable-pixbuf-loader
-		--with-gtk=2.0"
+		--enable-pixbuf-loader"
+	use gtk && ! use gtk3 && G2CONF+=" --with-gtk=2.0"
+	use gtk && use gtk3 && G2CONF+=" --with-gtk=both"
+	! use gtk && use gtk3 && G2CONF+=" --with-gtk=3.0 --enable-gtk-theme"
+
 	DOCS="AUTHORS ChangeLog README NEWS TODO"
 }
 
@@ -53,9 +57,31 @@ src_prepare() {
 }
 
 pkg_postinst() {
-	gdk-pixbuf-query-loaders > "${EROOT}/usr/$(get_libdir)/gdk-pixbuf-2.0/2.10.0/loaders.cache"
+	# causes segfault if set, see bug 375615
+	unset __GL_NO_DSO_FINALIZER
+
+	tmp_file=$(mktemp --suffix=gdk_pixbuf_ebuild)
+	# be atomic!
+	gdk-pixbuf-query-loaders > "${tmp_file}"
+	if [ "${?}" = "0" ]; then
+		cat "${tmp_file}" > "${EROOT}usr/$(get_libdir)/gdk-pixbuf-2.0/2.10.0/loaders.cache"
+	else
+		ewarn "Cannot update loaders.cache, gdk-pixbuf-query-loaders failed to run"
+	fi
+	rm "${tmp_file}"
 }
 
 pkg_postrm() {
-	gdk-pixbuf-query-loaders > "${EROOT}/usr/$(get_libdir)/gdk-pixbuf-2.0/2.10.0/loaders.cache"
+	# causes segfault if set, see bug 375615
+	unset __GL_NO_DSO_FINALIZER
+
+	tmp_file=$(mktemp --suffix=gdk_pixbuf_ebuild)
+	# be atomic!
+	gdk-pixbuf-query-loaders > "${tmp_file}"
+	if [ "${?}" = "0" ]; then
+		cat "${tmp_file}" > "${EROOT}usr/$(get_libdir)/gdk-pixbuf-2.0/2.10.0/loaders.cache"
+	else
+		ewarn "Cannot update loaders.cache, gdk-pixbuf-query-loaders failed to run"
+	fi
+	rm "${tmp_file}"
 }

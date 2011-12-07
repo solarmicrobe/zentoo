@@ -99,6 +99,7 @@ gsl
 gsm
 gstreamer
 gtk
+gtk3
 gtkhtml
 guile
 handbook
