@@ -15,4 +15,3 @@ IUSE=""
 # with this package; using PDEPEND in PEAR-Mail_Mime for the same reason
 
 DEPEND=">=dev-php/PEAR-Mail_Mime-1.5.2"
-RDEPEND="${DEPEND}"
