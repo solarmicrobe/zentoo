@@ -15,9 +15,17 @@ IUSE=""
 
 S=${WORKDIR}
 
+src_unpack() {
+	cp "${FILESDIR}"/am-wrapper-${PV}.sh "${T}"/
+	# usr/bin/aclocal: bad substitution -> /bin/sh != POSIX shell
+	if use prefix ; then
+		sed -i -e '1c\#!'"${EPREFIX}"'/bin/sh' "${T}"/am-wrapper-${PV}.sh || die
+	fi
+}
+
 src_install() {
 	exeinto /usr/$(get_libdir)/misc
-	newexe "${FILESDIR}"/am-wrapper-${PV}.sh am-wrapper.sh || die
+	newexe "${T}"/am-wrapper-${PV}.sh am-wrapper.sh || die
 
 	keepdir /usr/share/aclocal
 

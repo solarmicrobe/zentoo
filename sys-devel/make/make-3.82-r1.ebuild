@@ -21,6 +21,7 @@ RDEPEND="nls? ( virtual/libintl )"
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-archives-many-objs.patch #334889
 	epatch "${FILESDIR}"/${P}-MAKEFLAGS-reexec.patch #31975
+	epatch "${FILESDIR}"/${P}-memory-corruption.patch #355907
 }
 
 src_configure() {
