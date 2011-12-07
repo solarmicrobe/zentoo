@@ -3,12 +3,15 @@
 # $Header: $
 
 EAPI="3"
+GNOME_TARBALL_SUFFIX="xz"
 PYTHON_DEPEND="2"
 
-inherit autotools gnome.org libtool eutils flag-o-matic pax-utils python virtualx
+inherit autotools gnome.org libtool eutils multilib flag-o-matic pax-utils python virtualx
 
 DESCRIPTION="The GLib library of C routines"
 HOMEPAGE="http://www.gtk.org/"
+SRC_URI="${SRC_URI}
+	http://pkgconfig.freedesktop.org/releases/pkg-config-0.26.tar.gz" # pkg.m4 for eautoreconf
 
 LICENSE="LGPL-2"
 SLOT="2"
@@ -20,14 +23,14 @@ RDEPEND="virtual/libiconv
 	xattr? ( sys-apps/attr )
 	fam? ( virtual/fam )"
 DEPEND="${RDEPEND}
-	>=dev-util/pkgconfig-0.16
 	>=sys-devel/gettext-0.11
 	>=dev-util/gtk-doc-am-1.13
 	doc? (
 		>=dev-libs/libxslt-1.0
 		>=dev-util/gtk-doc-1.13
 		~app-text/docbook-xml-dtd-4.1.2 )
-	test? ( >=sys-apps/dbus-1.2.14 )"
+	test? ( >=sys-apps/dbus-1.2.14 )
+	!<dev-util/gtk-doc-1.15-r2"
 PDEPEND="introspection? ( dev-libs/gobject-introspection )
 	!<gnome-base/gvfs-1.6.4-r990" # Earlier versions do not work with glib
 
@@ -38,6 +41,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	mv -vf "${WORKDIR}"/pkg-config-*/pkg.m4 "${WORKDIR}"/ || die
+
 	if use ia64 ; then
 		# Only apply for < 4.1
 		local major=$(gcc-major-version)
@@ -71,13 +76,35 @@ src_prepare() {
 
 	if ! use test; then
 		# don't waste time building tests
-		sed 's/^\(SUBDIRS =.*\)tests\(.*\)$/\1\2/' -i Makefile.am Makefile.in \
-			|| die "sed failed"
+		sed 's/^\(.*\SUBDIRS .*\=.*\)tests\(.*\)$/\1\2/' -i $(find . -name Makefile.am -o -name Makefile.in) || die
+	else
+		# Disable tests requiring dev-util/desktop-file-utils when not installed, bug #286629
+		if ! has_version dev-util/desktop-file-utils ; then
+			ewarn "Some tests will be skipped due dev-util/desktop-file-utils not being present on your system,"
+			ewarn "think on installing it to get these tests run."
+			sed -i -e "/appinfo\/associations/d" gio/tests/appinfo.c || die
+			sed -i -e "/desktop-app-info\/default/d" gio/tests/desktop-app-info.c || die
+			sed -i -e "/desktop-app-info\/fallback/d" gio/tests/desktop-app-info.c || die
+			sed -i -e "/desktop-app-info\/lastused/d" gio/tests/desktop-app-info.c || die
+		fi
+
+		# Disable tests requiring dev-python/dbus-python, bug #349236
+		if ! has_version dev-python/dbus-python ; then
+			ewarn "Some tests will be skipped due dev-python/dbus-python not being present on your system,"
+			ewarn "think on installing it to get these tests run."
+			sed -i -e "/connection\/filter/d" gio/tests/gdbus-connection.c || die
+			sed -i -e "/connection\/large_message/d" gio/tests/gdbus-connection-slow.c || die
+			sed -i -e "/gdbus\/proxy/d" gio/tests/gdbus-proxy.c || die
+			sed -i -e "/gdbus\/bus-watch-name/d" gio/tests/gdbus-names.c || die
+			sed -i -e "/gdbus\/proxy-well-known-name/d" gio/tests/gdbus-proxy-well-known-name.c || die
+			sed -i -e "/gdbus\/introspection-parser/d" gio/tests/gdbus-introspection.c || die
+			sed -i -e "/gdbus\/method-calls-in-thread/d" gio/tests/gdbus-threading.c || die
+		fi
 	fi
 
 	# Needed for the punt-python-check patch, disabling timeout test
 	# Also needed to prevent croscompile failures, see bug #267603
-	eautoreconf
+	AT_M4DIR="${WORKDIR}" eautoreconf
 
 	[[ ${CHOST} == *-freebsd* ]] && elibtoolize
 
@@ -85,6 +112,12 @@ src_prepare() {
 }
 
 src_configure() {
+	# Avoid circular depend with dev-util/pkgconfig
+	if ! has_version dev-util/pkgconfig; then
+		export DBUS1_CFLAGS="-I/usr/include/dbus-1.0 -I/usr/$(get_libdir)/dbus-1.0/include"
+		export DBUS1_LIBS="-ldbus-1"
+	fi
+
 	local myconf
 
 	# Building with --disable-debug highly unrecommended.  It will build glib in
@@ -125,6 +158,10 @@ src_install() {
 		newins "${ED}/etc/bash_completion.d/${f}-bash-completion.sh" ${f} || die
 	done
 	rm -rf "${ED}/etc"
+
+	# Completely useless with or without USE static-libs, people need to use
+	# pkg-config
+	find "${ED}" -name '*.la' -exec rm -f {} +
 }
 
 src_test() {
