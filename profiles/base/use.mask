@@ -1,12 +1,16 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/use.mask,v 1.118 2011/05/09 21:20:22 chithanh Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/use.mask,v 1.128 2011/11/11 13:53:32 olemarkus Exp $
 
-# This ABI is in constant change and currently only available for SVN snapshots
-php_targets_php5-4
+# nvidia-cuda-toolkit is amd64/x86 only
+opencl
 
-# deprecated and replaced by USE="udev"
-hal
+# Infiniband stuff should generaly work on all arches but keyworded only on amd64/x86
+infiniband
+
+# These ABIs are in constant change and currently only available for SVN snapshots
+php_targets_php5-2
+#php_targets_php5-4
 
 # Its deps are not mature enough yet
 ayatana
@@ -73,6 +77,7 @@ vis
 ultra1
 
 # arm arch specific USE flags
+iwmmxt
 neon
 
 # nVidia XvMC requires nvidia-drivers/nvidia-legacy-drivers
@@ -247,10 +252,6 @@ prefix
 # Mask kdeprefix since its broken by now
 kdeprefix
 
-# Samuli Suominen <ssuominen@gentoo.org> (01 Aug 2009)
-# RealMagic Hollywood+/Creative DXR3 support
-dxr3
-
 # Diego E. Pettenò <flameeyes@gentoo.org> (6 Dec 2009)
 #  on behalf of QA Team
 # Removal of pvm is scheduled for Februrary 4.
@@ -258,17 +259,18 @@ pvm
 
 # Alex Legler <a3li@gentoo.org> (7 Dec 2009)
 # Ruby 1.9 is hardmasked
-# JRuby and REE18 are whitelisted on supported arches
+# JRuby, REE18, and Rubinius are whitelisted on supported arches
 ruby_targets_ruby19
 ruby_targets_jruby
 ruby_targets_ree18
+ruby_targets_rbx
 
-# Diego E. Pettenò <flameeyes@gentoo.org> (19 oct 2010)
+# Diego E. Pettenò <flameeyes@gentoo.org> (19 Oct 2010)
 # masking flags that only apply to FreeBSD
 kqueue
 
-# Nirbheek Chauahn <nirbheek@gentoo.org> (17 Mar 2011)
-# Nirbheek Chauhan <nirbheek@gentoo.org> (30 Dec 2009)
-# gobject-introspection USE-flag
-# introspection still has some kinks to iron out
-introspection
+# Samuli Suominen <ssuominen@gentoo.org> (03 Oct 2011)
+# RealMagic Hollywood+/Creative DXR3 support
+# Still using obsolete V4L1 wrt bug 350211
+# If fixed, should be unmasked in amd64/x86/ppc32 use.mask
+dxr3

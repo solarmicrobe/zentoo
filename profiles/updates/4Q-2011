@@ -1,0 +1,21 @@
+move app-text/libtextcat app-text/libexttextcat
+move dev-texlive/texlive-psutils dev-texlive/texlive-fontutils
+move dev-texlive/texlive-langukenglish dev-texlive/texlive-langenglish
+move dev-texlive/texlive-langarab dev-texlive/texlive-langarabic
+move dev-php5/pecl-ssh2 dev-php/pecl-ssh2
+slotmove <app-text/gtkspell-2.90 0 2
+slotmove <dev-libs/libnl-2 0 1.1
+slotmove >=dev-libs/libnl-2 0 3
+move dev-php5/pecl-timezonedb dev-php/pecl-timezonedb
+move kde-misc/knetworkmanager kde-misc/networkmanagement
+move dev-java/icedtea6-bin dev-java/icedtea-bin
+slotmove =dev-java/icedtea-bin-1* 0 6
+move app-text/notmuch net-mail/notmuch
+move dev-util/gtest dev-cpp/gtest
+move net-misc/get-flash-videos media-video/get_flash_videos
+move net-voip/telepathy-connection-managers net-im/telepathy-connection-managers
+move x11-misc/remind app-misc/remind
+slotmove dev-python/python-dateutil 0 python-2
+move x11-misc/bubblemon x11-plugins/bubblemon
+move app-misc/dsgui app-misc/datovka
+move dev-php5/pecl-gearman dev-php/pecl-gearman

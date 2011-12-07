@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/use.desc,v 1.460 2011/05/09 19:43:53 ulm Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/use.desc,v 1.470 2011/12/01 18:42:06 mr_bones_ Exp $
 
 # Keep them sorted
 
@@ -52,7 +52,6 @@ cdinstall - Copies files from the CD rather than asking the user to copy them, m
 cdparanoia - Enables cdparanoia (audio CD ripper) support
 cdr - Adds support for CD writer hardware
 cgi - Add CGI script support
-chasen - Enable chasen (Japanese Morphological Analysis System) support
 cjk - Adds support for Multi-byte character languages (Chinese, Japanese, Korean)
 clamav - Adds support for Clam AntiVirus software (usually with a plugin)
 coreaudio - Build the CoreAudio driver on Mac OS X systems
@@ -79,7 +78,7 @@ dedicated - Adds support for dedicated game servers (some packages do not provid
 dga - Adds DGA (Direct Graphic Access) support for X
 directfb - Adds support for DirectFB layer (library for FB devices)
 djvu - support DjVu, a PDF-like document format esp. suited for scanned documents
-doc - Adds extra documentation (API, Javadoc, etc)
+doc - Adds extra documentation (API, Javadoc, etc). It is recommended to enable per package instead of globally
 dri - Enable direct rendering: used for accelerated 3D and some 2D, like DMA
 dts - Enables DTS Coherent Acoustics decoder support
 dv - Enables support for a codec used by many camcorders
@@ -130,7 +129,6 @@ gmp - Adds support for dev-libs/gmp (GNU MP library)
 gnome - Adds GNOME support
 gnome-keyring - Enable support for storing passwords via gnome-keyring
 gnuplot - Enable support for gnuplot (data and function plotting)
-gnustep - Adds integration with GNUstep environment
 gnutls - Adds support for net-libs/gnutls (TLS 1.0 and SSL 3.0 support)
 gphoto2 - Adds digital camera support
 gpm - Adds support for sys-libs/gpm (Console-based mouse driver)
@@ -157,6 +155,7 @@ ieee1394 - Enable FireWire/iLink IEEE1394 support (dv, camera, ...)
 imagemagick - Enables support for Imagemagick (image converter)
 imap - Adds support for IMAP (Internet Mail Application Protocol)
 imlib - Adds support for imlib, an image loading and rendering library
+infiniband - Enable Infiniband RDMA transport support
 inifile - Adds dbm support for .ini files
 innodb - Adds innodb support for mySQL (transaction support)
 interbase - Adds support for Interbase database
@@ -164,6 +163,7 @@ iodbc - Adds support for iODBC library
 ios - Enable support for Apple's iDevice with iOS operating system (iPad, iPhone, iPod, etc)
 ipod - Enable support for iPod device access
 ipv6 - Adds support for IP version 6
+iwmmxt - Adds support for optimizations for ARM iwMMXt instructions
 jabber - Enable jabber IM protocol support
 jack - Adds support for the JACK Audio Connection Kit
 java - Adds support for Java
@@ -189,6 +189,7 @@ lcms - Adds lcms support (color management engine)
 ldap - Adds LDAP support (Lightweight Directory Access Protocol)
 libcaca - Add support for colored ASCII-art graphics
 libedit - Use the libedit library (replacement for readline)
+libffi - Enable support for Foreign Function Interface library
 libgda - Adds GNOME Data Access support
 libnotify - Enable desktop notification support
 libsamplerate - Build with support for converting sample rates using libsamplerate
@@ -213,6 +214,7 @@ milter - Adds sendmail mail filter (milter) support
 mime - Adds MIME support
 minimal - Install a very minimal build (disables, for example, plugins, fonts, most drivers, non-critical features)
 mmap - Adds mmap (memory map) support
+mms - Support for Microsoft Media Server (MMS) streams
 mmx - Adds support for optimizations for Pentium MMX and Athlon class processors
 mng - Adds support for libmng (MNG images)
 modplug - Adds libmodplug support
@@ -245,7 +247,7 @@ nis - Support for NIS/YP services
 nls - Adds Native Language Support (using gettext - GNU locale utilities)
 nntp - Add support for newsgroups (Network News Transfer Protocol)
 nocd - Install all files required to run the application without a CD mounted
-nocxx - Disable support for C++ (DON'T USE THIS UNLESS YOU KNOW WHAT YOU'RE DOING)
+nocxx - Old flag -- USE=cxx from now on
 nptl - Enable support for Native POSIX Threads Library, the new threading module (requires linux-2.6 or better usually)
 nsplugin - Build plugin for browsers supporting the Netscape plugin architecture (that is almost any modern browser)
 ocaml - Adds support/bindings for the Ocaml language
@@ -272,7 +274,7 @@ pcntl - Adds support for process creation functions
 pcre - Adds support for Perl Compatible Regular Expressions
 pda - Adds support for portable devices
 pdf - Adds general support for PDF (Portable Document Format), this replaces the pdflib and cpdflib flags
-perl - Adds support/bindings for the Perl language
+perl - Adds optional support/bindings for the Perl language
 php - Include support for the PHP language
 plasma - Build optional plasma widgets that require kde-base/libplasma
 plotutils - Add support for plotutils (library for 2-D vector graphics)
@@ -286,7 +288,7 @@ prefix - Defines if a Gentoo Prefix offset installation is used
 prelude - Adds support/bindings for the Prelude Intrusion Detection System
 profile - Adds support for software performance analysis (will likely vary from ebuild to ebuild)
 pulseaudio - Adds support for PulseAudio sound server
-python - Adds support/bindings for the Python language
+python - Adds optional support/bindings for the Python language
 qdbm - Adds support for the qdbm (Quick Database Manager) library
 qmail-spp - Adds support for qmail SMTP plugins
 qt4 - Adds support for the Qt GUI/Application Toolkit version 4.x
@@ -362,8 +364,7 @@ uclibc - Enable uclibc specific patches and build or link uclibc
 udev - Enable sys-fs/udev integration (device discovery, power and storage device support, etc)
 unicode - Adds support for Unicode
 usb - Adds USB support to applications that have optional USB support (e.g. cups)
-v4l - Enables video4linux support
-v4l2 - Enable video4linux2 support
+v4l - Enable support for video4linux (using linux-headers or userspace libv4l libraries)
 vanilla - Do not add extra patches which change default behaviour; DO NOT USE THIS ON A GLOBAL SCALE as the severity of the meaning changes drastically
 vcd - Video CD support
 vhosts - Adds support for installing web-based applications into a virtual-hosting environment

@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation.
 # Distributed under the terms of the GNU General Public License, v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/packages,v 1.49 2011/04/24 21:23:13 ulm Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/packages,v 1.58 2011/12/06 16:05:56 vapier Exp $
 
 # Gentoo Base Profile
 
@@ -26,7 +26,6 @@
 
 *sys-apps/baselayout
 *app-arch/bzip2
-*app-arch/cpio
 *app-arch/gzip
 *app-arch/tar
 *app-arch/xz-utils
@@ -45,29 +44,26 @@
 *sys-apps/grep
 *sys-apps/kbd
 *sys-apps/module-init-tools
-*sys-apps/net-tools
 #*>=sys-apps/portage-2.0.51.22
 *sys-process/procps
 *sys-process/psmisc
 *sys-apps/sed
-*sys-apps/shadow
+# eutils.eclass relies on options from newer shadow #367633
+*>=sys-apps/shadow-4.1
 *sys-apps/texinfo
 *sys-apps/which
-*sys-devel/autoconf
-*sys-devel/automake
+#*sys-devel/autoconf
+#*sys-devel/automake
 *sys-devel/binutils
-*sys-devel/bison
-*sys-devel/flex
+#*sys-devel/bison
+#*sys-devel/flex
 *sys-devel/gcc
 *sys-devel/gnuconfig
-*sys-devel/libtool
-*sys-devel/m4
+#*sys-devel/libtool
+#*sys-devel/m4
 *sys-devel/make
 *sys-devel/patch
 *sys-fs/e2fsprogs
-*sys-libs/ncurses
-*sys-libs/readline
-*sys-libs/zlib
 *virtual/dev-manager
 *virtual/editor
 *virtual/libc
