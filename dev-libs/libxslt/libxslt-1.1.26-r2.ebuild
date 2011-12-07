@@ -16,7 +16,7 @@ SRC_URI="ftp://xmlsoft.org/${PN}/${P}.tar.gz"
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="crypt debug python"
+IUSE="crypt debug python static-libs"
 
 DEPEND=">=dev-libs/libxml2-2.6.27:2
 	crypt?  ( >=dev-libs/libgcrypt-1.1.42 )"
@@ -58,7 +58,8 @@ src_configure() {
 		$(use_with crypt crypto) \
 		$(use_with python) \
 		$(use_with debug) \
-		$(use_with debug mem-debug)
+		$(use_with debug mem-debug) \
+		$(use_enable static-libs static)
 }
 
 src_compile() {
@@ -103,6 +104,11 @@ src_install() {
 	mv -vf "${ED}"/usr/share/doc/${PN}-python-${PV} \
 		"${ED}"/usr/share/doc/${PF}/python
 	dodoc AUTHORS ChangeLog FEATURES NEWS README TODO || die
+
+	if ! use static-libs; then
+		# Remove useless .la files
+		find "${D}" -name '*.la' -exec rm -f {} + || die "la file removal failed"
+	fi
 }
 
 pkg_postinst() {
