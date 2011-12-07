@@ -14,3 +14,6 @@ EMERGE_DEFAULT_OPTS="--quiet-build --buildpkg --with-bdeps=y --binpkg-respect-us
 # don't bother with these
 ACCEPT_LICENSE="*"
 EBEEP_IGNORE="yes"
+
+# disable these USE expands
+VIDEO_CARDS=""

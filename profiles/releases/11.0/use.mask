@@ -230,7 +230,6 @@ radius
 rdesktop
 recode
 rpm
-samba
 sapdb
 savedconfig
 scanner
@@ -309,9 +308,7 @@ zsh-completion
 # ruby targets we don't support
 ruby_targets_jruby
 ruby_targets_ree18
-
-# mask video card drivers
-video_cards_nvidia
+ruby_targets_ruby19
 
 # unsupported linguas
 linguas_ja
