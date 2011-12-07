@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=2
-USE_RUBY="ruby18 jruby"
+USE_RUBY="ruby18 ree18 jruby"
 
 RUBY_FAKEGEM_TASK_TEST="test_all"
 
