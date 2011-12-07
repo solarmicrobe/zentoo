@@ -36,10 +36,12 @@ src_configure() {
 
 src_test() {
 	emake -C test check | tee "${T}"/tests
-	grep FAILED "${T}"/tests &>/dev/null && die "1 or more tests failed"
 }
 
 src_install() {
 	emake DESTDIR="${D}" install || die "make install failed"
 	dodoc README ChangeLog
+	if ! use static-libs; then
+		rm -f "${D}"/usr/lib*/libevent*.la
+	fi
 }
