@@ -4,45 +4,35 @@
 
 EAPI="3"
 SUPPORT_PYTHON_ABIS="1"
+PYTHON_TESTS_FAILURES_TOLERANT_ABIS="*-jython"
 
 inherit distutils eutils
 
-DESCRIPTION="Set of python tools for processing plaintext docs into HTML, XML, etc..."
+DESCRIPTION="Docutils - Python Documentation Utilities"
 HOMEPAGE="http://docutils.sourceforge.net/ http://pypi.python.org/pypi/docutils"
-SRC_URI="mirror://sourceforge/docutils/${P}.tar.gz
-	glep? ( mirror://gentoo/glep-0.4-r1.tbz2 )"
+if [[ "${PV}" == *_pre* ]]; then
+	SRC_URI="mirror://gentoo/${P}.tar.xz"
+else
+	SRC_URI="mirror://sourceforge/${PN}/${P}.tar.gz"
+fi
+SRC_URI+=" glep? ( mirror://gentoo/glep-0.4-r1.tbz2 )"
 
-LICENSE="public-domain PYTHON BSD"
+LICENSE="BSD-2 GPL-3 PSF-2 public-domain"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="glep emacs"
+IUSE="glep"
 
-DEPEND=">=app-shells/bash-4
-	dev-python/setuptools"
+DEPEND="dev-python/setuptools"
 RDEPEND=""
-# Emacs support is in PDEPEND to avoid a dependency cycle (bug #183242)
-PDEPEND="emacs? ( || ( >=app-emacs/rst-0.4 >=virtual/emacs-23 ) )"
 
 DOCS="*.txt"
 PYTHON_MODNAME="docutils roman.py"
 
 GLEP_SRC="${WORKDIR}/glep-0.4-r1"
 
-pkg_setup() {
-	python_pkg_setup
-}
-
 src_prepare() {
-	# Delete internal copies of optparse and textwrap modules.
-	rm -f extras/{optparse.py,textwrap.py}
-
 	# Fix installation of extra modules.
 	epatch "${FILESDIR}/${PN}-0.6-extra_modules.patch"
-
-	epatch "${FILESDIR}/${P}-python-3.2-configparser.patch"
-	epatch "${FILESDIR}/${P}-python-3.2-xml.etree.ElementTree.patch"
-
-	epatch "${FILESDIR}/${P}-encoding.patch"
 
 	sed -e "s/from distutils.core/from setuptools/" -i setup.py || die "sed setup.py failed"
 }
@@ -52,21 +42,20 @@ src_compile() {
 
 	# Generate html docs from reStructured text sources.
 
-	# Make roman.py available for the doc building process
+	# Make roman.py available for process of building of documentation.
 	ln -s extras/roman.py
 
-	# Place html4css1.css in base directory. This makes sure the
-	# generated reference to it is correct.
+	# Place html4css1.css in base directory to ensure that the generated reference to it is correct.
 	cp docutils/writers/html4css1/html4css1.css .
 
 	pushd tools > /dev/null
 
-	echo PYTHONPATH="../build-$(PYTHON -f --ABI)/lib" "$(PYTHON -f)" $([[ -f ../build-$(PYTHON -f --ABI)/lib/tools/buildhtml.py ]] && echo ../build-$(PYTHON -f --ABI)/lib/tools/buildhtml.py || echo ../tools/buildhtml.py) --input-encoding=utf-8 --stylesheet-path=../html4css1.css --traceback ..
-	PYTHONPATH="../build-$(PYTHON -f --ABI)/lib" "$(PYTHON -f)" $([[ -f ../build-$(PYTHON -f --ABI)/lib/tools/buildhtml.py ]] && echo ../build-$(PYTHON -f --ABI)/lib/tools/buildhtml.py || echo ../tools/buildhtml.py) --input-encoding=utf-8 --stylesheet-path=../html4css1.css --traceback .. || die "buildhtml.py failed"
+	echo PYTHONPATH="../build-$(PYTHON -f --ABI)/lib" "$(PYTHON -f)" $([[ -f ../build-$(PYTHON -f --ABI)/lib/tools/buildhtml.py ]] && echo ../build-$(PYTHON -f --ABI)/lib/tools/buildhtml.py || echo ../tools/buildhtml.py) --input-encoding=utf-8 --stylesheet-path=../html4css1.css --traceback ../docs
+	PYTHONPATH="../build-$(PYTHON -f --ABI)/lib" "$(PYTHON -f)" $([[ -f ../build-$(PYTHON -f --ABI)/lib/tools/buildhtml.py ]] && echo ../build-$(PYTHON -f --ABI)/lib/tools/buildhtml.py || echo ../tools/buildhtml.py) --input-encoding=utf-8 --stylesheet-path=../html4css1.css --traceback ../docs || die "buildhtml.py failed"
 
 	popd > /dev/null
 
-	# Clean up after the doc building.
+	# Clean up after building of documentation.
 	rm roman.py html4css1.css
 }
 
@@ -88,25 +77,18 @@ install_txt_doc() {
 src_install() {
 	distutils_src_install
 
-	declare -A tools=()
-
 	postinstallational_preparation() {
 		# Install tools.
+		mkdir -p "${T}/images/${PYTHON_ABI}${EPREFIX}/usr/bin"
 		pushd $([[ -d build-${PYTHON_ABI}/lib/tools ]] && echo build-${PYTHON_ABI}/lib/tools || echo tools) > /dev/null
-		local tool
-		for tool in *.py; do
-			newbin "${tool}" "${tool}-${PYTHON_ABI}"
-			python_convert_shebangs -q $(python_get_version) "${ED}usr/bin/${tool}-${PYTHON_ABI}"
-			tools+=(["${ED}usr/bin/${tool}"]=)
-		done
+		cp buildhtml.py quicktest.py "${T}/images/${PYTHON_ABI}${EPREFIX}/usr/bin"
 		popd > /dev/null
 
 		# Delete useless files, which are installed only with Python 3.
 		rm -fr "${ED}$(python_get_sitedir)/"{test,tools}
 	}
 	python_execute_function -q postinstallational_preparation
-
-	python_generate_wrapper_scripts -f -q "${!tools[@]}"
+	python_merge_intermediate_installation_images "${T}/images"
 
 	# Install documentation.
 	dohtml -r docs tools
@@ -131,6 +113,6 @@ src_install() {
 			insinto $(python_get_sitedir)/docutils/writers
 			doins -r "${GLEP_SRC}/glep_html" || die "doins writer failed"
 		}
-		python_execute_function --action-message 'Installation of GLEP tools with $(python_get_implementation) $(python_get_version)...' installation_of_glep_tools
+		python_execute_function --action-message 'Installation of GLEP tools with $(python_get_implementation_and_version)...' installation_of_glep_tools
 	fi
 }

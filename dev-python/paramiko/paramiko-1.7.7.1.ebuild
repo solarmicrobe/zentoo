@@ -7,7 +7,7 @@ PYTHON_DEPEND="2"
 SUPPORT_PYTHON_ABIS="1"
 RESTRICT_PYTHON_ABIS="3.* *-jython"
 
-inherit distutils eutils
+inherit distutils
 
 DESCRIPTION="SSH2 protocol library"
 HOMEPAGE="http://www.lag.net/paramiko/ http://pypi.python.org/pypi/paramiko"
@@ -18,13 +18,13 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc examples"
 
-RDEPEND=">=dev-python/pycrypto-1.9_alpha6"
+RDEPEND=">=dev-python/pycrypto-2.1"
 DEPEND="${RDEPEND}
 	dev-python/setuptools"
 
 src_test() {
 	testing() {
-		"$(PYTHON)" test.py --verbose
+		PYTHONPATH="build-${PYTHON_ABI}/lib" "$(PYTHON)" test.py --verbose
 	}
 	python_execute_function testing
 }

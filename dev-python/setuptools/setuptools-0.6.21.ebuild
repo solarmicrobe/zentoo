@@ -15,7 +15,7 @@ DESCRIPTION="Distribute (fork of Setuptools) is a collection of extensions to Di
 HOMEPAGE="http://pypi.python.org/pypi/distribute"
 SRC_URI="mirror://pypi/${MY_PN:0:1}/${MY_PN}/${MY_P}.tar.gz"
 
-LICENSE="PSF-2.2"
+LICENSE="PSF-2"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
@@ -32,8 +32,7 @@ src_prepare() {
 	distutils_src_prepare
 
 	epatch "${FILESDIR}/${PN}-0.6_rc7-noexe.patch"
-	epatch "${FILESDIR}/distribute-0.6.12-disable_versioned_easy_install.patch"
-	epatch "${FILESDIR}/distribute-0.6.12-fix_deprecation_warnings.patch"
+	epatch "${FILESDIR}/distribute-0.6.16-fix_deprecation_warnings.patch"
 
 	# Disable tests requiring network connection.
 	rm -f setuptools/tests/test_packageindex.py
@@ -51,5 +50,5 @@ src_test() {
 }
 
 src_install() {
-	DONT_PATCH_SETUPTOOLS="1" distutils_src_install
+	DISTRIBUTE_DISABLE_VERSIONED_EASY_INSTALL_SCRIPT="1" DONT_PATCH_SETUPTOOLS="1" distutils_src_install
 }

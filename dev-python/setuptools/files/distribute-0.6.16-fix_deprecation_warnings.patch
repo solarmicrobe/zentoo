@@ -1,6 +1,6 @@
 --- pkg_resources.py
 +++ pkg_resources.py
-@@ -209,9 +209,10 @@
+@@ -210,9 +210,10 @@
      needs some hacks for Linux and Mac OS X.
      """
      try:
@@ -87,7 +87,7 @@
  
 --- setuptools/command/easy_install.py
 +++ setuptools/command/easy_install.py
-@@ -15,8 +15,21 @@
+@@ -15,9 +15,22 @@
  from setuptools import Command, _dont_write_bytecode
  from setuptools.sandbox import run_setup
  from distutils import log, dir_util
@@ -105,12 +105,13 @@
 +    def _get_purelib():
 +        return get_python_lib(False)
 +
+ from distutils.util import get_platform
  from distutils.util import convert_path, subst_vars
 -from distutils.sysconfig import get_python_lib, get_config_vars
  from distutils.errors import DistutilsArgError, DistutilsOptionError, \
      DistutilsError, DistutilsPlatformError
  from distutils.command.install import INSTALL_SCHEMES, SCHEME_KEYS
-@@ -1344,8 +1357,7 @@
+@@ -1348,8 +1361,7 @@
                                           'Python',
                                           sys.version[:3],
                                           'site-packages'))
@@ -119,4 +120,4 @@
 +    for site_lib in (_get_purelib(), _get_platlib()):
          if site_lib not in sitedirs: sitedirs.append(site_lib)
  
-     if sys.version >= "2.6":
+     if HAS_USER_SITE:

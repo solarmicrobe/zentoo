@@ -8,17 +8,16 @@ WANT_AUTOMAKE="none"
 inherit autotools eutils flag-o-matic multilib python toolchain-funcs
 
 if [[ "${PV}" == *_pre* ]]; then
-	inherit subversion
+	inherit mercurial
 
-	ESVN_PROJECT="python"
-	ESVN_REPO_URI="http://svn.python.org/projects/python/branches/release27-maint"
-	ESVN_REVISION=""
+	EHG_REPO_URI="http://hg.python.org/cpython"
+	EHG_REVISION=""
 else
 	MY_PV="${PV%_p*}"
 	MY_P="Python-${MY_PV}"
 fi
 
-PATCHSET_REVISION="1"
+PATCHSET_REVISION="0"
 
 DESCRIPTION="Python is an interpreted, interactive, object-oriented programming language."
 HOMEPAGE="http://www.python.org/"
@@ -29,13 +28,14 @@ else
 		mirror://gentoo/python-gentoo-patches-${MY_PV}$([[ "${PATCHSET_REVISION}" != "0" ]] && echo "-r${PATCHSET_REVISION}").tar.bz2"
 fi
 
-LICENSE="PSF-2.2"
+LICENSE="PSF-2"
 SLOT="2.7"
 PYTHON_ABI="${SLOT}"
 KEYWORDS="amd64"
 IUSE="-berkdb build doc elibc_uclibc examples gdbm ipv6 +ncurses +readline sqlite +ssl +threads tk +wide-unicode wininst +xml"
 
 RDEPEND=">=app-admin/eselect-python-20091230
+		app-arch/bzip2
 		>=sys-libs/zlib-1.1.3
 		virtual/libffi
 		virtual/libintl
@@ -56,11 +56,15 @@ RDEPEND=">=app-admin/eselect-python-20091230
 			)
 			sqlite? ( >=dev-db/sqlite-3.3.8:3[extensions] )
 			ssl? ( dev-libs/openssl )
-			tk? ( >=dev-lang/tk-8.0 )
+			tk? (
+				>=dev-lang/tk-8.0
+				dev-tcltk/blt
+			)
 			xml? ( >=dev-libs/expat-2 )
 		)
 		!!<sys-apps/portage-2.1.9"
-DEPEND="${RDEPEND}
+DEPEND=">=sys-devel/autoconf-2.65
+		${RDEPEND}
 		$([[ "${PV}" == *_pre* ]] && echo "=${CATEGORY}/${PN}-${PV%%.*}*")
 		dev-util/pkgconfig
 		$([[ "${PV}" =~ ^[[:digit:]]+\.[[:digit:]]+_pre ]] && echo "doc? ( dev-python/sphinx )")
@@ -77,9 +81,15 @@ pkg_setup() {
 	python_pkg_setup
 
 	if use berkdb; then
-		ewarn "\"bsddb\" module is out-of-date and no longer maintained inside dev-lang/python. It has"
-		ewarn "been additionally removed in Python 3. You should use external, still maintained \"bsddb3\""
-		ewarn "module provided by dev-python/bsddb3 which supports both Python 2 and Python 3."
+		ewarn "\"bsddb\" module is out-of-date and no longer maintained inside dev-lang/python."
+		ewarn "\"bsddb\" and \"dbhash\" modules have been additionally removed in Python 3."
+		ewarn "You should use external, still maintained \"bsddb3\" module provided by dev-python/bsddb3,"
+		ewarn "which supports both Python 2 and Python 3."
+	else
+		if has_version "=${CATEGORY}/${PN}-${PV%%.*}*[berkdb]"; then
+			ewarn "You are migrating from =${CATEGORY}/${PN}-${PV%%.*}*[berkdb] to =${CATEGORY}/${PN}-${PV%%.*}*[-berkdb]."
+			ewarn "You might need to migrate your databases."
+		fi
 	fi
 }
 
@@ -89,7 +99,17 @@ src_prepare() {
 	rm -fr Modules/_ctypes/libffi*
 	rm -fr Modules/zlib
 
+	if [[ "${PV}" =~ ^[[:digit:]]+\.[[:digit:]]+_pre ]]; then
+		if [[ "$(hg branch)" != "default" ]]; then
+			die "Invalid EHG_REVISION"
+		fi
+	fi
+
 	if [[ "${PV}" =~ ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+_pre ]]; then
+		if [[ "$(hg branch)" != "${SLOT}" ]]; then
+			die "Invalid EHG_REVISION"
+		fi
+
 		if grep -Eq '#define PY_RELEASE_LEVEL[[:space:]]+PY_RELEASE_LEVEL_FINAL' Include/patchlevel.h; then
 			# Update micro version, release level and version string.
 			local micro_version="${PV%_pre*}"
@@ -116,6 +136,7 @@ src_prepare() {
 	fi
 
 	EPATCH_EXCLUDE="${excluded_patches}" EPATCH_SUFFIX="patch" epatch "${patchset_dir}"
+	epatch "${FILESDIR}/linux2.patch"
 
 	sed -i -e "s:@@GENTOO_LIBDIR@@:$(get_libdir):g" \
 		Lib/distutils/command/install.py \
@@ -128,19 +149,11 @@ src_prepare() {
 		Modules/getpath.c \
 		setup.py || die "sed failed to replace @@GENTOO_LIBDIR@@"
 
-	if ! use wininst; then
-		# Remove Microsoft Windows executables.
-		rm Lib/distutils/command/wininst-*.exe
-	fi
+	# Linux-3 compat. Bug #374579 (upstream issue12571)
+	cp -r "${S}/Lib/plat-linux2" "${S}/Lib/plat-linux3" || die
 
-	# Support versions of Autoconf other than 2.65.
-	sed -e "/version_required(2\.65)/d" -i configure.in || die "sed failed"
-
-	if [[ "${PV}" == *_pre* ]]; then
-		sed -e "s/\(-DSVNVERSION=\).*\( -o\)/\1\\\\\"${ESVN_REVISION}\\\\\"\2/" -i Makefile.pre.in || die "sed failed"
-	fi
-
-	eautoreconf
+	eautoconf
+	eautoheader
 }
 
 src_configure() {
@@ -248,9 +261,9 @@ src_test() {
 	python_enable_pyc
 
 	# Skip failing tests.
-	local skip_tests="distutils gdb minidom pyexpat sax"
+	local skipped_tests="distutils gdb"
 
-	for test in ${skip_tests}; do
+	for test in ${skipped_tests}; do
 		mv "${S}/Lib/test/test_${test}.py" "${T}"
 	done
 
@@ -258,12 +271,12 @@ src_test() {
 	emake test EXTRATESTOPTS="-w" < /dev/tty
 	local result="$?"
 
-	for test in ${skip_tests}; do
+	for test in ${skipped_tests}; do
 		mv "${T}/test_${test}.py" "${S}/Lib/test/test_${test}.py"
 	done
 
 	elog "The following tests have been skipped:"
-	for test in ${skip_tests}; do
+	for test in ${skipped_tests}; do
 		elog "test_${test}.py"
 	done
 
@@ -295,15 +308,16 @@ src_install() {
 	rm -f "${ED}usr/bin/smtpd.py"
 
 	if use build; then
-		rm -fr "${ED}usr/bin/idle${SLOT}" "${ED}$(python_get_libdir)/"{bsddb,idlelib,lib-tk,sqlite3,test}
+		rm -fr "${ED}usr/bin/idle${SLOT}" "${ED}$(python_get_libdir)/"{bsddb,dbhash.py,idlelib,lib-tk,sqlite3,test}
 	else
 		use elibc_uclibc && rm -fr "${ED}$(python_get_libdir)/"{bsddb/test,test}
-		use berkdb || rm -fr "${ED}$(python_get_libdir)/"{bsddb,test/test_bsddb*}
+		use berkdb || rm -fr "${ED}$(python_get_libdir)/"{bsddb,dbhash.py,test/test_bsddb*}
 		use sqlite || rm -fr "${ED}$(python_get_libdir)/"{sqlite3,test/test_sqlite*}
 		use tk || rm -fr "${ED}usr/bin/idle${SLOT}" "${ED}$(python_get_libdir)/"{idlelib,lib-tk}
 	fi
 
 	use threads || rm -fr "${ED}$(python_get_libdir)/multiprocessing"
+	use wininst || rm -f "${ED}$(python_get_libdir)/distutils/command/"wininst-*.exe
 
 	dodoc Misc/{ACKS,HISTORY,NEWS} || die "dodoc failed"
 
@@ -312,11 +326,23 @@ src_install() {
 		doins -r "${S}/Tools" || die "doins failed"
 	fi
 
-	newinitd "${FILESDIR}/pydoc.init" pydoc-${SLOT} || die "newinitd failed"
 	newconfd "${FILESDIR}/pydoc.conf" pydoc-${SLOT} || die "newconfd failed"
+	newinitd "${FILESDIR}/pydoc.init" pydoc-${SLOT} || die "newinitd failed"
 
-	# Do not install empty directory.
-	rmdir "${ED}$(python_get_libdir)/lib-old"
+	if use kernel_linux; then
+		if [ -d "${ED}$(python_get_libdir)/plat-linux2" ];then
+			cp -r "${ED}$(python_get_libdir)/plat-linux2" \
+				"${ED}$(python_get_libdir)/plat-linux3" || die "copy plat-linux failed"
+		else
+			cp -r "${ED}$(python_get_libdir)/plat-linux3" \
+				"${ED}$(python_get_libdir)/plat-linux2" || die "copy plat-linux failed"
+		fi
+	fi
+
+	sed \
+		-e "s:@PYDOC_PORT_VARIABLE@:PYDOC${SLOT/./_}_PORT:" \
+		-e "s:@PYDOC@:pydoc${SLOT}:" \
+		-i "${ED}etc/conf.d/pydoc-${SLOT}" "${ED}etc/init.d/pydoc-${SLOT}" || die "sed failed"
 }
 
 pkg_preinst() {
@@ -347,11 +373,17 @@ pkg_postinst() {
 		ewarn "\e[1;31m************************************************************************\e[0m"
 		ewarn
 		ewarn "You have just upgraded from an older version of Python."
-		ewarn "You should run 'python-updater \${options}' to rebuild Python modules."
+		ewarn "You should switch active version of Python ${PV%%.*} and run"
+		ewarn "'python-updater \${options}' to rebuild Python modules."
 		ewarn
 		ewarn "\e[1;31m************************************************************************\e[0m"
 		ewarn
-		ebeep 12
+
+		local n
+		for ((n = 0; n < 12; n++)); do
+			echo -ne "\a"
+			sleep 1
+		done
 	fi
 }
 
