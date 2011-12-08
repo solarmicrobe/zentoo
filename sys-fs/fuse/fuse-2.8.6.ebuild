@@ -2,23 +2,26 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
-inherit eutils libtool linux-info
+EAPI=4
+inherit libtool linux-info
 
 MY_P=${P/_/-}
 DESCRIPTION="An interface for filesystems implemented in userspace."
 HOMEPAGE="http://fuse.sourceforge.net"
 SRC_URI="mirror://sourceforge/fuse/${MY_P}.tar.gz"
+
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="kernel_linux kernel_FreeBSD"
-S=${WORKDIR}/${MY_P}
+IUSE="kernel_linux kernel_FreeBSD static-libs"
+
 PDEPEND="kernel_FreeBSD? ( sys-fs/fuse4bsd )"
+
+S=${WORKDIR}/${MY_P}
 
 pkg_setup() {
 	if use kernel_linux ; then
-		if kernel_is lt 2 6 9; then
+		if kernel_is lt 2 6 9 ; then
 			die "Your kernel is too old."
 		fi
 		CONFIG_CHECK="~FUSE_FS"
@@ -28,19 +31,23 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-double-version.patch"
+	# fix building with glibc-2.14 #370411
+	sed -i '1i#define _GNU_SOURCE' util/fusermount.c || die
 
 	elibtoolize
 }
 
 src_configure() {
 	econf \
-		UDEV_RULES_PATH=/lib/udev/rules.d \
+		INIT_D_PATH="${EPREFIX}/etc/init.d" \
+		MOUNT_FUSE_PATH="${EPREFIX}/sbin" \
+		UDEV_RULES_PATH="${EPREFIX}/lib/udev/rules.d" \
+		$(use_enable static-libs static) \
 		--disable-example
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die "emake install failed"
+	emake DESTDIR="${D}" install
 
 	dodoc AUTHORS ChangeLog Filesystems README \
 		README.NFS NEWS doc/how-fuse-works \
@@ -58,10 +65,11 @@ src_install() {
 		die "We don't know what init code install for your kernel, please file a bug."
 	fi
 
+	find "${ED}" -name "*.la" -delete
 	rm -rf "${D}/dev"
 
 	dodir /etc
-	cat >"${D}"/etc/fuse.conf <<-EOF
+	cat > "${ED}"/etc/fuse.conf <<-EOF
 		# Set the maximum number of FUSE mounts allowed to non-root users.
 		# The default is 1000.
 		#

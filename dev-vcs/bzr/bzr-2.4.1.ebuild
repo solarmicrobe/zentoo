@@ -3,9 +3,9 @@
 # $Header: $
 
 EAPI="3"
-PYTHON_DEPEND="2"
+PYTHON_DEPEND="2:2.6"
 SUPPORT_PYTHON_ABIS="1"
-RESTRICT_PYTHON_ABIS="3.*"
+RESTRICT_PYTHON_ABIS="2.[45] 3.*"
 
 inherit bash-completion distutils elisp-common eutils versionator
 
@@ -22,20 +22,16 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="curl doc emacs +sftp test"
 
-# Disable until https://bugs.launchpad.net/bzr/+bug/392127 is released.
-# It can be found in Bazaar 2.3
-RESTRICT="test"
-
-RDEPEND="|| ( dev-lang/python:2.7[xml] dev-lang/python:2.6[xml] dev-lang/python:2.5[xml] dev-python/celementtree )
+RDEPEND="|| ( dev-lang/python:2.7[xml] dev-lang/python:2.6[xml] dev-python/celementtree )
 	curl? ( dev-python/pycurl )
 	sftp? ( dev-python/paramiko )"
 
 DEPEND="emacs? ( virtual/emacs )
 	test? (
 		${RDEPEND}
-		dev-python/medusa
+		|| ( dev-python/pyftpdlib dev-python/medusa )
 		dev-python/subunit
-		dev-python/testtools
+		>=dev-python/testtools-0.9.5
 	)"
 
 S="${WORKDIR}/${MY_P}"
@@ -49,18 +45,8 @@ SITEFILE="71bzr-gentoo.el"
 src_prepare() {
 	distutils_src_prepare
 
-	# Fix for changed behaviour of Python 2.7, integrated into Bazaar
-	# 2.3, might be a regression in Python, see
-	# https://bugs.launchpad.net/bzr/+bug/612096
-	# http://psf.upfronthosting.co.za/roundup/tracker/issue8194
-	epatch "${FILESDIR}"/${PN}-2.2.2-python-2.7.patch
 	# Don't regenerate .c files from .pyx when pyrex is found.
-	epatch "${FILESDIR}/${PN}-2.2.0-no-pyrex-citon.patch"
-	# Don't run lock permission tests when running as root
-	# Has to be backported, tests are restricted anyway
-#	epatch "${FILESDIR}/${PN}-0.90-tests-fix_root.patch"
-	# Fix permission errors when run under directories with setgid set.
-	epatch "${FILESDIR}/${PN}-0.90-tests-sgid.patch"
+	epatch "${FILESDIR}/${PN}-2.4.0-no-pyrex-citon.patch"
 }
 
 src_compile() {
@@ -77,17 +63,18 @@ src_test() {
 
 	# Define tests which are known to fail below.
 	local skip_tests="("
-	# https://bugs.launchpad.net/bzr/+bug/456471
-	skip_tests+="bzrlib.tests.blackbox.test_version.*|"
-	# https://bugs.launchpad.net/bzr/+bug/392127
-	skip_tests+="test_http.*"
+	# https://bugs.launchpad.net/bzr/+bug/850676
+	skip_tests+="per_transport.TransportTests.test_unicode_paths.*|"
+	# libcurl cannot verify SSL certs
+	# https://bugs.launchpad.net/bzr/+bug/82086
+	skip_tests+="per_transport.TransportTests.test_clone|per_transport.TransportTests.test_connection_sharing|per_transport.TransportTests.test_copy_to|per_transport.TransportTests.test_get|per_transport.TransportTests.test_get_bytes|per_transport.TransportTests.test_get_bytes_unknown_file|per_transport.TransportTests.test_get_directory_read_gives_ReadError|per_transport.TransportTests.test_get_unknown_file|per_transport.TransportTests.test_has|per_transport.TransportTests.test_has_root_works|per_transport.TransportTests.test_readv|per_transport.TransportTests.test_readv_out_of_order|per_transport.TransportTests.test_readv_short_read|per_transport.TransportTests.test_readv_with_adjust_for_latency|per_transport.TransportTests.test_readv_with_adjust_for_latency_with_big_file|per_transport.TransportTests.test_reuse_connection_for_various_paths|test_read_bundle.TestReadMergeableBundleFromURL.test_read_mergeable_respects_possible_transports|test_read_bundle.TestReadMergeableBundleFromURL.test_read_mergeable_from_url|test_read_bundle.TestReadMergeableBundleFromURL.test_read_fail|test_http.TestActivity.test_readv|test_http.TestActivity.test_post|test_http.TestActivity.test_has|test_http.TestActivity.test_get"
 	skip_tests+=")"
 	if [[ -n ${skip_tests} ]]; then
 		einfo "Skipping tests known to fail: ${skip_tests}"
 	fi
 
 	testing() {
-		LC_ALL="C" "$(PYTHON -2)" bzr --no-plugins selftest ${skip_tests:+-x} ${skip_tests}
+		LC_ALL="C" "$(PYTHON)" bzr --no-plugins selftest ${skip_tests:+-x} ${skip_tests}
 	}
 	python_execute_function testing
 

@@ -4,21 +4,25 @@
 
 EAPI="3"
 
-inherit eutils versionator
+inherit versionator
 
-MAJOR_MINOR_VERSION="$(get_version_component_range 1-2)"
-MICRO_VERSION="$(get_version_component_range 3)"
+MAJOR_VERSION="$(get_version_component_range 1)"
+MINOR_VERSION="$(get_version_component_range 2)"
+if [[ "${PV}" =~ ^[[:digit:]]+\.[[:digit:]]+(_rc[[:digit:]]*)?$ ]]; then
+	MICRO_VERSION="0"
+else
+	MICRO_VERSION="$(get_version_component_range 3)"
+fi
 
 DESCRIPTION="International Components for Unicode"
 HOMEPAGE="http://www.icu-project.org/"
 
-BASE_URI="http://download.icu-project.org/files/icu4c/${PV}"
-DOCS_BASE_URI="http://download.icu-project.org/files/icu4c/${MAJOR_MINOR_VERSION}"
+BASE_URI="http://download.icu-project.org/files/icu4c/${PV/_/}"
 SRC_ARCHIVE="icu4c-${PV//./_}-src.tgz"
-DOCS_ARCHIVE="icu4c-${MAJOR_MINOR_VERSION//./_}-docs.zip"
+DOCS_ARCHIVE="icu4c-${PV//./_}-docs.zip"
 
 SRC_URI="${BASE_URI}/${SRC_ARCHIVE}
-	doc? ( ${DOCS_BASE_URI}/${DOCS_ARCHIVE} )"
+	doc? ( ${BASE_URI}/${DOCS_ARCHIVE} )"
 
 LICENSE="BSD"
 SLOT="0"
@@ -30,7 +34,7 @@ RDEPEND=""
 
 S="${WORKDIR}/${PN}/source"
 
-QA_DT_NEEDED="/usr/lib.*/libicudata.so.${MAJOR_MINOR_VERSION/./}.${MICRO_VERSION:-0}"
+QA_DT_NEEDED="/usr/lib.*/libicudata\.so\.${MAJOR_VERSION}${MINOR_VERSION}\.${MICRO_VERSION}"
 
 src_unpack() {
 	unpack "${SRC_ARCHIVE}"
@@ -46,11 +50,12 @@ src_prepare() {
 	# Do not hardcode flags into icu-config.
 	# https://ssl.icu-project.org/trac/ticket/6102
 	local variable
-	for variable in ARFLAGS CFLAGS CPPFLAGS CXXFLAGS FFLAGS LDFLAGS; do
+	for variable in CFLAGS CPPFLAGS CXXFLAGS FFLAGS LDFLAGS; do
 		sed -i -e "/^${variable} =.*/s:@${variable}@::" config/Makefile.inc.in || die "sed failed"
 	done
 
-	epatch "${FILESDIR}/${P}-parallel_installation.patch"
+	epatch "${FILESDIR}/icu-4.8.1-fix_binformat_fonts.patch"
+	epatch "${FILESDIR}/icu-4.8.1-fix_nan.patch"
 }
 
 src_configure() {

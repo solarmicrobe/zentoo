@@ -25,7 +25,7 @@ CDEPEND=">=dev-db/sqlite-3.4
 	>=dev-libs/apr-util-1.3:1
 	dev-libs/expat
 	sys-libs/zlib
-	berkdb? ( =sys-libs/db-4* )
+	berkdb? ( >=sys-libs/db-4.0.14 )
 	ctypes-python? ( =dev-lang/python-2* )
 	emacs? ( virtual/emacs )
 	gnome-keyring? ( dev-libs/glib:2 sys-apps/dbus gnome-base/gnome-keyring )
@@ -56,21 +56,31 @@ PATCHES=(
 		"${FILESDIR}/${PN}-1.6.0-disable_linking_against_unneeded_libraries.patch"
 		"${FILESDIR}/${PN}-1.6.2-local_library_preloading.patch"
 		"${FILESDIR}/${PN}-1.6.3-kwallet_window.patch"
+		"${FILESDIR}/${PN}-1.5.4-interix.patch"
+		"${FILESDIR}/${PN}-1.5.6-aix-dso.patch"
+		"${FILESDIR}/${PN}-1.6.3-hpux-dso.patch"
 )
 
 want_apache
 
 pkg_setup() {
 	if use berkdb; then
+		local apu_bdb_version="$(${EPREFIX}/usr/bin/apu-1-config --includes \
+			| grep -Eoe '-I${EPREFIX}/usr/include/db[[:digit:]]\.[[:digit:]]' \
+			| sed 's:.*b::')"
 		einfo
 		if [[ -z "${SVN_BDB_VERSION}" ]]; then
-			SVN_BDB_VERSION="$(db_ver_to_slot "$(db_findver sys-libs/db 2>/dev/null)")"
-			einfo "SVN_BDB_VERSION variable isn't set. You can set it to enforce using of specific version of Berkeley DB."
+			if [[ -n "${apu_bdb_version}" ]]; then
+				SVN_BDB_VERSION="${apu_bdb_version}"
+				einfo "Matching db version to apr-util"
+			else
+				SVN_BDB_VERSION="$(db_ver_to_slot "$(db_findver sys-libs/db 2>/dev/null)")"
+				einfo "SVN_BDB_VERSION variable isn't set. You can set it to enforce using of specific version of Berkeley DB."
+			fi
 		fi
 		einfo "Using: Berkeley DB ${SVN_BDB_VERSION}"
 		einfo
 
-		local apu_bdb_version="$(scanelf -nq "${EROOT}usr/$(get_libdir)/libaprutil-1.so.0" | grep -Eo "libdb-[[:digit:]]+\.[[:digit:]]+" | sed -e "s/libdb-\(.*\)/\1/")"
 		if [[ -n "${apu_bdb_version}" && "${SVN_BDB_VERSION}" != "${apu_bdb_version}" ]]; then
 			eerror "APR-Util is linked against Berkeley DB ${apu_bdb_version}, but you are trying"
 			eerror "to build Subversion with support for Berkeley DB ${SVN_BDB_VERSION}."
@@ -114,6 +124,10 @@ src_prepare() {
 
 	sed -e "/SWIG_PY_INCLUDES=/s/\$ac_cv_python_includes/\\\\\$(PYTHON_INCLUDES)/" -i build/ac-macros/swig.m4 || die "sed failed"
 
+	# this bites us in particular on Solaris
+	sed -i -e '1c\#!/usr/bin/env sh' build/transform_libtool_scripts.sh || \
+		die "/bin/sh is not POSIX shell!"
+
 	eautoconf
 	elibtoolize
 
@@ -139,6 +153,21 @@ src_configure() {
 		myconf+=" --disable-nls"
 	fi
 
+	case ${CHOST} in
+		*-solaris*)
+			# -lintl isn't added for some reason (makes Neon check fail)
+			use nls && append-libs -lintl
+		;;
+		*-aix*)
+			# avoid recording immediate path to sharedlibs into executables
+			append-ldflags -Wl,-bnoipath
+		;;
+		*-interix*)
+			# loader crashes on the LD_PRELOADs...
+			myconf="${myconf} --disable-local-library-preloading"
+		;;
+	esac
+
 	econf --libdir="${EPREFIX}/usr/$(get_libdir)" \
 		$(use_with apache2 apxs "${APXS}") \
 		$(use_with berkdb berkeley-db "db.h:${EPREFIX}/usr/include/db${SVN_BDB_VERSION}::db-${SVN_BDB_VERSION}") \
@@ -159,6 +188,7 @@ src_configure() {
 		--enable-local-library-preloading \
 		--disable-mod-activation \
 		--disable-neon-version-check \
+		--disable-static \
 		--with-sqlite="${EPREFIX}/usr"
 }
 
@@ -199,7 +229,7 @@ src_compile() {
 	fi
 
 	if use perl; then
-		emake -j1 swig-pl || die "Building of Subversion SWIG Perl bindings failed"
+		emake swig-pl || die "Building of Subversion SWIG Perl bindings failed"
 	fi
 
 	if use ruby; then
@@ -247,7 +277,7 @@ src_install() {
 		swig_python_bindings_installation() {
 			rm -f subversion/bindings/swig/python
 			ln -s python-${PYTHON_ABI} subversion/bindings/swig/python
-			emake -j1 \
+			emake \
 				DESTDIR="${D}" \
 				PYTHON_VERSION="$(python_get_version)" \
 				swig_pydir="${EPREFIX}$(python_get_sitedir)/libsvn" \
@@ -258,11 +288,6 @@ src_install() {
 			--action-message 'Installation of Subversion SWIG Python bindings with $(python_get_implementation) $(python_get_version)' \
 			--failure-message 'Installation of Subversion SWIG Python bindings failed with $(python_get_implementation) $(python_get_version)' \
 			swig_python_bindings_installation
-
-		delete_static_libraries() {
-			find "${ED}$(python_get_sitedir)" -name "*.a" -print0 | xargs -0 rm -f
-		}
-		python_execute_function -q delete_static_libraries
 	fi
 
 	if use ctypes-python || use python; then
@@ -270,18 +295,17 @@ src_install() {
 	fi
 
 	if use perl; then
-		emake -j1 DESTDIR="${D}" INSTALLDIRS="vendor" install-swig-pl || die "Installation of Subversion SWIG Perl bindings failed"
+		emake DESTDIR="${D}" INSTALLDIRS="vendor" install-swig-pl || die "Installation of Subversion SWIG Perl bindings failed"
 		fixlocalpod
 		find "${ED}" "(" -name .packlist -o -name "*.bs" ")" -print0 | xargs -0 rm -fr
 	fi
 
 	if use ruby; then
-		emake -j1 DESTDIR="${D}" install-swig-rb || die "Installation of Subversion SWIG Ruby bindings failed"
-		find "${ED}usr/$(get_libdir)/ruby" "(" -name "*.a" -o -name "*.la" ")" -print0 | xargs -0 rm -f
+		emake DESTDIR="${D}" install-swig-rb || die "Installation of Subversion SWIG Ruby bindings failed"
 	fi
 
 	if use java; then
-		emake -j1 DESTDIR="${D}" install-javahl || die "Installation of Subversion JavaHL library failed"
+		emake DESTDIR="${D}" install-javahl || die "Installation of Subversion JavaHL library failed"
 		java-pkg_regso "${ED}"usr/$(get_libdir)/libsvnjavahl*.so
 		java-pkg_dojar "${ED}"usr/$(get_libdir)/svn-javahl/svn-javahl.jar
 		rm -fr "${ED}"usr/$(get_libdir)/svn-javahl/*.jar
@@ -360,12 +384,14 @@ EOF
 	if use doc; then
 		dohtml -r doc/doxygen/html/* || die "Installation of Subversion HTML documentation failed"
 
-		dodoc -r notes
+		dodoc notes/*
 
 		if use java; then
 			java-pkg_dojavadoc doc/javadoc
 		fi
 	fi
+
+	find "${D}" '(' -name '*.la' ')' -print0 | xargs -0 rm -f
 }
 
 pkg_preinst() {
@@ -389,16 +415,6 @@ pkg_postinst() {
 
 	if use python; then
 		python_mod_optimize libsvn svn
-	fi
-
-	if use apache2; then
-		elog " - http-based server:"
-		elog "   1. Edit /etc/conf.d/apache2 to include both \"-D DAV\" and \"-D SVN\""
-		elog "   2. Create an htpasswd file:"
-		elog "      htpasswd2 -m -c ${SVN_REPOS_LOC}/conf/svnusers USERNAME"
-		elog "   3. Fix the repository permissions (see \"Fixing the repository permissions\")"
-		elog "   4. Restart Apache: /etc/init.d/apache2 restart"
-		elog
 	fi
 
 	if [[ -n "${CHANGED_BDB_VERSION}" ]]; then
@@ -425,16 +441,18 @@ pkg_postrm() {
 }
 
 pkg_config() {
-	einfo "Initializing the database in ${EROOT}${SVN_REPOS_LOC}..."
-	if [[ -e "${EROOT}${SVN_REPOS_LOC}/repos" ]]; then
+	# Remember: Don't use ${EROOT}${SVN_REPOS_LOC} since ${SVN_REPOS_LOC}
+	# already has EPREFIX in it
+	einfo "Initializing the database in ${ROOT}${SVN_REPOS_LOC}..."
+	if [[ -e "${ROOT}${SVN_REPOS_LOC}/repos" ]]; then
 		echo "A Subversion repository already exists and I will not overwrite it."
-		echo "Delete \"${EROOT}${SVN_REPOS_LOC}/repos\" first if you're sure you want to have a clean version."
+		echo "Delete \"${ROOT}${SVN_REPOS_LOC}/repos\" first if you're sure you want to have a clean version."
 	else
-		mkdir -p "${EROOT}${SVN_REPOS_LOC}/conf"
+		mkdir -p "${ROOT}${SVN_REPOS_LOC}/conf"
 
 		einfo "Populating repository directory..."
 		# Create initial repository.
-		"${EROOT}usr/bin/svnadmin" create "${EROOT}${SVN_REPOS_LOC}/repos"
+		"${EROOT}usr/bin/svnadmin" create "${ROOT}${SVN_REPOS_LOC}/repos"
 
 		einfo "Setting repository permissions..."
 		SVNSERVE_USER="$(. "${EROOT}etc/conf.d/svnserve"; echo "${SVNSERVE_USER}")"
@@ -448,8 +466,8 @@ pkg_config() {
 			enewgroup "${SVNSERVE_GROUP}"
 			enewuser "${SVNSERVE_USER}" -1 -1 "${SVN_REPOS_LOC}" "${SVNSERVE_GROUP}"
 		fi
-		chown -Rf "${SVNSERVE_USER}:${SVNSERVE_GROUP}" "${EROOT}${SVN_REPOS_LOC}/repos"
-		chmod -Rf go-rwx "${EROOT}${SVN_REPOS_LOC}/conf"
-		chmod -Rf o-rwx "${EROOT}${SVN_REPOS_LOC}/repos"
+		chown -Rf "${SVNSERVE_USER}:${SVNSERVE_GROUP}" "${ROOT}${SVN_REPOS_LOC}/repos"
+		chmod -Rf go-rwx "${ROOT}${SVN_REPOS_LOC}/conf"
+		chmod -Rf o-rwx "${ROOT}${SVN_REPOS_LOC}/repos"
 	fi
 }

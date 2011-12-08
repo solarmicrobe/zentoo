@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit bash-completion
+inherit bash-completion-r1
 
 DESCRIPTION="Tig: text mode interface for git"
 HOMEPAGE="http://jonas.nitro.dk/tig/"
@@ -23,5 +23,5 @@ src_install() {
 	emake DESTDIR="${D}" install install-doc-man
 	dodoc BUGS NEWS TODO
 	dohtml manual.html README.html
-	dobashcompletion contrib/tig-completion.bash
+	newbashcomp contrib/tig-completion.bash ${PN}
 }

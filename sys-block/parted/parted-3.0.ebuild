@@ -33,8 +33,6 @@ DEPEND="
 "
 
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-git-version-gen.patch #355045
-
 	# Remove tests known to FAIL instead of SKIP without OS/userland support
 	sed -i libparted/tests/Makefile.am \
 		-e 's|t3000-symlink.sh||g' || die "sed failed"
@@ -55,7 +53,7 @@ src_configure() {
 		$(use_enable device-mapper) \
 		$(use_enable static-libs static) \
 		--disable-rpath \
-		--disable-Werror || die "Configure failed"
+		|| die "Configure failed"
 }
 
 src_test() {

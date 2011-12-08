@@ -14,7 +14,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="geoip"
 
-DEPEND="geoip? ( >=dev-libs/geoip-1.4.1 )"
+DEPEND="geoip? ( >=dev-libs/geoip-1.4.7 )"
 
 src_prepare() {
 	ht_fix_file configure
@@ -22,6 +22,11 @@ src_prepare() {
 
 src_configure() {
 	econf $(use_enable geoip)
+}
+
+src_compile() {
+	# Disable default CFLAGS (-O2 and -g)
+	emake DEFAULT_CFLAGS=""
 }
 
 src_install() {

@@ -2,8 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
-inherit eutils flag-o-matic multilib
+EAPI=4
+inherit autotools eutils flag-o-matic multilib
 
 DESCRIPTION="interactive process viewer"
 HOMEPAGE="http://htop.sourceforge.net"
@@ -16,6 +16,8 @@ IUSE="debug elibc_FreeBSD kernel_linux openvz unicode vserver"
 
 RDEPEND="sys-libs/ncurses[unicode?]"
 DEPEND="${RDEPEND}"
+
+DOCS=( ChangeLog README TODO )
 
 pkg_setup() {
 	if use elibc_FreeBSD && ! [[ -f ${ROOT}/proc/stat && -f ${ROOT}/proc/meminfo ]]; then
@@ -36,6 +38,14 @@ pkg_setup() {
 src_prepare() {
 	sed -i -e '1c\#!'"${EPREFIX}"'/usr/bin/python' \
 		scripts/MakeHeader.py || die
+
+	epatch "${FILESDIR}"/${P}-debug.patch #352024, 372911
+	epatch "${FILESDIR}"/${P}-uclibc.patch #374595
+
+	# patch accepted by upstream (bug 3383385), remove on >=0.9.1
+	epatch "${FILESDIR}"/${P}-small-width.patch
+
+	eautoreconf
 }
 
 src_configure() {
@@ -48,9 +58,4 @@ src_configure() {
 		$(use_enable unicode) \
 		--enable-taskstats \
 		--without-valgrind
-}
-
-src_install() {
-	emake DESTDIR="${D}" install || die
-	dodoc ChangeLog README TODO
 }

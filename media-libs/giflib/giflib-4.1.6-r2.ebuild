@@ -13,16 +13,16 @@ SRC_URI="mirror://sourceforge/giflib/${P}.tar.bz2"
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="rle X"
+IUSE="rle static-libs X"
 
-DEPEND="!media-libs/libungif
-	X? (
+DEPEND="X? (
 		x11-libs/libXt
 		x11-libs/libX11
 		x11-libs/libICE
 		x11-libs/libSM
 	)
 	rle? ( media-libs/urt )"
+RDEPEND="${DEPEND}"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-gif2rle.patch
@@ -42,15 +42,16 @@ src_configure() {
 	fi
 
 	econf \
-		--disable-static \
 		--disable-gl \
+		$(use_enable static-libs static) \
 		$(use_enable X x11) \
 		${myconf}
 }
 
 src_install() {
 	default
-	find "${ED}" -name '*.la' -delete
+	# for static libs the .la file is required if build with +rle or +X
+	use static-libs || find "${ED}" -name '*.la' -exec rm -f {} +
 	dodoc AUTHORS BUGS ChangeLog NEWS ONEWS README TODO doc/*.txt
 	dohtml -r doc
 }

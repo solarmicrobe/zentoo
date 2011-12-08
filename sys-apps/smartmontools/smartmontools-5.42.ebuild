@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="3"
 
 inherit flag-o-matic
 if [[ ${PV} == "9999" ]] ; then
@@ -22,19 +22,9 @@ LICENSE="GPL-2"
 SLOT="0"
 IUSE="static minimal caps"
 
-RDEPEND="!minimal? (
-		virtual/mailx
-		caps? ( sys-libs/libcap-ng )
-	)"
-DEPEND=""
-
-src_unpack() {
-	if [[ ${PV} == "9999" ]] ; then
-		subversion_src_unpack
-	else
-		unpack ${A}
-	fi
-}
+DEPEND="!minimal? ( caps? ( sys-libs/libcap-ng ) )"
+RDEPEND="${DEPEND}
+	!minimal? ( virtual/mailx )"
 
 src_prepare() {
 	if [[ ${PV} == "9999" ]] ; then
@@ -56,7 +46,7 @@ src_configure() {
 	fi
 
 	econf \
-		--with-docdir="/usr/share/doc/${PF}" \
+		--with-docdir="${EPREFIX}/usr/share/doc/${PF}" \
 		--with-initscriptdir="/toss-it-away" \
 		${myconf} \
 		|| die

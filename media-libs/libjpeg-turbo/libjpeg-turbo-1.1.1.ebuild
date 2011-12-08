@@ -18,8 +18,7 @@ IUSE="static-libs"
 NASM_DEPEND="dev-lang/nasm"
 RDEPEND="!media-libs/jpeg:0"
 DEPEND="${RDEPEND}
-	amd64? ( ${NASM_DEPEND} )
-	x86? ( ${NASM_DEPEND} )"
+	amd64? ( ${NASM_DEPEND} )"
 
 DOCS=( BUILDING.txt ChangeLog.txt example.c README-turbo.txt )
 
@@ -41,7 +40,7 @@ src_compile() {
 }
 
 src_test() {
-	emake test || die
+	emake test
 }
 
 src_install() {

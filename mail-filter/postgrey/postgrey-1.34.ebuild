@@ -2,20 +2,19 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=4
 
 inherit eutils
 
 DESCRIPTION="Postgrey is a Postfix policy server implementing greylisting"
 HOMEPAGE="http://postgrey.schweikert.ch/"
 SRC_URI="http://postgrey.schweikert.ch/pub/${P}.tar.gz
-	http://postgrey.schweikert.ch/pub/old/${P}.tar.gz
-	targrey? ( http://k2net.hakuba.jp/pub/targrey-0.31-${P}.patch )"
+	http://postgrey.schweikert.ch/pub/old/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="targrey"
+IUSE=""
 
 DEPEND=""
 RDEPEND=">=dev-lang/perl-5.6.0
@@ -30,12 +29,6 @@ RDEPEND=">=dev-lang/perl-5.6.0
 pkg_setup() {
 	enewgroup ${PN}
 	enewuser ${PN} -1 -1 /dev/null ${PN}
-}
-
-src_prepare() {
-	if use targrey ; then
-		epatch "${DISTDIR}/targrey-0.31-${P}.patch"
-	fi
 }
 
 src_install() {
@@ -66,31 +59,4 @@ src_install() {
 	newinitd "${FILESDIR}"/${PN}.rc.new ${PN}
 	insopts -o root -g root -m 640
 	newconfd "${FILESDIR}"/${PN}.conf.new ${PN}
-}
-
-pkg_postinst() {
-	echo
-	elog "To make use of greylisting, please update your postfix config:"
-	elog
-
-	elog "In order to start using postgrey, edit /etc/conf.d/postgrey, add following lines"
-	elog "to smtpd_recipient restrictions setting in your /etc/postfix/main.cf:"
-	elog "\t\"check_policy_service inet:127.0.0.1:10030\", if you're using TCP socket"
-	elog "\t\"check_policy_service unix:private/postgrey\", if you're using UNIX socket"
-	elog "Then, start postgrey and restart postfix."
-
-	elog "Also remember to make the daemon start durig system boot:"
-	elog "  rc-update add postgrey default"
-
-	if use targrey ; then
-		elog "The targrey patch has been applied, read the"
-		elog "documentation for more info at"
-		elog "\thttp://k2net.hakuba.jp/targrey/index.en.html"
-		elog
-		elog "Activate targrey and set options using POSTGREY_OPTS in"
-		elog "/etc/conf.d/postgrey"
-		elog
-	fi
-
-	elog "Read postgrey documentation for more info (perldoc postgrey)."
 }
