@@ -95,6 +95,7 @@ gphoto2
 gps
 gsl
 gsm
+gssapi
 gstreamer
 gtk
 gtk3

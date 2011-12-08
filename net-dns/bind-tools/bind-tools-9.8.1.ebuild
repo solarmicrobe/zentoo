@@ -2,12 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="4"
 
-inherit eutils autotools flag-o-matic
+inherit eutils autotools flag-o-matic toolchain-funcs
 
 MY_PN=${PN//-tools}
 MY_PV=${PV/_p/-P}
+MY_PV=${MY_PV/_rc/rc}
 MY_P="${MY_PN}-${MY_PV}"
 
 DESCRIPTION="bind tools: dig, nslookup, host, nsupdate, dnssec-keygen"
@@ -17,36 +18,27 @@ SRC_URI="ftp://ftp.isc.org/isc/bind9/${MY_PV}/${MY_P}.tar.gz"
 LICENSE="as-is"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="doc idn ipv6 ssl urandom xml"
+IUSE="doc gssapi idn ipv6 pkcs11 ssl urandom xml"
 
 DEPEND="ssl? ( dev-libs/openssl )
 	xml? ( dev-libs/libxml2 )
-	idn? (
-		|| ( sys-libs/glibc dev-libs/libiconv )
-		net-dns/idnkit
-		)"
+	idn? ( net-dns/idnkit )
+	gssapi? ( virtual/krb5 )"
 RDEPEND="${DEPEND}"
 
 S="${WORKDIR}/${MY_P}"
 
 src_prepare() {
-	# bug 122597
-	use idn && {
-		cd "${S}"/contrib/idn/idnkit-1.0-src
-		epatch "${FILESDIR}"/${PN}-configure.patch
-		cd "${S}"
-	}
-
 	# bug 231247
 	epatch "${FILESDIR}"/${PN}-9.5.0_p1-lwconfig.patch
 
+	# bug #220361
+	rm {aclocal,libtool}.m4
 	eautoreconf
 }
 
 src_configure() {
 	local myconf=
-
-	has_version sys-libs/glibc || myconf="${myconf} --with-iconv"
 
 	if use urandom; then
 		myconf="${myconf} --with-randomdev=/dev/urandom"
@@ -57,11 +49,14 @@ src_configure() {
 	# bug 344029
 	append-cflags "-DDIG_SIGCHASE"
 
+	tc-export BUILD_CC
 	econf \
 		$(use_enable ipv6) \
 		$(use_with idn) \
 		$(use_with ssl openssl) \
 		$(use_with xml libxml2) \
+		$(use_with gssapi) \
+		$(use_with pkcs11) \
 		${myconf}
 
 	# bug #151839

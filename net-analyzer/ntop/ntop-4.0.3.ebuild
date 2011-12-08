@@ -7,8 +7,8 @@ EAPI="2"
 inherit eutils autotools
 
 DESCRIPTION="Network traffic analyzer with web interface"
-HOMEPAGE="http://www.ntop.org/ntop.html"
-SRC_URI="mirror://sourceforge/ntop/${P}.tar.gz"
+HOMEPAGE="http://www.ntop.org/products/ntop/"
+SRC_URI="mirror://sourceforge/ntop/${P}.tgz"
 
 LICENSE="GPL-2"
 SLOT="0"
