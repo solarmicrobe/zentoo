@@ -148,6 +148,7 @@ lirc
 livecd
 llvm
 lm_sensors
+loop-aes
 lua
 lzo
 m17n-lib

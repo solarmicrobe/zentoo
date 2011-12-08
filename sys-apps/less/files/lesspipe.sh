@@ -123,7 +123,7 @@ lesspipe() {
 	*.cab)        cabextract -l -- "$1" ;;
 	*.lha|*.lzh)  lha v "$1" ;;
 	*.zoo)        zoo -list "$1" || unzoo -l "$1" ;;
-	*.7z|*.exe)   7z l -- "$1" || 7za l -- "$1" ;;
+	*.7z|*.exe)   7z l -- "$1" || 7za l -- "$1" || 7zr l -- "$1" ;;
 	*.a)          ar tv "$1" ;;
 	*.elf)        readelf -a -- "$1" ;;
 	*.so)         readelf -h -d -s -- "$1" ;;
@@ -160,8 +160,12 @@ lesspipe() {
 	*.flac)       metaflac --list "$1" ;;
 	*.torrent)    torrentinfo "$1" || torrentinfo-console "$1" || ctorrent -x "$1" ;;
 	*.bin|*.cue|*.raw)
-		# not all .bin/.raw files are cd images, so fall back to hexdump
-		cd-info --no-header --no-device-info "$1" || lesspipe_file "$1"
+		# not all .bin/.raw files are cd images #285507
+		# fall back to lesspipe_file if .cue doesn't exist, or if
+		# cd-info failed to parse things sanely
+		[[ -e ${1%.*}.cue ]] \
+			&& cd-info --no-header --no-device-info "$1" \
+			|| lesspipe_file "$1"
 		;;
 	*.iso)
 		iso_info=$(isoinfo -d -i "$1")
@@ -229,7 +233,7 @@ if [[ -z $1 ]] ; then
 elif [[ $1 == "-V" || $1 == "--version" ]] ; then
 	Id="cvsid"
 	cat <<-EOF
-		$Id: lesspipe.sh,v 1.45 2011/01/20 03:26:14 vapier Exp $
+		$Id: lesspipe.sh,v 1.47 2011/12/07 20:29:25 vapier Exp $
 		Copyright 2001-2010 Gentoo Foundation
 		Mike Frysinger <vapier@gentoo.org>
 		     (with plenty of ideas stolen from other projects/distros)

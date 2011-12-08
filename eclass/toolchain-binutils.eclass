@@ -58,6 +58,8 @@ case ${BTYPE} in
 		SRC_URI="mirror://kernel/linux/devel/binutils/binutils-${PV}.tar.bz2
 			mirror://kernel/linux/devel/binutils/test/binutils-${PV}.tar.bz2
 			mirror://gnu/binutils/binutils-${PV}.tar.bz2"
+		# disable kernel mirrors until kernel.org is back up #383579
+		SRC_URI="mirror://gnu/binutils/binutils-${PV}.tar.bz2"
 esac
 add_src_uri() {
 	[[ -z $2 ]] && return
@@ -74,7 +76,10 @@ if version_is_at_least 2.18 ; then
 else
 	LICENSE="|| ( GPL-2 LGPL-2 )"
 fi
-IUSE="nls multitarget multislot test vanilla"
+IUSE="nls multitarget multislot static-libs test vanilla"
+if version_is_at_least 2.19 ; then
+	IUSE+=" zlib"
+fi
 if use multislot ; then
 	SLOT="${CTARGET}-${BVER}"
 elif is_cross ; then
@@ -84,6 +89,7 @@ else
 fi
 
 RDEPEND=">=sys-devel/binutils-config-1.9"
+in_iuse zlib && RDEPEND+=" zlib? ( sys-libs/zlib )"
 DEPEND="${RDEPEND}
 	test? ( dev-util/dejagnu )
 	nls? ( sys-devel/gettext )
@@ -113,7 +119,6 @@ tc-binutils_apply_patches() {
 	cd "${S}"
 
 	if ! use vanilla ; then
-		EPATCH_EXCLUDE=
 		[[ ${SYMLINK_LIB} != "yes" ]] && EPATCH_EXCLUDE+=" 65_all_binutils-*-amd64-32bit-path.patch"
 		if [[ -n ${PATCHVER} ]] ; then
 			EPATCH_SOURCE=${WORKDIR}/patch
@@ -197,6 +202,7 @@ toolchain-binutils_src_compile() {
 
 	cd "${MY_BUILDDIR}"
 	set --
+
 	# enable gold if available (installed as ld.gold)
 	if grep -q 'enable-gold=default' "${S}"/configure ; then
 		set -- "$@" --enable-gold
@@ -209,16 +215,26 @@ toolchain-binutils_src_compile() {
 	if grep -q -e '--enable-plugins' "${S}"/ld/configure ; then
 		set -- "$@" --enable-plugins
 	fi
+
 	use nls \
 		&& set -- "$@" --without-included-gettext \
 		|| set -- "$@" --disable-nls
+
+	if in_iuse zlib ; then
+		# older versions did not have an explicit configure flag
+		export ac_cv_search_zlibVersion=$(usex zlib -lz no)
+		set -- "$@" $(use_with zlib)
+	fi
+
 	use multitarget && set -- "$@" --enable-targets=all
 	[[ -n ${CBUILD} ]] && set -- "$@" --build=${CBUILD}
 	is_cross && set -- "$@" --with-sysroot=/usr/${CTARGET}
+
 	# glibc-2.3.6 lacks support for this ... so rather than force glibc-2.5+
 	# on everyone in alpha (for now), we'll just enable it when possible
 	has_version ">=${CATEGORY}/glibc-2.5" && set -- "$@" --enable-secureplt
 	has_version ">=sys-libs/glibc-2.5" && set -- "$@" --enable-secureplt
+
 	set -- "$@" \
 		--prefix=/usr \
 		--host=${CHOST} \
@@ -233,6 +249,7 @@ toolchain-binutils_src_compile() {
 		--enable-64-bit-bfd \
 		--enable-shared \
 		--disable-werror \
+		$(use_enable static-libs static) \
 		${EXTRA_ECONF}
 	echo ./configure "$@"
 	"${S}"/configure "$@" || die
@@ -282,6 +299,7 @@ toolchain-binutils_src_install() {
 	cd "${MY_BUILDDIR}"
 	emake DESTDIR="${D}" tooldir="${LIBPATH}" install || die
 	rm -rf "${D}"/${LIBPATH}/bin
+	use static-libs || find "${D}" -name '*.la' -delete
 
 	# Newer versions of binutils get fancy with ${LIBPATH} #171905
 	cd "${D}"/${LIBPATH}
