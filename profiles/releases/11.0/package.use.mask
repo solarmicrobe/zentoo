@@ -58,6 +58,7 @@ app-editors/vim X
 app-misc/mc X
 app-text/ghostscript-gpl X
 dev-java/sun-jdk X
+dev-lang/R X
 dev-python/imaging X
 media-gfx/imagemagick X
 media-libs/giflib X

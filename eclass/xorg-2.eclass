@@ -103,16 +103,20 @@ fi
 
 # Set up autotools shared dependencies
 # Remember that all versions here MUST be stable
+XORG_EAUTORECONF_ARCHES=""
 EAUTORECONF_DEPEND+="
 	>=sys-devel/libtool-2.2.6a
 	sys-devel/m4"
 if [[ ${PN} != util-macros ]] ; then
-	EAUTORECONF_DEPEND+=" >=x11-misc/util-macros-1.14.0"
+	EAUTORECONF_DEPEND+=" >=x11-misc/util-macros-1.15.0"
 	# Required even by xorg-server
 	[[ ${PN} == "font-util" ]] || EAUTORECONF_DEPEND+=" >=media-fonts/font-util-1.2.0"
 fi
 WANT_AUTOCONF="latest"
 WANT_AUTOMAKE="latest"
+for arch in ${XORG_EAUTORECONF_ARCHES}; do
+	EAUTORECONF_DEPENDS+=" ${arch}? ( ${EAUTORECONF_DEPEND} )"
+done
 DEPEND+=" ${EAUTORECONF_DEPENDS}"
 [[ ${XORG_EAUTORECONF} != no ]] && DEPEND+=" ${EAUTORECONF_DEPEND}"
 unset EAUTORECONF_DEPENDS
@@ -473,7 +477,11 @@ xorg-2_src_install() {
 xorg-2_pkg_postinst() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	[[ -n ${FONT} ]] && setup_fonts "$@"
+	if [[ -n ${FONT} ]]; then
+		create_fonts_scale
+		create_fonts_dir
+		font_pkg_postinst "$@"
+	fi
 }
 
 # @FUNCTION: xorg-2_pkg_postrm
@@ -483,18 +491,14 @@ xorg-2_pkg_postinst() {
 xorg-2_pkg_postrm() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	[[ -n ${FONT} ]] && font_pkg_postrm "$@"
-}
-
-# @FUNCTION: setup_fonts
-# @DESCRIPTION:
-# Generates needed files for fonts and fixes font permissions
-setup_fonts() {
-	debug-print-function ${FUNCNAME} "$@"
-
-	create_fonts_scale
-	create_fonts_dir
-	font_pkg_postinst
+	if [[ -n ${FONT} ]]; then
+		# if we're doing an upgrade, postinst will do
+		if [[ ${EAPI} -lt 4 || -z ${REPLACED_BY_VERSION} ]]; then
+			create_fonts_scale
+			create_fonts_dir
+			font_pkg_postrm "$@"
+		fi
+	fi
 }
 
 # @FUNCTION: remove_font_metadata
@@ -517,7 +521,7 @@ create_fonts_scale() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	if [[ ${FONT_DIR} != Speedo && ${FONT_DIR} != CID ]]; then
-		ebegin "Generating font.scale"
+		ebegin "Generating fonts.scale"
 			mkfontscale \
 				-a "${EROOT}/usr/share/fonts/encodings/encodings.dir" \
 				-- "${EROOT}/usr/share/fonts/${FONT_DIR}"

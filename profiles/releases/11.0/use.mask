@@ -76,7 +76,6 @@ firefox
 fltk
 fontforge
 foomaticdb
-fortran
 freetds
 freewnn
 frontbase
@@ -93,7 +92,6 @@ gnome-keyring
 gnuplot
 gnustep
 gphoto2
-gpm
 gps
 gsl
 gsm
