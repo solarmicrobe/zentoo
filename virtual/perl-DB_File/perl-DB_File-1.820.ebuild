@@ -14,4 +14,4 @@ KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""
-RDEPEND="|| ( ~dev-lang/perl-5.12.3[berkdb] ~dev-lang/perl-5.12.2[berkdb] ~dev-lang/perl-5.12.1[berkdb] ~dev-lang/perl-5.10.1[berkdb] ~perl-core/DB_File-${PV} )"
+RDEPEND="|| ( ~dev-lang/perl-5.12.4[berkdb] ~dev-lang/perl-5.12.3[berkdb] ~dev-lang/perl-5.12.2[berkdb] ~dev-lang/perl-5.12.1[berkdb] ~dev-lang/perl-5.10.1[berkdb] ~perl-core/DB_File-${PV} )"
