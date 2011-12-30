@@ -9,7 +9,7 @@ inherit eutils multilib ssl-cert toolchain-funcs flag-o-matic pam
 MY_PV="${PV/_rc/-RC}"
 MY_SRC="${PN}-${MY_PV}"
 MY_URI="ftp://ftp.porcupine.org/mirrors/postfix-release/official"
-VDA_PV="2.8.3"
+VDA_PV="2.8.5"
 VDA_P="${PN}-vda-v10-${VDA_PV}"
 RC_VER="2.5"
 
@@ -274,8 +274,6 @@ pkg_postinst() {
 		ewarn
 	fi
 
-	elog
 	elog "See the RELEASE_NOTES file in /usr/share/doc/${PF}"
 	elog "for incompatibilities and other major changes between releases."
-	elog
 }
