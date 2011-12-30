@@ -2,9 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=4
 
 MODULE_AUTHOR=SMUELLER
+MODULE_VERSION=0.91
 inherit perl-module
 
 DESCRIPTION="Simpler definition of attribute handlers"

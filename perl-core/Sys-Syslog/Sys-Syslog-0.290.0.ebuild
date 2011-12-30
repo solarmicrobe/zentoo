@@ -2,18 +2,17 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-MODULE_VERSION=0.27
+EAPI=4
+
 MODULE_AUTHOR=SAPER
+MODULE_VERSION=0.29
 inherit perl-module
 
 DESCRIPTION="Provides same functionality as BSD syslog"
 
-LICENSE="|| ( Artistic GPL-2 )"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
-
-DEPEND="dev-lang/perl"
 
 # Tests disabled - they attempt to verify on the live system
 #SRC_TEST="do"

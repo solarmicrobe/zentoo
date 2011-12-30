@@ -2,19 +2,19 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=4
 
-MODULE_AUTHOR=GAAS
+MODULE_AUTHOR=DAGOLDEN
+MODULE_VERSION=1.000006
 inherit perl-module
 
-DESCRIPTION="MD5 message digest algorithm"
+DESCRIPTION="Gather package and POD information from perl module files"
 
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="virtual/perl-digest-base"
+RDEPEND=">=virtual/perl-version-0.870"
 DEPEND="${RDEPEND}"
 
-SRC_TEST=do
-mydoc="rfc*.txt"
+SRC_TEST="do"

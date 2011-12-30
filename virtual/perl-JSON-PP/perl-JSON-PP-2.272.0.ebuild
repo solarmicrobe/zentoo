@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-DESCRIPTION="Build and install Perl modules"
+DESCRIPTION="Virtual for ${PN#perl-}"
 HOMEPAGE=""
 SRC_URI=""
 
@@ -11,4 +11,5 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="~perl-core/Module-Build-${PV}"
+DEPEND=""
+RDEPEND="~perl-core/${PN#perl-}-${PV}"

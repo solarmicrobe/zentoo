@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-DESCRIPTION="Perl extension for Version Objects"
+DESCRIPTION="Virtual for Time-HiRes"
 HOMEPAGE=""
 SRC_URI=""
 
@@ -11,4 +11,5 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="|| ( ~dev-lang/perl-5.12.4 ~dev-lang/perl-5.12.3 ~dev-lang/perl-5.12.2 ~perl-core/version-${PV} )"
+DEPEND=""
+RDEPEND="~perl-core/Time-HiRes-${PV}"
