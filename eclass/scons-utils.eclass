@@ -104,7 +104,7 @@ escons() {
 	"${@}"
 	ret=${?}
 
-	[[ ${ret} -ne 0 && ${EAPI:-0} -ge 4 ]] && die "escons failed."
+	[[ ${ret} -ne 0 && ${EAPI} == 4 ]] && die "escons failed."
 	return ${ret}
 }
 

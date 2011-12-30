@@ -1,8 +1,6 @@
-diff --git a/SConstruct b/SConstruct
-index 4e46052..4520551 100644
---- a/SConstruct
-+++ b/SConstruct
-@@ -670,7 +670,7 @@ if nix:
+--- a/SConstruct	2011-11-16 22:11:39.000000000 +0100
++++ b/SConstruct	2011-11-17 16:30:16.144117550 +0100
+@@ -688,7 +688,7 @@
          env["CXX"] = "distcc " + env["CXX"]
          
      # -Winvalid-pch Warn if a precompiled header (see Precompiled Headers) is found in the search path but can't be used. 
@@ -11,22 +9,28 @@ index 4e46052..4520551 100644
      # env.Append( " -Wconversion" ) TODO: this doesn't really work yet
      if linux:
          env.Append( CPPFLAGS=" -Werror " )
-@@ -678,7 +678,9 @@ if nix:
+@@ -696,7 +696,9 @@
              env.Append( CPPFLAGS=" -fno-builtin-memcmp " ) # glibc's memcmp is faster than gcc's
  
      env.Append( CPPDEFINES="_FILE_OFFSET_BITS=64" )
-+    env.Append( CXXFLAGS=os.environ.get('CXXFLAGS', ''))
++    env.Append( CXXFLAGS=os.environ['CXXFLAGS'])
      env.Append( CXXFLAGS=" -Wnon-virtual-dtor " )
-+    env.Append( LINKFLAGS=os.environ.get('LDFLAGS', ''))
++    env.Append( LINKFLAGS=os.environ['LDFLAGS'] )
      env.Append( LINKFLAGS=" -fPIC -pthread -rdynamic" )
      env.Append( LIBS=[] )
  
-@@ -692,8 +694,6 @@ if nix:
+@@ -706,12 +708,13 @@
+ 
+     if linux and has_option( "sharedclient" ):
+         env.Append( LINKFLAGS=" -Wl,--as-needed -Wl,-zdefs " )
++        env.Append( SHLINKFLAGS=" -Wl,-soname=libmongoclient.so " )
+ 
      if debugBuild:
          env.Append( CPPFLAGS=" -O0 -fstack-protector " );
          env['ENV']['GLIBCXX_FORCE_NEW'] = 1; # play nice with valgrind
--    else:
+     else:
 -        env.Append( CPPFLAGS=" -O3 " )
++        env.Append( CXXFLAGS=" -O3 " )
          #env.Append( CPPFLAGS=" -fprofile-generate" )
          #env.Append( LINKFLAGS=" -fprofile-generate" )
          # then:
