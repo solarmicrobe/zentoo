@@ -21,10 +21,13 @@ IUSE=""
 # The gem has automagic dependencies over mongrel, ruby-openid,
 # memcache-client, thin, mongrel and camping; not sure if we should
 # make them dependencies at all.
-ruby_add_bdepend test dev-ruby/test-spec
+ruby_add_bdepend "test? ( dev-ruby/test-spec )"
 
 all_ruby_prepare() {
-	epatch "${FILESDIR}"/${P}-gentoo.patch
+	# Avoid tests depending on now randomized hash ordering.
+	sed -i -e '/foobarfoo/ s:^:#:' test/spec_rack_response.rb || die
+	sed -i -e '/should build query strings correctly/,/end/ s:^:#:' test/spec_rack_utils.rb || die
+	sed -i -e '/should build nested query strings correctly/,/end/ s:^:#:' test/spec_rack_utils.rb || die
 }
 
 each_ruby_test() {
@@ -34,10 +37,4 @@ each_ruby_test() {
 	${RUBY} -S specrb -Ilib:test -w -a \
 		-t '^(?!Rack::Handler|Rack::Adapter|Rack::Session::Memcache|rackup)' \
 		|| die "test failed for ${RUBY}"
-}
-
-all_ruby_install() {
-	all_fakegem_install
-
-	ruby_fakegem_binwrapper rackup
 }
