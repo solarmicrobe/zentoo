@@ -37,9 +37,9 @@ COMMON_URI="${DM_HOME}/dmraid-${VERSION_DMRAID}.tar.bz2
 
 if [[ ${PV} == 9999* ]]
 then
-	EGIT_REPO_URI="git://git.overlays.gentoo.org/proj/genkernel.git"
-	EGIT_BRANCH=master
-	inherit git bash-completion eutils
+	EGIT_REPO_URI="git://git.overlays.gentoo.org/proj/${PN}.git
+		http://git.overlays.gentoo.org/gitroot/proj/${PN}.git"
+	inherit git-2 bash-completion eutils
 	S="${WORKDIR}/${PN}"
 	SRC_URI="${COMMON_URI}"
 	KEYWORDS=""
@@ -59,9 +59,10 @@ HOMEPAGE="http://www.gentoo.org"
 LICENSE="GPL-2"
 SLOT="0"
 RESTRICT=""
-IUSE=""
+IUSE="ibm selinux"
 
-DEPEND="sys-fs/e2fsprogs"
+DEPEND="sys-fs/e2fsprogs
+	selinux? ( sys-libs/libselinux )"
 RDEPEND="${DEPEND} app-arch/cpio"
 
 if [[ ${PV} == 9999* ]]; then
@@ -70,7 +71,7 @@ fi
 
 src_unpack() {
 	if [[ ${PV} == 9999* ]] ; then
-		git_src_unpack
+		git-2_src_unpack
 	else
 		unpack ${P}.tar.bz2
 	fi
@@ -110,7 +111,8 @@ src_install() {
 
 	insinto /usr/share/genkernel
 	doins -r "${S}"/* || die "doins"
-	cp "${S}"/arch/ppc64/kernel-2.6.g5 "${S}"/arch/ppc64/kernel-2.6
+	use ibm && cp "${S}"/ppc64/kernel-2.6-pSeries "${S}"/ppc64/kernel-2.6 || \
+		cp "${S}"/arch/ppc64/kernel-2.6.g5 "${S}"/arch/ppc64/kernel-2.6
 
 	# Copy files to /var/cache/genkernel/src
 	elog "Copying files to /var/cache/genkernel/src..."
