@@ -74,3 +74,6 @@ x11-libs/gdk-pixbuf introspection
 
 # do not depend on gdbus-codegen and systemtap
 dev-libs/glib utils systemtap
+
+# do not depend on python-3.3
+sys-apps/portage xattr
