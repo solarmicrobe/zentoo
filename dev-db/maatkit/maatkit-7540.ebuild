@@ -26,6 +26,7 @@ RDEPEND="${COMMON_DEPEND}
 	virtual/perl-File-Temp
 	virtual/perl-File-Spec
 	virtual/perl-Time-HiRes
+	virtual/perl-Scalar-List-Utils
 	dev-perl/TermReadKey"
 DEPEND="${COMMON_DEPEND}
 	udf? ( dev-db/mysql )
