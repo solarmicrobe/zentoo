@@ -9,8 +9,10 @@
 # @DESCRIPTION:
 # This eclass is for all functions pertaining to handling multilib configurations.
 
-___ECLASS_RECUR_MULTILIB="yes"
-[[ -z ${___ECLASS_RECUR_TOOLCHAIN_FUNCS} ]] && inherit toolchain-funcs
+if [[ ${___ECLASS_ONCE_MULTILIB} != "recur -_+^+_- spank" ]] ; then
+___ECLASS_ONCE_MULTILIB="recur -_+^+_- spank"
+
+inherit toolchain-funcs
 
 # Defaults:
 export MULTILIB_ABIS=${MULTILIB_ABIS:-"default"}
@@ -345,7 +347,7 @@ multilib_env() {
 			: ${DEFAULT_ABI=s390x}
 		;;
 		sparc*)
-			export CFLAGS_sparc32=${CFLAGS_sparc32}
+			export CFLAGS_sparc32=${CFLAGS_sparc32--m32}
 			export CHOST_sparc32=${CTARGET/sparc64/sparc}
 			export CTARGET_sparc32=${CHOST_sparc32}
 			export LIBDIR_sparc32="lib"
@@ -405,3 +407,5 @@ multilib_toolchain_setup() {
 		export CBUILD=$(get_abi_CHOST $1)
 	fi
 }
+
+fi

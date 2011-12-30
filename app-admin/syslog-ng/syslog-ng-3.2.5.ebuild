@@ -13,25 +13,19 @@ SRC_URI="http://www.balabit.com/downloads/files/syslog-ng/sources/${PV}/source/s
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="caps hardened ipv6 +pcre selinux spoof-source sql ssl static tcpd"
+IUSE="caps hardened ipv6 +pcre selinux spoof-source sql ssl tcpd"
 RESTRICT="test"
 
-LIBS_DEPEND="
-	spoof-source? ( net-libs/libnet )
-	ssl? ( dev-libs/openssl )
-	tcpd? ( >=sys-apps/tcp-wrappers-7.6 )
-	!static? ( >=dev-libs/eventlog-0.2 )
-	>=dev-libs/glib-2.10.1:2
-	caps? ( sys-libs/libcap )
-	sql? ( >=dev-db/libdbi-0.8.3 )"
 RDEPEND="
-	!static? (
 		pcre? ( dev-libs/libpcre )
-		${LIBS_DEPEND}
-	)"
+		spoof-source? ( net-libs/libnet )
+		ssl? ( dev-libs/openssl )
+		tcpd? ( >=sys-apps/tcp-wrappers-7.6 )
+		>=dev-libs/eventlog-0.2.12
+		>=dev-libs/glib-2.10.1:2
+		caps? ( sys-libs/libcap )
+		sql? ( >=dev-db/libdbi-0.8.3 )"
 DEPEND="${RDEPEND}
-	${LIBS_DEPEND}
-	static? ( >=dev-libs/eventlog-0.2[static-libs] )
 	dev-util/pkgconfig
 	sys-devel/flex"
 
@@ -41,19 +35,9 @@ src_prepare() {
 }
 
 src_configure() {
-	local myconf
-
-	if use static ; then
-		myconf="${myconf} --enable-static-linking"
-		if use pcre ; then
-			ewarn "USE=pcre is incompatible with static linking"
-			myconf="${myconf} --disable-pcre"
-		fi
-	else
-			myconf="${myconf} --enable-dynamic-linking"
-	fi
 	econf \
 		--disable-dependency-tracking \
+		--enable-dynamic-linking \
 		--sysconfdir=/etc/syslog-ng \
 		--localstatedir=/var/lib/misc \
 		--with-pidfile-dir=/var/run \
@@ -64,15 +48,13 @@ src_configure() {
 		$(use_enable spoof-source) \
 		$(use_enable sql) \
 		$(use_enable ssl) \
-		$(use_enable tcpd tcp-wrapper) \
-		${myconf}
+		$(use_enable tcpd tcp-wrapper)
 }
 
 src_install() {
 	emake DESTDIR="${D}" install || die "emake install failed"
 
 	dodoc AUTHORS ChangeLog NEWS README \
-		doc/examples/{syslog-ng.conf.sample,syslog-ng.conf.solaris} \
 		contrib/syslog-ng.conf* \
 		contrib/syslog2ng "${FILESDIR}/syslog-ng.conf."*
 
