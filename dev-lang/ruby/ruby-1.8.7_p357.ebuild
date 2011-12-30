@@ -44,9 +44,7 @@ RDEPEND="
 	!libedit? ( readline? ( sys-libs/readline ) )
 	sys-libs/zlib
 	>=app-admin/eselect-ruby-20100603
-	!=dev-lang/ruby-cvs-${SLOT}*
-	!<dev-ruby/rdoc-2
-	!dev-ruby/rexml"
+	!<dev-ruby/rdoc-2"
 DEPEND="${RDEPEND}"
 PDEPEND="xemacs? ( app-xemacs/ruby-modes )"
 

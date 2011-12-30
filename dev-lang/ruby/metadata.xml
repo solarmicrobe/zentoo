@@ -26,5 +26,6 @@
       readline extension will not be built (and irb will lose line
       editing functionality).
     </flag>
+
   </use>
 </pkgmetadata>
