@@ -20,7 +20,8 @@
 # necessary utility is installed, the PT_PAX_FLAGS markings will be made.  If
 # PAX_MARKINGS is set to "none", no markings will be made.
 
-inherit eutils
+if [[ ${___ECLASS_ONCE_PAX_UTILS} != "recur -_+^+_- spank" ]] ; then
+___ECLASS_ONCE_PAX_UTILS="recur -_+^+_- spank"
 
 # Default to PT markings.
 PAX_MARKINGS=${PAX_MARKINGS:="PT"}
@@ -150,3 +151,4 @@ _pax_list_files() {
 	done
 }
 
+fi
