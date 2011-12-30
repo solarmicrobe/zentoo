@@ -14,6 +14,9 @@
 # Due to the nature of this eclass, some functions may have maintainers
 # different from the overall eclass!
 
+if [[ ${___ECLASS_ONCE_EUTILS} != "recur -_+^+_- spank" ]] ; then
+___ECLASS_ONCE_EUTILS="recur -_+^+_- spank"
+
 inherit multilib portability user
 
 DESCRIPTION="Based on the ${ECLASS} eclass"
@@ -96,6 +99,54 @@ esvn_clean() {
 	find "$@" -type d -name '.svn' -prune -print0 | xargs -0 rm -rf
 }
 
+# @FUNCTION: estack_push
+# @USAGE: <stack> [items to push]
+# @DESCRIPTION:
+# Push any number of items onto the specified stack.  Pick a name that
+# is a valid variable (i.e. stick to alphanumerics), and push as many
+# items as you like onto the stack at once.
+#
+# The following code snippet will echo 5, then 4, then 3, then ...
+# @CODE
+#		estack_push mystack 1 2 3 4 5
+#		while estack_pop mystack i ; do
+#			echo "${i}"
+#		done
+# @CODE
+estack_push() {
+	[[ $# -eq 0 ]] && die "estack_push: incorrect # of arguments"
+	local stack_name="__ESTACK_$1__" ; shift
+	eval ${stack_name}+=\( \"\$@\" \)
+}
+
+# @FUNCTION: estack_pop
+# @USAGE: <stack> [variable]
+# @DESCRIPTION:
+# Pop a single item off the specified stack.  If a variable is specified,
+# the popped item is stored there.  If no more items are available, return
+# 1, else return 0.  See estack_push for more info.
+estack_pop() {
+	[[ $# -eq 0 || $# -gt 2 ]] && die "estack_pop: incorrect # of arguments"
+
+	# We use the fugly __estack_xxx var names to avoid collision with
+	# passing back the return value.  If we used "local i" and the
+	# caller ran `estack_pop ... i`, we'd end up setting the local
+	# copy of "i" rather than the caller's copy.  The __estack_xxx
+	# garbage is preferable to using $1/$2 everywhere as that is a
+	# bit harder to read.
+	local __estack_name="__ESTACK_$1__" ; shift
+	local __estack_retvar=$1 ; shift
+	eval local __estack_i=\${#${__estack_name}\[@\]}
+	# Don't warn -- let the caller interpret this as a failure
+	# or as normal behavior (akin to `shift`)
+	[[ $(( --__estack_i )) -eq -1 ]] && return 1
+
+	if [[ -n ${__estack_retvar} ]] ; then
+		eval ${__estack_retvar}=\"\${${__estack_name}\[${__estack_i}\]}\"
+	fi
+	eval unset ${__estack_name}\[${__estack_i}\]
+}
+
 # @FUNCTION: eshopts_push
 # @USAGE: [options to `set` or `shopt`]
 # @DESCRIPTION:
@@ -110,7 +161,7 @@ esvn_clean() {
 # A common example is to disable shell globbing so that special meaning/care
 # may be used with variables/arguments to custom functions.  That would be:
 # @CODE
-#		eshopts_push -o noglob
+#		eshopts_push -s noglob
 #		for x in ${foo} ; do
 #			if ...some check... ; then
 #				eshopts_pop
@@ -120,17 +171,14 @@ esvn_clean() {
 #		eshopts_pop
 # @CODE
 eshopts_push() {
-	# have to assume __ESHOPTS_SAVE__ isn't screwed with
-	# as a `declare -a` here will reset its value
-	local i=${#__ESHOPTS_SAVE__[@]}
 	if [[ $1 == -[su] ]] ; then
-		__ESHOPTS_SAVE__[$i]=$(shopt -p)
+		estack_push eshopts "$(shopt -p)"
 		[[ $# -eq 0 ]] && return 0
-		shopt "$@" || die "eshopts_push: bad options to shopt: $*"
+		shopt "$@" || die "${FUNCNAME}: bad options to shopt: $*"
 	else
-		__ESHOPTS_SAVE__[$i]=$-
+		estack_push eshopts $-
 		[[ $# -eq 0 ]] && return 0
-		set "$@" || die "eshopts_push: bad options to set: $*"
+		set "$@" || die "${FUNCNAME}: bad options to set: $*"
 	fi
 }
 
@@ -140,17 +188,34 @@ eshopts_push() {
 # Restore the shell options to the state saved with the corresponding
 # eshopts_push call.  See that function for more details.
 eshopts_pop() {
-	[[ $# -ne 0 ]] && die "eshopts_pop takes no arguments"
-	local i=$(( ${#__ESHOPTS_SAVE__[@]} - 1 ))
-	[[ ${i} -eq -1 ]] && die "eshopts_{push,pop}: unbalanced pair"
-	local s=${__ESHOPTS_SAVE__[$i]}
-	unset __ESHOPTS_SAVE__[$i]
+	local s
+	estack_pop eshopts s || die "${FUNCNAME}: unbalanced push"
 	if [[ ${s} == "shopt -"* ]] ; then
-		eval "${s}" || die "eshopts_pop: sanity: invalid shopt options: ${s}"
+		eval "${s}" || die "${FUNCNAME}: sanity: invalid shopt options: ${s}"
 	else
-		set +$-     || die "eshopts_pop: sanity: invalid shell settings: $-"
-		set -${s}   || die "eshopts_pop: sanity: unable to restore saved shell settings: ${s}"
+		set +$-     || die "${FUNCNAME}: sanity: invalid shell settings: $-"
+		set -${s}   || die "${FUNCNAME}: sanity: unable to restore saved shell settings: ${s}"
 	fi
+}
+
+# @FUNCTION: eumask_push
+# @USAGE: <new umask>
+# @DESCRIPTION:
+# Set the umask to the new value specified while saving the previous
+# value onto a stack.  Useful for temporarily changing the umask.
+eumask_push() {
+	estack_push eumask "$(umask)"
+	umask "$@" || die "${FUNCNAME}: bad options to umask: $*"
+}
+
+# @FUNCTION: eumask_pop
+# @USAGE:
+# @DESCRIPTION:
+# Restore the previous umask state.
+eumask_pop() {
+	local s
+	estack_pop eumask s || die "${FUNCNAME}: unbalanced push"
+	umask ${s} || die "${FUNCNAME}: sanity: could not restore umask: ${s}"
 }
 
 # @VARIABLE: EPATCH_SOURCE
@@ -1086,65 +1151,6 @@ unpack_makeself() {
 	assert "failure unpacking (${filetype}) makeself ${shrtsrc} ('${ver}' +${skip})"
 }
 
-# @FUNCTION: check_license
-# @USAGE: [license]
-# @DESCRIPTION:
-# Display a license for user to accept.  If no license is
-# specified, then ${LICENSE} is used.
-check_license() {
-	local lic=$1
-	if [ -z "${lic}" ] ; then
-		lic="${PORTDIR}/licenses/${LICENSE}"
-	else
-		if [ -e "${PORTDIR}/licenses/${lic}" ] ; then
-			lic="${PORTDIR}/licenses/${lic}"
-		elif [ -e "${PWD}/${lic}" ] ; then
-			lic="${PWD}/${lic}"
-		elif [ -e "${lic}" ] ; then
-			lic="${lic}"
-		fi
-	fi
-	local l="`basename ${lic}`"
-
-	# here is where we check for the licenses the user already
-	# accepted ... if we don't find a match, we make the user accept
-	local alic
-	eshopts_push -o noglob # so that bash doesn't expand "*"
-	for alic in ${ACCEPT_LICENSE} ; do
-		if [[ ${alic} == ${l} ]]; then
-			eshopts_pop
-			return 0
-		fi
-	done
-	eshopts_pop
-	[ ! -f "${lic}" ] && die "Could not find requested license ${lic}"
-
-	local licmsg=$(emktemp)
-	cat <<-EOF > ${licmsg}
-	**********************************************************
-	The following license outlines the terms of use of this
-	package.  You MUST accept this license for installation to
-	continue.  When you are done viewing, hit 'q'.	If you
-	CTRL+C out of this, the install will not run!
-	**********************************************************
-
-	EOF
-	cat ${lic} >> ${licmsg}
-	${PAGER:-less} ${licmsg} || die "Could not execute pager (${PAGER}) to accept ${lic}"
-	einfon "Do you accept the terms of this license (${l})? [yes/no] "
-	read alic
-	case ${alic} in
-		yes|Yes|y|Y)
-			return 0
-			;;
-		*)
-			echo;echo;echo
-			eerror "You MUST accept the license to continue!  Exiting!"
-			die "Failed to accept license"
-			;;
-	esac
-}
-
 # @FUNCTION: cdrom_get_cds
 # @USAGE: <file on cd1> [file on cd2] [file on cd3] [...]
 # @DESCRIPTION:
@@ -1684,3 +1690,7 @@ use_if_iuse() {
 # If USE flag is set, echo [true output][true suffix] (defaults to "yes"),
 # otherwise echo [false output][false suffix] (defaults to "no").
 usex() { use "$1" && echo "${2-yes}$4" || echo "${3-no}$5" ; } #382963
+
+check_license() { die "you no longer need this as portage supports ACCEPT_LICENSE itself"; }
+
+fi

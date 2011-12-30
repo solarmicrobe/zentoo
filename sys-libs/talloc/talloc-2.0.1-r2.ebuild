@@ -65,5 +65,5 @@ src_install() {
 	use doc && dohtml *.html
 
 	# installs missing symlink
-	dolib.so sharedbuild/lib/libtalloc.so
+	dolib.so sharedbuild/lib/libtalloc.so{,.2}
 }
