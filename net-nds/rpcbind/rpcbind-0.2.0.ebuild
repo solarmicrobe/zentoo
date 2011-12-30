@@ -2,41 +2,31 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-if [[ ${PV} == "9999" ]] ; then
-	EGIT_REPO_URI="git://git.infradead.org/~steved/rpcbind.git"
-	inherit autotools git
-	SRC_URI=""
-	#KEYWORDS=""
-else
-	SRC_URI="mirror://sourceforge/${PN}/${P}.tar.bz2"
-	KEYWORDS="amd64"
-fi
+EAPI="2"
+
+inherit autotools
 
 DESCRIPTION="portmap replacement which supports RPC over various protocols"
 HOMEPAGE="http://sourceforge.net/projects/rpcbind/"
+SRC_URI="mirror://sourceforge/${PN}/${P}.tar.bz2"
 
 LICENSE="BSD"
 SLOT="0"
-IUSE=""
+KEYWORDS="amd64"
+IUSE="selinux"
 
-DEPEND="net-libs/libtirpc"
-RDEPEND=${DEPEND}
+RDEPEND="net-libs/libtirpc
+	selinux? ( sec-policy/selinux-rpcbind )"
+DEPEND="${RDEPEND}
+	dev-util/pkgconfig"
 
-src_unpack() {
-	if [[ ${PV} == "9999" ]] ; then
-		git_src_unpack
-		eautoreconf
-	else
-		unpack ${A}
-		cd "${S}"
-		# fix busted timestamps
-		find . -type f -print0 | xargs -0 touch -r .
-	fi
+src_prepare() {
+	epatch "${FILESDIR}"/${P}-pkgconfig.patch
+	eautoreconf
 }
 
-src_compile() {
-	econf --bindir=/sbin || die
-	emake || die
+src_configure() {
+	econf --bindir=/sbin
 }
 
 src_install() {
