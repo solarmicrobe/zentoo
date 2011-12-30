@@ -7,7 +7,7 @@ EAPI=3
 ACK_PATCH="ack-gentoo-r1.patch"
 
 MODULE_AUTHOR=PETDANCE
-inherit perl-module bash-completion
+inherit perl-module bash-completion-r1
 
 DESCRIPTION="ack is a tool like grep, aimed at programmers with large trees of heterogeneous source code"
 HOMEPAGE="http://betterthangrep.com/ ${HOMEPAGE}"
@@ -16,7 +16,7 @@ SRC_URI+=" http://dev.gentoo.org/~tove/distfiles/${CATEGORY}/${PN}/${ACK_PATCH}.
 LICENSE="Artistic-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
+IUSE="bash-completion"
 
 DEPEND=">=dev-perl/File-Next-1.02"
 RDEPEND="${DEPEND}"
@@ -26,9 +26,5 @@ PATCHES=( "${WORKDIR}"/${ACK_PATCH} )
 
 src_install() {
 	perl-module_src_install
-	dobashcompletion etc/ack.bash_completion.sh
-}
-
-pkg_postinst() {
-	bash-completion_pkg_postinst
+	newbashcomp etc/ack.bash_completion.sh ack
 }
