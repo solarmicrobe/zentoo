@@ -2,11 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="3"
 inherit eutils toolchain-funcs multilib python
 
 MY_PV="${PV}"
-MY_PV="${MY_PV/1.9.2/3.6}"
+MY_PV="${MY_PV/1.8.2/3.6}"
 DESCRIPTION="Stand-alone JavaScript C library"
 HOMEPAGE="http://www.mozilla.org/js/spidermonkey/"
 REL_URI="http://releases.mozilla.org/pub/mozilla.org/firefox/releases"
@@ -69,4 +69,10 @@ src_install() {
 	emake install DESTDIR="${D}" || die
 	dodoc ../jsd/README
 	dohtml README.html
+
+	if [[ ${CHOST} == *-darwin* ]] ; then
+		# fixup install_name
+		install_name_tool -id "${EPREFIX}"/usr/$(get_libdir)/libmozjs.dylib \
+			"${ED}"/usr/$(get_libdir)/libmozjs.dylib || die
+	fi
 }
