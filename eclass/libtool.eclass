@@ -13,6 +13,9 @@
 # generated libtool files.  We do not run the libtoolize program because that
 # requires a regeneration of the main autotool files in order to work properly.
 
+if [[ ${___ECLASS_ONCE_LIBTOOL} != "recur -_+^+_- spank" ]] ; then
+___ECLASS_ONCE_LIBTOOL="recur -_+^+_- spank"
+
 # If an overlay has eclass overrides, but doesn't actually override the
 # libtool.eclass, we'll have ECLASSDIR pointing to the active overlay's
 # eclass/ dir, but libtool.eclass is still in the main Gentoo tree.  So
@@ -204,8 +207,10 @@ elibtoolize() {
 			${force} || continue
 		fi
 
-		einfo "Running elibtoolize in: ${d#${WORKDIR}/}/"
-		if [[ -f ${d}/.elibtoolized ]] ; then
+		local outfunc="einfo"
+		[[ -f ${d}/.elibtoolized ]] && outfunc="ewarn"
+		${outfunc} "Running elibtoolize in: ${d#${WORKDIR}/}/"
+		if [[ ${outfunc} == "ewarn" ]] ; then
 			ewarn "  We've already been run in this tree; you should"
 			ewarn "  avoid this if possible (perhaps by filing a bug)"
 		fi
@@ -496,3 +501,5 @@ VER_to_int() {
 	echo 1
 	return 1
 }
+
+fi
