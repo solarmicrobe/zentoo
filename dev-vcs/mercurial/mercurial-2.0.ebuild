@@ -8,7 +8,7 @@ PYTHON_USE_WITH="threads"
 SUPPORT_PYTHON_ABIS="1"
 RESTRICT_PYTHON_ABIS="3.* *-jython"
 
-inherit bash-completion elisp-common eutils distutils
+inherit bash-completion-r1 elisp-common eutils distutils
 
 DESCRIPTION="Scalable distributed SCM"
 HOMEPAGE="http://mercurial.selenic.com/"
@@ -35,6 +35,14 @@ PYTHON_CFLAGS=(
 PYTHON_MODNAME="${PN} hgext"
 SITEFILE="70${PN}-gentoo.el"
 
+src_prepare() {
+	distutils_src_prepare
+
+	# fix up logic that won't work in Gentoo Prefix (also won't outside in
+	# certain cases), bug #362891
+	sed -i -e 's:xcodebuild:nocodebuild:' setup.py || die
+}
+
 src_compile() {
 	distutils_src_compile
 
@@ -49,7 +57,7 @@ src_compile() {
 src_install() {
 	distutils_src_install
 
-	dobashcompletion contrib/bash_completion ${PN}
+	newbashcomp contrib/bash_completion ${PN} || die
 
 	if use zsh-completion ; then
 		insinto /usr/share/zsh/site-functions
@@ -115,7 +123,6 @@ src_test() {
 pkg_postinst() {
 	distutils_pkg_postinst
 	use emacs && elisp-site-regen
-	bash-completion_pkg_postinst
 
 	elog "If you want to convert repositories from other tools using convert"
 	elog "extension please install correct tool:"
