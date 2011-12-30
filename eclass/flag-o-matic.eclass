@@ -9,6 +9,9 @@
 # This eclass contains a suite of functions to help developers sanely
 # and safely manage toolchain flags in their builds.
 
+if [[ ${___ECLASS_ONCE_FLAG_O_MATIC} != "recur -_+^+_- spank" ]] ; then
+___ECLASS_ONCE_FLAG_O_MATIC="recur -_+^+_- spank"
+
 inherit eutils toolchain-funcs multilib
 
 ################ DEPRECATED functions ################
@@ -28,41 +31,36 @@ inherit eutils toolchain-funcs multilib
 # {C,CXX,F,FC}FLAGS that we allow in strip-flags
 # Note: shell globs and character lists are allowed
 setup-allowed-flags() {
-	if [[ -z ${ALLOWED_FLAGS} ]] ; then
-		export ALLOWED_FLAGS="-pipe"
-		export ALLOWED_FLAGS="${ALLOWED_FLAGS} -O -O0 -O1 -O2 -mcpu -march -mtune"
-		export ALLOWED_FLAGS="${ALLOWED_FLAGS} -fstack-protector -fstack-protector-all"
-		export ALLOWED_FLAGS="${ALLOWED_FLAGS} -fbounds-checking -fno-strict-overflow"
-		export ALLOWED_FLAGS="${ALLOWED_FLAGS} -fno-PIE -fno-pie -fno-unit-at-a-time"
-		export ALLOWED_FLAGS="${ALLOWED_FLAGS} -g -g[0-9] -ggdb -ggdb[0-9] -gstabs -gstabs+"
-		export ALLOWED_FLAGS="${ALLOWED_FLAGS} -fno-ident -fpermissive"
-		export ALLOWED_FLAGS="${ALLOWED_FLAGS} -W* -w"
-	fi
+	ALLOWED_FLAGS="-pipe"
+	ALLOWED_FLAGS+=" -O -O1 -O2 -Os -mcpu -march -mtune"
+	ALLOWED_FLAGS+=" -fstack-protector -fstack-protector-all"
+	ALLOWED_FLAGS+=" -fbounds-checking -fno-strict-overflow"
+	ALLOWED_FLAGS+=" -fno-PIE -fno-pie -fno-unit-at-a-time"
+	ALLOWED_FLAGS+=" -g -g[0-9] -ggdb -ggdb[0-9] -gstabs -gstabs+"
+	ALLOWED_FLAGS+=" -fno-ident -fpermissive"
+	ALLOWED_FLAGS+=" -W* -w"
+
 	# allow a bunch of flags that negate features / control ABI
-	ALLOWED_FLAGS="${ALLOWED_FLAGS} -fno-stack-protector -fno-stack-protector-all \
-		-fno-strict-aliasing -fno-bounds-checking -fstrict-overflow -fno-omit-frame-pointer"
-	ALLOWED_FLAGS="${ALLOWED_FLAGS} -mregparm -mno-app-regs -mapp-regs \
-		-mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-ssse3 -mno-sse4 -mno-sse4.1 \
-		-mno-sse4.2 -mno-avx -mno-aes -mno-pclmul -mno-sse4a -mno-3dnow \
-		-mno-popcnt -mno-abm \
-		-mips1 -mips2 -mips3 -mips4 -mips32 -mips64 -mips16 -mplt \
+	ALLOWED_FLAGS+=" -fno-stack-protector -fno-stack-protector-all \
+		-fno-strict-aliasing -fno-bounds-checking -fstrict-overflow \
+		-fno-omit-frame-pointer"
+	ALLOWED_FLAGS+=" -mregparm -mno-app-regs -mapp-regs -mno-mmx -mno-sse \
+		-mno-sse2 -mno-sse3 -mno-ssse3 -mno-sse4 -mno-sse4.1 -mno-sse4.2 \
+		-mno-avx -mno-aes -mno-pclmul -mno-sse4a -mno-3dnow -mno-popcnt \
+		-mno-abm -mips1 -mips2 -mips3 -mips4 -mips32 -mips64 -mips16 -mplt \
 		-msoft-float -mno-soft-float -mhard-float -mno-hard-float -mfpu \
 		-mieee -mieee-with-inexact -mschedule -mfloat-gprs -mspe -mno-spe \
-		-mtls-direct-seg-refs -mno-tls-direct-seg-refs \
-		-mflat -mno-flat -mno-faster-structs -mfaster-structs \
-		-m32 -m64 -mx32 -mabi -mlittle-endian -mbig-endian -EL -EB -fPIC \
-		-mlive-g0 -mcmodel -mstack-bias -mno-stack-bias \
-		-msecure-plt -m*-toc -D* -U*"
+		-mtls-direct-seg-refs -mno-tls-direct-seg-refs -mflat -mno-flat \
+		-mno-faster-structs -mfaster-structs -m32 -m64 -mx32 -mabi \
+		-mlittle-endian -mbig-endian -EL -EB -fPIC -mlive-g0 -mcmodel \
+		-mstack-bias -mno-stack-bias -msecure-plt -m*-toc -D* -U*"
 
 	# 4.5
-	ALLOWED_FLAGS="${ALLOWED_FLAGS} -mno-fma4 -mno-movbe -mno-xop -mno-lwp"
+	ALLOWED_FLAGS+=" -mno-fma4 -mno-movbe -mno-xop -mno-lwp"
 	# 4.6
-	ALLOWED_FLAGS="${ALLOWED_FLAGS} -mno-fsgsbase -mno-rdrnd -mno-f16c \
-		-mno-bmi -mno-tbm"
+	ALLOWED_FLAGS+=" -mno-fsgsbase -mno-rdrnd -mno-f16c -mno-bmi -mno-tbm"
 
-	# {C,CXX,F,FC}FLAGS that we are think is ok, but needs testing
-	# NOTE:  currently -Os have issues with gcc3 and K6* arch's
-	export UNSTABLE_FLAGS="-Os -O3 -freorder-blocks"
+	export ALLOWED_FLAGS
 	return 0
 }
 
@@ -333,11 +331,6 @@ strip-flags() {
 	local NEW_CXXFLAGS=""
 	local NEW_FFLAGS=""
 	local NEW_FCFLAGS=""
-
-	# Allow unstable C[XX]FLAGS if we are using unstable profile ...
-	if has "~$(tc-arch)" ${ACCEPT_KEYWORDS} ; then
-		ALLOWED_FLAGS="${ALLOWED_FLAGS} ${UNSTABLE_FLAGS}"
-	fi
 
 	set -f	# disable pathname expansion
 
@@ -683,28 +676,4 @@ no-as-needed() {
 	esac
 }
 
-# Some tests for when we screw with things and want to make
-# sure we didn't break anything
-#TESTS() {
-#	CFLAGS="-a -b -c=1"
-#	CXXFLAGS="-x -y -z=2"
-#	LDFLAGS="-l -m -n=3"
-#
-#	die() { exit 1; }
-#	(is-flag 1 2 3) && die
-#	(is-ldflag 1 2 3) && die
-#
-#	is-flagq -l && die
-#	is-ldflagq -a && die
-#	is-flagq -a || die
-#	is-flagq -x || die
-#	is-ldflagq -n=* || die
-#	is-ldflagq -n && die
-#
-#	strip-unsupported-flags
-#	[[ ${CFLAGS} == "-c=1" ]] || die
-#	[[ ${CXXFLAGS} == "-y -z=2" ]] || die
-#
-#	echo "All tests pass"
-#}
-#TESTS
+fi

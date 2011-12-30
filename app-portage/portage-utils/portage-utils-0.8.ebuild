@@ -2,27 +2,28 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI="3"
+
 inherit flag-o-matic toolchain-funcs
 
 DESCRIPTION="small and fast portage helper tools written in C"
 HOMEPAGE="http://www.gentoo.org/"
-SRC_URI="mirror://gentoo/${P}.tar.bz2"
+SRC_URI="mirror://gentoo/${P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="static"
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-	sed -i -e 's:\[\[:[:' -e 's:\]\]:]:' Makefile
-}
-
-src_compile() {
-	tc-export CC
+src_configure() {
 	use static && append-ldflags -static
-	emake || die
+
+	# Avoid slow configure+gnulib+make if on an up-to-date Linux system
+	if ! use kernel_linux ; then
+		econf --with-eprefix="${EPREFIX}"
+	else
+		tc-export CC
+	fi
 }
 
 src_install() {
