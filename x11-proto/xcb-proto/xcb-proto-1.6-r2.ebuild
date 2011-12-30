@@ -16,7 +16,10 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/xcb/proto"
 KEYWORDS="amd64"
 IUSE=""
 
-PATCHES=( "${FILESDIR}/1.6-fix_negative.patch" )
+PATCHES=(
+	"${FILESDIR}/1.6-fix_negative.patch"
+	"${FILESDIR}/1.6-libdir-pc.patch"
+)
 
 RDEPEND=""
 DEPEND="${RDEPEND}

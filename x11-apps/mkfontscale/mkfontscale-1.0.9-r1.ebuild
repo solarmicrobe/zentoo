@@ -21,3 +21,5 @@ DEPEND="${RDEPEND}
 XORG_CONFIGURE_OPTIONS=(
 	--with-bzip2
 )
+
+PATCHES=( "${FILESDIR}/mkfontscale-1.0.9-heavy-support.txt" )

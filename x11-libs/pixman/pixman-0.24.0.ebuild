@@ -9,7 +9,10 @@ EGIT_REPO_URI="git://anongit.freedesktop.org/git/pixman"
 DESCRIPTION="Low-level pixel manipulation routines"
 
 KEYWORDS="amd64"
-IUSE="altivec mmx neon sse2"
+IUSE="altivec iwmmxt mmx neon sse2"
+
+PATCHES=( "${FILESDIR}"/${P}-posix-test.patch )
+XORG_EAUTORECONF="yes"
 
 pkg_setup() {
 	xorg-2_pkg_setup
@@ -45,6 +48,7 @@ pkg_setup() {
 		"${confadd[@]}"
 		$(use_enable altivec vmx)
 		$(use_enable neon arm-neon)
+		$(use_enable iwmmxt arm-iwmmxt)
 		--disable-gtk
 	)
 }

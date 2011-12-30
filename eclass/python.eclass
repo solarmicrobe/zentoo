@@ -1591,8 +1591,14 @@ for file in sorted(files_set):
 
 		popd > /dev/null || die "popd failed"
 
-		if ROOT="/" has_version sys-apps/coreutils; then
+		# This is per bug #390691, without the duplication refactor, and with
+		# the 3-way structure per comment #6. This enable users with old
+		# coreutils to upgrade a lot easier (you need to upgrade python+portage
+		# before coreutils can be upgraded).
+		if ROOT="/" has_version '>=sys-apps/coreutils-6.9.90'; then
 			cp -fr --preserve=all --no-preserve=context "${intermediate_installation_images_directory}/${PYTHON_ABI}/"* "${D}" || die "Merging of intermediate installation image for Python ABI '${PYTHON_ABI} into installation image failed"
+		elif ROOT="/" has_version sys-apps/coreutils; then
+			cp -fr --preserve=all "${intermediate_installation_images_directory}/${PYTHON_ABI}/"* "${D}" || die "Merging of intermediate installation image for Python ABI '${PYTHON_ABI} into installation image failed"
 		else
 			cp -fpr "${intermediate_installation_images_directory}/${PYTHON_ABI}/"* "${D}" || die "Merging of intermediate installation image for Python ABI '${PYTHON_ABI} into installation image failed"
 		fi

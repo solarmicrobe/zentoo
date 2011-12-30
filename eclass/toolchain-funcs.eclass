@@ -12,8 +12,10 @@
 # in such a way that you can rely on the function always returning
 # something sane.
 
-___ECLASS_RECUR_TOOLCHAIN_FUNCS="yes"
-[[ -z ${___ECLASS_RECUR_MULTILIB} ]] && inherit multilib
+if [[ ${___ECLASS_ONCE_TOOLCHAIN_FUNCS} != "recur -_+^+_- spank" ]] ; then
+___ECLASS_ONCE_TOOLCHAIN_FUNCS="recur -_+^+_- spank"
+
+inherit multilib
 
 DESCRIPTION="Based on the ${ECLASS} eclass"
 
@@ -758,3 +760,5 @@ gen_usr_ldscript() {
 		fperms a+x "/usr/${libdir}/${lib}" || die "could not change perms on ${lib}"
 	done
 }
+
+fi
