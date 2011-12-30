@@ -11,12 +11,12 @@ detect_version
 
 PATCH_VER="1"
 SRC_URI="mirror://gentoo/gentoo-headers-base-${PV}.tar.xz"
-[[ -n ${PATCH_VER} ]] && SRC_URI="${SRC_URI} mirror://gentoo/gentoo-headers-${PV%.1}-${PATCH_VER}.tar.xz"
+[[ -n ${PATCH_VER} ]] && SRC_URI="${SRC_URI} mirror://gentoo/gentoo-headers-${PV}-${PATCH_VER}.tar.xz"
 
 KEYWORDS="amd64"
-IUSE=""
 
-DEPEND="app-arch/xz-utils"
+DEPEND="app-arch/xz-utils
+	dev-lang/perl"
 RDEPEND=""
 
 S=${WORKDIR}/gentoo-headers-base-${PV}
@@ -26,7 +26,7 @@ src_unpack() {
 }
 
 src_prepare() {
-	[[ -n ${PATCH_VER} ]] && EPATCH_SUFFIX="patch" epatch "${WORKDIR}"/${PV%.1}
+	[[ -n ${PATCH_VER} ]] && EPATCH_SUFFIX="patch" epatch "${WORKDIR}"/${PV}
 }
 
 src_install() {
