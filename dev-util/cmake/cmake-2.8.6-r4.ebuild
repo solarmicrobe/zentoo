@@ -4,6 +4,7 @@
 
 EAPI=4
 
+CMAKE_REMOVE_MODULES="no"
 inherit elisp-common toolchain-funcs eutils versionator flag-o-matic base cmake-utils virtualx
 
 MY_P="${PN}-$(replace_version_separator 3 - ${MY_PV})"
@@ -21,6 +22,7 @@ DEPEND="
 	>=app-arch/libarchive-2.8.0
 	>=net-misc/curl-7.20.0-r1[ssl]
 	>=dev-libs/expat-2.0.1
+	dev-util/pkgconfig
 	sys-libs/zlib
 	ncurses? ( sys-libs/ncurses )
 	qt4? ( x11-libs/qt-gui:4 )
@@ -42,8 +44,8 @@ S="${WORKDIR}/${MY_P}"
 
 CMAKE_BINARY="${S}/Bootstrap.cmk/cmake"
 
-# REDO ME:
-# darwin-no-qt
+# Fixme:
+# Boost patchset is foobared and should respect eselect / slotting
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.6.3-darwin-bundle.patch
 	"${FILESDIR}"/${PN}-2.6.3-no-duplicates-in-rpath.patch
@@ -51,21 +53,24 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.8.0-darwin-default-install_name.patch
 	"${FILESDIR}"/${PN}-2.8.1-libform.patch
 	"${FILESDIR}"/${PN}-2.8.4-FindPythonLibs.patch
-	"${FILESDIR}"/${PN}-2.8.4-FindPythonInterp.patch
 	"${FILESDIR}"/${PN}-2.8.3-more-no_host_paths.patch
 	"${FILESDIR}"/${PN}-2.8.3-ruby_libname.patch
-	"${FILESDIR}"/${PN}-2.8.3-fix_assembler_test.patch
 	"${FILESDIR}"/${PN}-2.8.4-FindBoost.patch
-	"${FILESDIR}"/${PN}-2.8.4-FindQt4.patch
+	"${FILESDIR}"/${PN}-2.8.6-FindBLAS-2.patch
+	"${FILESDIR}"/${PN}-2.8.6-FindLAPACK-2.patch
+	"${FILESDIR}"/${PN}-2.8.6-CodeBlocks.patch
+	"${FILESDIR}"/${PN}-2.8.6-testsvn17.patch
 )
-_src_bootstrap() {
-	  echo ${MAKEOPTS} | egrep -o '(\-j|\-\-jobs)(=?|[[:space:]]*)[[:digit:]]+' > /dev/null
-	  if [ $? -eq 0 ]; then
-		  par_arg=$(echo ${MAKEOPTS} | egrep -o '(\-j|\-\-jobs)(=?|[[:space:]]*)[[:digit:]]+' | egrep -o '[[:digit:]]+')
-		  par_arg="--parallel=${par_arg}"
-	  else
-		  par_arg="--parallel=1"
-	  fi
+cmake_src_bootstrap() {
+	# Cleanup args to extract only JOBS.
+	# Because bootstrap does not know anything else.
+	echo ${MAKEOPTS} | egrep -o '(\-j|\-\-jobs)(=?|[[:space:]]*)[[:digit:]]+' > /dev/null
+	if [ $? -eq 0 ]; then
+		par_arg=$(echo ${MAKEOPTS} | egrep -o '(\-j|\-\-jobs)(=?|[[:space:]]*)[[:digit:]]+' | egrep -o '[[:digit:]]+')
+		par_arg="--parallel=${par_arg}"
+	else
+		par_arg="--parallel=1"
+	fi
 
 	tc-export CC CXX LD
 
@@ -75,10 +80,37 @@ _src_bootstrap() {
 		|| die "Bootstrap failed"
 }
 
+cmake_src_test() {
+	# fix OutDir test
+	# this is altered thanks to our eclass
+	sed -i -e 's:#IGNORE ::g' "${S}"/Tests/OutDir/CMakeLists.txt || die
+
+	pushd "${CMAKE_BUILD_DIR}" > /dev/null
+
+	local ctestargs
+	[[ -n ${TEST_VERBOSE} ]] && ctestargs="--extra-verbose --output-on-failure"
+
+	# Excluded tests:
+	#    BootstrapTest: we actualy bootstrap it every time so why test it.
+	#    SimpleCOnly_sdcc: sdcc choke on global cflags so just skip the test
+	#        as it was never intended to be used this way.
+	"${CMAKE_BUILD_DIR}"/bin/ctest ${ctestargs} \
+		-E BootstrapTest SimpleCOnly_sdcc \
+		|| die "Tests failed"
+
+	popd > /dev/null
+}
+
+pkg_setup() {
+	einfo "Fixing java access violations ..."
+	# bug 387227
+	addpredict /proc/self/coredump_filter
+}
+
 src_prepare() {
 	base_src_prepare
 
-	# disable bootstrap cmake and make run, we use eclass for that
+	# disable running of cmake in boostrap command
 	sed -i \
 		-e '/"${cmake_bootstrap_dir}\/cmake"/s/^/#DONOTRUN /' \
 		bootstrap || die "sed failed"
@@ -89,7 +121,7 @@ src_prepare() {
 		-e "s|@GENTOO_PORTAGE_EPREFIX@|${EPREFIX}/|g" \
 		Modules/Platform/{UnixPaths,Darwin}.cmake || die "sed failed"
 
-	_src_bootstrap
+	cmake_src_bootstrap
 }
 
 src_configure() {
@@ -115,23 +147,8 @@ src_compile() {
 	use emacs && elisp-compile Docs/cmake-mode.el
 }
 
-_run_test() {
-	# fix OutDir test
-	# this is altered thanks to our eclass
-	sed -i -e 's:#IGNORE ::g' "${S}"/Tests/OutDir/CMakeLists.txt || die
-	pushd "${CMAKE_BUILD_DIR}" > /dev/null
-	# Excluded tests:
-	#    BootstrapTest: we actualy bootstrap it every time so why test it.
-	#    SimpleCOnly_sdcc: sdcc choke on global cflags so just skip the test
-	#        as it was never intended to be used this way.
-	"${CMAKE_BUILD_DIR}"/bin/ctest \
-		-E BootstrapTest SimpleCOnly_sdcc \
-		|| die "Tests failed"
-	popd > /dev/null
-}
-
 src_test() {
-	VIRTUALX_COMMAND="_run_test" virtualmake
+	VIRTUALX_COMMAND="cmake_src_test" virtualmake
 }
 
 src_install() {
