@@ -1,4 +1,4 @@
-# Copyright 1999-2007 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: savedconfig.eclass
@@ -31,7 +31,7 @@ save_config() {
 	[[ -z "${ED}" ]] && ED=${D}
 	case $# in
 		0) die "Tell me what to save"
-		    ;;
+			;;
 		1) if [[ -f "$1" ]]; then
 				dodir /etc/portage/savedconfig/${CATEGORY}
 				cp "$1" "${ED}"/etc/portage/savedconfig/${CATEGORY}/${PF} \

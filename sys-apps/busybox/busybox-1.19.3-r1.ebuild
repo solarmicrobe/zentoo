@@ -55,22 +55,22 @@ else
 	MY_P=${PN}-${PV/_/-}
 	SRC_URI="http://www.busybox.net/downloads/${MY_P}.tar.bz2"
 fi
+
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="debug ipv6 make-symlinks +mdev nfs -pam selinux static elibc_glibc"
+IUSE="ipv6 make-symlinks mdev -pam selinux static elibc_glibc"
 RESTRICT="test"
 
 RDEPEND="selinux? ( sys-libs/libselinux )
 	pam? ( sys-libs/pam )"
-DEPEND="${RDEPEND}
-	nfs? ( || ( <sys-libs/glibc-2.13 >=net-libs/libtirpc-0.2.2-r1 ) )"
+DEPEND="${RDEPEND}"
 
 S=${WORKDIR}/${MY_P}
 
 busybox_config_option() {
 	case $1 in
-		y) sed -i -e "s:.*\<CONFIG_$2\>.*set:CONFIG_$2=y:g" .config;;
+		y) sed -i -e "s:.*\<CONFIG_$2\>.*set:${new}:g" .config;;
 		n) sed -i -e "s:CONFIG_$2=y:# CONFIG_$2 is not set:g" .config;;
 		*) use $1 \
 		       && busybox_config_option y $2 \
@@ -85,10 +85,9 @@ src_prepare() {
 	unset KBUILD_OUTPUT #88088
 	append-flags -fno-strict-aliasing #310413
 	use ppc64 && append-flags -mminimal-toc #130943
-	append-cppflags $($(tc-getPKG_CONFIG) libtirpc --cflags)
 
 	# patches go here!
-	#epatch "${FILESDIR}"/busybox-1.19.0-bb.patch
+	epatch "${FILESDIR}"/busybox-1.19.0-bb.patch
 	epatch "${FILESDIR}"/busybox-${PV}-*.patch
 
 	# flag cleanup
@@ -104,6 +103,9 @@ src_prepare() {
 		-e "/^CC\>/s:=.*:= $(tc-getCC):" \
 		-e "/^HOSTCC/s:=.*:= $(tc-getBUILD_CC):" \
 		Makefile || die
+	sed -i \
+		-e 's:-static-libgcc::' \
+		Makefile.flags || die
 }
 
 src_configure() {
@@ -120,11 +122,16 @@ src_configure() {
 
 	# setup the config file
 	emake -j1 allyesconfig > /dev/null
+	# nommu forces a bunch of things off which we want on #387555
+	busybox_config_option n NOMMU
+	sed -i '/^#/d' .config
+	yes "" | emake -j1 oldconfig >/dev/null
+
+	# now turn off stuff we really don't want
 	busybox_config_option n DMALLOC
 	busybox_config_option n FEATURE_SUID_CONFIG
 	busybox_config_option n BUILD_AT_ONCE
 	busybox_config_option n BUILD_LIBBUSYBOX
-	busybox_config_option n NOMMU
 	busybox_config_option n MONOTONIC_SYSCALL
 
 	# If these are not set and we are using a uclibc/busybox setup
@@ -142,18 +149,21 @@ src_configure() {
 	if use static && use pam ; then
 		ewarn "You cannot have USE='static pam'.  Assuming static is more important."
 	fi
-	busybox_config_option nfs FEATURE_MOUNT_NFS
 	use static \
 		&& busybox_config_option n PAM \
 		|| busybox_config_option pam PAM
 	busybox_config_option static STATIC
-	busybox_config_option debug DEBUG
-	use debug \
-		&& busybox_config_option y NO_DEBUG_LIB \
-		&& busybox_config_option n DMALLOC \
-		&& busybox_config_option n EFENCE
+
+	# all the debug options are compiler related, so punt them
+	busybox_config_option n DEBUG
+	busybox_config_option y NO_DEBUG_LIB
+	busybox_config_option n DMALLOC
+	busybox_config_option n EFENCE
 
 	busybox_config_option selinux SELINUX
+
+	# this opt only controls mounting with <linux-2.6.23
+	busybox_config_option n FEATURE_MOUNT_NFS
 
 	# default a bunch of uncommon options to off
 	local opt
@@ -185,12 +195,12 @@ src_compile() {
 	unset KBUILD_OUTPUT #88088
 	export SKIP_STRIP=y
 
-	emake busybox || die "build failed"
+	emake V=1 busybox || die
 	if ! use static ; then
 		cp .config{,.bak}
 		mv busybox_unstripped{,.bak}
 		use pam && busybox_config_option n PAM
-		emake CONFIG_STATIC=y busybox || die "static build failed"
+		emake CONFIG_STATIC=y busybox || die
 		mv busybox_unstripped bb
 		mv busybox_unstripped{.bak,}
 		mv .config{.bak,}
@@ -215,11 +225,9 @@ src_install() {
 		cp "${S}"/examples/mdev_fat.conf "${ED}"/etc/mdev.conf
 
 		exeinto /$(get_libdir)/mdev/
-		doexe "${FILESDIR}"/mdev/*
+		doexe "${FILESDIR}"/mdev/* || die
 
-		insinto /$(get_libdir)/rcscripts/addons
-		doins "${FILESDIR}"/mdev-start.sh || die
-		newinitd "${FILESDIR}"/mdev.rc mdev || die
+		newinitd "${FILESDIR}"/mdev.rc.1 mdev || die
 	fi
 
 	# bundle up the symlink files for use later
