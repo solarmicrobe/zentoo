@@ -7,15 +7,18 @@ EAPI="1"
 inherit eutils flag-o-matic multilib toolchain-funcs linux-info
 
 #PATCHSET=${P}-gentoo-patchset-v1
+scriptversion=164-v2
+scriptname=${PN}-gentoo-scripts-${scriptversion}
 
 if [[ ${PV} == "9999" ]]; then
 	EGIT_REPO_URI="git://git.kernel.org/pub/scm/linux/hotplug/udev.git"
 	EGIT_BRANCH="master"
-	inherit git autotools
+	inherit git-2 autotools
 else
 	# please update testsys-tarball whenever udev-xxx/test/sys/ is changed
 	SRC_URI="mirror://kernel/linux/utils/kernel/hotplug/${P}.tar.bz2
-			 test? ( mirror://gentoo/${PN}-151-testsys.tar.bz2 )"
+			 test? ( mirror://gentoo/${PN}-151-testsys.tar.bz2 )
+			 mirror://gentoo/${scriptname}.tar.bz2"
 	[[ -n "${PATCHSET}" ]] && SRC_URI="${SRC_URI} mirror://gentoo/${PATCHSET}.tar.bz2"
 fi
 DESCRIPTION="Linux dynamic and persistent device naming support (aka userspace devfs)"
@@ -24,7 +27,7 @@ HOMEPAGE="http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="selinux devfs-compat old-hd-rules -extras test"
+IUSE="build selinux extras test"
 
 COMMON_DEPEND="selinux? ( sys-libs/libselinux )
 	extras? (
@@ -62,11 +65,15 @@ fi
 
 # required kernel options
 CONFIG_CHECK="~INOTIFY_USER ~SIGNALFD ~!SYSFS_DEPRECATED ~!SYSFS_DEPRECATED_V2
-	~!IDE"
+	~!IDE ~BLK_DEV_BSG"
 
+# Return values:
+# 2 - reliable
+# 1 - unreliable
+# 0 - too old
 udev_check_KV() {
 	local ok=0
-	if [[ ${KV_MAJOR} == 2 && ${KV_MINOR} == 6 ]]
+	if [[ ${KV_MAJOR} == 2 && ${KV_MINOR} == 6 ]] || [[ ${KV_MAJOR} == 3 ]]
 	then
 		if kernel_is -ge 2 6 ${KV_PATCH_reliable} ; then
 			ok=2
@@ -140,9 +147,12 @@ src_unpack() {
 		fi
 	fi
 
+	cd "${WORKDIR}/${scriptname}"
+
 	cd "${S}"
 
 	# patches go here...
+	epatch "${FILESDIR}"/udev-164-remove-v4l1.patch
 
 	# backport some patches
 	if [[ -n "${PATCHSET}" ]]; then
@@ -150,17 +160,9 @@ src_unpack() {
 	  	      EPATCH_FORCE="yes" epatch
 	fi
 
-	# Bug 301667
-	epatch "${FILESDIR}"/udev-150-fix-missing-firmware-timeout.diff
-
-	if ! use devfs-compat; then
-		# see Bug #269359
-		epatch "${FILESDIR}"/udev-141-remove-devfs-names.diff
-	fi
-
 	# change rules back to group uucp instead of dialout for now
 	sed -e 's/GROUP="dialout"/GROUP="uucp"/' \
-		-i rules/{rules.d,packages,gentoo}/*.rules \
+		-i rules/{rules.d,arch}/*.rules \
 	|| die "failed to change group dialout to uucp"
 
 	if [[ ${PV} != 9999 ]]; then
@@ -168,17 +170,13 @@ src_unpack() {
 		# (more for my own needs than anything else ...)
 		MD5=$(md5sum < "${S}/rules/rules.d/50-udev-default.rules")
 		MD5=${MD5/  -/}
-		if [[ ${MD5} != 5685cc3878df54845dda5e08d712447a ]]
+		if [[ ${MD5} != f3c9ade42f70cec0459f9e58a99c632a ]]
 		then
 			echo
 			eerror "50-udev-default.rules has been updated, please validate!"
 			eerror "md5sum: ${MD5}"
 			die "50-udev-default.rules has been updated, please validate!"
 		fi
-	fi
-
-	if use old-hd-rules; then
-		epatch "${FILESDIR}"/udev-151-readd-hd-rules.diff
 	fi
 
 	sed_libexec_dir \
@@ -191,6 +189,11 @@ src_unpack() {
 		gtkdocize --copy
 		eautoreconf
 	fi
+
+	cd "${WORKDIR}/${scriptname}"
+	sed_libexec_dir \
+		helpers/* \
+		rc/*/*
 }
 
 src_compile() {
@@ -214,23 +217,15 @@ src_compile() {
 }
 
 src_install() {
-	local scriptdir="${FILESDIR}/151-r4"
+	emake -C "${WORKDIR}/${scriptname}" \
+		DESTDIR="${D}" LIBDIR="$(get_libdir)" \
+		KV_min="${KV_min}" KV_reliable="${KV_reliable}" \
+		install || die "make install failed"
 
 	into /
 	emake DESTDIR="${D}" install || die "make install failed"
 
 	exeinto "${udev_libexec_dir}"
-	newexe "${FILESDIR}"/net-130-r1.sh net.sh	|| die "net.sh not installed properly"
-	newexe "${FILESDIR}"/move_tmp_persistent_rules-112-r1.sh move_tmp_persistent_rules.sh \
-		|| die "move_tmp_persistent_rules.sh not installed properly"
-	newexe "${FILESDIR}"/write_root_link_rule-125 write_root_link_rule \
-		|| die "write_root_link_rule not installed properly"
-
-	doexe "${scriptdir}"/shell-compat-KV.sh \
-		|| die "shell-compat.sh not installed properly"
-	doexe "${scriptdir}"/shell-compat-addon.sh \
-		|| die "shell-compat.sh not installed properly"
-
 	keepdir "${udev_libexec_dir}"/state
 	keepdir "${udev_libexec_dir}"/devices
 
@@ -249,51 +244,19 @@ src_install() {
 	cd "${S}"/rules
 	insinto "${udev_libexec_dir}"/rules.d/
 
-	# Our rules files
-	doins gentoo/??-*.rules
-	doins packages/40-isdn.rules
+	# support older kernels
+	doins misc/30-kernel-compat.rules
 
 	# Adding arch specific rules
-	if [[ -f packages/40-${ARCH}.rules ]]
+	if [[ -f arch/40-${ARCH}.rules ]]
 	then
-		doins "packages/40-${ARCH}.rules"
+		doins "arch/40-${ARCH}.rules"
 	fi
 	cd "${S}"
-
-	# our udev hooks into the rc system
-	insinto /$(get_libdir)/rcscripts/addons
-	doins "${scriptdir}"/udev-start.sh \
-		|| die "udev-start.sh not installed properly"
-	doins "${scriptdir}"/udev-stop.sh \
-		|| die "udev-stop.sh not installed properly"
-
-	local init
-	# udev-postmount and init-scripts for >=openrc-0.3.1, Bug #240984
-	for init in udev udev-mount udev-dev-tarball udev-postmount; do
-		newinitd "${scriptdir}/${init}.initd" "${init}" \
-			|| die "initscript ${init} not installed properly"
-	done
-
-	# insert minimum kernel versions
-	sed -e "s/%KV_MIN%/${KV_min}/" \
-		-e "s/%KV_MIN_RELIABLE%/${KV_reliable}/" \
-		-i "${D}"/etc/init.d/udev-mount
-
-	# config file for init-script and start-addon
-	newconfd "${scriptdir}/udev.confd" udev \
-		|| die "config file not installed properly"
 
 	insinto /etc/modprobe.d
 	newins "${FILESDIR}"/blacklist-146 blacklist.conf
 	newins "${FILESDIR}"/pnp-aliases pnp-aliases.conf
-
-	# convert /lib/udev to real used dir
-	sed_libexec_dir \
-		"${D}/$(get_libdir)"/rcscripts/addons/*.sh \
-		"${D}/${udev_libexec_dir}"/write_root_link_rule \
-		"${D}"/etc/conf.d/udev \
-		"${D}"/etc/init.d/udev* \
-		"${D}"/etc/modprobe.d/*
 
 	# documentation
 	dodoc ChangeLog README TODO || die "failed installing docs"
@@ -415,13 +378,23 @@ restart_udevd() {
 }
 
 postinst_init_scripts() {
-	# FIXME: we may need some code that detects if this is a system bootstrap
-	# and auto-enables udev then
-	#
+	local enable_postmount=false
+
 	# FIXME: inconsistent handling of init-scripts here
 	#  * udev is added to sysinit in openrc-ebuild
 	#  * we add udev-postmount to default in here
 	#
+
+	# If we are building stages, add udev to the sysinit runlevel automatically.
+	if use build
+	then
+		if [[ -x "${ROOT}"/etc/init.d/udev  \
+			&& -d "${ROOT}"/etc/runlevels/sysinit ]]
+		then
+			ln -s /etc/init.d/udev "${ROOT}"/etc/runlevels/sysinit/udev
+		fi
+		enable_postmount=true
+	fi
 
 	# migration to >=openrc-0.4
 	if [[ -e "${ROOT}"/etc/runlevels/sysinit && ! -e "${ROOT}"/etc/runlevels/sysinit/udev ]]
@@ -441,11 +414,10 @@ postinst_init_scripts() {
 	# already enabled?
 	[[ -e "${ROOT}"/etc/runlevels/default/udev-postmount ]] && return
 
-	local enable_postmount=0
-	[[ -e "${ROOT}"/etc/runlevels/sysinit/udev ]] && enable_postmount=1
-	[[ "${ROOT}" = "/" && -d /dev/.udev/ ]] && enable_postmount=1
+	[[ -e "${ROOT}"/etc/runlevels/sysinit/udev ]] && enable_postmount=true
+	[[ "${ROOT}" = "/" && -d /dev/.udev/ ]] && enable_postmount=true
 
-	if [[ ${enable_postmount} = 1 ]]
+	if $enable_postmount
 	then
 		local initd=udev-postmount
 
@@ -464,6 +436,14 @@ postinst_init_scripts() {
 
 pkg_postinst() {
 	fix_old_persistent_net_rules
+
+	# "losetup -f" is confused if there is an empty /dev/loop/, Bug #338766
+	# So try to remove it here (will only work if empty).
+	rmdir "${ROOT}"/dev/loop 2>/dev/null
+	if [[ -d "${ROOT}"/dev/loop ]]; then
+		ewarn "Please make sure your remove /dev/loop,"
+		ewarn "else losetup may be confused when looking for unused devices."
+	fi
 
 	restart_udevd
 
@@ -548,31 +528,16 @@ pkg_postinst() {
 	ewarn "set in /etc/udev/udev.conf, but in /etc/fstab"
 	ewarn "as for other directories."
 
-	if use devfs-compat; then
-		ewarn
-		ewarn "devfs-compat use flag is enabled."
-		ewarn "This enables devfs compatible device names."
-	else
-		ewarn
-		ewarn "This version of udev no longer has devfs-compat enabled"
-	fi
+	ewarn
 	ewarn "If you use /dev/md/*, /dev/loop/* or /dev/rd/*,"
 	ewarn "then please migrate over to using the device names"
 	ewarn "/dev/md*, /dev/loop* and /dev/ram*."
-	ewarn "The devfs-compat rules will be removed on the next udev update."
+	ewarn "The devfs-compat rules have been removed."
 	ewarn "For reference see Bug #269359."
 
-	if use old-hd-rules; then
-		ewarn
-		ewarn "old-hd-rules use flag is enabled"
-		ewarn "This adds the removed rules for /dev/hd* devices"
-	else
-		ewarn
-		ewarn "This version of udev no longer has use flag old-hd-rules enabled"
-		ewarn "So all special rules for /dev/hd* devices are missing"
-	fi
-	ewarn "Please migrate to the new libata if you need these rules."
-	ewarn "They will be completely removed on the next udev update."
+	ewarn
+	ewarn "Rules for /dev/hd* devices have been removed"
+	ewarn "Please migrate to libata."
 
 	elog
 	elog "For more information on udev on Gentoo, writing udev rules, and"
