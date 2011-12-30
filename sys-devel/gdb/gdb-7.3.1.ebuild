@@ -14,34 +14,47 @@ if [[ ${CTARGET} == ${CHOST} ]] ; then
 fi
 is_cross() { [[ ${CHOST} != ${CTARGET} ]] ; }
 
-if [[ ${PV} == *.*.*.*.*.* ]] ; then
-	inherit versionator rpm
+RPM=
+MY_PV=${PV}
+case ${PV} in
+*.*.*.*.*.*)
 	# fedora version: gdb-6.8.50.20090302-8.fc11.src.rpm
+	inherit versionator rpm
 	gvcr() { get_version_component_range "$@"; }
 	MY_PV=$(gvcr 1-4)
 	RPM="${PN}-${MY_PV}-$(gvcr 5).fc$(gvcr 6).src.rpm"
-else
-	MY_PV=${PV}
-	RPM=
-fi
-
-PATCH_VER="1"
-DESCRIPTION="GNU debugger"
-HOMEPAGE="http://sources.redhat.com/gdb/"
-if [[ -n ${RPM} ]] ; then
-	SRC_URI="http://mirrors.kernel.org/fedora/development/source/SRPMS/${RPM}"
-else
+	SRC_URI="mirror://fedora/development/source/SRPMS/${RPM}"
+	;;
+*.*.50.*)
+	# weekly snapshots
+	SRC_URI="ftp://sources.redhat.com/pub/gdb/snapshots/current/gdb-weekly-${PV}.tar.bz2"
+	;;
+9999*)
+	# live git tree
+	EGIT_REPO_URI="git://sourceware.org/git/gdb.git"
+	inherit git-2
+	SRC_URI=""
+	;;
+*)
+	# Normal upstream release
 	SRC_URI="http://ftp.gnu.org/gnu/gdb/${P}.tar.bz2
 		ftp://sources.redhat.com/pub/gdb/releases/${P}.tar.bz2"
-fi
+	;;
+esac
+
+PATCH_VER="2"
+DESCRIPTION="GNU debugger"
+HOMEPAGE="http://sourceware.org/gdb/"
 SRC_URI="${SRC_URI} ${PATCH_VER:+mirror://gentoo/${P}-patches-${PATCH_VER}.tar.xz}"
 
 LICENSE="GPL-2 LGPL-2"
 is_cross \
 	&& SLOT="${CTARGET}" \
 	|| SLOT="0"
-KEYWORDS="amd64"
-IUSE="expat multitarget nls python test vanilla"
+if [[ ${PV} != 9999* ]] ; then
+	KEYWORDS="amd64"
+fi
+IUSE="expat multitarget nls +python test vanilla"
 
 RDEPEND=">=sys-libs/ncurses-5.2-r2
 	sys-libs/readline
@@ -49,6 +62,7 @@ RDEPEND=">=sys-libs/ncurses-5.2-r2
 	python? ( =dev-lang/python-2* )"
 DEPEND="${RDEPEND}
 	app-arch/xz-utils
+	virtual/yacc
 	test? ( dev-util/dejagnu )
 	nls? ( sys-devel/gettext )"
 
@@ -77,7 +91,8 @@ src_configure() {
 		--disable-werror \
 		--enable-64-bit-bfd \
 		--with-system-readline \
-		$(is_cross && echo --with-sysroot=/usr/${CTARGET}) \
+		--with-separate-debug-dir="${EPREFIX}"/usr/lib/debug \
+		$(is_cross && echo --with-sysroot="${EPREFIX}"/usr/${CTARGET}) \
 		$(use_with expat) \
 		$(use_enable nls) \
 		$(use multitarget && echo --enable-targets=all) \
@@ -91,13 +106,13 @@ src_test() {
 src_install() {
 	emake \
 		DESTDIR="${D}" \
-		libdir=/nukeme/pretty/pretty/please includedir=/nukeme/pretty/pretty/please \
+		{include,lib}dir=/nukeme/pretty/pretty/please \
 		install || die
 	rm -r "${D}"/nukeme || die
 
 	# Don't install docs when building a cross-gdb
 	if [[ ${CTARGET} != ${CHOST} ]] ; then
-		rm -r "${D}"/usr/share
+		rm -r "${ED}"/usr/share
 		return 0
 	fi
 
@@ -108,13 +123,23 @@ src_install() {
 	docinto sim
 	dodoc sim/ChangeLog sim/MAINTAINERS sim/README-HACKING
 
-	dodoc "${WORKDIR}"/extra/gdbinit.sample
+	if [[ -n ${PATCH_VER} ]] ; then
+		dodoc "${WORKDIR}"/extra/gdbinit.sample
+	fi
 
 	# Remove shared info pages
-	rm -f "${D}"/usr/share/info/{annotate,bfd,configure,standards}.info*
+	rm -f "${ED}"/usr/share/info/{annotate,bfd,configure,standards}.info*
 }
 
 pkg_postinst() {
 	# portage sucks and doesnt unmerge files in /etc
 	rm -vf "${ROOT}"/etc/skel/.gdbinit
+
+	if use prefix && [[ ${CHOST} == *-darwin* ]] ; then
+		ewarn "gdb is unable to get a mach task port when installed by Prefix"
+		ewarn "Portage, unprivileged.  To make gdb fully functional you'll"
+		ewarn "have to perform the following steps:"
+		ewarn "  % sudo chgrp procmod ${EPREFIX}/usr/bin/gdb"
+		ewarn "  % sudo chmod g+s ${EPREFIX}/usr/bin/gdb"
+	fi
 }
