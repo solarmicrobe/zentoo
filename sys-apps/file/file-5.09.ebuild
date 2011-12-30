@@ -14,7 +14,7 @@ HOMEPAGE="ftp://ftp.astron.com/pub/file/"
 SRC_URI="ftp://ftp.astron.com/pub/file/${P}.tar.gz
 	ftp://ftp.gw.com/mirrors/pub/unix/file/${P}.tar.gz"
 
-LICENSE="as-is"
+LICENSE="BSD-2"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="python static-libs zlib"
@@ -25,11 +25,7 @@ DEPEND="${RDEPEND}"
 PYTHON_MODNAME="magic.py"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-zip-detect.patch #367417
-	epatch "${FILESDIR}"/${P}-postscript-detect.patch #368121
-
 	elibtoolize
-	epunt_cxx
 
 	# dont let python README kill main README #60043
 	mv python/README{,.python}
