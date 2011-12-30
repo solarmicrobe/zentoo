@@ -3,7 +3,6 @@
 # $Header: $
 
 EAPI=4
-inherit autotools
 
 DESCRIPTION="A lossy image compression format"
 HOMEPAGE="http://code.google.com/p/webp/"
@@ -14,20 +13,14 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="static-libs"
 
-RDEPEND=">=media-libs/libpng-1.4
+RDEPEND=">=media-libs/libpng-1.4:0
 	virtual/jpeg"
 DEPEND="${RDEPEND}"
 
-DOCS="AUTHORS ChangeLog NEWS README"
-
-src_prepare() {
-	eautoreconf
-}
+DOCS=( AUTHORS ChangeLog NEWS README )
 
 src_configure() {
-	econf \
-		$(use_enable static-libs static) \
-		--disable-dependency-tracking
+	econf $(use_enable static-libs static)
 }
 
 src_install() {
