@@ -3,7 +3,4 @@
 <pkgmetadata>
 <herd>net-mail</herd>
 <longdescription>Postgrey is a Postfix policy server implementing greylisting developed by David Schweikert at the ISG.EE.</longdescription>
-<use>
-	<flag name='targrey'>Enables the targrey patch</flag>
-</use>
 </pkgmetadata>

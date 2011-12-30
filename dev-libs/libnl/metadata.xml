@@ -2,7 +2,4 @@
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
 <herd>netmon</herd>
-<use>
-<flag name="utils">Install command line interface utils</flag>
-</use>
 </pkgmetadata>
