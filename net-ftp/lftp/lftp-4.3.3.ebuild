@@ -16,6 +16,7 @@ KEYWORDS="amd64"
 IUSE="ssl gnutls socks5 nls"
 
 RDEPEND="
+	dev-libs/expat
 	>=sys-libs/ncurses-5.1
 	socks5? (
 		>=net-proxy/dante-1.1.12
