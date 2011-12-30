@@ -23,7 +23,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${WORKDIR}"/${P}-fixes-20081208.patch
-
+	epatch "${FILESDIR}"/CVE-2011-4516+7.patch
 	elibtoolize
 }
 
