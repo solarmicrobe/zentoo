@@ -18,10 +18,9 @@ LICENSE="GPL-2"
 SLOT="0"
 IUSE=""
 
-# Drop "~m68k ~s390 ~sh ~sparc-fbsd ~x86-fbsd" due to dev-python/argparse dependency
-# Note: argparse is provided in python 2.7 and 3.2 (Bug 346005)
 KEYWORDS="amd64"
 
+# Note: argparse is provided in python 2.7 and 3.2 (Bug 346005)
 DEPEND="sys-apps/portage"
 RDEPEND="${DEPEND}
 	!<=app-portage/gentoolkit-dev-0.2.7
@@ -42,6 +41,7 @@ src_prepare() {
 	epatch "${FILESDIR}/${PV}-gentoolkit-375293.patch"
 	epatch "${FILESDIR}/${PV}-equery-380573.patch"
 	epatch "${FILESDIR}/${PV}-euse-382219.patch"
+	epatch "${FILESDIR}/${PV}-setup-394909.patch"
 }
 
 src_install() {
