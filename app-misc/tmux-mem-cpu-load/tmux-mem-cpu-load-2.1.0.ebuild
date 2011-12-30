@@ -6,30 +6,18 @@ EAPI="3"
 
 inherit cmake-utils
 
-IUSE=""
-if [[ ${PV} == *9999* ]]; then
-	inherit git
-	EGIT_REPO_URI=${EGIT_REPO_URI:-"git://github.com/thewtex/tmux-mem-cpu-load.git"}
-	KEYWORDS=""
-	SRC_URI=""
-else
-	KEYWORDS="amd64"
-	SRC_URI="http://www.github.com/thewtex/${PN}/tarball/v${PV} -> ${P}.tar.gz"
-fi
-
 DESCRIPTION="CPU, RAM memory, and load monitor for use with tmux"
 HOMEPAGE="http://github.com/thewtex/tmux-mem-cpu-load/"
+SRC_URI="http://www.github.com/thewtex/${PN}/tarball/v${PV} -> ${P}.tar.gz"
 
 LICENSE="as-is"
 SLOT="0"
+KEYWORDS="amd64"
+IUSE=""
 
 src_prepare() {
-	if [[ ${PV} == *9999* ]]; then
-		git_src_prepare
-	else
-		cd "${WORKDIR}"/thewtex-${PN}-*
-		S=$(pwd)
-	fi
+	cd "${WORKDIR}"/thewtex-${PN}-*
+	S=$(pwd)
 }
 
 src_install() {
