@@ -19,13 +19,6 @@ inherit flag-o-matic autotools
 
 EXPORT_FUNCTIONS src_unpack src_prepare src_configure src_compile src_install
 
-# @ECLASS-VARIABLE: PHP_EXT_NAME
-# @DESCRIPTION:
-# The extension name. This must be set, otherwise the eclass dies.
-# Only automagically set by php-ext-pecl-r1.eclass, so unless your ebuild
-# inherits that eclass, you must set this manually before inherit.
-[[ -z "${PHP_EXT_NAME}" ]] && die "No module name specified for the php-ext-source-r2 eclass"
-
 DEPEND=">=sys-devel/m4-1.4.3
 		>=sys-devel/libtool-1.5.18"
 RDEPEND=""
@@ -59,7 +52,7 @@ esac
 # @ECLASS-VARIABLE: USE_PHP
 # @DESCRIPTION:
 # Lists the PHP slots compatibile the extension is compatibile with
-[[ -z "${USE_PHP}" ]] && USE_PHP="php5-3"
+[[ -z "${USE_PHP}" ]] && USE_PHP="php5-3 php5-2"
 
 # @ECLASS-VARIABLE: PHP_EXT_OPTIONAL_USE
 # @DESCRIPTION:

@@ -1,7 +1,7 @@
 # eclass for ant based Java packages
 #
 # Copyright (c) 2004-2005, Thomas Matthijs <axxo@gentoo.org>
-# Copyright (c) 2004-2005, Gentoo Foundation
+# Copyright (c) 2004-2011, Gentoo Foundation
 # Changes:
 #   May 2007:
 #     Made bsfix make one pass for all things and add some glocal targets for
@@ -54,10 +54,10 @@ fi
 # and ant dependencies constructed above. Python is there for
 # java-ant_remove-taskdefs
 JAVA_ANT_E_DEPEND="${JAVA_ANT_E_DEPEND}
-       ${ANT_TASKS_DEPEND}
-       ${JAVA_PKG_PORTAGE_DEP}
-       >=dev-java/javatoolkit-0.3.0-r2
-       >=dev-lang/python-2.4"
+	   ${ANT_TASKS_DEPEND}
+	   ${JAVA_PKG_PORTAGE_DEP}
+	   >=dev-java/javatoolkit-0.3.0-r2
+	   >=dev-lang/python-2.4"
 
 # this eclass must be inherited after java-pkg-2 or java-pkg-opt-2
 # if it's java-pkg-opt-2, ant dependencies are pulled based on USE flag
@@ -430,20 +430,28 @@ java-ant_rewrite-classpath() {
 # ------------------------------------------------------------------------------
 # @public java-ant_remove-taskdefs
 #
-# Removes taskdef elements from the file
+# Removes (named) taskdef elements from the file.
+# Options:
+#   --name NAME : only remove taskdef with name NAME.
 # @param $1 - the file to rewrite (defaults to build.xml)
 # ------------------------------------------------------------------------------
 java-ant_remove-taskdefs() {
 	debug-print-function ${FUNCNAME} $*
-	local file=${1:-build.xml}
+	local task_name
+	if [[ "${1}" == --name ]]; then
+		task_name="${2}"
+		shift 2
+	fi
+	local file="${1:-build.xml}"
 	echo "Removing taskdefs from ${file}"
 	python <<EOF
 import sys
 from xml.dom.minidom import parse
 dom = parse("${file}")
 for elem in dom.getElementsByTagName('taskdef'):
-       elem.parentNode.removeChild(elem)
-       elem.unlink()
+	if (len("${task_name}") == 0 or elem.getAttribute("name") == "${task_name}"):
+		elem.parentNode.removeChild(elem)
+		elem.unlink()
 f = open("${file}", "w")
 dom.writexml(f)
 f.close()

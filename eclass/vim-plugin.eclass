@@ -1,4 +1,4 @@
-# Copyright 1999-2004 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # This eclass simplifies installation of app-vim plugins into
@@ -147,4 +147,3 @@ display_vim_plugin_help() {
 		elog " "
 	fi
 }
-

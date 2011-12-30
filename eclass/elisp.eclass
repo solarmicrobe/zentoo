@@ -35,8 +35,14 @@
 # @ECLASS-VARIABLE: ELISP_PATCHES
 # @DEFAULT_UNSET
 # @DESCRIPTION:
-# Any patches to apply after unpacking the sources.  Patch files are
-# searched for in the current working dir, WORKDIR, and FILESDIR.
+# Space separated list of patches to apply after unpacking the sources.
+# Patch files are searched for in the current working dir, WORKDIR, and
+# FILESDIR.
+
+# @ECLASS-VARIABLE: ELISP_REMOVE
+# @DEFAULT_UNSET
+# @DESCRIPTION:
+# Space separated list of files to remove after unpacking the sources.
 
 # @ECLASS-VARIABLE: SITEFILE
 # @DEFAULT_UNSET
@@ -118,6 +124,13 @@ elisp_src_prepare() {
 			die "Cannot find ${patch}"
 		fi
 	done
+
+	# apply any user patches
+	epatch_user
+
+	if [[ -n ${ELISP_REMOVE} ]]; then
+		rm ${ELISP_REMOVE} || die
+	fi
 }
 
 # @FUNCTION: elisp_src_configure

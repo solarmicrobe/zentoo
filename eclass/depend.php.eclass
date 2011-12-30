@@ -105,7 +105,6 @@ need_php() {
 need_php_by_category() {
 	case "${CATEGORY}" in
 		dev-php) need_php ;;
-		dev-php5) need_php5 ;;
 		*) die "Version of PHP required by packages in category ${CATEGORY} unknown"
 	esac
 }

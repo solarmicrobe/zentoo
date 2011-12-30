@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2004-2005, Thomas Matthijs <axxo@gentoo.org>
 # Copyright (c) 2004, Karl Trygve Kalleberg <karltk@gentoo.org>
-# Copyright (c) 2004-2005, Gentoo Foundation
+# Copyright (c) 2004-2011, Gentoo Foundation
 #
 # Licensed under the GNU General Public License, v2
 #
@@ -2008,6 +2008,8 @@ eant() {
 		antflags="${antflags} -DJunit.present=true"
 		[[ ${ANT_TASKS} = *ant-junit* ]] && gcp="${gcp} junit"
 		getjarsarg="--with-dependencies"
+	else
+		antflags="${antflags} -Dmaven.test.skip=true"
 	fi
 
 	local cp
@@ -2134,6 +2136,13 @@ use_doc() {
 # -----------------------------------------------------------------------------
 java-pkg_init() {
 	debug-print-function ${FUNCNAME} $*
+
+	# Don't set up build environment if installing from binary. #206024 #258423
+	[[ "${MERGE_TYPE}" == "binary" ]] && return
+	# Also try Portage's nonstandard EMERGE_FROM for old EAPIs, if it doesn't
+	# work nothing is lost.
+	has ${EAPI:-0} 0 1 2 3 && [[ "${EMERGE_FROM}" == "binary" ]] && return
+
 	unset JAVAC
 	unset JAVA_HOME
 
@@ -2508,8 +2517,6 @@ java-pkg_func-exists() {
 java-pkg_setup-vm() {
 	debug-print-function ${FUNCNAME} $*
 
-	export LANG="C" LC_ALL="C"
-
 	local vendor="$(java-pkg_get-vm-vendor)"
 	if [[ "${vendor}" == "sun" ]] && java-pkg_is-vm-version-ge "1.5" ; then
 		addpredict "/dev/random"
@@ -2518,6 +2525,9 @@ java-pkg_setup-vm() {
 		addpredict "/proc/cpuinfo"
 		addpredict "/proc/self/coredump_filter"
 	elif [[ "${vendor}" == "oracle" ]]; then
+		addpredict "/dev/random"
+		addpredict "/proc/self/coredump_filter"
+	elif [[ "${vendor}" == icedtea* ]] && java-pkg_is-vm-version-ge "1.7" ; then
 		addpredict "/dev/random"
 		addpredict "/proc/self/coredump_filter"
 	elif [[ "${vendor}" == "jrockit" ]]; then
@@ -2731,7 +2741,7 @@ java-pkg_ensure-dep() {
 	local target_pkg="${2}"
 	local dev_error=""
 
-    # remove the version specification, which may include globbing (* and [123])
+	# remove the version specification, which may include globbing (* and [123])
 	local stripped_pkg=$(echo "${target_pkg}" | sed \
 		's/-\([0-9*]*\(\[[0-9]*\]\)*\)*\(\.\([0-9*]*\(\[[0-9]*\]\)*\)*\)*$//')
 

@@ -1,4 +1,4 @@
-# Copyright 2005-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License, v2 or later
 
 # @ECLASS: twisted.eclass
@@ -23,7 +23,8 @@ if [[ "${CATEGORY}/${PN}" == "dev-python/twisted"* ]]; then
 	MY_P="Twisted${MY_PACKAGE}-${MY_PV}"
 
 	HOMEPAGE="http://www.twistedmatrix.com/"
-	SRC_URI="http://tmrc.mit.edu/mirror/twisted/${MY_PACKAGE}/$(get_version_component_range 1-2 ${MY_PV})/${MY_P}.tar.bz2"
+	#SRC_URI="http://tmrc.mit.edu/mirror/twisted/${MY_PACKAGE}/$(get_version_component_range 1-2 ${MY_PV})/${MY_P}.tar.bz2"
+	SRC_URI="http://twistedmatrix.com/Releases/${MY_PACKAGE}/$(get_version_component_range 1-2 ${MY_PV})/${MY_P}.tar.bz2"
 
 	LICENSE="MIT"
 	SLOT="0"
@@ -67,7 +68,7 @@ twisted_src_install() {
 	distutils_src_install
 
 	if [[ -d doc/man ]]; then
-		doman doc/man/*
+		doman doc/man/*.[[:digit:]]
 	fi
 
 	if [[ -d doc ]]; then

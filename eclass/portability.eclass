@@ -1,4 +1,4 @@
-# Copyright 1999-2005 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # Author: Diego Pettenò <flameeyes@gentoo.org>
@@ -6,6 +6,9 @@
 # This eclass is created to avoid using non-portable GNUisms inside ebuilds
 #
 # NB:  If you add anything, please comment it!
+
+if [[ ${___ECLASS_ONCE_PORTABILITY} != "recur -_+^+_- spank" ]] ; then
+___ECLASS_ONCE_PORTABILITY="recur -_+^+_- spank"
 
 # treecopy orig1 orig2 orig3 .... dest
 #
@@ -80,59 +83,6 @@ dlopen_lib() {
 	esac
 }
 
-# Gets the home directory for the specified user
-# it's a wrap around egetent as the position of the home directory in the line
-# varies depending on the os used.
-#
-# To use that, inherit eutils, not portability!
-egethome() {
-	ent=$(egetent passwd $1)
-
-	case ${CHOST} in
-	*-darwin*|*-freebsd*|*-dragonfly*)
-		# Darwin, OSX, FreeBSD and DragonFly use position 9 to store homedir
-		echo ${ent} | cut -d: -f9
-		;;
-	*)
-		# Linux, NetBSD and OpenBSD use position 6 instead
-		echo ${ent} | cut -d: -f6
-		;;
-	esac
-}
-
-# Gets the shell for the specified user
-# it's a wrap around egetent as the position of the home directory in the line
-# varies depending on the os used.
-#
-# To use that, inherit eutils, not portability!
-egetshell() {
-	ent=$(egetent passwd "$1")
-
-	case ${CHOST} in
-	*-darwin*|*-freebsd*|*-dragonfly*)
-		# Darwin, OSX, FreeBSD and DragonFly use position 9 to store homedir
-		echo ${ent} | cut -d: -f10
-		;;
-	*)
-		# Linux, NetBSD and OpenBSD use position 6 instead
-		echo ${ent} cut -d: -f7
-		;;
-	esac
-}
-
-# Returns true if specified user has a shell that precludes logins
-# on whichever operating system.
-is-login-disabled() {
-	shell=$(egetshell "$1")
-
-	case ${shell} in
-		/bin/false|/usr/bin/false|/sbin/nologin|/usr/sbin/nologin)
-			return 0 ;;
-		*)
-			return 1 ;;
-	esac
-}
-
 # Gets the name of the BSD-ish make command (pmake from NetBSD)
 #
 # This will return make (provided by system packages) for BSD userlands,
@@ -180,3 +130,7 @@ get_mounts() {
 	done
 }
 
+_dead_portability_user_funcs() { die "if you really need this, please file a bug for base-system@gentoo.org"; }
+is-login-disabled() { _dead_portability_user_funcs; }
+
+fi

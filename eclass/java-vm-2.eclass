@@ -1,4 +1,4 @@
-# Copyright 1999-2004 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # -----------------------------------------------------------------------------
@@ -11,7 +11,7 @@
 #
 # -----------------------------------------------------------------------------
 
-inherit eutils fdo-mime multilib prefix
+inherit eutils fdo-mime multilib pax-utils prefix
 
 DEPEND="=dev-java/java-config-2*"
 has "${EAPI}" 0 1 && DEPEND="${DEPEND} >=sys-apps/portage-2.1"
@@ -23,6 +23,7 @@ export WANT_JAVA_CONFIG=2
 
 JAVA_VM_CONFIG_DIR="/usr/share/java-config-2/vm"
 JAVA_VM_DIR="/usr/lib/jvm"
+JAVA_VM_SYSTEM="/etc/java-config-2/current-system-vm"
 JAVA_VM_BUILD_ONLY="${JAVA_VM_BUILD_ONLY:-FALSE}"
 
 EXPORT_FUNCTIONS pkg_setup pkg_postinst pkg_prerm pkg_postrm
@@ -36,9 +37,18 @@ java-vm-2_pkg_setup() {
 }
 
 java-vm-2_pkg_postinst() {
-	# Set the generation-2 system VM, if it isn't set
-	if [[ -z "$(java-config-2 -f)" ]]; then
+	# Set the generation-2 system VM, if it isn't set or the setting is invalid
+	# Note that we cannot rely on java-config here, as it will silently recognize
+	# e.g. icedtea6-bin as valid system VM if icedtea6 is set but invalid (e.g. due
+	# to the migration to icedtea-6)
+	if [[ ! -L "${JAVA_VM_SYSTEM}" ]]; then
 		java_set_default_vm_
+	else
+		local current_vm_path="$(readlink "${JAVA_VM_SYSTEM}")"
+		local current_vm="$(basename "${current_vm_path}")"
+		if [[ ! -L "${JAVA_VM_DIR}/${current_vm}" ]]; then
+			java_set_default_vm_
+		fi
 	fi
 
 	java-vm_check-nsplugin
@@ -57,7 +67,7 @@ java-vm_check-nsplugin() {
 	has ${EAPI:-0} 0 1 2 && ! use prefix && EPREFIX=
 
 	# Install a default nsplugin if we don't already have one
-	if has nsplugin ${IUSE} && use nsplugin; then
+	if in_iuse nsplugin && use nsplugin; then
 		if [[ ! -f "${EPREFIX}"/usr/${libdir}/nsbrowser/plugins/javaplugin.so ]]; then
 			einfo "No system nsplugin currently set."
 			java-vm_set-nsplugin
@@ -84,7 +94,8 @@ java-vm_set-nsplugin() {
 }
 
 java-vm-2_pkg_prerm() {
-	if [[ "$(java-config -f 2>/dev/null)" == "${VMHANDLE}" ]]; then
+	# Although REPLACED_BY_VERSION is EAPI=4, we shouldn't need to check EAPI for this use case
+	if [[ "$(GENTOO_VM="" java-config -f 2>/dev/null)" == "${VMHANDLE}" && -z "${REPLACED_BY_VERSION}" ]]; then
 		ewarn "It appears you are removing your system-vm!"
 		ewarn "Please run java-config -L to list available VMs,"
 		ewarn "then use java-config -S to set a new system-vm!"
@@ -114,7 +125,10 @@ get_system_arch() {
 set_java_env() {
 	debug-print-function ${FUNCNAME} $*
 
-	has ${EAPI:-0} 0 1 2 && ! use prefix && ED="${D}"
+	if has ${EAPI:-0} 0 1 2 && ! use prefix ; then
+		ED="${D}"
+		EPREFIX=""
+	fi
 
 	local platform="$(get_system_arch)"
 	local env_file="${ED}${JAVA_VM_CONFIG_DIR}/${VMHANDLE}"
@@ -135,6 +149,7 @@ set_java_env() {
 		-e "s/@PN@/${PN}/g" \
 		-e "s/@PV@/${PV}/g" \
 		-e "s/@PF@/${PF}/g" \
+		-e "s/@SLOT@/${SLOT}/g" \
 		-e "s/@PLATFORM@/${platform}/g" \
 		-e "s/@LIBDIR@/$(get_libdir)/g" \
 		-e "/^LDPATH=.*lib\\/\\\"/s|\"\\(.*\\)\"|\"\\1${platform}/:\\1${platform}/server/\"|" \
@@ -155,8 +170,42 @@ set_java_env() {
 
 	# Make the symlink
 	dodir "${JAVA_VM_DIR}"
-	dosym ${java_home} ${JAVA_VM_DIR}/${VMHANDLE} \
+	dosym ${java_home#${EPREFIX}} ${JAVA_VM_DIR}/${VMHANDLE} \
 		|| die "Failed to make VM symlink at ${JAVA_VM_DIR}/${VMHANDLE}"
+}
+
+# -----------------------------------------------------------------------------
+# @ebuild-function java-vm_set-pax-markings
+#
+# Set PaX markings on all JDK/JRE executables to allow code-generation on
+# the heap by the JIT compiler.
+# 
+# The markings need to be set prior to the first invocation of the the freshly
+# built / installed VM. Be it before creating the Class Data Sharing archive or
+# generating cacerts. Otherwise a PaX enabled kernel will kill the VM.
+# Bug #215225 #389751
+#
+# @example
+#   java-vm_set-pax-markings "${S}"
+#   java-vm_set-pax-markings "${ED}"/opt/${P}
+#
+# @param $1 - JDK/JRE base directory.
+# -----------------------------------------------------------------------------
+java-vm_set-pax-markings() {
+	debug-print-function ${FUNCNAME} "$*"
+	[[ $# -ne 1 ]] && die "${FUNCNAME}: takes exactly one argument"
+	[[ ! -f "${1}"/bin/java ]] \
+		&& die "${FUNCNAME}: argument needs to be JDK/JRE base directory"
+
+	local executables=( "${1}"/bin/* )
+	[[ -d "${1}"/jre ]] && executables+=( "${1}"/jre/bin/* )
+
+	# Usally disabeling MPROTECT is sufficent
+	local pax_markings="m"
+	# On x86 for heap sizes over 700MB disable SEGMEXEC and PAGEEXEC as well.
+	use x86 && pax_markings="msp"
+
+	pax-mark ${pax_markings} $(list-paxables "${executables[@]}")
 }
 
 # -----------------------------------------------------------------------------
@@ -182,11 +231,30 @@ java-vm_revdep-mask() {
 
 	dodir /etc/revdep-rebuild/
 	echo "SEARCH_DIRS_MASK=\"${VMROOT}\""> "${ED}/etc/revdep-rebuild/61-${VMHANDLE}"
+}
 
-	elog "A revdep-rebuild control file was installed to prevent reinstalls due to"
-	elog "missing dependencies (see bug #177925 for more info). Note that some parts"
-	elog "of the JVM may require dependencies that are pulled only through respective"
-	elog "USE flags (typically X, alsa, odbc) and some Java code may fail without them."
+# -----------------------------------------------------------------------------
+# @ebuild-function java-vm_sandbox-predict
+#
+# Install a sandbox control file. Specified paths won't cause a sandbox
+# violation if opened read write but no write takes place. See bug 388937#c1
+#
+# @example
+#   java-vm_sandbox-predict /dev/random /proc/self/coredump_filter
+# -----------------------------------------------------------------------------
+java-vm_sandbox-predict() {
+	debug-print-function ${FUNCNAME} "$*"
+	[[ -z "${1}" ]] && die "${FUNCNAME} takes at least one argument"
+
+	has ${EAPI:-0} 0 1 2 && ! use prefix && ED="${D}"
+
+	local path path_arr=("$@")
+	# subshell this to prevent IFS bleeding out dependant on bash version.
+	# could use local, which *should* work, but that requires a lot of testing.
+	path=$(IFS=":"; echo "${path_arr[*]}")
+	dodir /etc/sandbox.d
+	echo "SANDBOX_PREDICT=\"${path}\"" > "${ED}/etc/sandbox.d/20${VMHANDLE}" \
+		|| die "Failed to write sandbox control file"
 }
 
 java_get_plugin_dir_() {

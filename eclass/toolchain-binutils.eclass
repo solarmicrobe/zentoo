@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # Maintainer: Toolchain Ninjas <toolchain@gentoo.org>
@@ -7,7 +7,8 @@
 # us easily merge multiple versions for multiple targets (if we wish) and
 # then switch the versions on the fly (with `binutils-config`).
 #
-# binutils-9999           -> live cvs
+# binutils-99999999       -> live cvs
+# binutils-9999           -> live git
 # binutils-9999_preYYMMDD -> nightly snapshot date YYMMDD
 # binutils-#              -> normal release
 
@@ -16,26 +17,34 @@ if [[ -n ${BINUTILS_TYPE} ]] ; then
 	BTYPE=${BINUTILS_TYPE}
 else
 	case ${PV} in
-	9999)      BTYPE="cvs";;
+	99999999)  BTYPE="cvs";;
+	9999)      BTYPE="git";;
 	9999_pre*) BTYPE="snap";;
 	*)         BTYPE="rel";;
 	esac
 fi
 
-if [[ ${BTYPE} == "cvs" ]] ; then
+case ${BTYPE} in
+cvs)
 	extra_eclass="cvs"
 	ECVS_SERVER="sourceware.org:/cvs/src"
 	ECVS_MODULE="binutils"
 	ECVS_USER="anoncvs"
 	ECVS_PASS="anoncvs"
 	BVER="cvs"
-elif [[ ${BTYPE} == "snap" ]] ; then
+	;;
+git)
+	extra_eclass="git-2"
+	BVER="git"
+	EGIT_REPO_URI="git://sourceware.org/git/binutils.git"
+	;;
+snap)
 	BVER=${PV/9999_pre}
-elif [[ ${BTYPE} == "rel" ]] ; then
-	BVER=${PV}
-else
-	BVER=${BINUTILS_VER}
-fi
+	;;
+*)
+	BVER=${BINUTILS_VER:-${PV}}
+	;;
+esac
 
 inherit eutils libtool flag-o-matic gnuconfig multilib versionator ${extra_eclass}
 EXPORT_FUNCTIONS src_unpack src_compile src_test src_install pkg_postinst pkg_postrm
@@ -52,14 +61,14 @@ DESCRIPTION="Tools necessary to build programs"
 HOMEPAGE="http://sources.redhat.com/binutils/"
 
 case ${BTYPE} in
-	cvs)  SRC_URI="";;
+	cvs|git) SRC_URI="" ;;
 	snap) SRC_URI="ftp://gcc.gnu.org/pub/binutils/snapshots/binutils-${BVER}.tar.bz2";;
 	rel)
-		SRC_URI="mirror://kernel/linux/devel/binutils/binutils-${PV}.tar.bz2
-			mirror://kernel/linux/devel/binutils/test/binutils-${PV}.tar.bz2
-			mirror://gnu/binutils/binutils-${PV}.tar.bz2"
+		SRC_URI="mirror://kernel/linux/devel/binutils/binutils-${BVER}.tar.bz2
+			mirror://kernel/linux/devel/binutils/test/binutils-${BVER}.tar.bz2
+			mirror://gnu/binutils/binutils-${BVER}.tar.bz2"
 		# disable kernel mirrors until kernel.org is back up #383579
-		SRC_URI="mirror://gnu/binutils/binutils-${PV}.tar.bz2"
+		SRC_URI="mirror://gnu/binutils/binutils-${BVER}.tar.bz2"
 esac
 add_src_uri() {
 	[[ -z $2 ]] && return
@@ -67,8 +76,8 @@ add_src_uri() {
 	set -- mirror://gentoo http://dev.gentoo.org/~vapier/dist
 	SRC_URI="${SRC_URI} ${@/%//${a}}"
 }
-add_src_uri binutils-${PV}-patches-${PATCHVER}.tar.bz2 ${PATCHVER}
-add_src_uri binutils-${PV}-uclibc-patches-${UCLIBC_PATCHVER}.tar.bz2 ${UCLIBC_PATCHVER}
+add_src_uri binutils-${BVER}-patches-${PATCHVER}.tar.bz2 ${PATCHVER}
+add_src_uri binutils-${BVER}-uclibc-patches-${UCLIBC_PATCHVER}.tar.bz2 ${UCLIBC_PATCHVER}
 add_src_uri elf2flt-${ELF2FLT_VER}.tar.bz2 ${ELF2FLT_VER}
 
 if version_is_at_least 2.18 ; then
@@ -97,7 +106,10 @@ DEPEND="${RDEPEND}
 	virtual/yacc"
 
 S=${WORKDIR}/binutils
-[[ ${BVER} != "cvs" ]] && S=${S}-${BVER}
+case ${BVER} in
+cvs|git) ;;
+*) S=${S}-${BVER} ;;
+esac
 
 LIBPATH=/usr/$(get_libdir)/binutils/${CTARGET}/${BVER}
 INCPATH=${LIBPATH}/include
@@ -110,10 +122,17 @@ else
 fi
 
 tc-binutils_unpack() {
-	unpack ${A}
+	case ${BTYPE} in
+	cvs) cvs_src_unpack ;;
+	git) git-2_src_unpack ;;
+	*)   unpack ${A} ;;
+	esac
 	mkdir -p "${MY_BUILDDIR}"
 	[[ -d ${WORKDIR}/patch ]] && mkdir "${WORKDIR}"/patch/skip
 }
+
+# In case the ebuild wants to add a few of their own.
+PATCHES=()
 
 tc-binutils_apply_patches() {
 	cd "${S}"
@@ -145,6 +164,7 @@ tc-binutils_apply_patches() {
 				die "sorry, but this binutils doesn't yet support uClibc :("
 			fi
 		fi
+		[[ ${#PATCHES[@]} -gt 0 ]] && epatch "${PATCHES[@]}"
 		epatch_user
 	fi
 
@@ -249,6 +269,7 @@ toolchain-binutils_src_compile() {
 		--enable-64-bit-bfd \
 		--enable-shared \
 		--disable-werror \
+		--with-bugurl=http://bugs.gentoo.org/ \
 		$(use_enable static-libs static) \
 		${EXTRA_ECONF}
 	echo ./configure "$@"

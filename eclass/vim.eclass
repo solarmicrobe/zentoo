@@ -30,7 +30,7 @@ if [[ ${MY_PN} != "vim-core" ]] ; then
 	PYTHON_USE_WITH_OPT="python"
 	PYTHON_USE_WITH="threads"
 fi
-inherit eutils vim-doc flag-o-matic versionator fdo-mime bash-completion prefix python
+inherit eutils vim-doc flag-o-matic versionator fdo-mime bash-completion-r1 prefix python
 
 HOMEPAGE="http://www.vim.org/"
 SLOT="0"
@@ -94,7 +94,6 @@ else
 		acl?     ( kernel_linux? ( sys-apps/acl ) )
 		ruby?    ( =dev-lang/ruby-1.8* )
 		!<app-vim/align-30-r1
-		!app-vim/vimspell
 		!<app-vim/vimbuddy-0.9.1-r1
 		!<app-vim/autoalign-11
 		!<app-vim/supertab-0.41"
@@ -624,9 +623,9 @@ vim_src_install() {
 
 	# bash completion script, bug #79018.
 	if [[ ${MY_PN} == "vim-core" ]] ; then
-		dobashcompletion "${FILESDIR}"/xxd-completion xxd
+		newbashcomp "${FILESDIR}"/xxd-completion xxd
 	else
-		dobashcompletion "${FILESDIR}"/${MY_PN}-completion ${MY_PN}
+		newbashcomp "${FILESDIR}"/${MY_PN}-completion ${MY_PN}
 	fi
 	# We shouldn't be installing the ex or view man page symlinks, as they
 	# are managed by eselect-vi
@@ -721,12 +720,6 @@ vim_pkg_postinst() {
 	fi
 
 	echo
-
-	# Display bash-completion message
-	if [[ ${MY_PN} == "vim-core" ]] ; then
-		export BASHCOMPLETION_NAME="xxd"
-	fi
-	bash-completion_pkg_postinst
 
 	# Make convenience symlinks
 	if [[ ${MY_PN} != "vim-core" ]] ; then

@@ -368,18 +368,13 @@ hardened_gcc_is_stable() {
 	return 1
 }
 
-_want_stuff() {
-	local var=$1 flag=$2
-	[[ -z ${!var} ]] && return 1
-	use ${flag} && return 0
-	return 1
-}
-want_boundschecking() { _want_stuff HTB_VER boundschecking ; }
 want_pie() {
 	! use hardened && [[ -n ${PIE_VER} ]] && use nopie && return 1
 	[[ -n ${PIE_VER} ]] && [[ -n ${SPECS_VER} ]] && return 0
 	tc_version_is_at_least 4.3.2 && return 1
-	_want_stuff PIE_VER !nopie
+	[[ -z ${PIE_VER} ]] && return 1
+	use !nopie && return 0
+	return 1
 }
 
 want_minispecs() {
@@ -813,6 +808,21 @@ toolchain_src_unpack() {
 	disable_multilib_libjava || die "failed to disable multilib java"
 }
 
+gcc-abi-map() {
+	# Convert the ABI name we use in Gentoo to what gcc uses
+	local map=()
+	case ${CTARGET} in
+	mips*)   map=("o32 32" "n32 n32" "n64 64") ;;
+	x86_64*) map=("amd64 m64" "x86 m32" "x32 mx32") ;;
+	esac
+
+	local m
+	for m in "${map[@]}" ; do
+		l=( ${m} )
+		[[ $1 == ${l[0]} ]] && echo ${l[1]} && break
+	done
+}
+
 gcc-multilib-configure() {
 	# if multilib is disabled, get out quick!
 	if ! is_multilib ; then
@@ -823,26 +833,23 @@ gcc-multilib-configure() {
 	fi
 
 	# translate our notion of multilibs into gcc's
-	local abi map=() list
-	case ${CTARGET} in
-	x86_64*)
-		# drop the 4.6.2 stuff once 4.7 goes stable
-		if tc_version_is_at_least 4.7 ||
-		   ( tc_version_is_at_least 4.6.2 && has x32 $(get_all_abis) )
-		then
-			map=(amd64:m64 x86:m32 x32:mx32)
-		fi
-		;;
-	esac
+	local abi list
 	for abi in $(get_all_abis) ; do
-		local m a l
-		for m in "${map[@]}" ; do
-			a=${m%:*}
-			l=${m#*:}
-			[[ ${abi} == ${a} ]] && list=",${l}${list}"
-		done
+		local l=$(gcc-abi-map ${abi})
+		[[ -n ${l} ]] && list+=",${l}"
 	done
-	[[ -n ${list} ]] && confgcc+=" --with-multilib-list=${list:1}"
+	if [[ -n ${list} ]] ; then
+		case ${CTARGET} in
+		x86_64*)
+			# drop the 4.6.2 stuff once 4.7 goes stable
+			if tc_version_is_at_least 4.7 ||
+			   ( tc_version_is_at_least 4.6.2 && has x32 $(get_all_abis) )
+			then
+				confgcc+=" --with-multilib-list=${list:1}"
+			fi
+			;;
+		esac
+	fi
 }
 
 gcc-compiler-configure() {
@@ -931,6 +938,7 @@ gcc-compiler-configure() {
 		confgcc+=" --disable-libquadmath"
 	fi
 
+	local with_abi_map=()
 	case $(tc-arch) in
 		arm)	#264534
 			local arm_arch="${CTARGET%%-*}"
@@ -950,12 +958,16 @@ gcc-compiler-configure() {
 			        confgcc+=" --with-float=hard"
 			fi
 			;;
-		# Add --with-abi flags to set default MIPS ABI
+		# Add --with-abi flags to set default ABI
 		mips)
-			local mips_abi=""
-			[[ ${DEFAULT_ABI} == n64 ]] && mips_abi="--with-abi=64"
-			[[ ${DEFAULT_ABI} == n32 ]] && mips_abi="--with-abi=n32"
-			[[ -n ${mips_abi} ]] && confgcc+=" ${mips_abi}"
+			confgcc+=" --with-abi=$(gcc-abi-map ${DEFAULT_ABI})"
+			;;
+		amd64)
+			# drop the older/ABI checks once this get's merged into some
+			# version of gcc upstream
+			if [[ ${PV} == "4.6.2" ]] && has x32 $(get_all_abis) ; then
+				confgcc+=" --with-abi=$(gcc-abi-map ${DEFAULT_ABI})"
+			fi
 			;;
 		# Default arch for x86 is normally i386, lets give it a bump
 		# since glibc will do so based on CTARGET anyways
@@ -1159,14 +1171,14 @@ gcc_do_configure() {
 	esac
 	tc_version_is_at_least 3.4 || confgcc+=" --disable-libunwind-exceptions"
 
-	# create a sparc*linux*-{gcc,g++} that can handle -m32 and -m64 (biarch)
-	if [[ ${CTARGET} == sparc*linux* ]] \
-		&& is_multilib \
-		&& ! is_crosscompile \
-		&& tc_version_is_at_least 4.3
-	then
-		confgcc+=" --enable-targets=all"
-	fi
+	# if the target can do biarch (-m32/-m64), enable it.  overhead should
+	# be small, and should simplify building of 64bit kernels in a 32bit
+	# userland by not needing sys-devel/kgcc64.  #349405
+	case $(tc-arch) in
+	ppc|ppc64) tc_version_is_at_least 3.4 && confgcc+=" --enable-targets=all" ;;
+	sparc)     tc_version_is_at_least 4.4 && confgcc+=" --enable-targets=all" ;;
+	amd64|x86) tc_version_is_at_least 4.3 && confgcc+=" --enable-targets=all" ;;
+	esac
 
 	tc_version_is_at_least 4.3 && set -- "$@" \
 		--with-bugurl=http://bugs.gentoo.org/ \
@@ -1195,6 +1207,16 @@ gcc_do_configure() {
 
 	# return to whatever directory we were in before
 	popd > /dev/null
+}
+
+has toolchain_death_notice ${EBUILD_DEATH_HOOKS} || EBUILD_DEATH_HOOKS+=" toolchain_death_notice"
+toolchain_death_notice() {
+	pushd "${WORKDIR}"/build >/dev/null
+	tar jcf gcc-build-logs.tar.bz2 $(find -name config.log)
+	eerror
+	eerror "Please include ${PWD}/gcc-build-logs.tar.bz2 in your bug report"
+	eerror
+	popd >/dev/null
 }
 
 # This function accepts one optional argument, the make target to be used.
@@ -1236,10 +1258,12 @@ gcc_do_make() {
 
 	# the gcc docs state that parallel make isnt supported for the
 	# profiledbootstrap target, as collisions in profile collecting may occur.
-	[[ ${GCC_MAKE_TARGET} == "profiledbootstrap" ]] && export MAKEOPTS="${MAKEOPTS} -j1"
-
-	# boundschecking seems to introduce parallel build issues
-	want_boundschecking && export MAKEOPTS="${MAKEOPTS} -j1"
+	# boundschecking also seems to introduce parallel build issues.
+	if [[ ${GCC_MAKE_TARGET} == "profiledbootstrap" ]] ||
+	   use_if_iuse boundschecking
+	then
+		export MAKEOPTS="${MAKEOPTS} -j1"
+	fi
 
 	if [[ ${GCC_MAKE_TARGET} == "all" ]] ; then
 		STAGE1_CFLAGS=${STAGE1_CFLAGS-"${CFLAGS}"}
@@ -1714,14 +1738,13 @@ gcc_quick_unpack() {
 			unpack gcc-${SPECS_GCC_VER}-specs-${SPECS_VER}.tar.bz2
 	fi
 
-	want_boundschecking && \
-		unpack "bounds-checking-gcc-${HTB_GCC_VER}-${HTB_VER}.patch.bz2"
+	use_if_iuse boundschecking && unpack "bounds-checking-gcc-${HTB_GCC_VER}-${HTB_VER}.patch.bz2"
 
 	popd > /dev/null
 }
 
 do_gcc_HTB_patches() {
-	want_boundschecking || return 0
+	use_if_iuse boundschecking || return 0
 
 	# modify the bounds checking patch with a regression patch
 	epatch "${WORKDIR}/bounds-checking-gcc-${HTB_GCC_VER}-${HTB_VER}.patch"
@@ -1731,10 +1754,6 @@ do_gcc_HTB_patches() {
 # do various updates to PIE logic
 do_gcc_PIE_patches() {
 	want_pie || return 0
-
-	want_boundschecking \
-		&& rm -f "${WORKDIR}"/piepatch/*/*-boundschecking-no.patch* \
-		|| rm -f "${WORKDIR}"/piepatch/*/*-boundschecking-yes.patch*
 
 	use vanilla && return 0
 
@@ -1845,20 +1864,18 @@ gcc_version_patch() {
 	tc_version_is_at_least 4.3 && return 0
 
 	local version_string=${GCC_CONFIG_VER}
-	[[ -n ${BRANCH_UPDATE} ]] && version_string="${version_string} ${BRANCH_UPDATE}"
+	[[ -n ${BRANCH_UPDATE} ]] && version_string+=" ${BRANCH_UPDATE}"
 
 	einfo "patching gcc version: ${version_string} (${BRANDING_GCC_PKGVERSION})"
 
+	local gcc_sed=( -e 's:gcc\.gnu\.org/bugs\.html:bugs\.gentoo\.org/:' )
 	if grep -qs VERSUFFIX "${S}"/gcc/version.c ; then
-		sed -i -e "s~VERSUFFIX \"\"~VERSUFFIX \" (${BRANDING_GCC_PKGVERSION})\"~" \
-			"${S}"/gcc/version.c || die "failed to update VERSUFFIX with Gentoo branding"
+		gcc_sed+=( -e "/VERSUFFIX \"\"/s:\"\":\" (${BRANDING_GCC_PKGVERSION})\":" )
 	else
 		version_string="${version_string} (${BRANDING_GCC_PKGVERSION})"
-		sed -i -e "s~\(const char version_string\[\] = \"\).*\(\".*\)~\1$version_string\2~" \
-			"${S}"/gcc/version.c || die "failed to update version.c with Gentoo branding."
+		gcc_sed+=( -e "/const char version_string\[\] = /s:= \".*\":= \"${version_string}\":" )
 	fi
-	sed -i -e 's~gcc\.gnu\.org\/bugs\.html~bugs\.gentoo\.org\/~' \
-		"${S}"/gcc/version.c || die "Failed to change the bug URL"
+	sed -i "${gcc_sed[@]}" "${S}"/gcc/version.c || die
 }
 
 # This is a historical wart.  The original Gentoo/amd64 port used:

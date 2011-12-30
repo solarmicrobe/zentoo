@@ -236,7 +236,7 @@ git_fetch() {
 	if [[ ! -d ${EGIT_STORE_DIR} ]] ; then
 		debug-print "${FUNCNAME}: initial clone. creating git directory"
 		addwrite /
-		mkdir -p "${EGIT_STORE_DIR}" \
+		mkdir -m 775 -p "${EGIT_STORE_DIR}" \
 			|| die "${EGIT}: can't mkdir ${EGIT_STORE_DIR}."
 		export SANDBOX_WRITE="${SANDBOX_WRITE%%:/}"
 	fi

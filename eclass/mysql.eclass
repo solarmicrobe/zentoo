@@ -141,8 +141,9 @@ for i in "mysql" "mysql-community" "mysql-cluster" "mariadb" ; do
 	DEPEND="${DEPEND} !dev-db/${i}"
 done
 
+# prefix: first need to implement something for #196294
 RDEPEND="${DEPEND}
-		!minimal? ( dev-db/mysql-init-scripts )
+		!minimal? ( !prefix? ( dev-db/mysql-init-scripts ) )
 		selinux? ( sec-policy/selinux-mysql )"
 
 DEPEND="${DEPEND}

@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: autotools-utils.eclass
@@ -10,7 +10,11 @@
 # autotools-utils.eclass is autotools.eclass(5) and base.eclass(5) wrapper
 # providing all inherited features along with econf arguments as Bash array,
 # out of source build with overridable build dir location, static archives
-# handling, libtool files removal, enable/disable debug handling.
+# handling, libtool files removal.
+#
+# Please note note that autotools-utils does not support mixing of its phase
+# functions with regular econf/emake calls. If necessary, please call
+# autotools-utils_src_compile instead of the latter.
 #
 # @EXAMPLE:
 # Typical ebuild using autotools-utils.eclass:
@@ -88,24 +92,28 @@ case ${EAPI:-0} in
 	*) die "EAPI=${EAPI} is not supported" ;;
 esac
 
-inherit autotools base eutils libtool
+inherit autotools eutils libtool
 
 EXPORT_FUNCTIONS src_prepare src_configure src_compile src_install src_test
 
 # @ECLASS-VARIABLE: AUTOTOOLS_BUILD_DIR
+# @DEFAULT_UNSET
 # @DESCRIPTION:
 # Build directory, location where all autotools generated files should be
 # placed. For out of source builds it defaults to ${WORKDIR}/${P}_build.
 
 # @ECLASS-VARIABLE: AUTOTOOLS_IN_SOURCE_BUILD
+# @DEFAULT_UNSET
 # @DESCRIPTION:
 # Set to enable in-source build.
 
 # @ECLASS-VARIABLE: ECONF_SOURCE
+# @DEFAULT_UNSET
 # @DESCRIPTION:
 # Specify location of autotools' configure script. By default it uses ${S}.
 
 # @ECLASS-VARIABLE: myeconfargs
+# @DEFAULT_UNSET
 # @DESCRIPTION:
 # Optional econf arguments as Bash array. Should be defined before calling src_configure.
 # @CODE
@@ -118,6 +126,36 @@ EXPORT_FUNCTIONS src_prepare src_configure src_compile src_install src_test
 # 	)
 # 	autotools-utils_src_configure
 # }
+# @CODE
+
+# @ECLASS-VARIABLE: DOCS
+# @DEFAULT_UNSET
+# @DESCRIPTION:
+# Array containing documents passed to dodoc command.
+#
+# Example:
+# @CODE
+# DOCS=( NEWS README )
+# @CODE
+
+# @ECLASS-VARIABLE: HTML_DOCS
+# @DEFAULT_UNSET
+# @DESCRIPTION:
+# Array containing documents passed to dohtml command.
+#
+# Example:
+# @CODE
+# HTML_DOCS=( doc/html/ )
+# @CODE
+
+# @ECLASS-VARIABLE: PATCHES
+# @DEFAULT_UNSET
+# @DESCRIPTION:
+# PATCHES array variable containing all various patches to be applied.
+#
+# Example:
+# @CODE
+# PATCHES=( "${FILESDIR}"/${P}-mypatch.patch )
 # @CODE
 
 # Determine using IN or OUT source build
@@ -200,6 +238,15 @@ remove_libtool_files() {
 			rm -f "${f}" || die
 		fi
 	done
+
+	# check for invalid eclass use
+	# this is the most commonly used function, so do it here
+	_check_build_dir
+	if [[ ! -d "${AUTOTOOLS_BUILD_DIR}" ]]; then
+		eqawarn "autotools-utils used but autotools-utils_src_configure was never called."
+		eqawarn "This is not supported and never was. Please report a bug against"
+		eqawarn "the offending ebuild. This will become a fatal error in a near future."
+	fi
 }
 
 # @FUNCTION: autotools-utils_src_prepare
@@ -207,10 +254,15 @@ remove_libtool_files() {
 # The src_prepare function.
 #
 # Supporting PATCHES array and user patches. See base.eclass(5) for reference.
+#
+# This function calls elibtoolize implicitly. If you need to call eautoreconf
+# afterwards, please use AT_NOELIBTOOLIZE=yes to avoid it being called twice.
 autotools-utils_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	base_src_prepare
+	[[ ${PATCHES} ]] && epatch "${PATCHES[@]}"
+	epatch_user
+
 	elibtoolize --patch-only
 }
 
@@ -232,16 +284,6 @@ autotools-utils_src_configure() {
 	# Common args
 	local econfargs=()
 
-	# Handle debug found in IUSE
-	if in_iuse debug; then
-		local debugarg=$(use_enable debug)
-		if ! has "${debugarg}" "${myeconfargs[@]}"; then
-			eqawarn 'Implicit $(use_enable debug) for IUSE="debug" is no longer supported.'
-			eqawarn 'Please add the necessary arg to myeconfargs if requested.'
-			eqawarn 'The autotools-utils eclass will stop warning about it on Oct 15th.'
-		fi
-	fi
-
 	# Handle static-libs found in IUSE, disable them by default
 	if in_iuse static-libs; then
 		econfargs+=(
@@ -256,7 +298,7 @@ autotools-utils_src_configure() {
 	_check_build_dir
 	mkdir -p "${AUTOTOOLS_BUILD_DIR}" || die "mkdir '${AUTOTOOLS_BUILD_DIR}' failed"
 	pushd "${AUTOTOOLS_BUILD_DIR}" > /dev/null
-	base_src_configure "${econfargs[@]}" "$@"
+	econf "${econfargs[@]}" "$@"
 	popd > /dev/null
 }
 
@@ -268,7 +310,7 @@ autotools-utils_src_compile() {
 
 	_check_build_dir
 	pushd "${AUTOTOOLS_BUILD_DIR}" > /dev/null
-	base_src_compile "$@"
+	emake "$@" || die 'emake failed'
 	popd > /dev/null
 }
 
@@ -285,8 +327,16 @@ autotools-utils_src_install() {
 
 	_check_build_dir
 	pushd "${AUTOTOOLS_BUILD_DIR}" > /dev/null
-	base_src_install "$@"
+	emake DESTDIR="${D}" "$@" install || die "emake install failed"
 	popd > /dev/null
+
+	# XXX: support installing them from builddir as well?
+	if [[ ${DOCS} ]]; then
+		dodoc "${DOCS[@]}" || die "dodoc failed"
+	fi
+	if [[ ${HTML_DOCS} ]]; then
+		dohtml -r "${HTML_DOCS[@]}" || die "dohtml failed"
+	fi
 
 	# Remove libtool files and unnecessary static libs
 	remove_libtool_files
