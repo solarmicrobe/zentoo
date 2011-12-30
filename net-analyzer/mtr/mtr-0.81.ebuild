@@ -8,8 +8,7 @@ inherit eutils autotools flag-o-matic
 
 DESCRIPTION="My TraceRoute, an Excellent network diagnostic tool"
 HOMEPAGE="http://www.bitwizard.nl/mtr/"
-SRC_URI="
-	ftp://ftp.bitwizard.nl/mtr/${P}.tar.gz
+SRC_URI="ftp://ftp.bitwizard.nl/mtr/${P}.tar.gz
 	mirror://gentoo/gtk-2.0-for-mtr.m4.bz2"
 
 LICENSE="GPL-2"
@@ -24,7 +23,7 @@ DEPEND="${RDEPEND}
 	gtk? ( dev-util/pkgconfig )"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PV}-impl-dec.patch
+	epatch "${FILESDIR}"/0.80-impl-dec.patch
 
 	# Keep this comment and following mv, even in case ebuild does not need
 	# it: kept gtk-2.0.m4 in SRC_URI but you'll have to mv it before autoreconf
@@ -42,6 +41,7 @@ src_configure() {
 
 src_install() {
 	emake DESTDIR="${D}" install
+	dodoc AUTHORS ChangeLog FORMATS NEWS README SECURITY TODO
 
 	if use !prefix ; then
 		fowners root:0 /usr/sbin/mtr
@@ -51,5 +51,4 @@ src_install() {
 			fperms 0710 /usr/sbin/mtr
 		fi
 	fi
-	dodoc AUTHORS ChangeLog FORMATS NEWS README SECURITY TODO
 }
