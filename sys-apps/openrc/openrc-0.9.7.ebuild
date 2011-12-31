@@ -4,28 +4,27 @@
 
 EAPI=4
 
-EGIT_REPO_URI="git://git.overlays.gentoo.org/proj/${PN}.git"
-[[ ${PV} == "9999" ]] && SCM_ECLASS="git-2"
-inherit eutils flag-o-matic multilib toolchain-funcs ${SCM_ECLASS}
-unset SCM_ECLASS
+inherit eutils flag-o-matic multilib pam toolchain-funcs
 
 DESCRIPTION="OpenRC manages the services, startup and shutdown of a host"
 HOMEPAGE="http://www.gentoo.org/proj/en/base/openrc/"
-if [[ ${PV} != "9999" ]] ; then
-	SRC_URI="mirror://gentoo/${P}.tar.bz2"
-	KEYWORDS="amd64"
-fi
+SRC_URI="mirror://github/zentoo/${PN}/${P}-zentoo-${PR}.tar.bz2"
 
 LICENSE="BSD-2"
 SLOT="0"
-IUSE="debug elibc_glibc ncurses pam selinux unicode kernel_linux kernel_FreeBSD"
+KEYWORDS="amd64"
+IUSE="debug elibc_glibc ncurses pam selinux static-libs unicode kernel_linux kernel_FreeBSD"
 
 RDEPEND="virtual/init
+	kernel_FreeBSD? ( || ( >=sys-freebsd/freebsd-ubin-9.0_rc sys-process/fuser-bsd ) )
 	elibc_glibc? ( >=sys-libs/glibc-2.5 )
 	ncurses? ( sys-libs/ncurses )
-	pam? ( virtual/pam )
+	pam? ( sys-auth/pambase )
 	>=sys-apps/baselayout-2.0.0
-	kernel_linux? ( !<sys-apps/module-init-tools-3.2.2-r2 )
+	kernel_linux? (
+		!<sys-apps/module-init-tools-3.2.2-r2
+		sys-process/psmisc
+	)
 	!<sys-fs/udev-133
 	!<sys-apps/sysvinit-2.86-r11"
 DEPEND="${RDEPEND}
@@ -35,7 +34,6 @@ make_args() {
 	unset LIBDIR #266688
 
 	MAKE_ARGS="${MAKE_ARGS} LIBNAME=$(get_libdir) LIBEXECDIR=/$(get_libdir)/rc"
-	MAKE_ARGS="${MAKE_ARGS} MKOLDNET=yes"
 
 	local brand="Unknown"
 	if use kernel_linux ; then
@@ -49,6 +47,9 @@ make_args() {
 			MAKE_ARGS="${MAKE_ARGS} MKSELINUX=yes"
 	fi
 	export BRANDING="Gentoo ${brand}"
+	if ! use static-libs; then
+			MAKE_ARGS="${MAKE_ARGS} MKSTATICLIBS=no"
+	fi
 }
 
 pkg_setup() {
@@ -65,9 +66,6 @@ src_prepare() {
 		local ver="git-${EGIT_VERSION:0:6}"
 		sed -i "/^GITVER[[:space:]]*=/s:=.*:=${ver}:" mk/git.mk || die
 	fi
-
-	epatch "${FILESDIR}"/${P}-deprecation_warning.patch
-	epatch "${FILESDIR}"/${P}-ccwgroup.patch #367467
 
 	# Allow user patches to be applied without modifying the ebuild
 	epatch_user
@@ -97,9 +95,6 @@ src_install() {
 	make_args
 	emake ${MAKE_ARGS} DESTDIR="${D}" install
 
-	# install the readme for the new network scripts
-	dodoc README.newnet
-
 	# move the shared libs back to /usr so ldscript can install
 	# more of a minimal set of files
 	# disabled for now due to #270646
@@ -115,13 +110,6 @@ src_install() {
 	cp -PR "${D}"/etc/runlevels "${D}"/usr/share/${PN} || die
 	rm -rf "${D}"/etc/runlevels
 
-	# Stick with "old" net as the default for now
-	doconfd conf.d/net || die
-	pushd "${D}"/usr/share/${PN}/runlevels/boot > /dev/null
-	rm -f network staticroute
-	ln -s /etc/init.d/net.lo net.lo
-	popd > /dev/null
-
 	# Setup unicode defaults for silly unicode users
 	set_config_yes_no /etc/rc.conf unicode use unicode
 
@@ -136,6 +124,9 @@ src_install() {
 	# Support for logfile rotation
 	insinto /etc/logrotate.d
 	newins "${FILESDIR}"/openrc.logrotate openrc
+
+	# install the gentoo pam.d file
+	newpamd "${FILESDIR}"/start-stop-daemon.pam start-stop-daemon
 }
 
 add_boot_init() {
@@ -168,13 +159,6 @@ add_boot_init_mit_config() {
 
 pkg_preinst() {
 	local f LIBDIR=$(get_libdir)
-
-	# default net script is just comments, so no point in biting people
-	# in the ass by accident.  we save in preinst so that the package
-	# manager doesnt go throwing etc-update crap at us -- postinst is
-	# too late to prevent that.  this behavior also lets us keep the
-	# file in the CONTENTS for binary packages.
-	[[ -e ${ROOT}/etc/conf.d/net ]] && cp "${ROOT}"/etc/conf.d/net "${D}"/etc/conf.d/
 
 	# avoid default thrashing in conf.d files when possible #295406
 	if [[ -e ${ROOT}/etc/conf.d/hostname ]] ; then
@@ -219,19 +203,6 @@ pkg_preinst() {
 		elog "Please migrate your settings to /etc/rc.conf as applicable"
 		elog "and delete /etc/conf.d/rc"
 	fi
-
-	# force net init.d scripts into symlinks
-	for f in "${ROOT}"/etc/init.d/net.* ; do
-		[[ -e ${f} ]] || continue # catch net.* not matching anything
-		[[ ${f} == */net.lo ]] && continue # real file now
-		[[ ${f} == *.openrc.bak ]] && continue
-		if [[ ! -L ${f} ]] ; then
-			elog "Moved net service '${f##*/}' to '${f##*/}.openrc.bak' to force a symlink."
-			elog "You should delete '${f##*/}.openrc.bak' if you don't need it."
-			mv "${f}" "${f}.openrc.bak"
-			ln -snf net.lo "${f}"
-		fi
-	done
 
 	# termencoding was added in 0.2.1 and needed in boot
 	has_version ">=sys-apps/openrc-0.2.1" || add_boot_init termencoding
