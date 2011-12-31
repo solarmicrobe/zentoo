@@ -60,7 +60,6 @@ pkg_setup() {
 
 src_prepare() {
 	sed -i 's:0444:0644:' mk/sys.mk || die
-	sed -i "/^DIR/s:/openrc:/${PF}:" doc/Makefile || die #241342
 
 	if [[ ${PV} == "9999" ]] ; then
 		local ver="git-${EGIT_VERSION:0:6}"
@@ -334,36 +333,6 @@ pkg_postinst() {
 			cp -RPp "${ROOT}"/usr/share/${PN}/runlevels/shutdown/* \
 				"${ROOT}"/etc/runlevels/shutdown
 		fi
-	fi
-
-	# /etc/conf.d/net.example is no longer valid
-	local NET_EXAMPLE="${ROOT}/etc/conf.d/net.example"
-	local NET_MD5='8ebebfa07441d39eb54feae0ee4c8210'
-	if [[ -e "${NET_EXAMPLE}" ]] ; then
-		if [[ $(md5sum "${NET_EXAMPLE}") == ${NET_MD5}* ]]; then
-			rm -f "${NET_EXAMPLE}"
-			elog "${NET_EXAMPLE} has been removed."
-		else
-			sed -i '1i# This file is obsolete.\n' "${NET_EXAMPLE}"
-			elog "${NET_EXAMPLE} should be removed."
-		fi
-		elog "The new file is ${ROOT}/usr/share/doc/${PF}/net.example"
-	fi
-
-	# /etc/conf.d/wireless.example is no longer valid
-	local WIRELESS_EXAMPLE="${ROOT}/etc/conf.d/wireless.example"
-	local WIRELESS_MD5='d1fad7da940bf263c76af4d2082124a3'
-	if [[ -e "${WIRELESS_EXAMPLE}" ]] ; then
-		if [[ $(md5sum "${WIRELESS_EXAMPLE}") == ${WIRELESS_MD5}* ]]; then
-			rm -f "${WIRELESS_EXAMPLE}"
-			elog "${WIRELESS_EXAMPLE} is deprecated and has been removed."
-		else
-			sed -i '1i# This file is obsolete.\n' "${WIRELESS_EXAMPLE}"
-			elog "${WIRELESS_EXAMPLE} is deprecated and should be removed."
-		fi
-		elog "If you are using the old style network scripts,"
-		elog "Configure wireless settings in ${ROOT}/etc/conf.d/net"
-		elog "after reviewing ${ROOT}/usr/share/doc/${PF}/net.example"
 	fi
 
 	if [[ -d ${ROOT}/etc/modules.autoload.d ]] ; then
