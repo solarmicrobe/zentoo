@@ -1,0 +1,64 @@
+From e9fb0025197a800ab1708475574d370f844d2a87 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Benedikt=20B=C3=B6hm?= <bb@xnull.de>
+Date: Mon, 2 Jan 2012 21:14:27 +0100
+Subject: [PATCH] do not clobber L
+
+---
+ bson/bson-inl.h       |   16 ++++++++--------
+ bson/bsonobjbuilder.h |    6 +++---
+ 2 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/bson/bson-inl.h b/bson/bson-inl.h
+index b86d667..98267f2 100644
+--- a/bson/bson-inl.h
++++ b/bson/bson-inl.h
+@@ -66,19 +66,19 @@ namespace mongo {
+             }
+         case NumberLong:
+             if( r.type() == NumberLong ) {
+-                long long L = l._numberLong();
+-                long long R = r._numberLong();
+-                if( L < R ) return -1;
+-                if( L == R ) return 0;
++                long long left = l._numberLong();
++                long long right = r._numberLong();
++                if( left < right ) return -1;
++                if( left == right ) return 0;
+                 return 1;
+             }
+             goto dodouble;
+         case NumberInt:
+             if( r.type() == NumberInt ) {
+-                int L = l._numberInt();
+-                int R = r._numberInt();
+-                if( L < R ) return -1;
+-                return L == R ? 0 : 1;
++                int left = l._numberInt();
++                int right = r._numberInt();
++                if( left < right ) return -1;
++                return left == right ? 0 : 1;
+             }
+             // else fall through
+         case NumberDouble: 
+diff --git a/bson/bsonobjbuilder.h b/bson/bsonobjbuilder.h
+index f89d225..cc7065d 100644
+--- a/bson/bsonobjbuilder.h
++++ b/bson/bsonobjbuilder.h
+@@ -796,11 +796,11 @@ namespace mongo {
+         return *this;
+     }
+ 
+-    template < class L >
+-    inline BSONObjBuilder& _appendIt( BSONObjBuilder& _this, const StringData& fieldName, const L& vals ) {
++    template < class TL >
++    inline BSONObjBuilder& _appendIt( BSONObjBuilder& _this, const StringData& fieldName, const TL& vals ) {
+         BSONObjBuilder arrBuilder;
+         int n = 0;
+-        for( typename L::const_iterator i = vals.begin(); i != vals.end(); i++ )
++        for( typename TL::const_iterator i = vals.begin(); i != vals.end(); i++ )
+             arrBuilder.append( BSONObjBuilder::numStr(n++), *i );
+         _this.appendArray( fieldName, arrBuilder.done() );
+         return _this;
+-- 
+1.7.4.5
+

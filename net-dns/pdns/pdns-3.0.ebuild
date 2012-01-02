@@ -29,6 +29,7 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-lua-config.patch
 	epatch "${FILESDIR}"/${P}-mongodbbackend.patch
+	epatch "${FILESDIR}"/${P}-mongodb-2.0.patch
 	eautoreconf
 }
 

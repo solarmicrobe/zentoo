@@ -38,6 +38,7 @@ pkg_setup() {
 	enewuser mongodb -1 -1 /var/lib/${PN} mongodb
 
 	scons_opts=" --cxx=$(tc-getCXX) --use-system-all --sharedclient"
+
 	if use v8; then
 		scons_opts+=" --usev8"
 	else
@@ -47,14 +48,17 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-2.0-fix-scons.patch"
+	epatch "${FILESDIR}/${PN}-2.0.2-do-not-clobber-L.patch"
 
 	# drop -Werror
-	sed -i -e '/Werror/d' SConstruct || die
+	sed -i -e '/Werror/d' SConstruct
 
-	sed -i -e "s@jsapi.h@js/jsapi.h@g" \
-			-e "s@jsobj.h@js/jsobj.h@g" \
-			-e "s@jsdate.h@js/jsdate.h@g" \
-			-e "s@jsregexp.h@js/jsregexp.h@g" scripting/engine_spidermonkey.h
+	sed -i \
+		-e "s:jsapi.h:js/jsapi.h:g" \
+		-e "s:jsobj.h:js/jsobj.h:g" \
+		-e "s:jsdate.h:js/jsdate.h:g" \
+		-e "s:jsregexp.h:js/jsregexp.h:g" \
+		scripting/engine_spidermonkey.h
 }
 
 src_compile() {

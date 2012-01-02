@@ -1,0 +1,24 @@
+diff --git a/modules/mongodbbackend/Makefile.am b/modules/mongodbbackend/Makefile.am
+index 6ecd9f5..89fee89 100644
+--- a/modules/mongodbbackend/Makefile.am
++++ b/modules/mongodbbackend/Makefile.am
+@@ -1,4 +1,4 @@
+-AM_CPPFLAGS=@THREADFLAGS@
++AM_CPPFLAGS=@THREADFLAGS@ -fno-strict-aliasing
+ EXTRA_DIST=OBJECTFILES OBJECTLIBS 
+ 
+ INCLUDES=-I/usr/include/mongo/
+diff --git a/modules/mongodbbackend/mongodbbackend.hh b/modules/mongodbbackend/mongodbbackend.hh
+index 816128f..f4db9c8 100644
+--- a/modules/mongodbbackend/mongodbbackend.hh
++++ b/modules/mongodbbackend/mongodbbackend.hh
+@@ -4,6 +4,9 @@
+ #include "pdns/dnsbackend.hh"
+ 
+ #undef VERSION
++#include <memory>
++using std::auto_ptr;
++
+ #include <string>
+ using std::string;
+ 
