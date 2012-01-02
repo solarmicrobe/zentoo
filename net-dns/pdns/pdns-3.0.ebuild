@@ -3,7 +3,8 @@
 # $Header: $
 
 EAPI=2
-inherit eutils multilib
+
+inherit eutils multilib autotools
 
 DESCRIPTION="The PowerDNS Daemon"
 SRC_URI="http://downloads.powerdns.com/releases/${P}.tar.gz"
@@ -12,7 +13,7 @@ HOMEPAGE="http://www.powerdns.com/"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="debug doc ldap mysql postgres sqlite sqlite3 static opendbx"
+IUSE="debug doc ldap mongodb mysql postgres sqlite sqlite3 static opendbx"
 
 RDEPEND="mysql? ( virtual/mysql )
 	postgres? ( dev-db/postgresql-base )
@@ -20,18 +21,21 @@ RDEPEND="mysql? ( virtual/mysql )
 	sqlite? ( =dev-db/sqlite-2.8* )
 	sqlite3? ( =dev-db/sqlite-3* )
 	opendbx? ( dev-db/opendbx )
-	>=dev-libs/boost-1.31"
+	mongodb? ( dev-db/mongodb )
+	>=dev-libs/boost-1.34"
 DEPEND="${RDEPEND}
 	doc? ( app-doc/doxygen )"
 
 src_prepare() {
-	epatch "${FILESDIR}"/2.9.18-default-mysql-options.patch \
-		"${FILESDIR}"/${P}-gcc44.patch
+	epatch "${FILESDIR}"/${P}-lua-config.patch
+	epatch "${FILESDIR}"/${P}-mongodbbackend.patch
+	eautoreconf
 }
 
 src_configure() {
 	local modules="pipe geo" myconf=""
 
+	use mongodb && modules="${modules} mongodb"
 	use mysql && modules="${modules} gmysql"
 	use postgres && modules="${modules} gpgsql"
 	use sqlite && modules="${modules} gsqlite"
@@ -50,7 +54,7 @@ src_configure() {
 		--with-pgsql-lib=/usr/$(get_libdir) \
 		--with-mysql-lib=/usr/$(get_libdir) \
 		--with-sqlite-lib=/usr/$(get_libdir) \
-		--with-sqlite3-lib=/usr/$(get_libdir) \
+		--without-lua \
 		$(use_enable static static-binaries) \
 		${myconf} \
 		|| die "econf failed"
