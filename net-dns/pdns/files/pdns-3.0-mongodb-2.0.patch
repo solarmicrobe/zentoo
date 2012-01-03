@@ -1,5 +1,15 @@
+From 93f9360b4b1d6234b1beef06dda36ae01ee17a0f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Benedikt=20B=C3=B6hm?= <bb@xnull.de>
+Date: Tue, 3 Jan 2012 09:50:46 +0100
+Subject: [PATCH] mongodb 2.0 compatibility
+
+---
+ modules/mongodbbackend/Makefile.am       |    2 +-
+ modules/mongodbbackend/mongodbbackend.hh |    8 ++++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
 diff --git a/modules/mongodbbackend/Makefile.am b/modules/mongodbbackend/Makefile.am
-index 6ecd9f5..89fee89 100644
+index e3b4eb7..c37f734 100644
 --- a/modules/mongodbbackend/Makefile.am
 +++ b/modules/mongodbbackend/Makefile.am
 @@ -1,4 +1,4 @@
@@ -7,12 +17,18 @@ index 6ecd9f5..89fee89 100644
 +AM_CPPFLAGS=@THREADFLAGS@ -fno-strict-aliasing
  EXTRA_DIST=OBJECTFILES OBJECTLIBS 
  
- INCLUDES=-I/usr/include/mongo/
+ INCLUDES=-I/opt/mongo/include/mongo/
 diff --git a/modules/mongodbbackend/mongodbbackend.hh b/modules/mongodbbackend/mongodbbackend.hh
-index 816128f..f4db9c8 100644
+index 816128f..48c093b 100644
 --- a/modules/mongodbbackend/mongodbbackend.hh
 +++ b/modules/mongodbbackend/mongodbbackend.hh
-@@ -4,6 +4,9 @@
+@@ -1,14 +1,18 @@
+ #ifndef MONGODB_HH
+ #define MONGODB_HH
+ 
++// include this one first, so that L is not clobbered by PDNS' logging macro
++#include "client/dbclient.h"
++
  #include "pdns/dnsbackend.hh"
  
  #undef VERSION
@@ -22,3 +38,11 @@ index 816128f..f4db9c8 100644
  #include <string>
  using std::string;
  
+-#include "client/dbclient.h"
+-
+ class MONGODBException {
+ public:
+   MONGODBException(const string &ex) : what(ex){}
+-- 
+1.7.4.5
+

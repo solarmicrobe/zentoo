@@ -48,7 +48,6 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-2.0-fix-scons.patch"
-	epatch "${FILESDIR}/${PN}-2.0.2-do-not-clobber-L.patch"
 
 	# drop -Werror
 	sed -i -e '/Werror/d' SConstruct
