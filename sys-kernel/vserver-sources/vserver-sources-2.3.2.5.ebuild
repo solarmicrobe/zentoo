@@ -3,7 +3,7 @@
 # $Header: $
 
 ETYPE="sources"
-CKV="3.0.7"
+CKV="3.2"
 
 K_USEPV=1
 K_NOSETEXTRAVERSION=1
