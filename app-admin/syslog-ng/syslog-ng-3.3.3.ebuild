@@ -8,26 +8,35 @@ inherit autotools fixheadtails eutils multilib
 MY_PV=${PV/_/}
 DESCRIPTION="syslog replacement with advanced filtering features"
 HOMEPAGE="http://www.balabit.com/products/syslog_ng/"
-SRC_URI="http://www.balabit.com/downloads/files/syslog-ng/sources/${PV}/source/syslog-ng_${PV}.tar.gz"
+SRC_URI="http://www.balabit.com/downloads/files/syslog-ng/sources/${MY_PV}/source/syslog-ng_${MY_PV}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="caps hardened ipv6 +pcre selinux spoof-source sql ssl tcpd"
+IUSE="caps hardened ipv6 json mongodb +pcre selinux spoof-source sql ssl static tcpd"
 RESTRICT="test"
 
+LIBS_DEPEND="
+	spoof-source? ( net-libs/libnet )
+	ssl? ( dev-libs/openssl )
+	tcpd? ( >=sys-apps/tcp-wrappers-7.6 )
+	!static? ( >=dev-libs/eventlog-0.2.12 )
+	>=dev-libs/glib-2.10.1:2
+	json? ( >=dev-libs/json-glib-0.12 )
+	caps? ( sys-libs/libcap )
+	sql? ( >=dev-db/libdbi-0.8.3 )"
 RDEPEND="
+	!static? (
 		pcre? ( dev-libs/libpcre )
-		spoof-source? ( net-libs/libnet )
-		ssl? ( dev-libs/openssl )
-		tcpd? ( >=sys-apps/tcp-wrappers-7.6 )
-		>=dev-libs/eventlog-0.2.12
-		>=dev-libs/glib-2.10.1:2
-		caps? ( sys-libs/libcap )
-		sql? ( >=dev-db/libdbi-0.8.3 )"
+		${LIBS_DEPEND}
+	)"
 DEPEND="${RDEPEND}
+	${LIBS_DEPEND}
+	static? ( >=dev-libs/eventlog-0.2.12[static-libs] )
 	dev-util/pkgconfig
 	sys-devel/flex"
+
+S=${WORKDIR}/${PN}-${MY_PV}
 
 src_prepare() {
 	ht_fix_file configure.in
@@ -35,26 +44,38 @@ src_prepare() {
 }
 
 src_configure() {
+	local myconf
+
+	if use static ; then
+		myconf="${myconf} --enable-static-linking"
+	else
+		myconf="${myconf} --enable-dynamic-linking"
+	fi
 	econf \
 		--disable-dependency-tracking \
-		--enable-dynamic-linking \
+		--disable-systemd \
+		--with-ivykis=internal \
 		--sysconfdir=/etc/syslog-ng \
 		--localstatedir=/var/lib/misc \
 		--with-pidfile-dir=/var/run \
 		--with-module-dir=/usr/$(get_libdir)/syslog-ng \
 		$(use_enable caps linux-caps) \
 		$(use_enable ipv6) \
+		$(use_enable json) \
+		$(use_with json json-glib) \
+		$(use_enable mongodb) \
 		$(use_enable pcre) \
 		$(use_enable spoof-source) \
 		$(use_enable sql) \
 		$(use_enable ssl) \
-		$(use_enable tcpd tcp-wrapper)
+		$(use_enable tcpd tcp-wrapper) \
+		${myconf}
 }
 
 src_install() {
 	emake DESTDIR="${D}" install || die "emake install failed"
 
-	dodoc AUTHORS ChangeLog NEWS README \
+	dodoc AUTHORS ChangeLog NEWS \
 		contrib/syslog-ng.conf* \
 		contrib/syslog2ng "${FILESDIR}/syslog-ng.conf."*
 
@@ -76,13 +97,17 @@ src_install() {
 		newins "${FILESDIR}/syslog-ng.logrotate" syslog-ng || die
 	fi
 
-	newinitd "${FILESDIR}/syslog-ng.rc6.${PV%%.*}" syslog-ng || die
+	newinitd "${FILESDIR}/syslog-ng.rc6.${PV%.*}" syslog-ng || die
 	newconfd "${FILESDIR}/syslog-ng.confd" syslog-ng || die
 	keepdir /etc/syslog-ng/patterndb.d
 	find "${D}" -type f -name '*.la' -exec rm {} + || die
+	rmdir "${D}"/usr/libexec
 }
 
 pkg_postinst() {
+	elog "For detailed documentation please see the upstream website:"
+	elog "http://www.balabit.com/sites/default/files/documents/syslog-ng-ose-3.3-guides/syslog-ng-ose-v3.3-guide-admin-en.html/index.html"
+
 	# bug #355257
 	if ! has_version app-admin/logrotate ; then
 		echo

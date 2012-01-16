@@ -608,20 +608,23 @@ edos2unix() {
 	sed -i 's/\r$//' -- "$@" || die
 }
 
-# Make a desktop file !
-# Great for making those icons in kde/gnome startmenu !
-# Amaze your friends !	Get the women !	 Join today !
+# @FUNCTION: make_desktop_entry
+# @USAGE: make_desktop_entry(<command>, [name], [icon], [type], [fields])
+# @DESCRIPTION:
+# Make a .desktop file.
 #
-# make_desktop_entry(<command>, [name], [icon], [type], [fields])
-#
-# binary:	what command does the app run with ?
-# name:		the name that will show up in the menu
-# icon:		give your little like a pretty little icon ...
-#			this can be relative (to /usr/share/pixmaps) or
-#			a full path to an icon
-# type:		what kind of application is this ?	for categories:
-#			http://standards.freedesktop.org/menu-spec/latest/apa.html
+# @CODE
+# binary:   what command does the app run with ?
+# name:     the name that will show up in the menu
+# icon:     give your little like a pretty little icon ...
+#           this can be relative (to /usr/share/pixmaps) or
+#           a full path to an icon
+# type:     what kind of application is this?
+#           for categories:
+#           http://standards.freedesktop.org/menu-spec/latest/apa.html
+#           if unset, function tries to guess from package's category
 # fields:	extra fields to append to the desktop file; a printf string
+# @CODE
 make_desktop_entry() {
 	[[ -z $1 ]] && die "make_desktop_entry: You must specify the executable"
 
