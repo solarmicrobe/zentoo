@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: distutils.eclass
@@ -8,7 +8,11 @@
 # @DESCRIPTION:
 # The distutils eclass defines phase functions for packages with build systems using Distutils.
 
-inherit multilib python
+if [[ -z "${_PYTHON_ECLASS_INHERITED}" ]]; then
+	inherit python
+fi
+
+inherit multilib
 
 case "${EAPI:-0}" in
 	0|1)

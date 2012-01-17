@@ -4,6 +4,8 @@
 
 EAPI="2"
 SUPPORT_PYTHON_ABIS="1"
+RESTRICT_PYTHON_ABIS="3.*"
+PYTHON_DEPEND="2"
 
 inherit distutils eutils
 
@@ -22,7 +24,6 @@ IUSE=""
 DEPEND=""
 RDEPEND=""
 
-RESTRICT_PYTHON_ABIS="3.*"
 PYTHON_MODNAME="${MY_PN}"
 
 S="${WORKDIR}/${MY_P}"
