@@ -1,19 +1,15 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 inherit eutils toolchain-funcs flag-o-matic
 
-code_ver=${PV%l}i
+code_ver=${PV%n}i
 data_ver=${PV}
 DESCRIPTION="Timezone data (/usr/share/zoneinfo) and utilities (tzselect/zic/zdump)"
 HOMEPAGE="http://www.twinsun.com/tz/tz-link.htm https://mm.icann.org/mailman/listinfo/tz"
-SRC_URI="ftp://elsie.nci.nih.gov/pub/tzdata${data_ver}.tar.gz
-	ftp://munnari.oz.au/pub/tzdata${data_ver}.tar.gz
-	ftp://elsie.nci.nih.gov/pub/tzcode${code_ver}.tar.gz
-	ftp://munnari.oz.au/pub/tzcode${code_ver}.tar.gz
-	mirror://gentoo/tzdata${data_ver}.tar.gz
-	mirror://gentoo/tzcode${code_ver}.tar.gz"
+SRC_URI="ftp://munnari.oz.au/pub/tzdata${data_ver}.tar.gz
+	ftp://munnari.oz.au/pub/tzcode${code_ver}.tar.gz"
 
 LICENSE="BSD public-domain"
 SLOT="0"
