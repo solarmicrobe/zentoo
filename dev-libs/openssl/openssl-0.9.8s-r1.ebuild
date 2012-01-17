@@ -1,10 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 # this ebuild is only for the libcrypto.so.0.9.8 and libssl.so.0.9.8 SONAME for ABI compat
 
-EAPI="1"
+EAPI="2"
 
 inherit eutils flag-o-matic toolchain-funcs
 
@@ -34,11 +34,7 @@ pkg_setup() {
 	fi
 }
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-
-	epatch "${FILESDIR}"/${PN}-0.9.7e-gentoo.patch
+src_prepare() {
 	epatch "${FILESDIR}"/${PN}-0.9.8e-bsd-sparc64.patch
 	epatch "${FILESDIR}"/${PN}-0.9.8h-ldflags.patch #181438
 	epatch "${FILESDIR}"/${PN}-0.9.8m-binutils.patch #289130
@@ -57,6 +53,10 @@ src_unpack() {
 		|| die
 	# show the actual commands in the log
 	sed -i '/^SET_X/s:=.*:=set -x:' Makefile.shared
+	# update the enginedir path
+	sed -i \
+		-e "/foo.*engines/s|/lib/engines|/$(get_libdir)/engines|" \
+		Configure || die
 
 	# allow openssl to be cross-compiled
 	cp "${FILESDIR}"/gentoo.config-0.9.8 gentoo.config || die "cp cross-compile failed"
@@ -70,7 +70,7 @@ src_unpack() {
 	./config --test-sanity || die "I AM NOT SANE"
 }
 
-src_compile() {
+src_configure() {
 	unset APPS #197996
 	unset SCRIPTS #312551
 
@@ -78,7 +78,7 @@ src_compile() {
 
 	# Clean out patent-or-otherwise-encumbered code
 	# Camellia: Royalty Free            http://en.wikipedia.org/wiki/Camellia_(cipher)
-	# IDEA:     5,214,703 25/05/2010    http://en.wikipedia.org/wiki/International_Data_Encryption_Algorithm
+	# IDEA:     Expired                 http://en.wikipedia.org/wiki/International_Data_Encryption_Algorithm
 	# EC:       ????????? ??/??/2015    http://en.wikipedia.org/wiki/Elliptic_Curve_Cryptography
 	# MDC2:     Expired                 http://en.wikipedia.org/wiki/MDC-2
 	# RC5:      5,724,428 03/03/2015    http://en.wikipedia.org/wiki/RC5
@@ -98,7 +98,7 @@ src_compile() {
 		$(use sse2 || echo "no-sse2") \
 		enable-camellia \
 		$(use_ssl !bindist ec) \
-		$(use_ssl !bindist idea) \
+		enable-idea \
 		enable-mdc2 \
 		$(use_ssl !bindist rc5) \
 		enable-tlsext \
@@ -124,7 +124,9 @@ src_compile() {
 		-e "/^CFLAG/s|=.*|=${CFLAG} ${CFLAGS}|" \
 		-e "/^SHARED_LDFLAGS=/s|$| ${LDFLAGS}|" \
 		Makefile || die
+}
 
+src_compile() {
 	# depend is needed to use $confopts
 	emake -j1 depend || die "depend failed"
 	emake -j1 build_libs || die "make build_libs failed"
