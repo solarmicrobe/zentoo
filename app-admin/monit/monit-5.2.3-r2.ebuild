@@ -37,7 +37,7 @@ src_install() {
 	dohtml -r doc/*
 
 	insinto /etc; insopts -m700; doins monitrc || die "doins monitrc failed"
-	newinitd "${FILESDIR}"/monit.initd-5.0 monit || die "newinitd failed"
+	newinitd "${FILESDIR}"/monit.initd-5.0-r1 monit || die "newinitd failed"
 }
 
 pkg_postinst() {
