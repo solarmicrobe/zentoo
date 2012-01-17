@@ -1,10 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="2"
 
-inherit eutils libtool toolchain-funcs flag-o-matic
+inherit toolchain-funcs flag-o-matic
 
 DESCRIPTION="BSD tar command"
 HOMEPAGE="http://code.google.com/p/libarchive/"
@@ -32,12 +32,6 @@ DEPEND="${RDEPEND}
 	kernel_linux? ( sys-fs/e2fsprogs
 		virtual/os-headers )"
 
-src_prepare() {
-	epatch "$FILESDIR"/libarchive-disable-lzma-size-test.patch
-	elibtoolize
-	epunt_cxx
-}
-
 src_configure() {
 	local myconf
 
@@ -63,7 +57,7 @@ src_configure() {
 		$(use_with zlib) \
 		$(use_with bzip2 bz2lib) $(use_with lzma) \
 		$(use_enable static-libs static) \
-		$(use_with expat expat) \
+		$(use_with expat) \
 		$(use_with !expat xml2) \
 		--without-lzmadec \
 		${myconf} \
