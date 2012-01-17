@@ -1,8 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="3"
+
+inherit base
 
 DESCRIPTION="Simplified Wrapper and Interface Generator"
 HOMEPAGE="http://www.swig.org/"
@@ -14,8 +16,12 @@ KEYWORDS="amd64"
 IUSE="ccache doc pcre"
 RESTRICT="test"
 
-DEPEND="pcre? ( dev-libs/libpcre )"
+DEPEND="pcre? ( dev-libs/libpcre )
+		ccache? ( sys-libs/zlib )"
+
 RDEPEND="${DEPEND}"
+
+PATCHES=( "${FILESDIR}/${P}-typedef.patch" )
 
 src_configure() {
 	econf \
