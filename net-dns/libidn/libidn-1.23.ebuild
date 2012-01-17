@@ -1,6 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
+
+EAPI="4"
 
 inherit java-pkg-opt-2 mono elisp-common
 
@@ -12,6 +14,8 @@ LICENSE="LGPL-2.1 GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc emacs java mono nls static-libs"
+
+DOCS=( AUTHORS ChangeLog FAQ NEWS README THANKS TODO )
 
 COMMON_DEPEND="emacs? ( virtual/emacs )
 	mono? ( >=dev-lang/mono-0.95 )"
@@ -27,13 +31,12 @@ RDEPEND="${COMMON_DEPEND}
 
 SITEFILE=50${PN}-gentoo.el
 
-src_unpack() {
-	unpack ${A}
+src_prepare() {
 	# bundled, with wrong bytecode
 	rm "${S}/java/${P}.jar" || die
 }
 
-src_compile() {
+src_configure() {
 	econf \
 		$(use_enable nls) \
 		$(use_enable java) \
@@ -43,10 +46,11 @@ src_compile() {
 		--with-lispdir="${SITELISP}/${PN}" \
 		--with-packager="Gentoo" \
 		--with-packager-version="r${PR}" \
-		--with-packager-bug-reports="https://bugs.gentoo.org" \
-		|| die
+		--with-packager-bug-reports="https://bugs.gentoo.org"
+}
 
-	emake || die
+src_compile() {
+	default
 
 	if use emacs; then
 		elisp-compile src/*.el || die
@@ -54,8 +58,7 @@ src_compile() {
 }
 
 src_install() {
-	emake install DESTDIR="${D}" || die
-	dodoc AUTHORS ChangeLog FAQ NEWS README THANKS TODO || die
+	default
 
 	if use emacs; then
 		# *.el are installed by the build system
@@ -66,7 +69,7 @@ src_install() {
 	fi
 
 	if use doc ; then
-		dohtml -r doc/reference/html/* || die
+		dohtml -r doc/reference/html/*
 	fi
 
 	if use java ; then
@@ -76,6 +79,9 @@ src_install() {
 		if use doc ; then
 			java-pkg_dojavadoc doc/java
 		fi
+	fi
+	if ! use static-libs; then
+		rm -f "${D}"/usr/lib*/lib*.la
 	fi
 }
 
