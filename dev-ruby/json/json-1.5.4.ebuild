@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ EAPI=2
 USE_RUBY="ruby18 ree18 jruby"
 
 RUBY_FAKEGEM_TASK_DOC="doc"
-RUBY_FAKEGEM_EXTRADOC="CHANGES TODO README"
+RUBY_FAKEGEM_EXTRADOC="CHANGES TODO README.rdoc README-json-jruby.markdown"
 RUBY_FAKEGEM_DOCDIR="doc"
 
 inherit multilib ruby-fakegem
@@ -14,7 +14,6 @@ inherit multilib ruby-fakegem
 DESCRIPTION="A JSON implementation as a Ruby extension."
 HOMEPAGE="http://json.rubyforge.org/"
 LICENSE="|| ( Ruby GPL-2 )"
-SRC_URI="mirror://rubygems/${P}.gem"
 
 KEYWORDS="amd64"
 SLOT="0"
@@ -31,25 +30,26 @@ all_ruby_prepare() {
 	# Avoid building the extension twice!
 	# And use rdoc instead of sdoc which we don't have packaged
 	sed -i \
-		-e 's| => :compile_ext||' \
+		-e 's| => :compile||' \
 		-e 's| => :clean||' \
 		-e 's|sdoc|rdoc|' \
 		Rakefile || die "rakefile fix failed"
 }
 
 each_ruby_compile() {
+	# Since 1.5.0 a Java extension is provided but it does not compile.
 	if [[ $(basename ${RUBY}) != "jruby" ]]; then
-		${RUBY} -S rake compile_ext || die "extension compile failed"
+		${RUBY} -S rake compile || die "extension compile failed"
 	fi
 }
 
 each_ruby_test() {
 	JSON=pure \
-	${RUBY} -Iext:lib -S testrb tests/*.rb || die "pure ruby tests failed"
+	${RUBY} -Iext:lib -rtest/unit -e "Dir['test/*.rb'].each{|f| require f}" || die "pure ruby tests failed"
 
 	if [[ $(basename ${RUBY}) != "jruby" ]]; then
 		JSON=ext \
-		${RUBY} -Iext:lib -S testrb tests/*.rb || die "ext ruby tests failed"
+		${RUBY} -Iext:lib -rtest/unit -e "Dir['test/*.rb'].each{|f| require f}" || die "ext ruby tests failed"
 	fi
 }
 
