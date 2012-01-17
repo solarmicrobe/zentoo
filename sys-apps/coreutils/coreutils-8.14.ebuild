@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -7,7 +7,7 @@ EAPI="3"
 inherit eutils flag-o-matic toolchain-funcs
 
 PATCH_VER="1"
-DESCRIPTION="Standard GNU file, text, and shell utilities"
+DESCRIPTION="Standard GNU file utilities (chmod, cp, dd, dir, ls...), text utilities (sort, tr, head, wc..), and shell utilities (whoami, who,...)"
 HOMEPAGE="http://www.gnu.org/software/coreutils/"
 SRC_URI="ftp://alpha.gnu.org/gnu/coreutils/${P}.tar.xz
 	mirror://gnu/${PN}/${P}.tar.xz
@@ -45,9 +45,6 @@ src_prepare() {
 		epatch
 	fi
 
-	# Avoid perl dep for compiled in dircolors default #348642
-	has_version dev-lang/perl || touch src/dircolors.h
-
 	# Since we've patched many .c files, the make process will try to
 	# re-build the manpages by running `./bin --help`.  When doing a
 	# cross-compile, we can't do that since 'bin' isn't a native bin.
@@ -55,6 +52,12 @@ src_prepare() {
 	# so let's just update the timestamps and skip the help2man step.
 	set -- man/*.x
 	tc-is-cross-compiler && touch ${@/%x/1}
+
+	# Avoid perl dep for compiled in dircolors default #348642
+	if ! has_version dev-lang/perl ; then
+		touch src/dircolors.h
+		touch ${@/%x/1}
+	fi
 }
 
 src_configure() {
@@ -149,5 +152,16 @@ pkg_postinst() {
 			einfo "Deleting orphaned GNU /bin/dircolors for you"
 			rm -f "${ROOT}/bin/dircolors"
 		fi
+	fi
+
+	# Help out users using experimental filesystems
+	if grep -qs btrfs "${ROOT}"/etc/fstab /proc/mounts ; then
+		case $(uname -r) in
+		2.6.[12][0-9]|2.6.3[0-7]*)
+			ewarn "You are running a system with a buggy btrfs driver."
+			ewarn "Please upgrade your kernel to avoid silent corruption."
+			ewarn "See: https://bugs.gentoo.org/353907"
+			;;
+		esac
 	fi
 }
