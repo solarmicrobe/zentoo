@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -86,6 +86,9 @@ src_prepare() {
 
 	# Fix missing error status in XPath evaluation
 	epatch "${FILESDIR}/${P}-error-xpath.patch"
+
+	# Heap-based overflow in parsing long entity references
+	epatch "${FILESDIR}/${P}-allocation-error-copying-entities.patch"
 
 	# Please do not remove, as else we get references to PORTAGE_TMPDIR
 	# in /usr/lib/python?.?/site-packages/libxml2mod.la among things.

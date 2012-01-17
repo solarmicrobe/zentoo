@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: python.eclass
@@ -8,7 +8,19 @@
 # @DESCRIPTION:
 # The python eclass contains miscellaneous, useful functions for Python packages.
 
-inherit multilib
+# Must call inherit before EXPORT_FUNCTIONS to avoid QA warning.
+if [[ -z "${_PYTHON_ECLASS_INHERITED}" ]]; then
+	inherit multilib
+fi
+
+# Export pkg_setup every time to avoid issues with eclass inheritance order.
+if ! has "${EAPI:-0}" 0 1 2 3 || { has "${EAPI:-0}" 2 3 && [[ -n "${PYTHON_USE_WITH}" || -n "${PYTHON_USE_WITH_OR}" ]]; }; then
+	EXPORT_FUNCTIONS pkg_setup
+fi
+
+# Avoid processing this eclass more than once.
+if [[ -z "${_PYTHON_ECLASS_INHERITED}" ]]; then
+_PYTHON_ECLASS_INHERITED="1"
 
 if ! has "${EAPI:-0}" 0 1 2 3 4; then
 	die "API of python.eclass in EAPI=\"${EAPI}\" not established"
@@ -461,10 +473,6 @@ python_pkg_setup() {
 
 	PYTHON_PKG_SETUP_EXECUTED="1"
 }
-
-if ! has "${EAPI:-0}" 0 1 2 3 || { has "${EAPI:-0}" 2 3 && [[ -n "${PYTHON_USE_WITH}" || -n "${PYTHON_USE_WITH_OR}" ]]; }; then
-	EXPORT_FUNCTIONS pkg_setup
-fi
 
 _PYTHON_SHEBANG_BASE_PART_REGEX='^#![[:space:]]*([^[:space:]]*/usr/bin/env[[:space:]]+)?([^[:space:]]*/)?(jython|pypy-c|python)'
 
@@ -3113,3 +3121,5 @@ python_mod_cleanup() {
 # ================================================================================================
 # ===================================== DEPRECATED FUNCTIONS =====================================
 # ================================================================================================
+
+fi # _PYTHON_ECLASS_INHERITED
