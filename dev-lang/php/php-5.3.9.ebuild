@@ -1,24 +1,24 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/dev-lang/php/php-5.3.9.ebuild,v 1.8 2012/01/17 05:18:51 jer Exp $
 
 EAPI=4
 
 PHPCONFUTILS_MISSING_DEPS="adabas birdstep db2 dbmaker empress empress-bcs esoob interbase oci8 sapdb solid"
 
-inherit eutils autotools flag-o-matic versionator depend.apache apache-module db-use phpconfutils php-common-r1 libtool
+inherit eutils autotools flag-o-matic versionator depend.apache apache-module db-use libtool
 
-SUHOSIN_VERSION="5.3.7-0.9.10"
+SUHOSIN_VERSION="5.3.9-0.9.10-gentoo"
 FPM_VERSION="builtin"
 EXPECTED_TEST_FAILURES=""
 
-KEYWORDS="amd64"
+KEYWORDS="alpha amd64 arm hppa ia64 ppc ppc64 s390 sh sparc x86"
 
 function php_get_uri ()
 {
 	case "${1}" in
 		"php-pre")
-			echo "http://downloads.php.net/ilia/${2}"
+			echo "http://downloads.php.net/johannes/${2}"
 		;;
 		"php")
 			echo "http://www.php.net/distributions/${2}"
@@ -60,7 +60,7 @@ PHP_FPM_CONF_VER="1"
 if [[ ${SUHOSIN_VERSION} == *-gentoo ]]; then
 	# in some cases we use our own suhosin patch (very recent version,
 	# patch conflicts, etc.)
-	SUHOSIN_TYPE="gentoo"
+	SUHOSIN_TYPE="olemarkus"
 else
 	SUHOSIN_TYPE="suhosin"
 fi
@@ -97,17 +97,17 @@ IUSE="${IUSE}
 	${SAPIS/cli/+cli}
 	threads"
 
-IUSE="${IUSE} adabas bcmath berkdb birdstep bzip2 calendar cdb cjk
-	crypt +ctype curl curlwrappers db2 dbmaker debug doc empress
-	empress-bcs enchant esoob exif frontbase +fileinfo +filter firebird
-	flatfile ftp gd gd-external gdbm gmp +hash +iconv imap inifile
-	interbase intl iodbc ipv6 +json kerberos ldap ldap-sasl libedit mhash
-	mssql mysql mysqlnd mysqli nls oci8
+IUSE="${IUSE} bcmath berkdb bzip2 calendar cdb cjk
+	crypt +ctype curl curlwrappers debug doc
+	enchant exif frontbase +fileinfo +filter firebird
+	flatfile ftp gd gdbm gmp +hash +iconv imap inifile
+	intl iodbc ipv6 +json kerberos ldap ldap-sasl libedit mhash
+	mssql mysql mysqlnd mysqli nls
 	oci8-instant-client odbc pcntl pdo +phar pic +posix postgres qdbm
-	readline recode sapdb +session sharedext sharedmem
-	+simplexml snmp soap sockets solid spell sqlite sqlite3 ssl
+	readline recode +session sharedmem
+	+simplexml snmp soap sockets spell sqlite sqlite3 ssl
 	sybase-ct sysvipc tidy +tokenizer truetype unicode wddx
-	xml xmlreader xmlwriter xmlrpc xpm xsl zip zlib"
+	+xml xmlreader xmlwriter xmlrpc xpm xsl zip zlib"
 
 # Enable suhosin if available
 [[ -n $SUHOSIN_VERSION ]] && IUSE="${IUSE} suhosin"
@@ -115,33 +115,25 @@ IUSE="${IUSE} adabas bcmath berkdb birdstep bzip2 calendar cdb cjk
 DEPEND="!dev-lang/php:5
 	>=app-admin/eselect-php-0.6.2
 	>=dev-libs/libpcre-8.12[unicode]
-	adabas? ( >=dev-db/unixODBC-1.8.13 )
 	apache2? ( www-servers/apache[threads=] )
 	berkdb? ( =sys-libs/db-4* )
-	birdstep? ( >=dev-db/unixODBC-1.8.13 )
 	bzip2? ( app-arch/bzip2 )
 	cdb? ( || ( dev-db/cdb dev-db/tinycdb ) )
-	cjk? ( !gd? ( !gd-external? (
+	cjk? ( !gd? (
 		virtual/jpeg
 		media-libs/libpng
 		sys-libs/zlib
-	) ) )
+	) )
 	crypt? ( >=dev-libs/libmcrypt-2.4 )
 	curl? ( >=net-misc/curl-7.10.5 )
-	db2? ( >=dev-db/unixODBC-1.8.13 )
-	dbmaker? ( >=dev-db/unixODBC-1.8.13 )
-	empress? ( >=dev-db/unixODBC-1.8.13 )
-	empress-bcs? ( >=dev-db/unixODBC-1.8.13 )
 	enchant? ( app-text/enchant )
-	esoob? ( >=dev-db/unixODBC-1.8.13 )
-	exif? ( !gd? ( !gd-external? (
+	exif? ( !gd? (
 		virtual/jpeg
 		media-libs/libpng
 		sys-libs/zlib
-	) ) )
+	) )
 	firebird? ( dev-db/firebird )
 	gd? ( virtual/jpeg media-libs/libpng sys-libs/zlib )
-	gd-external? ( media-libs/gd )
 	gdbm? ( >=sys-libs/gdbm-1.8.0 )
 	gmp? ( >=dev-libs/gmp-4.1.2 )
 	iconv? ( virtual/libiconv )
@@ -150,8 +142,8 @@ DEPEND="!dev-lang/php:5
 	iodbc? ( dev-db/libiodbc )
 	kerberos? ( virtual/krb5 )
 	kolab? ( >=net-libs/c-client-2004g-r1 )
-	ldap? ( !oci8? ( >=net-nds/openldap-1.2.11 ) )
-	ldap-sasl? ( !oci8? ( dev-libs/cyrus-sasl >=net-nds/openldap-1.2.11 ) )
+	ldap? ( >=net-nds/openldap-1.2.11 )
+	ldap-sasl? ( dev-libs/cyrus-sasl >=net-nds/openldap-1.2.11 )
 	libedit? ( || ( sys-freebsd/freebsd-lib dev-libs/libedit ) )
 	mssql? ( dev-db/freetds[mssql] )
 	!mysqlnd? (
@@ -165,12 +157,10 @@ DEPEND="!dev-lang/php:5
 	qdbm? ( dev-db/qdbm )
 	readline? ( sys-libs/readline )
 	recode? ( app-text/recode )
-	sapdb? ( >=dev-db/unixODBC-1.8.13 )
 	sharedmem? ( dev-libs/mm )
 	simplexml? ( >=dev-libs/libxml2-2.6.8 )
 	snmp? ( >=net-analyzer/net-snmp-5.2 )
 	soap? ( >=dev-libs/libxml2-2.6.8 )
-	solid? ( >=dev-db/unixODBC-1.8.13 )
 	spell? ( >=app-text/aspell-0.50 )
 	sqlite? ( =dev-db/sqlite-2* pdo? ( >=dev-db/sqlite-3.7.7.1 ) )
 	sqlite3? ( >=dev-db/sqlite-3.7.7.1 )
@@ -180,8 +170,8 @@ DEPEND="!dev-lang/php:5
 	truetype? (
 		=media-libs/freetype-2*
 		>=media-libs/t1lib-5.0.0
-		!gd? ( !gd-external? (
-			virtual/jpeg media-libs/libpng sys-libs/zlib ) )
+		!gd? (
+			virtual/jpeg media-libs/libpng sys-libs/zlib )
 	)
 	unicode? ( dev-libs/oniguruma )
 	wddx? ( >=dev-libs/libxml2-2.6.8 )
@@ -203,29 +193,19 @@ DEPEND="!dev-lang/php:5
 php="=${CATEGORY}/${PF}"
 
 REQUIRED_USE="
-	truetype? ( || ( gd gd-external ) )
-	cjk? ( || ( gd gd-external ) )
-	exif? ( || ( gd gd-external ) )
+	truetype? ( gd )
+	cjk? ( gd )
+	exif? ( gd  )
 
 	xpm? ( gd )
-	gd? ( zlib !gd-external )
-	gd-external? ( !gd )
+	gd? ( zlib )
 	simplexml? ( xml )
 	soap? ( xml )
 	wddx? ( xml )
 	xmlrpc? ( || ( xml iconv ) )
 	xmlreader? ( xml )
 	xsl? ( xml )
-	ldap-sasl? ( ldap !oci8 )
-	adabas? ( odbc )
-	birdstep? ( odbc )
-	dbmaker? ( odbc )
-	empress-bcs? ( empress )
-	empress? ( odbc )
-	esoob? ( odbc )
-	db2? ( odbc )
-	sapdb? ( odbc )
-	solid? ( odbc )
+	ldap-sasl? ( ldap )
 	kolab? ( imap )
 	mhash? ( hash )
 	phar? ( hash )
@@ -235,13 +215,9 @@ REQUIRED_USE="
 		pdo
 	) )
 
-	oci8? ( !oci8-instant-client !ldap-sasl )
-	oci8-instant-client? ( !oci8 )
-
 	qdbm? ( !gdbm )
 	readline? ( !libedit )
 	recode? ( !imap !mysql !mysqli )
-	firebird? ( !interbase )
 	sharedmem? ( !threads )
 
 	!cli? ( !cgi? ( !fpm? ( !apache2? ( !embed? ( cli ) ) ) ) )"
@@ -256,6 +232,8 @@ DEPEND="${DEPEND}
 
 [[ -n $SUHOSIN_VERSION ]] && RDEPEND="${RDEPEND} suhosin? (
 =${CATEGORY}/${PN}-${SLOT}*[unicode] )"
+
+RDEPEND="${DEPEND}"
 
 DEPEND="${DEPEND}
 	sys-devel/flex
@@ -329,7 +307,7 @@ eblit-run-maybe() {
 # Usage: <function> [version]
 # Runs a function defined in an eblit
 eblit-run() {
-	eblit-include --skip common "${*:2}"
+	eblit-include --skip common "v2"
 	eblit-include "$@"
 	eblit-run-maybe eblit-$1-pre
 	eblit-${PN}-$1
@@ -344,11 +322,69 @@ eblit-pkg() {
 	eblit-core $1 $2 1
 }
 
-eblit-pkg pkg_setup v2
+eblit-pkg pkg_setup v3
 
 src_prepare() { eblit-run src_prepare v3 ; }
-src_configure() { eblit-run src_configure v2 ; }
+src_configure() { eblit-run src_configure v53 ; }
 src_compile() { eblit-run src_compile v1 ; }
-src_install() { eblit-run src_install v2 ; }
+src_install() { eblit-run src_install v3 ; }
 src_test() { eblit-run src_test v1 ; }
-pkg_postinst() { eblit-run pkg_postinst v2 ; }
+
+#Do not use eblit for this because it will not get sourced when installing from
+#binary package (bug #380845)
+pkg_postinst() {
+	# Output some general info to the user
+	if use apache2 ; then
+		APACHE2_MOD_DEFINE="PHP5"
+		APACHE2_MOD_CONF="70_mod_php5"
+		apache-module_pkg_postinst
+	fi
+
+	# Create the symlinks for php
+	for m in ${SAPIS}; do
+		[[ ${m} == 'embed' ]] && continue;
+		if use $m ; then
+			local ci=$(eselect php show $m)
+			if [[ -z $ci ]]; then
+				eselect php set $m php${SLOT}
+				einfo "Switched ${m} to use php:${SLOT}"
+				einfo
+			elif [[ $ci != "php${SLOT}" ]] ; then
+				elog "To switch $m to use php:${SLOT}, run"
+				elog "    eselect php set $m php${SLOT}"
+				elog
+			fi
+		fi
+	done
+
+	elog "Make sure that PHP_TARGETS in /etc/make.conf includes php${SLOT/./-} in order"
+	elog "to compile extensions for the ${SLOT} ABI"
+	elog
+	if ! use readline && use cli ; then
+		ewarn "Note that in order to use php interactivly, you need to enable"
+		ewarn "the readline USE flag or php -a will hang"
+	fi
+	elog
+	elog "This ebuild installed a version of php.ini based on php.ini-${PHP_INI_VERSION} version."
+	elog "You can chose which version of php.ini to install by default by setting PHP_INI_VERSION to either"
+	elog "'production' or 'development' in /etc/make.conf"
+	ewarn "Both versions of php.ini can be found in /usr/share/doc/${PF}"
+
+	# check for not yet migrated old style config dirs
+	ls "${ROOT}"/etc/php/*-php5 &>/dev/null
+	if [[ $? -eq 0 ]]; then
+		ewarn "Make sure to migrate your config files, starting with php-5.3.4 and php-5.2.16 config"
+		ewarn "files are now kept at ${ROOT}etc/php/{apache2,cli,cgi,fpm}-php5.x"
+	fi
+	elog
+	elog "For more details on how minor version slotting works (PHP_TARGETS) please read the upgrade guide:"
+	elog "http://www.gentoo.org/proj/en/php/php-upgrading.xml"
+	elog
+
+	if ( [[ -z SUHOSIN_VERSION ]] && use suhosin && version_is_at_least 5.3.6_rc1 ) ; then
+		ewarn "The suhosin USE flag now only installs the suhosin patch!"
+		ewarn "If you want the suhosin extension, make sure you install"
+		ewarn " dev-php5/suhosin"
+		ewarn
+	fi
+}
