@@ -31,9 +31,6 @@ app-admin/syslog-ng json sql
 # do not support opendbx backend
 net-dns/pdns opendbx
 
-# do not support c-ares
-net-misc/curl ares
-
 # virtualbox
 app-emulation/virtualbox extensions vboxwebsrv
 
