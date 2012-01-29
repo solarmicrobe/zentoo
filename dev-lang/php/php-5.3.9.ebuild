@@ -12,7 +12,7 @@ SUHOSIN_VERSION="5.3.9-0.9.10-gentoo"
 FPM_VERSION="builtin"
 EXPECTED_TEST_FAILURES=""
 
-KEYWORDS="alpha amd64 arm hppa ia64 ppc ppc64 s390 sh sparc x86"
+KEYWORDS="amd64"
 
 function php_get_uri ()
 {

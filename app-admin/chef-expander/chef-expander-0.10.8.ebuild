@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
 USE_RUBY="ruby18"
 
 RUBY_FAKEGEM_TASK_DOC=""
@@ -22,13 +22,20 @@ RDEPEND=""
 
 ruby_add_rdepend "~app-admin/chef-${PV}
 	>=dev-ruby/amqp-0.6.7
+	<dev-ruby/amqp-0.7
 	>=dev-ruby/bunny-0.6.0
+	<dev-ruby/bunny-0.7
 	>=dev-ruby/em-http-request-0.2.11
+	<dev-ruby/em-http-request-0.3
 	>=dev-ruby/eventmachine-0.12.10
+	<dev-ruby/eventmachine-0.13
 	>=dev-ruby/fast_xs-0.7.3
+	<dev-ruby/fast_xs-0.8
 	>=dev-ruby/highline-1.6.1
+	<dev-ruby/highline-1.7
 	>=dev-ruby/mixlib-log-1.2.0
 	>=dev-ruby/uuidtools-2.1.1
+	<dev-ruby/uuidtools-2.2
 	>=dev-ruby/yajl-ruby-0.7.7"
 
 all_ruby_install() {

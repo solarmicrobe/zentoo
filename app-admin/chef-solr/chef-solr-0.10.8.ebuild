@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
 USE_RUBY="ruby18"
 
 RUBY_FAKEGEM_TASK_DOC=""
@@ -21,9 +21,7 @@ IUSE=""
 RDEPEND=">=net-misc/rabbitmq-server-1.7.2
 	virtual/jre:1.6"
 
-ruby_add_rdepend "~app-admin/chef-${PV}
-	>=dev-ruby/libxml-1.1.3
-	>=dev-ruby/uuidtools-2.0.0"
+ruby_add_rdepend "~app-admin/chef-${PV}"
 
 each_ruby_install() {
 	each_fakegem_install

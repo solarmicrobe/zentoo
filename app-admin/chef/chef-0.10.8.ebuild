@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
 USE_RUBY="ruby18"
 
 RUBY_FAKEGEM_TASK_DOC=""
@@ -20,27 +20,25 @@ IUSE=""
 
 ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	dev-ruby/erubis
-	dev-ruby/extlib
 	dev-ruby/highline
 	>=dev-ruby/json-1.4.4
-	<=dev-ruby/json-1.5.2
+	<=dev-ruby/json-1.6.1
 	>=dev-ruby/mixlib-authentication-1.1.0
 	>=dev-ruby/mixlib-cli-1.1.0
 	>=dev-ruby/mixlib-config-1.1.2
 	>=dev-ruby/mixlib-log-1.3.0
 	dev-ruby/moneta
 	>=dev-ruby/net-ssh-2.1.3
-	>=dev-ruby/net-ssh-multi-1.0.1
+	<dev-ruby/net-ssh-2.2
+	>=dev-ruby/net-ssh-multi-1.1
+	<dev-ruby/net-ssh-multi-1.2
 	>=dev-ruby/ohai-0.6.0
 	>=dev-ruby/rest-client-1.0.4
 	<dev-ruby/rest-client-1.7.0
 	dev-ruby/ruby-shadow
 	>=dev-ruby/treetop-1.4.9
+	<dev-ruby/treetop-1.5
 	dev-ruby/uuidtools"
-
-all_ruby_prepare() {
-	epatch "${FILESDIR}"/${PN}-0.10.0-less-verbose.patch
-}
 
 all_ruby_install() {
 	all_fakegem_install
