@@ -64,6 +64,7 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.8.8-interix.patch
 	epatch "${FILESDIR}"/${PN}-1.10.0-buggy_gradients.patch
+	epatch "${FILESDIR}"/${P}-interix.patch
 
 	# Slightly messed build system YAY
 	if [[ ${PV} == *9999* ]]; then
@@ -79,6 +80,9 @@ src_prepare() {
 
 src_configure() {
 	local myopts
+
+	# SuperH doesn't have native atomics yet
+	use sh && myopts+=" --disable-atomic"
 
 	[[ ${CHOST} == *-interix* ]] && append-flags -D_REENTRANT
 
