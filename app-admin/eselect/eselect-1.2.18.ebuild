@@ -1,8 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit bash-completion
+EAPI=2
+
+inherit bash-completion-r1
 
 DESCRIPTION="Gentoo's multi-purpose configuration and management tool"
 HOMEPAGE="http://www.gentoo.org/proj/en/eselect/"
@@ -31,22 +33,26 @@ RDEPEND="!app-admin/eselect-news
 #	vim-syntax? ( app-vim/eselect-syntax )"
 
 src_compile() {
-	econf
-	emake || die "emake failed"
+	emake || die
 
 	if use doc; then
-		make html || die "failed to build html"
+		emake html || die
 	fi
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die "make install failed"
-	dodoc AUTHORS ChangeLog NEWS README TODO doc/*.txt
-	use doc && dohtml *.html doc/*
-	dobashcompletion misc/${PN}.bashcomp
+	emake DESTDIR="${D}" install || die
+	newbashcomp misc/${PN}.bashcomp ${PN} || die
+	dodoc AUTHORS ChangeLog NEWS README TODO doc/*.txt || die
+
+	if use doc; then
+		dohtml *.html doc/* || die
+	fi
 
 	# needed by news module
 	keepdir /var/lib/gentoo/news
+	fowners root:portage /var/lib/gentoo/news || die
+	fperms g+w /var/lib/gentoo/news || die
 }
 
 pkg_postinst() {
@@ -55,6 +61,4 @@ pkg_postinst() {
 	[[ -z ${EROOT} ]] && local EROOT=${ROOT}
 	chgrp portage "${EROOT}/var/lib/gentoo/news" \
 		&& chmod g+w "${EROOT}/var/lib/gentoo/news"
-
-	bash-completion_pkg_postinst
 }
