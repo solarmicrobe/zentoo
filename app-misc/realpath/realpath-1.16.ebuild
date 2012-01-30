@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -7,7 +7,8 @@ inherit eutils toolchain-funcs flag-o-matic prefix
 
 DESCRIPTION="Return the canonicalized absolute pathname"
 HOMEPAGE="http://packages.debian.org/unstable/utils/realpath"
-SRC_URI="mirror://debian/pool/main/r/${PN}/${PN}_${PV}.tar.gz
+SRC_URI="
+	mirror://debian/pool/main/r/${PN}/${PN}_${PV}.tar.gz
 	nls? ( mirror://debian/pool/main/r/${PN}/${PN}_${PV}_i386.deb )"
 
 LICENSE="GPL-2"
@@ -15,10 +16,12 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="nls"
 
-RDEPEND="!sys-freebsd/freebsd-bin"
+RDEPEND="!sys-freebsd/freebsd-bin
+	nls? ( virtual/libintl )"
 DEPEND="${RDEPEND}
-	sys-devel/gettext
-	virtual/libintl"
+	nls? ( sys-devel/gettext )
+	x86-interix? ( dev-libs/gnulib )
+	elibc_mintlib? ( virtual/libiconv )"
 
 src_unpack() {
 	unpack ${PN}_${PV}.tar.gz
@@ -36,9 +39,9 @@ src_unpack() {
 
 src_prepare() {
 	use nls || epatch "${FILESDIR}"/${P}-nonls.patch
-	epatch "${FILESDIR}"/${P}-build.patch
+	epatch "${FILESDIR}"/${PN}-1.15-build.patch
 	epatch "${FILESDIR}"/${PN}-1.14-no-po4a.patch
-	epatch "${FILESDIR}"/${P}-prefix.patch
+	epatch "${FILESDIR}"/${PN}-1.15-prefix.patch
 	eprefixify common.mk
 }
 
