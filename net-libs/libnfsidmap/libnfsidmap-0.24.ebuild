@@ -1,6 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
+
+EAPI="2"
 
 inherit autotools
 
@@ -11,29 +13,34 @@ SRC_URI="http://www.citi.umich.edu/projects/nfsv4/linux/libnfsidmap/${P}.tar.gz"
 LICENSE="BSD"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="ldap"
+IUSE="ldap static-libs"
 
 DEPEND="ldap? ( net-nds/openldap )"
 RDEPEND="${DEPEND}
-	!<net-fs/nfs-utils-1.1.4
+	!<net-fs/nfs-utils-1.2.2
 	!net-fs/idmapd"
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
+src_prepare() {
 	epatch "${FILESDIR}"/${PN}-0.19-getgrouplist.patch #169909
 	epatch "${FILESDIR}"/${PN}-0.21-headers.patch
 	eautoreconf
 }
 
-src_compile() {
-	econf $(use_enable ldap) || die
-	emake || die
+src_configure() {
+	econf \
+		--disable-dependency-tracking \
+		$(use_enable static-libs static) \
+		$(use_enable ldap)
 }
 
 src_install() {
 	emake install DESTDIR="${D}" || die
+	dodoc AUTHORS ChangeLog NEWS README
+
 	insinto /etc
 	doins idmapd.conf || die
-	dodoc AUTHORS ChangeLog NEWS README
+
+	# remove useless files
+	rm -f "${D}"/usr/lib*/libnfsidmap/*.{a,la}
+	use static-libs || rm -f "${D}"/usr/lib*/*.la
 }
