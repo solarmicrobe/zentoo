@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="4"
 
 inherit flag-o-matic toolchain-funcs eutils
 
@@ -31,20 +31,20 @@ src_configure() {
 }
 
 src_install () {
-	dobin multitail || die
+	dobin multitail
 
 	insinto /etc
-	doins multitail.conf || die
+	doins multitail.conf
 
-	dodoc Changes readme.txt thanks.txt || die
-	doman multitail.1 || die
+	dodoc Changes readme.txt thanks.txt
+	doman multitail.1
 
 	if use examples; then
 		docinto examples
-		dodoc colors-example.{pl,sh} convert-{geoip,simple}.pl || die
+		dodoc colors-example.{pl,sh} convert-{geoip,simple}.pl
 	fi
 
 	if use doc; then
-		dohtml manual.html || die
+		dohtml manual.html
 	fi
 }
