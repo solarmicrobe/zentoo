@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -29,8 +29,7 @@ src_unpack() {
 	fi
 	cd "${S}"
 	epatch "${FILESDIR}"/dev86-pic.patch
-	epatch "${FILESDIR}"/${P}-fortify.patch
-	epatch "${FILESDIR}"/${P}-make382.patch
+	epatch "${FILESDIR}"/${PN}-0.16.17-fortify.patch
 	sed -i \
 		-e "s:-O2 -g:${CFLAGS}:" \
 		-e '/INEXE=/s:-s::' \
