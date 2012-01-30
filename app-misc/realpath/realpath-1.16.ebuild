@@ -20,7 +20,6 @@ RDEPEND="!sys-freebsd/freebsd-bin
 	nls? ( virtual/libintl )"
 DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )
-	x86-interix? ( dev-libs/gnulib )
 	elibc_mintlib? ( virtual/libiconv )"
 
 src_unpack() {
