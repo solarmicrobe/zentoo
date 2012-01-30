@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=4
 
 inherit eutils
 
@@ -73,12 +73,11 @@ src_compile() {
 		$(use_var KRB5 pam_krb5) \
 		$(use_var minimal) \
 		IMPLEMENTATION=${implementation} \
-		LINUX_PAM_VERSION=${linux_pam_version} \
-		|| die "emake failed"
+		LINUX_PAM_VERSION=${linux_pam_version}
 }
 
 src_install() {
-	emake GIT=true DESTDIR="${ED}" install || die "emake install failed"
+	emake GIT=true DESTDIR="${ED}" install
 }
 
 pkg_postinst() {
