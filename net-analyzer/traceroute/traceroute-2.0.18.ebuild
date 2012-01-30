@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="3"
 
 inherit flag-o-matic toolchain-funcs
 
@@ -24,8 +24,8 @@ src_compile() {
 src_install() {
 	emake \
 		DESTDIR="${D}" \
-		prefix="/usr" \
-		libdir="/usr/$(get_libdir)" \
+		prefix="${EPREFIX}/usr" \
+		libdir="${EPREFIX}/usr/$(get_libdir)" \
 		install \
 		|| die
 	dodoc ChangeLog CREDITS README TODO
