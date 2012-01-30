@@ -1,10 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI=4
 
-inherit eutils
+inherit eutils autotools
 
 MY_PV=${PV/_p/+nmu}
 DESCRIPTION="Library for handling paper characteristics"
@@ -18,9 +18,22 @@ IUSE=""
 
 S="${WORKDIR}/${PN}-${MY_PV}"
 
+DOCS=( README ChangeLog debian/changelog )
+
+src_prepare() {
+	eautoreconf
+}
+
+src_configure() {
+	econf \
+		--disable-static
+}
+
 src_install() {
-	emake DESTDIR="${D}" install || die "emake install failed"
-	dodoc README ChangeLog debian/changelog || die "dodoc failed"
+	default
+
+	find "${ED}" -name '*.la' -exec rm -f {} +
+
 	dodir /etc
 	(paperconf 2>/dev/null || echo a4) > "${ED}"/etc/papersize \
 		|| die "papersize config failed"
