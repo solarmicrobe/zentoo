@@ -21,7 +21,8 @@ RDEPEND="=dev-libs/apr-1*
 	ssl? ( dev-libs/openssl )
 	!<www-servers/apache-2.2.4"
 
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	sys-devel/libtool"
 
 S="${WORKDIR}/httpd-${PV}"
 

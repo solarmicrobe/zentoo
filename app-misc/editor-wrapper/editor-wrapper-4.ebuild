@@ -23,6 +23,4 @@ src_prepare() {
 src_install() {
 	exeinto /usr/libexec
 	doexe editor pager
-	# backwards compatibility
-	dosym editor /usr/libexec/gentoo-editor
 }

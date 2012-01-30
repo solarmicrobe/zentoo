@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -19,7 +19,8 @@ src_configure() {
 	use static && append-ldflags -static
 
 	# Avoid slow configure+gnulib+make if on an up-to-date Linux system
-	if ! use kernel_linux ; then
+	if ! use kernel_linux || has_version '<sys-libs/glibc-2.10'
+	then
 		econf --with-eprefix="${EPREFIX}"
 	else
 		tc-export CC

@@ -10,7 +10,7 @@
 
 # Must call inherit before EXPORT_FUNCTIONS to avoid QA warning.
 if [[ -z "${_PYTHON_ECLASS_INHERITED}" ]]; then
-	inherit eutils multilib
+	inherit multilib
 fi
 
 # Export pkg_setup every time to avoid issues with eclass inheritance order.
@@ -559,7 +559,7 @@ python_convert_shebangs() {
 	done
 
 	if [[ "${shebangs_converted}" == "0" ]]; then
-		eqawarn "${FUNCNAME}(): Python scripts not found"
+		ewarn "${FUNCNAME}(): Python scripts not found"
 	fi
 }
 

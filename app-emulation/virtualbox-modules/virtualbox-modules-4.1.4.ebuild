@@ -40,7 +40,9 @@ src_prepare() {
 		grep -lR linux/autoconf.h *  | xargs sed -i -e 's:<linux/autoconf.h>:<generated/autoconf.h>:'
 	fi
 
-	use pax_kernel && epatch "${FILESDIR}"/${PN}-4.1.4-pax-const.patch
+	if use pax_kernel && kernel_is -ge 3 0 0 ; then
+		epatch "${FILESDIR}"/${PN}-4.1.4-pax-const.patch
+	fi
 }
 
 src_install() {
@@ -53,9 +55,5 @@ pkg_postinst() {
 	elog "be sure to load all the needed modules."
 	elog ""
 	elog "Please add \"vboxdrv\", \"vboxnetflt\" and \"vboxnetadp\" to:"
-	if has_version sys-apps/openrc; then
-		elog "/etc/conf.d/modules"
-	else
-		elog "/etc/modules.autoload.d/kernel-${KV_MAJOR}.${KV_MINOR}"
-	fi
+	elog "/etc/conf.d/modules"
 }

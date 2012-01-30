@@ -7,7 +7,7 @@ EAPI="3"
 PYTHON_DEPEND="*:2.6"
 PYTHON_USE_WITH="xml"
 
-inherit python
+inherit python eutils
 
 DESCRIPTION="Collection of developer scripts for Gentoo"
 HOMEPAGE="http://www.gentoo.org/proj/en/portage/tools/index.xml"
@@ -22,6 +22,10 @@ DEPEND=""
 RDEPEND="sys-apps/portage
 	dev-lang/perl
 	sys-apps/diffutils"
+
+src_prepare() {
+	epatch "${FILESDIR}/${P}-tests.patch"
+}
 
 src_test() {
 	# echangelog test is not able to run as root

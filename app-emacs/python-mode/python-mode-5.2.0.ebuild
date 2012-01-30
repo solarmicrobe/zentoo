@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -16,14 +16,10 @@ KEYWORDS="amd64"
 IUSE=""
 
 S="${WORKDIR}/${PN}"
+# doctest-mode has its own package, pycomplete is not yet ready for production
+ELISP_REMOVE="doctest-mode.el pycomplete.el"
 SITEFILE="50${PN}-gentoo.el"
 DOCS="NEWS"
-
-src_prepare() {
-	# doctest-mode has its own package,
-	# pycomplete is not yet ready for production.
-	rm doctest-mode.el pycomplete.el || die
-}
 
 pkg_postinst() {
 	elisp-site-regen

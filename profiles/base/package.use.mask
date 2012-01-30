@@ -1,9 +1,50 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.296 2011/12/22 12:27:04 aballier Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.305 2012/01/29 14:52:52 wired Exp $
 
 # This file requires >=portage-2.1.1
 # New entries go on top.
+
+# Alex Alexander <wired@gentoo.org> (29 Jan 2012)
+# Experimental use flags
+~x11-libs/qt-assistant-4.8.0 c++0x qpa
+~x11-libs/qt-core-4.8.0 c++0x qpa
+~x11-libs/qt-declarative-4.8.0 c++0x qpa
+~x11-libs/qt-dbus-4.8.0 c++0x qpa
+~x11-libs/qt-demo-4.8.0 c++0x qpa
+~x11-libs/qt-gui-4.8.0 c++0x qpa
+~x11-libs/qt-multimedia-4.8.0 c++0x qpa
+~x11-libs/qt-opengl-4.8.0 c++0x qpa
+~x11-libs/qt-openvg-4.8.0 c++0x qpa
+~x11-libs/qt-phonon-4.8.0 c++0x qpa
+~x11-libs/qt-qt3support-4.8.0 c++0x qpa
+~x11-libs/qt-script-4.8.0 c++0x qpa
+~x11-libs/qt-sql-4.8.0 c++0x qpa
+~x11-libs/qt-svg-4.8.0 c++0x qpa
+~x11-libs/qt-test-4.8.0 c++0x qpa
+~x11-libs/qt-webkit-4.8.0 c++0x qpa
+~x11-libs/qt-xmlpatterns-4.8.0 c++0x qpa
+
+# Johannes Huber <johu@gentoo.org> (25 Jan 2012)
+# Required >=net-libs/telepathy-glib-0.17.2 version is not tree yet. 
+# Remove this entry if it's available.
+>=net-libs/telepathy-qt-0.9.0 glib
+
+# Samuli Suominen <ssuominen@gentoo.org> (10 Jan 2012)
+# This is required only for Linux, so mask it here and unmask in
+# default/linux/package.use.mask. Bug 354923.
+app-arch/libarchive e2fsprogs
+
+# Alexandre Rostovtsev <tetromono@gentoo.org> (09 Jan 2012)
+# jsc JIT compilation is supported only on amd64/arm/x86 and their prefixes, so
+# it's masked here and unmasked in individual profiles (bug #396313).
+net-libs/webkit-gtk jit
+
+# Samuli Suominen <ssuominen@gentoo.org> (05 Jan 2012)
+# Masked for keywording AND testing. This mask entry can be
+# removed by the systemd maintainers when they think it's
+# ready.
+sys-auth/polkit systemd
 
 # Mike Frysinger <vapier@gentoo.org> (06 Dec 2011)
 # No one should be mucking with libssp unless they really know what they're
@@ -114,10 +155,6 @@ gnustep-base/gnustep-make libobjc2
 # incompatible with >=sci-mathematics/octave-3.4.0
 sci-libs/mathgl octave
 
-# Samuli Suominen <ssuominen@gentoo.org> (29 Mar 2011)
-# This would need x11-libs/gtk+:3 stable.
-x11-libs/libnotify test
-
 # Luca Barbato <lu_zero@gentoo.org> (28 Mar 2011)
 # Mask mplayer2 arch specific flags
 media-video/mplayer2 bluray
@@ -139,15 +176,11 @@ sys-fs/lvm2 clvm cman
 # Gilles Dartiguelongue <eva@gentoo.org> (23 Feb 2011)
 # libgnome[esd] ABI broken, bug #348644 and bug #352260.
 >=gnome-base/libgnome-2.32 esd
-app-text/stardict pronounce
+<app-text/stardict-3.0.3 pronounce
 
 # Raúl Porcel <armin76@gentoo.org> (13 Feb 2011)
 # Masked until devs know how to use repoman
 <media-video/mplayer-9999 bluray
-
-# Diego Elio Pettenò <flameeyes@gentoo.org> (02 Dec 2010)
-# Unmask as soon as bio2jack is back into stable (0.9-r1 or later).
-media-plugins/audacious-plugins jack
 
 # Robin H. Johnson <robbat2@gentoo.org> (28 Nov 2010)
 # bug 344885: USE=debug causes compile to fail presently.
@@ -326,7 +359,7 @@ media-video/mplayer cpudetection custom-cpuopts bindist
 # Win32 specific useflags for vlc. Can be used for cross-compiling.
 media-video/vlc direct2d directx dshow dxva2 waveout wingdi
 # Mac OSX / iPhone OS specific useflags
-media-video/vlc audioqueue ios-vout macosx macosx-audio macosx-dialog-provider macosx-eyetv macosx-quartztext macosx-qtcapture macosx-qtkit macosx-vout
+media-video/vlc audioqueue ios-vout macosx macosx-audio macosx-dialog-provider macosx-eyetv macosx-quartztext macosx-qtkit macosx-vout
 # media-library does not build
 media-video/vlc media-library
 

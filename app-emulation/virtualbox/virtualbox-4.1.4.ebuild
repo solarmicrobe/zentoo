@@ -168,6 +168,9 @@ src_prepare() {
 	# Don't build vboxpci.ko module (D'oh!)
 	epatch "${FILESDIR}"/${PN}-4.1.2-vboxpci-build.patch
 
+	# Fixed compilation with yasm-1.2.0 (bug #391189)
+	epatch "${FILESDIR}"/${PN}-4.1.6-yasm120-fix.patch
+
 	# Use PAM only when pam USE flag is enbaled (bug #376531)
 	if ! use pam ; then
 		elog "Disabling PAM removes the possibility to use the VRDP features."
@@ -180,8 +183,8 @@ src_prepare() {
 	if use java ; then
 		sed "s:/usr/lib/jvm/java-6-sun:$(java-config -O):" \
 			-i "${S}"/Config.kmk || die
+		java-pkg-opt-2_src_prepare
 	fi
-	java-pkg-opt-2_src_prepare
 }
 
 src_configure() {

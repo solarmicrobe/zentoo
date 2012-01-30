@@ -86,7 +86,6 @@ move dev-php5/pecl-imagick dev-php/pecl-imagick
 move dev-php5/pecl-lzf dev-php/pecl-lzf
 move dev-php5/pecl-mailparse dev-php/pecl-mailparse
 move dev-php5/pecl-mcve dev-php/pecl-mcve
-move dev-php5/pecl-memcache dev-php/pecl-memcache
 move dev-php5/pecl-memcached dev-php/pecl-memcached
 move dev-php5/pecl-mogilefs dev-php/pecl-mogilefs
 move dev-php5/pecl-mongo dev-php/pecl-mongo

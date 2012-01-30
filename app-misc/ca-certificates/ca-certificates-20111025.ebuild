@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -17,7 +17,8 @@ KEYWORDS="amd64"
 IUSE=""
 
 # platforms like AIX don't have a good ar
-DEPEND="kernel_AIX? ( app-arch/deb2targz )"
+DEPEND="kernel_AIX? ( app-arch/deb2targz )
+	!<sys-apps/portage-2.1.10.41"
 # openssl: we run `c_rehash`
 # debianutils: we run `run-parts`
 RDEPEND="${DEPEND}

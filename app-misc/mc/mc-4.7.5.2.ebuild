@@ -59,7 +59,7 @@ src_install() {
 	dodoc AUTHORS README
 
 	# fix bug #334383
-	if [[ ${EUID} == 0 ]] ; then
+	if use kernel_linux && [[ ${EUID} == 0 ]] ; then
 		fowners root:tty /usr/libexec/mc/cons.saver ||
 			die "setting cons.saver's owner failed"
 		fperms g+s /usr/libexec/mc/cons.saver ||

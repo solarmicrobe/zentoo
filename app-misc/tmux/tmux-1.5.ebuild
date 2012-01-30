@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=4
 
-inherit toolchain-funcs
+inherit eutils autotools
 
 DESCRIPTION="Terminal multiplexer"
 HOMEPAGE="http://tmux.sourceforge.net"
@@ -22,6 +22,8 @@ RDEPEND="${DEPEND}
 	vim-syntax? ( || (
 			app-editors/vim
 			app-editors/gvim ) )"
+
+DOCS=( CHANGES FAQ NOTES TODO )
 
 pkg_setup() {
 	if has_version "<app-misc/tmux-1.3"; then
@@ -41,29 +43,26 @@ pkg_setup() {
 	fi
 }
 
-src_configure() {
-	# The configure script isn't created by GNU autotools.
-	./configure || die "configure failed"
-}
-
-src_compile() {
-	emake CC="$(tc-getCC)" || die "emake failed"
+src_prepare() {
+	epatch "${FILESDIR}"/${P}-darwin.patch  # drop on next release
+	eautoreconf  # for darwin patch
+	# look for config file in the prefix
+	sed -i -e '/SYSTEM_CFG/s:"/etc:"'"${EPREFIX}"'/etc:' tmux.h || die
+	# and don't just add some includes
+	sed -i -e 's:-I/usr/local/include::' Makefile.in || die
 }
 
 src_install() {
-	dobin tmux || die "dobin failed"
+	default
 
-	dodoc CHANGES FAQ NOTES TODO || die "dodoc failed"
 	docinto examples
-	dodoc examples/*.conf || die "dodoc examples failed"
-
-	doman tmux.1 || die "doman failed"
+	dodoc examples/*.conf
 
 	if use vim-syntax; then
 		insinto /usr/share/vim/vimfiles/syntax
-		doins examples/tmux.vim || die "doins syntax failed"
+		doins examples/tmux.vim
 
 		insinto /usr/share/vim/vimfiles/ftdetect
-		doins "${FILESDIR}"/tmux.vim || die "doins ftdetect failed"
+		doins "${FILESDIR}"/tmux.vim
 	fi
 }
