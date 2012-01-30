@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -38,15 +38,15 @@ src_configure() {
 	econf \
 		$(use_enable nls gettext) \
 		--enable-shared $(use_enable static-libs static) \
-		--libexecdir=/usr/$(get_libdir) \
-		--bindir=/bin
+		--libexecdir="${EPREFIX}"/usr/$(get_libdir) \
+		--bindir="${EPREFIX}"/bin
 }
 
 src_install() {
 	emake DIST_ROOT="${D}" install install-lib install-dev || die
 	use static-libs || find "${D}" -name '*.la' -delete
 	# the man-pages packages provides the man2 files
-	rm -r "${D}"/usr/share/man/man2
+	rm -r "${ED}"/usr/share/man/man2
 
 	# we install attr into /bin, so we need the shared lib with it
 	gen_usr_ldscript -a attr
