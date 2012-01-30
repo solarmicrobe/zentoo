@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
 
 inherit autotools eutils fixheadtails
 
@@ -13,11 +13,9 @@ SRC_URI="http://www.nic.ad.jp/ja/idn/idnkit/download/sources/${P}-src.tar.gz"
 LICENSE="JNIC"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
+IUSE="static-libs"
 
-DEPEND="sys-libs/glibc"
-RDEPEND="${DEPEND}"
-# non gnu systems need libiconv
+DEPEND="virtual/libiconv"
 
 S=${WORKDIR}/${P}-src
 
@@ -29,7 +27,18 @@ src_prepare() {
 	eautoreconf
 }
 
+src_configure() {
+	myconf=""
+	if has_version dev-libs/libiconv; then
+		myconf="--with-iconv"
+	fi
+	econf $(use_enable static-libs static) ${myconf}
+}
+
 src_install() {
-	emake DESTDIR="${D}" install || die
+	default
+	if ! use static-libs; then
+		rm -f "${D}"/usr/lib*/lib*.la
+	fi
 	dodoc ChangeLog DISTFILES NEWS README README.ja
 }
