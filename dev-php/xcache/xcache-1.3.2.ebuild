@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -23,7 +23,7 @@ IUSE=""
 RESTRICT="test"
 
 DEPEND="virtual/httpd-php
-!dev-php/eaccelerator !dev-php5/pecl-apc"
+!dev-php/eaccelerator !dev-php/pecl-apc"
 RDEPEND="${DEPEND}"
 
 src_configure() {
