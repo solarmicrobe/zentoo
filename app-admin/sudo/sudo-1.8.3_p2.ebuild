@@ -1,21 +1,17 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI="4"
 
 inherit eutils pam multilib libtool
 
 MY_P=${P/_/}
 MY_P=${MY_P/beta/b}
 
-case "${P}" in
-	*_beta* | *_rc*)
-		uri_prefix=beta/
-		;;
-	*)
-		uri_prefix=""
-		;;
+uri_prefix=
+case ${P} in
+*_beta*|*_rc*) uri_prefix=beta/ ;;
 esac
 
 DESCRIPTION="Allows users or groups to run commands as other users"
@@ -26,7 +22,6 @@ SRC_URI="http://www.sudo.ws/sudo/dist/${uri_prefix}${MY_P}.tar.gz
 # Basic license is ISC-style as-is, some files are released under
 # 3-clause BSD license
 LICENSE="as-is BSD"
-
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="pam offensive ldap selinux skey"
@@ -38,6 +33,7 @@ DEPEND="pam? ( virtual/pam )
 		dev-libs/cyrus-sasl
 	)
 	>=app-misc/editor-wrapper-3
+	sys-libs/zlib
 	virtual/editor
 	virtual/mta"
 RDEPEND="selinux? ( sec-policy/selinux-sudo )
@@ -51,68 +47,65 @@ S=${WORKDIR}/${MY_P}
 
 REQUIRED_USE="pam? ( !skey ) skey? ( !pam )"
 
-MAKEOPTS="${MAKEOPTS} SAMPLES="
+MAKEOPTS+=" SAMPLES="
 
 src_prepare() {
+	epatch "${FILESDIR}"/${PN}-1.8.3_p1-linguas.patch
 	elibtoolize
 }
 
-src_configure() {
-	local line ROOTPATH
-
+set_rootpath() {
 	# FIXME: secure_path is a compile time setting. using ROOTPATH
 	# is not perfect, env-update may invalidate this, but until it
 	# is available as a sudoers setting this will have to do.
-	einfo "Setting secure_path..."
+	einfo "Setting secure_path ..."
 
-		# why not use grep? variable might be expanded from other variables
-		# declared in that file. cannot just source the file, would override
-		# any variables already set.
-		eval `PS4= bash -x /etc/profile.env 2>&1 | \
-			while read line; do
-				case $line in
-					ROOTPATH=*) echo $line; break;;
-					*) continue;;
-				esac
-			done`  && einfo "	Found ROOTPATH..." || \
-				ewarn "	Failed to find ROOTPATH, please report this."
+	# first extract the default ROOTPATH from build env
+	ROOTPATH=$(unset ROOTPATH; . /etc/profile.env; echo "${ROOTPATH}")
+	if [[ -z ${ROOTPATH} ]] ; then
+		ewarn "	Failed to find ROOTPATH, please report this"
+	fi
 
-		# remove duplicate path entries from $1
-		cleanpath() {
-			local i=1 x n IFS=:
-			local -a paths;	paths=($1)
+	# then remove duplicate path entries
+	cleanpath() {
+		local newpath thisp IFS=:
+		for thisp in $1 ; do
+			if [[ :${newpath}: != *:${thisp}:* ]] ; then
+				newpath+=:$thisp
+			else
+				einfo "   Duplicate entry ${thisp} removed..."
+			fi
+		done
+		ROOTPATH=${newpath#:}
+	}
+	cleanpath /bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin${ROOTPATH:+:${ROOTPATH}}
 
-			for ((n=${#paths[*]}-1;i<=n;i++)); do
-				for ((x=0;x<i;x++)); do
-					test "${paths[i]}" == "${paths[x]}" && {
-						einfo "	Duplicate entry ${paths[i]} removed..." 1>&2
-						unset paths[i]; continue 2; }
-				done; # einfo "	Adding ${paths[i]}..." 1>&2
-			done; echo "${paths[*]}"
-		}
+	# finally, strip gcc paths #136027
+	rmpath() {
+		local e newpath thisp IFS=:
+		for thisp in ${ROOTPATH} ; do
+			for e ; do [[ $thisp == $e ]] && continue 2 ; done
+			newpath+=:$thisp
+		done
+		ROOTPATH=${newpath#:}
+	}
+	rmpath '*/gcc-bin/*' '*/gnat-gcc-bin/*' '*/gnat-gcc/*'
 
-		ROOTPATH=$(cleanpath /bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/opt/bin${ROOTPATH:+:${ROOTPATH}})
+	einfo "... done"
+}
 
-		# strip gcc path (bug #136027)
-		rmpath() {
-			declare e newpath oldpath=${!1} PATHvar=$1 thisp IFS=:
-			shift
-			for thisp in $oldpath; do
-				for e; do [[ $thisp == $e ]] && continue 2; done
-				newpath=$newpath:$thisp
-			done
-			eval $PATHvar='${newpath#:}'
-		}
-
-		rmpath ROOTPATH '*/gcc-bin/*'
-		rmpath ROOTPATH '*/gnat-gcc-bin/*'
-		rmpath ROOTPATH '*/gnat-gcc/*'
-
-	einfo "...done."
+src_configure() {
+	local ROOTPATH
+	set_rootpath
 
 	# audit: somebody got to explain me how I can test this before I
-	# enable it.. — Diego
-	econf --with-secure-path="${ROOTPATH}" \
+	# enable it.. - Diego
+	# plugindir: autoconf code is crappy and does not delay evaluation
+	# until `make` time, so we have to use a full path here rather than
+	# basing off other values.
+	econf \
+		--enable-zlib=system \
+		--with-secure-path="${ROOTPATH}" \
 		--with-editor=/usr/libexec/editor \
 		--with-env-editor \
 		$(use_with offensive insults) \
@@ -121,6 +114,7 @@ src_configure() {
 		$(use_with ldap) \
 		$(use_with pam) \
 		$(use_with skey) \
+		$(use_with selinux) \
 		--without-opie \
 		--without-linux-audit \
 		--with-timedir=/var/db/sudo \
@@ -131,17 +125,18 @@ src_configure() {
 src_install() {
 	emake DESTDIR="${D}" install || die
 
-	if use ldap; then
+	if use ldap ; then
 		dodoc README.LDAP doc/schema.OpenLDAP
 		dosbin plugins/sudoers/sudoers2ldif
 
-		cat - > "${T}"/ldap.conf.sudo <<EOF
-# See ldap.conf(5) and README.LDAP for details\n"
-# This file should only be readable by root\n\n"
-# supported directives: host, port, ssl, ldap_version\n"
-# uri, binddn, bindpw, sudoers_base, sudoers_debug\n"
-# tls_{checkpeer,cacertfile,cacertdir,randfile,ciphers,cert,key
-EOF
+		cat <<-EOF > "${T}"/ldap.conf.sudo
+		# See ldap.conf(5) and README.LDAP for details
+		# This file should only be readable by root
+
+		# supported directives: host, port, ssl, ldap_version
+		# uri, binddn, bindpw, sudoers_base, sudoers_debug
+		# tls_{checkpeer,cacertfile,cacertdir,randfile,ciphers,cert,key
+		EOF
 
 		insinto /etc
 		doins "${T}"/ldap.conf.sudo
@@ -155,11 +150,11 @@ EOF
 }
 
 pkg_postinst() {
-	if use ldap; then
+	if use ldap ; then
 		ewarn
 		ewarn "sudo uses the /etc/ldap.conf.sudo file for ldap configuration."
 		ewarn
-		if egrep -q '^[[:space:]]*sudoers:' "${ROOT}"/etc/nsswitch.conf; then
+		if grep -qs '^[[:space:]]*sudoers:' "${ROOT}"/etc/nsswitch.conf ; then
 			ewarn "In 1.7 series, LDAP is no more consulted, unless explicitly"
 			ewarn "configured in /etc/nsswitch.conf."
 			ewarn
