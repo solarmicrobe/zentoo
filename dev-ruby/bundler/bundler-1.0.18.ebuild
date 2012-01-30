@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ EAPI=2
 
 # ruby19 → uncountable number of test failures
 # jruby → needs to be tested because jruby-1.5.1 fails in multiple
-# ways unrelated to this package
+# ways unrelated to this package.
 USE_RUBY="ruby18 ree18"
 
 RUBY_FAKEGEM_TASK_TEST="spec"
@@ -25,9 +25,9 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-ruby_add_rdepend dev-ruby/rubygems
+ruby_add_rdepend virtual/rubygems
 
-ruby_add_bdepend "test? ( dev-ruby/rspec:2 )"
+ruby_add_bdepend "test? ( app-text/ronn dev-ruby/rspec:2 )"
 
 RDEPEND="${RDEPEND}
 	dev-vcs/git"
@@ -38,7 +38,7 @@ RUBY_PATCHES=( "${FILESDIR}"/${PN}-1.0.3-gentoo.patch )
 
 all_ruby_prepare() {
 	# Reported upstream: http://github.com/carlhuda/bundler/issues/issue/738
-	sed -i -e '685s/should/should_not/' spec/runtime/setup_spec.rb || die
+	sed -i -e '707s/should/should_not/' spec/runtime/setup_spec.rb || die
 
 	# Fails randomly and no clear cause can be found. Might be related
 	# to bug 346357. This was broken in previous releases without a
