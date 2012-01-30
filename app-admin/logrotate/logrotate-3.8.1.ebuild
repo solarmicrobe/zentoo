@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -33,7 +33,8 @@ src_prepare() {
 		"${FILESDIR}"/${PN}-3.7.7-datehack.patch \
 		"${FILESDIR}"/${PN}-3.8.0-ignore-hidden.patch \
 		"${FILESDIR}"/${PN}-3.8.0-fbsd.patch \
-		"${FILESDIR}"/${PN}-3.8.0-atomic-create.patch
+		"${FILESDIR}"/${PN}-3.8.0-atomic-create.patch \
+		"${FILESDIR}"/${PN}-3.8.1-noasprintf.patch
 }
 
 src_configure() {
@@ -43,8 +44,8 @@ src_configure() {
 src_compile() {
 	local myconf
 	myconf="CC=$(tc-getCC)"
-	useq selinux && myconf="${myconf} WITH_SELINUX=yes"
-	useq acl && myconf="${myconf} WITH_ACL=yes"
+	use selinux && myconf="${myconf} WITH_SELINUX=yes"
+	use acl && myconf="${myconf} WITH_ACL=yes"
 	emake ${myconf} RPM_OPT_FLAGS="${CFLAGS}" || die "emake failed"
 }
 
@@ -52,7 +53,7 @@ src_install() {
 	insinto /usr
 	dosbin logrotate
 	doman logrotate.8
-	dodoc examples/logrotate*
+	dodoc CHANGES examples/logrotate*
 
 	exeinto /etc/cron.daily
 	doexe "${FILESDIR}"/logrotate.cron
