@@ -65,10 +65,6 @@ net-misc/openssh X
 sys-apps/groff X
 sys-fs/mtools X
 
-# do not support gobject introspection for now
-x11-libs/pango introspection
-x11-libs/gdk-pixbuf introspection
-
 # do not depend on gdbus-codegen and systemtap
 dev-libs/glib utils systemtap
 
