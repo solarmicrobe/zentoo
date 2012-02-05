@@ -1,21 +1,21 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 
-inherit base
+inherit base flag-o-matic
 
 MY_P=${P/_/-}
 
 DESCRIPTION="GNU Midnight Commander is a text based file manager"
 HOMEPAGE="http://www.midnight-commander.org"
-SRC_URI="http://www.midnight-commander.org/downloads/${MY_P}.tar.lzma"
+SRC_URI="http://www.midnight-commander.org/downloads/${MY_P}.tar.xz"
 
-LICENSE="GPL-2"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="+edit gpm +ncurses nls samba slang X"
+IUSE="+edit gpm mclib +ncurses nls samba slang test X +xdg"
 
 REQUIRED_USE="^^ ( ncurses slang )"
 
@@ -33,13 +33,19 @@ RDEPEND=">=dev-libs/glib-2.8:2
 DEPEND="${RDEPEND}
 	app-arch/xz-utils
 	dev-util/pkgconfig
-	nls? ( sys-devel/gettext )"
+	nls? ( sys-devel/gettext )
+	test? ( dev-libs/check )
+	"
 
 S=${WORKDIR}/${MY_P}
 
 src_configure() {
 	local myscreen=ncurses
 	use slang && myscreen=slang
+	[[ ${CHOST} == *-solaris* ]] && append-ldflags "-lnsl -lsocket"
+
+	local homedir=".mc"
+	use xdg && homedir="XDG"
 
 	econf \
 		--disable-dependency-tracking \
@@ -51,12 +57,15 @@ src_configure() {
 		$(use_enable samba vfs-smb) \
 		$(use_with gpm gpm-mouse) \
 		--with-screen=${myscreen} \
-		$(use_with edit)
+		$(use_with edit) \
+		$(use_enable mclib) \
+		$(use_enable test tests) \
+		--with-homedir=${homedir}
 }
 
 src_install() {
 	emake DESTDIR="${D}" install || die
-	dodoc AUTHORS README
+	dodoc AUTHORS README NEWS
 
 	# fix bug #334383
 	if use kernel_linux && [[ ${EUID} == 0 ]] ; then

@@ -1,21 +1,24 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-DESCRIPTION="A somewhat comprehensive collection of Linux german man page translations"
-HOMEPAGE="http://www.infodrom.org/projects/manpages-de/"
-SRC_URI="http://www.infodrom.org/projects/manpages-de/download/manpages-de-${PV}.tar.gz"
+MY_PN="manpages-de"
 
-LICENSE="as-is GPL-2 BSD"
+DESCRIPTION="A somewhat comprehensive collection of Linux german man page translations"
+HOMEPAGE="http://alioth.debian.org/projects/manpages-de/"
+SRC_URI="http://manpages-de.alioth.debian.org/downloads/${MY_PN}-${PV}.tar.bz2"
+
+LICENSE="as-is GPL-2 GPL-3 BSD"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="virtual/man"
+S="${WORKDIR}/${MY_PN}-${PV}"
 
-S=${WORKDIR}/manpages-de-${PV}
-
-src_compile() { :; }
+src_compile() {
+	:;
+}
 
 src_install() {
 	make MANDIR="${D}"/usr/share/man/de install  || die

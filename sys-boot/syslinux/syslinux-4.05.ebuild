@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -10,7 +10,7 @@ SRC_URI="mirror://kernel/linux/utils/boot/syslinux/${PV:0:1}.xx/${P/_/-}.tar.bz2
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="-* amd64"
+KEYWORDS="amd64"
 IUSE="custom-cflags"
 
 RDEPEND="sys-fs/mtools
@@ -31,7 +31,10 @@ src_unpack() {
 	unpack ${A}
 	cd "${S}"
 	# Fix building on hardened
-	epatch "${FILESDIR}"/${PN}-4.00-nopie.patch
+	epatch "${FILESDIR}"/${PN}-4.05-nopie.patch
+
+	# Fix building with --as-needed
+	epatch "${FILESDIR}"/${PN}-4.05-asneeded-linking-order.patch
 
 	rm -f gethostip #bug 137081
 

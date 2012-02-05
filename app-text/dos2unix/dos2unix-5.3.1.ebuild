@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI=4
 
 inherit eutils toolchain-funcs
 
@@ -26,6 +26,8 @@ DEPEND="
 	dev-lang/perl"
 
 src_prepare() {
+	epatch "${FILESDIR}"/${PN}-5.3.1-fix_debug_build.patch
+
 	sed \
 		-e '/^LDFLAGS/s|=|+=|' \
 		-e '/^CC/s|=|?=|' \
@@ -44,12 +46,10 @@ lintl() {
 
 src_compile() {
 	emake prefix="${EPREFIX}/usr" \
-		$(use nls && echo "LDFLAGS_EXTRA=$(lintl)" || echo "ENABLE_NLS=") \
-		|| die
+		$(use nls && echo "LDFLAGS_EXTRA=$(lintl)" || echo "ENABLE_NLS=")
 }
 
 src_install() {
 	emake DESTDIR="${D}" prefix="${EPREFIX}/usr" \
-		$(use nls || echo "ENABLE_NLS=") install \
-		|| die "emake install failed"
+		$(use nls || echo "ENABLE_NLS=") install
 }

@@ -1,11 +1,11 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=4
 
 MODULE_AUTHOR=ADAMK
-MODULE_VERSION=1.48
+MODULE_VERSION=1.50
 inherit perl-module
 
 DESCRIPTION="Read/Write YAML files with as little code as possible"

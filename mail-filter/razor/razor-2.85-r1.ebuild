@@ -1,12 +1,14 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 inherit perl-app
 
+MY_PN="razor-agents"
+MY_P="${MY_PN}-${PV}"
 DESCRIPTION="Vipul's Razor is a distributed, collaborative spam detection and filtering network"
 HOMEPAGE="http://razor.sourceforge.net/"
-SRC_URI="mirror://sourceforge/razor/razor-agents-${PV}.tar.bz2"
+SRC_URI="mirror://sourceforge/razor/${MY_P}.tar.bz2"
 LICENSE="Artistic"
 SLOT="0"
 KEYWORDS="amd64"
@@ -17,11 +19,16 @@ DEPEND="dev-lang/perl"
 RDEPEND="dev-perl/Net-DNS
 	virtual/perl-net-ping
 	virtual/perl-Time-HiRes
-	dev-perl/Digest-SHA1
+	|| ( virtual/perl-Digest-SHA dev-perl/Digest-SHA1 )
 	dev-perl/URI
 	dev-perl/Digest-Nilsimsa"
 
-S=${WORKDIR}/razor-agents-${PV}
+PATCHES=(
+	"${FILESDIR}/${PN}-2.85-use-sha-not-sha1.patch"
+	"${FILESDIR}/${PN}-2.85-cosmetic-pv-fix.patch"
+	)
+
+S=${WORKDIR}/${MY_P}
 
 pkg_postinst() {
 	elog

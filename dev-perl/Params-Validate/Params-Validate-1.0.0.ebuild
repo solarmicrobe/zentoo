@@ -1,11 +1,11 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 
 MODULE_AUTHOR=DROLSKY
-MODULE_VERSION=0.98
+MODULE_VERSION=1.00
 inherit perl-module
 
 DESCRIPTION="A module to provide a flexible system for validation method/function call parameters"

@@ -1,6 +1,6 @@
-diff -ur a/com32/MCONFIG b/com32/MCONFIG
---- a/com32/MCONFIG	2010-02-16 23:53:51.000000000 +0100
-+++ b/com32/MCONFIG	2010-02-18 22:28:18.791609195 +0100
+diff -ur a/mk/com32.mk b/mk/com32.mk
+--- a/mk/com32.mk	2011-12-09 19:28:17.000000000 +0100
++++ b/mk/com32.mk	2011-12-18 18:22:11.032342645 +0100
 @@ -24,6 +24,8 @@
  GCCOPT += $(call gcc_ok,-freg-struct-return,)
  GCCOPT += -mregparm=3 -DREGPARM=3 -march=i386 -Os
