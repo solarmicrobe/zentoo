@@ -17,7 +17,6 @@ DEPEND=">=dev-libs/popt-1.5
 	acl? ( virtual/acl )
 	xattr? ( kernel_linux? ( sys-apps/attr ) )
 	iconv? ( virtual/libiconv )"
-RDEPEND="${DEPEND}"
 
 S=${WORKDIR}/${P/_/}
 

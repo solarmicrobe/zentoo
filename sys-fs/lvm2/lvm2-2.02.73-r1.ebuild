@@ -17,6 +17,7 @@ KEYWORDS="amd64"
 IUSE="readline +static clvm cman +lvm1 selinux"
 
 DEPEND_COMMON="!!sys-fs/device-mapper
+	readline? ( sys-libs/readline )
 	clvm? ( =sys-cluster/dlm-2*
 			cman? ( =sys-cluster/cman-2* ) )
 	>=sys-fs/udev-151-r4"

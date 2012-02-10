@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -43,8 +43,6 @@ src_prepare() {
 	# This will avoid polluting the pkg-config file with versioned libpng,
 	# which is causing problems with libpng14 -> libpng15 upgrade
 	sed -i -e 's:libpng15:libpng libpng15:' configure.ac || die
-
-	elibtoolize
 	eautoreconf
 }
 

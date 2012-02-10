@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=4
+
 inherit eutils flag-o-matic libtool toolchain-funcs
 
 DESCRIPTION="A Type 1 Font Rasterizer Library for UNIX/X11"
@@ -11,21 +13,22 @@ SRC_URI="ftp://sunsite.unc.edu/pub/Linux/libs/graphics/${P}.tar.gz"
 LICENSE="LGPL-2 GPL-2"
 SLOT="5"
 KEYWORDS="amd64"
-IUSE="X doc"
+IUSE="X doc static-libs"
 
-RDEPEND="X? ( x11-libs/libXaw
-			x11-libs/libX11
-			x11-libs/libXt )"
+RDEPEND="X? (
+		x11-libs/libXaw
+		x11-libs/libX11
+		x11-libs/libXt
+	)"
 DEPEND="${RDEPEND}
 	doc? ( virtual/latex-base )
-	X? ( x11-libs/libXfont
+	X? (
+		x11-libs/libXfont
 		x11-proto/xproto
-		x11-proto/fontsproto )"
+		x11-proto/fontsproto
+	)"
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-
+src_prepare() {
 	epatch "${FILESDIR}"/${PN}-5.1.1-parallel.patch
 	epatch "${FILESDIR}"/${PN}-do-not-install-t1lib_doc.patch
 
@@ -33,6 +36,13 @@ src_unpack() {
 	sed -i -e "s:\./\(t1lib\.config\):/etc/t1lib/\1:" "${S}"/xglyph/xglyph.c
 	# Needed for sane .so versionning on fbsd. Please don't drop.
 	elibtoolize
+}
+
+src_configure() {
+	econf \
+		--datadir="${EPREFIX}/etc" \
+		$(use_enable static-libs static) \
+		$(use_with X x)
 }
 
 src_compile() {
@@ -47,16 +57,13 @@ src_compile() {
 		VARTEXFONTS=${T}/fonts
 	fi
 
-	econf \
-		--datadir=/etc \
-		$(use_with X x) \
-		|| die "econf failed."
-
 	emake ${myopt} || die "emake failed."
 }
 
 src_install() {
-	make DESTDIR="${D}" install || die "make install failed."
+	default
+	use static-libs || find "${ED}" -name '*.la' -exec rm -f {} +
+
 	dodoc Changes README*
 	if use doc; then
 		cd doc

@@ -206,7 +206,7 @@ src_test() {
 	local t tests skipped failed passed shell
 	tests="interop-tests compat-tests"
 	skipped=""
-	shell=$(getent passwd ${UID} | cut -d: -f7)
+	shell=$(egetshell ${UID})
 	if [[ ${shell} == */nologin ]] || [[ ${shell} == */false ]] ; then
 		elog "Running the full OpenSSH testsuite"
 		elog "requires a usable shell for the 'portage'"

@@ -14,7 +14,7 @@ DESCRIPTION="Python Cryptography Toolkit"
 HOMEPAGE="http://www.dlitz.net/software/pycrypto/ http://pypi.python.org/pypi/pycrypto"
 SRC_URI="http://ftp.dlitz.net/pub/dlitz/crypto/pycrypto/${P}.tar.gz"
 
-LICENSE="public-domain PSF-2.2"
+LICENSE="PSF-2 public-domain"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc +gmp"

@@ -45,6 +45,7 @@ app-admin/collectd collectd_plugins_nut
 app-admin/collectd collectd_plugins_onewire
 app-admin/collectd collectd_plugins_oracle
 app-admin/collectd collectd_plugins_ping
+app-admin/collectd collectd_plugins_routeros
 app-admin/collectd collectd_plugins_sensors
 app-admin/collectd collectd_plugins_tokyotyrant
 app-admin/collectd collectd_plugins_varnish

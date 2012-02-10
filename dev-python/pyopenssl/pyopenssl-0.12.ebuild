@@ -15,14 +15,17 @@ DESCRIPTION="Python interface to the OpenSSL library"
 HOMEPAGE="http://pyopenssl.sourceforge.net/ https://launchpad.net/pyopenssl http://pypi.python.org/pypi/pyOpenSSL"
 SRC_URI="mirror://pypi/${MY_PN:0:1}/${MY_PN}/${MY_P}.tar.gz"
 
-LICENSE="LGPL-2.1"
+LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc"
 
 RDEPEND=">=dev-libs/openssl-0.9.6g"
 DEPEND="${RDEPEND}
-	doc? ( >=dev-tex/latex2html-2002.2 )"
+	doc? (
+		=dev-lang/python-2*
+		>=dev-tex/latex2html-2002.2
+	)"
 
 S="${WORKDIR}/${MY_P}"
 
@@ -46,6 +49,8 @@ src_prepare() {
 		-e "s/test_subject_name_hash/_&/" \
 		-i OpenSSL/test/test_crypto.py
 	sed -e "s/test_load_verify_directory/_&/" -i OpenSSL/test/test_ssl.py
+
+	sed -e "s/python/&2/" -i doc/Makefile
 }
 
 src_compile() {
@@ -55,7 +60,7 @@ src_compile() {
 		addwrite /var/cache/fonts
 
 		pushd doc > /dev/null
-		emake html ps dvi || die "Generation of documentation failed"
+		emake -j1 html ps dvi || die "Generation of documentation failed"
 		popd > /dev/null
 	fi
 }

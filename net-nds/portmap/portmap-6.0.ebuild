@@ -15,7 +15,6 @@ IUSE="selinux tcpd"
 
 DEPEND="selinux? ( sec-policy/selinux-portmap )
 	tcpd? ( >=sys-apps/tcp-wrappers-7.6-r7 )"
-RDEPEND="${DEPEND}"
 
 S=${WORKDIR}/${PN}_${PV}
 

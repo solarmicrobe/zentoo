@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
 
 inherit toolchain-funcs
 
@@ -15,19 +15,12 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="nls"
 
+DOCS=( README doc/NEWS doc/TODO )
+
 src_configure() {
 	econf $(use_enable nls)
 }
 
 src_compile() {
-	emake \
-		CC="$(tc-getCC)" \
-		LD="$(tc-getLD)" \
-		|| die
-}
-
-src_install() {
-	emake DESTDIR="${D}" install || die
-
-	dodoc README doc/NEWS doc/TODO || die
+	emake LD="$(tc-getLD)"
 }

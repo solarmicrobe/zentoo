@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -64,7 +64,8 @@ RESTRICT="test"
 
 RDEPEND="selinux? ( sys-libs/libselinux )
 	pam? ( sys-libs/pam )"
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	>=sys-kernel/linux-headers-2.6.39"
 
 S=${WORKDIR}/${MY_P}
 

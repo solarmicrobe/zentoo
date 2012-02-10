@@ -61,6 +61,14 @@ src_install() {
 	newinitd "${FILESDIR}"/atd.rc6 atd
 	newconfd "${FILESDIR}"/atd.confd atd
 	newpamd "${FILESDIR}"/at.pamd atd
+	prepalldocs
+
+	# Preserve existing .SEQ files (bug #386625)
+	local seq_file="${ROOT}/var/spool/at/atjobs/.SEQ"
+	if [ -f "${seq_file}" ] ; then
+		einfo"Preserving existing .SEQ file (bug #386625)."
+		cp -p "${seq_file}" "${D}"/var/spool/at/atjobs/ || die
+	fi
 }
 
 pkg_postinst() {

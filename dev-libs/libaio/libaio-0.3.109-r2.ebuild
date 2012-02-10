@@ -23,9 +23,11 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-0.3.106-build.patch
 	epatch "${FILESDIR}"/${PN}-0.3.107-ar-ranlib.patch
 	epatch "${FILESDIR}"/${PN}-0.3.109-install.patch
+	epatch "${FILESDIR}"/${PN}-0.3.109-x32.patch
 	sed -i \
 		-e "/^libdir=/s:lib$:$(get_libdir):" \
 		-e "/^prefix=/s:/usr:${EPREFIX}/usr:" \
+		-e '/:=.*strip.*shell.*git/s:=.*:=:' \
 		src/Makefile Makefile || die
 }
 
@@ -40,7 +42,9 @@ src_test() {
 }
 
 src_install() {
-	emake install DESTDIR="${ED}" || die
+	# Don't use ED for emake, src_prepare already inserts EPREFIX in the correct
+	# place
+	emake install DESTDIR="${D}" || die
 	doman man/*
 	dodoc ChangeLog TODO
 

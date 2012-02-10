@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -41,4 +41,5 @@ src_unpack() {
 
 src_install() {
 	emake DESTDIR="${D}" docdir=/usr/share/doc/${PF} install || die "make install failed"
+	prepalldocs
 }

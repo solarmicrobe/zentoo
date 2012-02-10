@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -12,7 +12,7 @@ SRC_URI="mirror://slang/v${PV%.*}/${P}.tar.bz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="cjk pcre png readline zlib"
+IUSE="cjk pcre png readline static-libs zlib"
 
 # ncurses for ncurses5-config to get terminfo directory
 RDEPEND="sys-libs/ncurses
@@ -45,7 +45,7 @@ src_configure() {
 }
 
 src_compile() {
-	emake elf static
+	emake elf $(use static-libs && echo static)
 
 	pushd slsh >/dev/null
 	emake slsh
@@ -53,7 +53,7 @@ src_compile() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install-all
+	emake DESTDIR="${D}" install-elf $(use static-libs && echo install-static)
 
 	rm -rf "${D}"/usr/share/doc/{slang,slsh}
 

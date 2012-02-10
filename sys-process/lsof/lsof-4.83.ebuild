@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -17,7 +17,6 @@ KEYWORDS="amd64"
 IUSE="static selinux"
 
 DEPEND="selinux? ( sys-libs/libselinux )"
-RDEPEND="${DEPEND}"
 
 S=${WORKDIR}/${MY_P}/${MY_P}_src
 

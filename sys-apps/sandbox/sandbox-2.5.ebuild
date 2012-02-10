@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -7,7 +7,7 @@
 # period.
 #
 
-inherit eutils flag-o-matic toolchain-funcs multilib
+inherit eutils flag-o-matic toolchain-funcs multilib unpacker
 
 DESCRIPTION="sandbox'd LD_PRELOAD hack"
 HOMEPAGE="http://www.gentoo.org/"
@@ -32,14 +32,6 @@ sandbox_death_notice() {
 }
 
 sb_get_install_abis() { use multilib && get_install_abis || echo ${ABI:-default} ; }
-
-src_unpack() {
-	unpack ${A}
-	if [[ ! -d ${S} ]] ; then
-		# When upgrading from older version, xz unpack may not work #271543
-		xz -dc "${DISTDIR}/${A}" | tar xof - || die
-	fi
-}
 
 src_compile() {
 	filter-lfs-flags #90228

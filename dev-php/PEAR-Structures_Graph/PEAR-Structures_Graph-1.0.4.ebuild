@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -20,7 +20,6 @@ IUSE=""
 SRC_URI="http://pear.php.net/get/${MY_P}.tgz"
 DEPEND="|| ( <dev-lang/php-5.3[pcre] >=dev-lang/php-5.3 )
 		>=dev-php/PEAR-PEAR-1.8.1"
-RDEPEND="${DEPEND}"
 PDEPEND="dev-php/pear"
 HOMEPAGE="http://pear.php.net/package/Structures_Graph"
 

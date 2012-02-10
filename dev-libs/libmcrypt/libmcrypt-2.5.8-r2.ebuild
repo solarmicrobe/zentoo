@@ -28,4 +28,5 @@ src_install() {
 
 	dodoc AUTHORS NEWS README THANKS TODO ChangeLog
 	dodoc doc/README.* doc/example.c
+	prepalldocs
 }

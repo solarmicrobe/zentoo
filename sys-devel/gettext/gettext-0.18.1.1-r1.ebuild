@@ -13,7 +13,7 @@ SRC_URI="mirror://gnu/${PN}/${P}.tar.gz"
 LICENSE="GPL-3 LGPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="acl doc emacs +git nls nocxx openmp elibc_glibc"
+IUSE="acl doc emacs +git nls +cxx openmp elibc_glibc"
 
 DEPEND="virtual/libiconv
 	dev-libs/libxml2
@@ -36,7 +36,7 @@ src_configure() {
 	else
 		myconf="${myconf} --with-included-gettext --enable-nls"
 	fi
-	use nocxx && export CXX=$(tc-getCC)
+	use cxx || export CXX=$(tc-getCC)
 
 	# --without-emacs: Emacs support is now in a separate package
 	# --with-included-glib: glib depends on us so avoid circular deps

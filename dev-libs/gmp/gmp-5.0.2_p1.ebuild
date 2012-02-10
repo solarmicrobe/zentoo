@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -81,7 +81,10 @@ src_install() {
 	# should be a standalone lib
 	rm -f "${D}"/usr/$(get_libdir)/libgmp.la
 	# this requires libgmp
-	use static-libs || rm -f "${D}"/usr/$(get_libdir)/libgmpxx.la
+	local la="${D}/usr/$(get_libdir)/libgmpxx.la"
+	use static-libs \
+		&& sed -i 's:/[^ ]*/libgmp.la:-lgmp:' "${la}" \
+		|| rm -f "${la}"
 
 	dodoc AUTHORS ChangeLog NEWS README
 	dodoc doc/configuration doc/isa_abi_headache

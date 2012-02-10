@@ -16,7 +16,6 @@ KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="!prefix? ( >=sys-kernel/linux-headers-2.6.11 )"
-RDEPEND="${DEPEND}"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.2-makefile-fixup.patch

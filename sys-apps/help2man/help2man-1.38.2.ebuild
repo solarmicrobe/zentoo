@@ -15,11 +15,13 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="nls elibc_glibc"
 
-RDEPEND="dev-lang/perl"
+RDEPEND="dev-lang/perl
+	elibc_glibc? ( nls? (
+		dev-perl/Locale-gettext
+	) )"
 DEPEND="${RDEPEND}
 	elibc_glibc? ( nls? (
 		dev-perl/Locale-gettext
-		>=sys-devel/gettext-0.12.1-r1
 	) )"
 
 src_prepare() {

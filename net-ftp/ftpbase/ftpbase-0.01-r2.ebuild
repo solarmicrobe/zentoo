@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -17,7 +17,6 @@ DEPEND="pam? ( virtual/pam )
 	!<net-ftp/proftpd-1.2.10-r6
 	!<net-ftp/pure-ftpd-1.0.20-r2
 	!<net-ftp/vsftpd-2.0.3-r1"
-RDEPEND="${DEPEND}"
 
 S=${WORKDIR}
 

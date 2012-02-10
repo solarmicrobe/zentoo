@@ -45,4 +45,5 @@ src_configure() {
 
 src_install() {
 	emake DIST_ROOT="${D}" install || die
+	prepalldocs
 }

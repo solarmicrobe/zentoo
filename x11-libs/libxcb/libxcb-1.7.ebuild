@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -18,12 +18,12 @@ IUSE="doc selinux"
 
 RDEPEND="x11-libs/libXau
 	x11-libs/libXdmcp
-	dev-libs/libpthread-stubs
-	>=x11-proto/xcb-proto-1.6"
+	dev-libs/libpthread-stubs"
 DEPEND="${RDEPEND}
 	doc? ( app-doc/doxygen )
 	dev-libs/libxslt
-	=dev-lang/python-2*[xml]"
+	=dev-lang/python-2*[xml]
+	>=x11-proto/xcb-proto-1.6"
 
 	PATCHES=( "${FILESDIR}/${P}-interix.patch" )
 

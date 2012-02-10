@@ -14,7 +14,6 @@ KEYWORDS="amd64"
 IUSE="berkdb"
 
 DEPEND="berkdb? ( sys-libs/db )"
-RDEPEND="${DEPEND}"
 
 src_unpack() {
 	unpack ${A}

@@ -100,6 +100,7 @@ pkg_postinst() {
 	# src_install we put them in /usr/lib/nfs for safe-keeping, but
 	# the daemons actually use the files in /var/lib/nfs.  #30486
 	local f
+	mkdir -p "${ROOT}"/var/lib/nfs #368505
 	for f in "${ROOT}"/usr/$(get_libdir)/nfs/*; do
 		[[ -e ${ROOT}/var/lib/nfs/${f##*/} ]] && continue
 		einfo "Copying default ${f##*/} from /usr/$(get_libdir)/nfs to /var/lib/nfs"

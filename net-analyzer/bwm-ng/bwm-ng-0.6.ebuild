@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -13,7 +13,6 @@ IUSE="html csv"
 
 DEPEND=">=sys-libs/ncurses-5.4-r4
 	>=sys-apps/net-tools-1.60-r1"
-RDEPEND="${DEPEND}"
 
 src_compile() {
 	econf \

@@ -97,6 +97,7 @@ src_configure() {
 
 src_install() {
 	emake DIST_ROOT="${D}" install install-dev || die
+	prepalldocs
 
 	# handle is for xfsdump, the rest for xfsprogs
 	gen_usr_ldscript -a xfs xlog

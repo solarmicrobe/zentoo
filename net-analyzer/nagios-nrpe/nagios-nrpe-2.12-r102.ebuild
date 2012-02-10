@@ -17,7 +17,6 @@ KEYWORDS="amd64"
 IUSE="ssl command-args"
 DEPEND=">=net-analyzer/nagios-plugins-1.3.0
 	ssl? ( dev-libs/openssl )"
-RDEPEND="${DEPEND}"
 S="${WORKDIR}/nrpe-${PV}"
 
 pkg_setup() {
@@ -32,7 +31,7 @@ src_compile() {
 					  $(use_enable command-args)"
 
 	# Generate the dh.h header file for better security (2005 Mar 20 eldad)
-	if useq ssl ; then
+	if use ssl ; then
 		openssl dhparam -C 512 | sed -n '1,/BEGIN DH PARAMETERS/p' | grep -v "BEGIN DH PARAMETERS" > "${S}"/src/dh.h
 	fi
 
@@ -83,7 +82,7 @@ pkg_postinst() {
 	einfo "the config file /etc/nagios/nrpe.cfg"
 	einfo
 
-	if useq command-args ; then
+	if use command-args ; then
 		ewarn "You have enabled command-args for NRPE. This enables"
 		ewarn "the ability for clients to supply arguments to commands"
 		ewarn "which should be run. "

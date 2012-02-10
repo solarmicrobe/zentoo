@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI="4"
 
 # Usually apr-util has the same PV as apr, but in case of security fixes, this may change.
 # APR_PV="${PV}"
@@ -17,7 +17,7 @@ SRC_URI="mirror://apache/apr/${P}.tar.bz2"
 LICENSE="Apache-2.0"
 SLOT="1"
 KEYWORDS="amd64"
-IUSE="berkdb doc freetds gdbm ldap mysql odbc postgres sqlite"
+IUSE="berkdb doc freetds gdbm ldap mysql odbc postgres sqlite static-libs"
 RESTRICT="test"
 
 RDEPEND="dev-libs/expat
@@ -33,7 +33,7 @@ RDEPEND="dev-libs/expat
 DEPEND="${RDEPEND}
 	doc? ( app-doc/doxygen )"
 
-DOCS=( CHANGES NOTICE README )
+DOCS=(CHANGES NOTICE README)
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-bdb-5.2.patch"
@@ -71,23 +71,25 @@ src_configure() {
 }
 
 src_compile() {
-	emake CPPFLAGS="${CPPFLAGS}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" || die "emake failed"
+	emake CPPFLAGS="${CPPFLAGS}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}"
 
 	if use doc; then
-		emake dox || die "emake dox failed"
+		emake dox
 	fi
 }
 
 src_install() {
 	default
 
-	# --disable-static does not work
-	find "${ED}" -name "*.a" -exec rm -f {} +
-
-	find "${ED}" -name '*.la' -exec rm -f {} +
+	find "${ED}" -name "*.la" -exec rm -f {} +
+	find "${ED}usr/$(get_libdir)/apr-util-${SLOT}" -name "*.a" -exec rm -f {} +
 
 	if use doc; then
-		dohtml -r docs/dox/html/* || die "dohtml failed"
+		dohtml -r docs/dox/html/*
+	fi
+
+	if ! use static-libs; then
+		find "${ED}" -name "*.a" -exec rm -f {} +
 	fi
 
 	# This file is only used on AIX systems, which Gentoo is not,

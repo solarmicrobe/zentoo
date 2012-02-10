@@ -23,13 +23,13 @@ DEPEND=">=sys-apps/texinfo-4.7-r1
 		x11-libs/libSM
 		x11-libs/libICE
 	)"
-RDEPEND="${RDEPEND}"
 
 src_unpack() {
 	unpack ${A}
 	cd "${S}"
 
 	epatch "${FILESDIR}"/${PN}-1.19.2-man-unicode-dashes.patch #16108 #17580 #121502
+	epatch "${FILESDIR}"/${PN}-1.20.1-pdfmark-parallel.patch
 
 	# Make sure we can cross-compile this puppy
 	if tc-is-cross-compiler ; then

@@ -16,7 +16,6 @@ KEYWORDS="amd64"
 IUSE="network-cron zlib"
 
 DEPEND="zlib? ( sys-libs/zlib )"
-RDEPEND="${DEPEND}"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-install-lib.patch #273489

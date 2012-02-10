@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -51,7 +51,8 @@ src_compile() {
 		bindir=/usr/bin
 	fi
 
-	use selinux || export ac_cv_{search_setfilecon,header_selinux_{context,selinux}_h}=no
+	export ac_cv_search_setfilecon=$(usex selinux -lselinux)
+	export ac_cv_header_selinux_{context,selinux}_h=$(usex selinux)
 	use static && append-ldflags -static
 	econf \
 		--bindir=${bindir} \

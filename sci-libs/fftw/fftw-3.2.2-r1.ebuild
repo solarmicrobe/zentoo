@@ -4,7 +4,7 @@
 
 EAPI=2
 
-inherit autotools eutils flag-o-matic toolchain-funcs
+inherit autotools eutils flag-o-matic fortran-2 toolchain-funcs
 
 DESCRIPTION="Fast C library for the Discrete Fourier Transform"
 HOMEPAGE="http://www.fftw.org/"
@@ -15,7 +15,12 @@ SLOT="3.0"
 KEYWORDS="amd64"
 IUSE="altivec doc fortran openmp sse sse2 threads"
 
+DEPEND="fortran? ( virtual/fortran )"
+RDEPEND="${DEPEND}"
+
 pkg_setup() {
+	use openmp && FORTRAN_NEED_OPENMP="1"
+	use fortran && fortran-2_pkg_setup
 	FFTW_THREADS="--disable-threads --disable-openmp"
 	if use openmp; then
 		FFTW_THREADS="--disable-threads --enable-openmp"

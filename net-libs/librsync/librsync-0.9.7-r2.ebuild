@@ -15,6 +15,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="static-libs"
 
+RDEPEND="dev-libs/popt"
+
 src_prepare() {
 	# Bug #142945
 	epatch "${FILESDIR}"/${P}-huge-files.patch

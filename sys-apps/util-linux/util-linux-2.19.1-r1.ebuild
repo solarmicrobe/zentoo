@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -23,7 +23,7 @@ else
 	KEYWORDS="amd64"
 fi
 
-LICENSE="GPL-2"
+LICENSE="GPL-2 GPL-3 LGPL-2.1 BSD-4 MIT public-domain"
 SLOT="0"
 IUSE="+cramfs crypt loop-aes ncurses nls old-linux perl selinux slang uclibc unicode"
 

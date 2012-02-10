@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=3
 
 inherit libtool eutils toolchain-funcs
 
@@ -37,6 +37,7 @@ src_prepare() {
 }
 
 src_configure() {
+	[[ ${CHOST} == *-mint* ]] && CXXFLAGS="${CXXFLAGS} -D_GNU_SOURCE"
 	econf --with-match-limit-recursion=$(use recursion-limit && echo 8192 || echo MATCH_LIMIT) \
 		$(use_enable unicode utf8) $(use_enable unicode unicode-properties) \
 		$(use_enable cxx cpp) \
@@ -44,9 +45,8 @@ src_configure() {
 		$(use_enable bzip2 pcregrep-libbz2) \
 		$(use_enable static-libs static) \
 		--enable-shared \
-		--htmldir=/usr/share/doc/${PF}/html \
-		--docdir=/usr/share/doc/${PF} \
-		|| die "econf failed"
+		--htmldir="${EPREFIX}"/usr/share/doc/${PF}/html \
+		--docdir="${EPREFIX}"/usr/share/doc/${PF}
 }
 
 src_install() {

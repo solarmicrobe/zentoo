@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,7 +14,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="unicode"
 
-DEPEND=">=sys-libs/ncurses-5.2"
+DEPEND=">=sys-libs/ncurses-5.7-r7"
 
 src_unpack() {
 	unpack ${P}.tar.gz

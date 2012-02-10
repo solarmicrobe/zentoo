@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,7 +15,6 @@ IUSE=""
 
 DEPEND=">=net-analyzer/nagios-plugins-1.3.1
 	>=dev-libs/libmcrypt-2.5.1-r4"
-RDEPEND="${DEPEND}"
 S="${WORKDIR}/nsca-${PV}"
 
 src_compile() {

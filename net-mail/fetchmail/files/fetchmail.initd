@@ -27,7 +27,7 @@ checkconfig() {
 }
 
 start() {
-	checkconfig || return 1
+        checkconfig || return 1
 	ebegin "Starting ${RC_SVCNAME}"
 	start-stop-daemon --start --pidfile ${pid_file} \
 		--user fetchmail --exec /usr/bin/fetchmail \

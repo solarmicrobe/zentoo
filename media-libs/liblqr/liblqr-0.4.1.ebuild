@@ -14,7 +14,8 @@ KEYWORDS="amd64"
 IUSE="doc"
 
 RDEPEND="dev-libs/glib"
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	dev-util/pkgconfig"
 
 S=$WORKDIR/${PN}-1-${PV}
 

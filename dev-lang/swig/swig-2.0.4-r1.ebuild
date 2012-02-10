@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI=3
 
 inherit base
 
@@ -21,7 +21,7 @@ DEPEND="pcre? ( dev-libs/libpcre )
 
 RDEPEND="${DEPEND}"
 
-PATCHES=( "${FILESDIR}/${P}-typedef.patch" )
+PATCHES=( "${FILESDIR}"/${P}-typedef.patch )
 
 src_configure() {
 	econf \
@@ -31,9 +31,9 @@ src_configure() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die "emake install failed"
-	dodoc ANNOUNCE CHANGES CHANGES.current README TODO || die "dodoc failed"
+	emake DESTDIR="${D}" install || die
+	dodoc ANNOUNCE CHANGES CHANGES.current README TODO || die
 	if use doc; then
-		dohtml -r Doc/{Devel,Manual} || die "dohtml failed"
+		dohtml -r Doc/{Devel,Manual} || die
 	fi
 }

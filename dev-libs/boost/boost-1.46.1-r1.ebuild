@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -59,7 +59,7 @@ pkg_setup() {
 	fi
 
 	if use test ; then
-		CHECKREQS_DISK_BUILD="15360"
+		CHECKREQS_DISK_BUILD="15G"
 		check_reqs
 
 		ewarn "The tests may take several hours on a recent machine"

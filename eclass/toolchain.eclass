@@ -1774,11 +1774,18 @@ do_gcc_PIE_patches() {
 		EPATCH_MULTI_MSG="Applying default pie patches ..." \
 		epatch "${WORKDIR}"/piepatch/def
 	fi
-		# we want to be able to control the pie patch logic via something other
-		# than ALL_CFLAGS...
-		sed -e '/^ALL_CFLAGS/iHARD_CFLAGS = ' \
-			-e 's|^ALL_CFLAGS = |ALL_CFLAGS = $(HARD_CFLAGS) |' \
-			-i "${S}"/gcc/Makefile.in
+	
+	# we want to be able to control the pie patch logic via something other
+	# than ALL_CFLAGS...
+	sed -e '/^ALL_CFLAGS/iHARD_CFLAGS = ' \
+		-e 's|^ALL_CFLAGS = |ALL_CFLAGS = $(HARD_CFLAGS) |' \
+		-i "${S}"/gcc/Makefile.in
+	# Need to add HARD_CFLAGS to ALL_CXXFLAGS on >= 4.7
+	if tc_version_is_at_least 4.7.0 ; then
+		sed -e '/^ALL_CXXFLAGS/iHARD_CFLAGS = ' \
+                        -e 's|^ALL_CXXFLAGS = |ALL_CXXFLAGS = $(HARD_CFLAGS) |' \
+                        -i "${S}"/gcc/Makefile.in
+	fi
 
 	BRANDING_GCC_PKGVERSION="${BRANDING_GCC_PKGVERSION}, pie-${PIE_VER}"
 }

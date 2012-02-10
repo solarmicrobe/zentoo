@@ -19,7 +19,9 @@ RDEPEND="
 	>=net-libs/libnetfilter_conntrack-0.0.101
 	!net-firewall/conntrack"
 DEPEND="${RDEPEND}
-	>=dev-util/pkgconfig-0.9.0"
+	>=dev-util/pkgconfig-0.9.0
+	sys-devel/bison
+	sys-devel/flex"
 
 pkg_setup() {
 	linux-info_pkg_setup

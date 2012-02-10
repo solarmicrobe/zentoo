@@ -44,7 +44,7 @@ src_install() {
 	php-lib-r1_src_install library/Zend $(cd library/Zend ; find . -type f -print)
 
 	if ! use minimal ; then
-		insinto /usr/share/php5
+		insinto /usr/share/php
 		doins -r externals/dojo
 	fi
 

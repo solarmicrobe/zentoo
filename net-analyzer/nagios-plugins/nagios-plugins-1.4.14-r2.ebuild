@@ -36,7 +36,7 @@ RDEPEND="${DEPEND}
 	nagios-ping? ( >=net-analyzer/fping-2.4_beta2-r1 )
 	nagios-ssh? ( >=net-misc/openssh-3.5_p1 )
 	ups? ( >=sys-power/nut-1.4 )
-	nagios-game? ( >=games-util/qstat-2.6 )
+	!sparc? ( nagios-game? ( >=games-util/qstat-2.6 ) )
 	jabber? ( >=dev-perl/Net-Jabber-2.0 )"
 
 pkg_setup() {

@@ -6,7 +6,7 @@ inherit eutils libtool toolchain-funcs pam multilib
 
 DESCRIPTION="Utilities to deal with user accounts"
 HOMEPAGE="http://shadow.pld.org.pl/ http://pkg-shadow.alioth.debian.org/"
-SRC_URI="ftp://pkg-shadow.alioth.debian.org/pub/pkg-shadow/shadow-${PV}.tar.bz2"
+SRC_URI="http://pkg-shadow.alioth.debian.org/releases/${P}.tar.bz2"
 
 LICENSE="BSD GPL-2"
 SLOT="0"
@@ -16,8 +16,6 @@ IUSE="audit cracklib nls pam selinux skey"
 RDEPEND="audit? ( sys-process/audit )
 	cracklib? ( >=sys-libs/cracklib-2.7-r3 )
 	pam? ( virtual/pam )
-	!sys-apps/pam-login
-	!app-admin/nologin
 	skey? ( sys-auth/skey )
 	selinux? ( >=sys-libs/libselinux-1.28 )
 	nls? ( virtual/libintl )"
@@ -88,7 +86,7 @@ src_install() {
 	case $(tc-arch) in
 		ppc*)  devs="hvc0 hvsi0 ttyPSC0";;
 		hppa)  devs="ttyB0";;
-		arm)   devs="ttyFB0";;
+		arm)   devs="ttyFB0 ttySAC0 ttySAC1 ttymxc0 ttymxc1 ttyO0 ttyO1 ttyO2";;
 		sh)    devs="ttySC0 ttySC1";;
 	esac
 	[[ -n ${devs} ]] && printf '%s\n' ${devs} >> "${D}"/etc/securetty

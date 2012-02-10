@@ -8,7 +8,7 @@ PYTHON_DEPEND="tk? 2"
 PYTHON_USE_WITH_OPT="tk"
 PYTHON_USE_WITH="tk"
 
-inherit python eutils
+inherit python eutils autotools
 
 DESCRIPTION="the legendary remote-mail retrieval and forwarding utility"
 HOMEPAGE="http://fetchmail.berlios.de"
@@ -39,6 +39,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${PN}-gss_c_nt_hostbased_service.patch"
+	eautoreconf
 	# dont compile during src_install
 	: > "${S}"/py-compile
 }

@@ -19,8 +19,7 @@ inherit multilib
 EXPORT_FUNCTIONS src_install
 
 DEPEND="dev-lang/php
-	|| ( ( >=dev-php/PEAR-PEAR-1.6.1 <dev-php/PEAR-PEAR-1.8.1 )
-		 >=dev-php/pear-1.8.1 )"
+	 >=dev-php/pear-1.8.1"
 RDEPEND="${DEPEND}"
 
 # @ECLASS-VARIABLE: PHP_PEAR_PKG_NAME

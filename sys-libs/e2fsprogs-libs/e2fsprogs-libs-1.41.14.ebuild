@@ -13,10 +13,9 @@ SRC_URI="mirror://sourceforge/e2fsprogs/${P}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="nls elibc_glibc"
+IUSE="nls"
 
-RDEPEND="elibc_glibc? ( >=sys-libs/glibc-2.6 )
-	!sys-libs/com_err
+RDEPEND="!sys-libs/com_err
 	!sys-libs/ss
 	!<sys-fs/e2fsprogs-1.41.8"
 DEPEND="nls? ( sys-devel/gettext )

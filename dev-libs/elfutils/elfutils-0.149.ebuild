@@ -11,7 +11,7 @@ SRC_URI="https://fedorahosted.org/releases/e/l/elfutils/${PV}/${P}.tar.bz2"
 LICENSE="GPL-2-with-exceptions"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="bzip2 lzma nls zlib elibc_glibc"
+IUSE="bzip2 lzma nls zlib"
 
 # This pkg does not actually seem to compile currently in a uClibc
 # environment (xrealloc errs), but we need to ensure that glibc never
@@ -20,12 +20,9 @@ RDEPEND="zlib? ( >=sys-libs/zlib-1.2.2.3 )
 	bzip2? ( app-arch/bzip2 )
 	lzma? ( app-arch/xz-utils )"
 DEPEND="${RDEPEND}
-	elibc_glibc? ( !prefix? ( >=sys-libs/glibc-2.7 ) )
 	nls? ( sys-devel/gettext )
 	>=sys-devel/flex-2.5.4a
 	sys-devel/m4
-	>=sys-devel/binutils-2.15.90.0.1
-	>=sys-devel/gcc-4.1.2
 	!dev-libs/libelf"
 
 src_unpack() {

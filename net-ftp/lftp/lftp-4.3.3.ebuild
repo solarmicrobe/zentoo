@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -13,7 +13,12 @@ SRC_URI="http://ftp.yars.free.net/pub/source/${PN}/${P}.tar.xz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="ssl gnutls socks5 nls"
+LFTP_LINGUAS="cs de es fr it ja ko pl pt_BR ru zh_CN zh_HK zh_TW"
+
+IUSE="
+	$( for i in ${LFTP_LINGUAS}; do echo linguas_${i}; done )
+	gnutls nls socks5 +ssl
+"
 
 RDEPEND="
 	dev-libs/expat

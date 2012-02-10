@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="4"
 
 inherit autotools eutils libtool multilib
 
@@ -13,12 +13,14 @@ SRC_URI="mirror://apache/apr/${P}.tar.bz2"
 LICENSE="Apache-2.0"
 SLOT="1"
 KEYWORDS="amd64"
-IUSE="doc elibc_FreeBSD older-kernels-compatibility +urandom +uuid"
+IUSE="doc elibc_FreeBSD older-kernels-compatibility static-libs +urandom +uuid"
 RESTRICT="test"
 
 RDEPEND="uuid? ( !elibc_FreeBSD? ( >=sys-apps/util-linux-2.16 ) )"
 DEPEND="${RDEPEND}
 	doc? ( app-doc/doxygen )"
+
+DOCS=(CHANGES NOTICE README)
 
 src_prepare() {
 	# Ensure that system libtool is used.
@@ -63,25 +65,27 @@ src_configure() {
 }
 
 src_compile() {
-	emake || die "emake failed"
+	emake
 
 	if use doc; then
-		emake dox || die "emake dox failed"
+		emake dox
 	fi
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die "emake install failed"
+	default
 
-	find "${ED}" -name "*.la" -print0 | xargs -0 rm -f
-
-	dodoc CHANGES NOTICE README
+	find "${ED}" -name "*.la" -exec rm -f {} +
 
 	if use doc; then
-		dohtml -r docs/dox/html/* || die "dohtml failed"
+		dohtml -r docs/dox/html/*
+	fi
+
+	if ! use static-libs; then
+		find "${ED}" -name "*.a" -exec rm -f {} +
 	fi
 
 	# This file is only used on AIX systems, which Gentoo is not,
 	# and causes collisions between the SLOTs, so remove it.
-	rm -f "${D}usr/$(get_libdir)/apr.exp"
+	rm -f "${ED}usr/$(get_libdir)/apr.exp"
 }

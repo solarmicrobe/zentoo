@@ -17,7 +17,7 @@ SRC_URI="mirror://sourceforge/ming/${P}.tar.bz2"
 LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="+perl +python php"
+IUSE="+perl +python php static-libs"
 
 RDEPEND="perl? ( dev-lang/perl )
 	python? ( dev-lang/python )
@@ -27,7 +27,8 @@ RDEPEND="perl? ( dev-lang/perl )
 	sys-libs/zlib
 	!media-libs/libswf"
 DEPEND="${DEPEND}
-	sys-devel/flex"
+	sys-devel/flex
+	virtual/yacc"
 
 S=${WORKDIR}/${P/_/.}
 
@@ -64,7 +65,10 @@ src_configure() {
 	# build is sensitive to -O3 (bug #297437)
 	replace-flags -O3 -O2
 
-	econf $(use_enable perl) $(use_enable python)
+	econf \
+		$(use_enable static-libs static) \
+		$(use_enable perl) \
+		$(use_enable python)
 }
 
 src_compile() {
@@ -85,6 +89,8 @@ src_test() {
 
 src_install() {
 	emake DESTDIR="${D}" INSTALLDIRS="vendor" install || die
+
+	rm -f "${ED}"usr/lib*/lib${PN}.la
 
 	fixlocalpod
 

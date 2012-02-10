@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: autotools-utils.eclass
@@ -92,9 +92,32 @@ case ${EAPI:-0} in
 	*) die "EAPI=${EAPI} is not supported" ;;
 esac
 
+# @ECLASS-VARIABLE: AUTOTOOLS_AUTORECONF
+# @DEFAULT_UNSET
+# @DESCRIPTION:
+# Set to a non-empty value in order to enable running autoreconf
+# in src_prepare() and adding autotools dependencies.
+#
+# This is usually necessary when using live sources or applying patches
+# modifying configure.ac or Makefile.am files. Note that in the latter case
+# setting this variable is obligatory even though the eclass will work without
+# it (to add the necessary dependencies).
+#
+# The eclass will try to determine the correct autotools to run including a few
+# external tools: gettext, glib-gettext, intltool, gtk-doc, gnome-doc-prepare.
+# If your tool is not supported, please open a bug and we'll add support for it.
+#
+# Note that dependencies are added for autoconf, automake and libtool only.
+# If your package needs one of the external tools listed above, you need to add
+# appropriate packages to DEPEND yourself.
+[[ ${AUTOTOOLS_AUTORECONF} ]] || _autotools_auto_dep=no
+
+AUTOTOOLS_AUTO_DEPEND=${_autotools_auto_dep} \
 inherit autotools eutils libtool
 
 EXPORT_FUNCTIONS src_prepare src_configure src_compile src_install src_test
+
+unset _autotools_auto_dep
 
 # @ECLASS-VARIABLE: AUTOTOOLS_BUILD_DIR
 # @DEFAULT_UNSET
@@ -249,20 +272,112 @@ remove_libtool_files() {
 	fi
 }
 
+# @FUNCTION: autotools-utils_autoreconf
+# @DESCRIPTION:
+# Reconfigure the sources (like gnome-autogen.sh or eautoreconf).
+autotools-utils_autoreconf() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	# Override this func to not require unnecessary eaclocal calls.
+	autotools_check_macro() {
+		local x
+
+		# Add a few additional variants as we don't get expansions.
+		[[ ${1} = AC_CONFIG_HEADERS ]] && set -- "${@}" \
+			AC_CONFIG_HEADER AM_CONFIG_HEADER
+
+		for x; do
+			grep -h "^${x}" configure.{ac,in} 2>/dev/null
+		done
+	}
+
+	einfo "Autoreconfiguring '${PWD}' ..."
+
+	local auxdir=$(sed -n -e 's/^AC_CONFIG_AUX_DIR(\(.*\))$/\1/p' \
+			configure.{ac,in} 2>/dev/null)
+	if [[ ${auxdir} ]]; then
+		auxdir=${auxdir%%]}
+		mkdir -p ${auxdir##[}
+	fi
+
+	# Support running additional tools like gnome-autogen.sh.
+	# Note: you need to add additional depends to the ebuild.
+
+	# gettext
+	if [[ $(autotools_check_macro AM_GLIB_GNU_GETTEXT) ]]; then
+		echo 'no' | autotools_run_tool glib-gettextize --copy --force
+	elif [[ $(autotools_check_macro AM_GNU_GETTEXT) ]]; then
+		eautopoint --force
+	fi
+
+	# intltool
+	if [[ $(autotools_check_macro AC_PROG_INTLTOOL IT_PROG_INTLTOOL) ]]
+	then
+		autotools_run_tool intltoolize --copy --automake --force
+	fi
+
+	# gtk-doc
+	if [[ $(autotools_check_macro GTK_DOC_CHECK) ]]; then
+		autotools_run_tool gtkdocize --copy
+	fi
+
+	# gnome-doc
+	if [[ $(autotools_check_macro GNOME_DOC_INIT) ]]; then
+		autotools_run_tool gnome-doc-prepare --copy --force
+	fi
+
+	# We need to perform the check twice to know whether to run eaclocal.
+	# (_elibtoolize does that itself)
+	if [[ $(autotools_check_macro AC_PROG_LIBTOOL AM_PROG_LIBTOOL LT_INIT) ]]
+	then
+		_elibtoolize --copy --force --install
+	else
+		eaclocal
+	fi
+
+	eautoconf
+	eautoheader
+	FROM_EAUTORECONF=sure eautomake
+
+	local x
+	for x in $(autotools_get_subdirs); do
+		if [[ -d ${x} ]] ; then
+			pushd "${x}" >/dev/null
+			autotools-utils_autoreconf
+			popd >/dev/null
+		fi
+	done
+}
+
 # @FUNCTION: autotools-utils_src_prepare
 # @DESCRIPTION:
 # The src_prepare function.
 #
 # Supporting PATCHES array and user patches. See base.eclass(5) for reference.
-#
-# This function calls elibtoolize implicitly. If you need to call eautoreconf
-# afterwards, please use AT_NOELIBTOOLIZE=yes to avoid it being called twice.
 autotools-utils_src_prepare() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	[[ ${PATCHES} ]] && epatch "${PATCHES[@]}"
-	epatch_user
+	local want_autoreconf=${AUTOTOOLS_AUTORECONF}
 
+	[[ ${PATCHES} ]] && epatch "${PATCHES[@]}"
+
+	at_checksum() {
+		find '(' -name 'Makefile.am' \
+			-o -name 'configure.ac' \
+			-o -name 'configure.in' ')' \
+			-exec cksum {} + | sort -k2
+	}
+
+	[[ ! ${want_autoreconf} ]] && local checksum=$(at_checksum)
+	epatch_user
+	if [[ ! ${want_autoreconf} ]]; then
+		if [[ ${checksum} != $(at_checksum) ]]; then
+			einfo 'Will autoreconfigure due to user patches applied.'
+			want_autoreconf=yep
+		fi
+	fi
+
+	[[ ${want_autoreconf} ]] && autotools-utils_autoreconf
 	elibtoolize --patch-only
 }
 
@@ -281,8 +396,17 @@ autotools-utils_src_configure() {
 	[[ -z ${myeconfargs+1} || $(declare -p myeconfargs) == 'declare -a'* ]] \
 		|| die 'autotools-utils.eclass: myeconfargs has to be an array.'
 
+	[[ ${EAPI} == 2 ]] && ! use prefix && EPREFIX=
+
 	# Common args
 	local econfargs=()
+
+	_check_build_dir
+	if "${ECONF_SOURCE}"/configure --help 2>&1 | grep -q '^ *--docdir='; then
+		econfargs+=(
+			--docdir="${EPREFIX}"/usr/share/doc/${PF}
+		)
+	fi
 
 	# Handle static-libs found in IUSE, disable them by default
 	if in_iuse static-libs; then
@@ -295,7 +419,6 @@ autotools-utils_src_configure() {
 	# Append user args
 	econfargs+=("${myeconfargs[@]}")
 
-	_check_build_dir
 	mkdir -p "${AUTOTOOLS_BUILD_DIR}" || die "mkdir '${AUTOTOOLS_BUILD_DIR}' failed"
 	pushd "${AUTOTOOLS_BUILD_DIR}" > /dev/null
 	econf "${econfargs[@]}" "$@"
@@ -330,9 +453,33 @@ autotools-utils_src_install() {
 	emake DESTDIR="${D}" "$@" install || die "emake install failed"
 	popd > /dev/null
 
+	# Move docs installed by autotools (in EAPI < 4).
+	if [[ ${EAPI} == [23] ]] \
+			&& path_exists "${D}${EPREFIX}"/usr/share/doc/${PF}/*; then
+		if [[ $(find "${D}${EPREFIX}"/usr/share/doc/${PF}/* -type d) ]]; then
+			eqawarn "autotools-utils: directories in docdir require at least EAPI 4"
+		else
+			mkdir "${T}"/temp-docdir
+			mv "${D}${EPREFIX}"/usr/share/doc/${PF}/* "${T}"/temp-docdir/ \
+				|| die "moving docs to tempdir failed"
+
+			dodoc "${T}"/temp-docdir/* || die "docdir dodoc failed"
+			rm -r "${T}"/temp-docdir || die
+		fi
+	fi
+
 	# XXX: support installing them from builddir as well?
 	if [[ ${DOCS} ]]; then
 		dodoc "${DOCS[@]}" || die "dodoc failed"
+	else
+		local f
+		# same list as in PMS
+		for f in README* ChangeLog AUTHORS NEWS TODO CHANGES \
+				THANKS BUGS FAQ CREDITS CHANGELOG; do
+			if [[ -s ${f} ]]; then
+				dodoc "${f}" || die "(default) dodoc ${f} failed"
+			fi
+		done
 	fi
 	if [[ ${HTML_DOCS} ]]; then
 		dohtml -r "${HTML_DOCS[@]}" || die "dohtml failed"

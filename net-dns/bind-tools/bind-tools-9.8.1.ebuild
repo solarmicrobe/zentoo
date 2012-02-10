@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -49,8 +49,10 @@ src_configure() {
 	# bug 344029
 	append-cflags "-DDIG_SIGCHASE"
 
+	# localstatedir for nsupdate -l, bug 395785
 	tc-export BUILD_CC
 	econf \
+		--localstatedir=/var \
 		$(use_enable ipv6) \
 		$(use_with idn) \
 		$(use_with ssl openssl) \

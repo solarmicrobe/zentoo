@@ -14,11 +14,11 @@ ___ECLASS_ONCE_PORTABILITY="recur -_+^+_- spank"
 #
 # mimic cp --parents copy, but working on BSD userland as well
 treecopy() {
-	dest=${!#}
-	files_count=$#
+	local dest=${!#}
+	local files_count=$#
 
-	while(( $# > 1 )); do
-		dirstruct=$(dirname "$1")
+	while (( $# > 1 )); do
+		local dirstruct=$(dirname "$1")
 		mkdir -p "${dest}/${dirstruct}"
 		cp -pPR "$1" "${dest}/${dirstruct}"
 
@@ -37,6 +37,7 @@ seq() {
 		return $?
 	fi
 
+	local min max step
 	case $# in
 		1) min=1  max=$1 step=1  ;;
 		2) min=$1 max=$2 step=1  ;;

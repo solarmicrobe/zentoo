@@ -1,10 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 
-inherit eutils versionator ssl-cert autotools-utils
+inherit eutils versionator ssl-cert
 
 MY_P="${P/_/.}"
 major_minor="$( get_version_component_range 1-2 )"
@@ -31,7 +31,7 @@ DEPEND="caps? ( sys-libs/libcap )
 	ldap? ( net-nds/openldap )
 	mysql? ( virtual/mysql )
 	pam? ( virtual/pam )
-	postgres? ( dev-db/postgresql-base )
+	postgres? ( dev-db/postgresql-base !dev-db/postgresql-base[ldap,threads] )
 	sqlite? ( dev-db/sqlite )
 	ssl? ( dev-libs/openssl )
 	vpopmail? ( net-mail/vpopmail )
@@ -253,7 +253,7 @@ src_install () {
 		doman doc/man/*.{1,7}
 	fi
 
-	use static-libs || remove_libtool_files
+	use static-libs || find "${ED}"/usr/lib* -name '*.la' -delete
 }
 
 pkg_preinst() {

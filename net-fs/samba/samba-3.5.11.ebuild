@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -140,6 +140,16 @@ src_configure() {
 		myconf+=" --without-cifsupcall"
 	fi
 
+	if use client && use kernel_linux ; then
+		myconf+=" --with-cifsmount --with-cifsumount"
+	else
+		myconf+=" --without-cifsmount --without-cifsumount"
+	fi
+
+	#bug #399141 wrap newer iniparser version
+	has_version ">=dev-libs/iniparser-3.0.0" && \
+		export CPPFLAGS+=" -Diniparser_getstr\(d,i\)=iniparser_getstring\(d,i,NULL\)"
+
 	# Notes:
 	# - automount is only needed in conjunction with NIS and we don't have that
 	# anymore => LDAP?
@@ -175,8 +185,6 @@ src_configure() {
 		$(use_with ads krb5 /usr) \
 		$(use_with ads dnsupdate) \
 		--without-automount \
-		$(use_with client cifsmount) \
-		$(use_with client cifsumount) \
 		$(use_with pam) \
 		$(use_with pam pam_smbpass) \
 		$(use_with syslog) \
@@ -248,7 +256,7 @@ src_compile() {
 		emake ${KRBPLUGIN}${PLUGINEXT}
 	fi
 
-	if use client ; then
+	if use client && use kernel_linux; then
 		einfo "make {,u}mount.cifs"
 		emake bin/{,u}mount.cifs
 	fi
@@ -376,7 +384,7 @@ src_install() {
 	fi
 
 	# install client files ({u,}mount.cifs into /)
-	if use client ; then
+	if use client && use kernel_linux ; then
 		into /
 		dosbin bin/{u,}mount.cifs
 		doman ../docs/manpages/{u,}mount.cifs.8

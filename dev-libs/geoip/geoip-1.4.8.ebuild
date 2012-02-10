@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit autotools autotools-utils
+inherit autotools
 
 MY_P=${P/geoip/GeoIP}
 
@@ -47,7 +47,9 @@ src_install() {
 	use perl-geoipupdate && dobin apps/geoipupdate-pureperl.pl
 	dodoc AUTHORS ChangeLog README TODO conf/GeoIP.conf.default
 	rm "${ED}/etc/GeoIP.conf.default"
-	use static-libs || remove_libtool_files
+	if ! use static-libs; then
+		rm -f "${D}"/usr/lib*/lib*.la
+	fi
 
 	if use ipv6; then
 		insinto /usr/share/GeoIP

@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -29,12 +29,12 @@ src_compile() {
 
 	local myconf=""
 	[[ ${USERLAND} != "GNU" ]] && myconf="--program-prefix=g"
-	econf ${myconf} || die
+	econf ${myconf}
 
-	emake || die "emake failed"
+	emake || die
 }
 
 src_install() {
-	emake install DESTDIR="${D}" || die
+	emake DESTDIR="${D}" install || die
 	dodoc AUTHORS ChangeLog NEWS README
 }

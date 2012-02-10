@@ -3,8 +3,9 @@
 # $Header: $
 
 EAPI="3"
+PYTHON_DEPEND="python? 2"
 
-inherit eutils multilib autotools java-pkg-opt-2
+inherit eutils multilib autotools java-pkg-opt-2 python
 
 DESCRIPTION="general-purpose cryptography library"
 HOMEPAGE="http://sourceforge.net/projects/beecrypt/"
@@ -13,23 +14,28 @@ SRC_URI="mirror://sourceforge/beecrypt/${P}.tar.gz"
 LICENSE="GPL-2 LGPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="java nocxx python threads doc"
+IUSE="java cxx python threads doc"
 
-COMMONDEPEND="python? ( >=dev-lang/python-2.2 )
-	!<app-arch/rpm-4.2.1
-	!nocxx? ( threads? ( >=dev-libs/icu-2.8 ) )"
+COMMONDEPEND="!<app-arch/rpm-4.2.1
+	threads? ( cxx? ( >=dev-libs/icu-2.8 ) )"
 
 DEPEND="${COMMONDEPEND}
 	java? ( >=virtual/jdk-1.4 )
 	doc? ( app-doc/doxygen
 		virtual/latex-base
-		|| ( dev-texlive/texlive-fontsextra app-text/ptex )
+		dev-texlive/texlive-fontsextra
 	)"
 RDEPEND="${COMMONDEPEND}
 	java? ( >=virtual/jre-1.4 )"
 
+pkg_setup() {
+	use python && python_set_active_version 2
+}
+
 src_prepare() {
 	java-pkg-opt-2_src_prepare
+
+	use python && python_convert_shebangs -r 2 .
 
 	epatch "${FILESDIR}"/${P}-build-system.patch
 	eautoreconf
@@ -40,8 +46,8 @@ src_configure() {
 	econf \
 		--disable-expert-mode \
 		$(use_enable threads) \
-		$(use_with python python "${EPREFIX}"/usr/bin/python) \
-		$(use threads && use_with !nocxx cplusplus || echo --without-cplusplus) \
+		$(use_with python python "${EPREFIX}"/usr/bin/python2) \
+		$(use threads && use_with cxx cplusplus || echo --without-cplusplus) \
 		$(use_with java)
 }
 
@@ -58,8 +64,8 @@ src_compile() {
 src_test() {
 	export BEECRYPT_CONF_FILE="${T}/beecrypt-test.conf"
 	echo "provider.1=${S}/c++/provider/.libs/base.so" > "${BEECRYPT_CONF_FILE}"
-	make check || die "self test failed"
-	make bench || die "self benchmark test failed"
+	emake check || die "self test failed"
+	emake bench || die "self benchmark test failed"
 }
 
 src_install() {

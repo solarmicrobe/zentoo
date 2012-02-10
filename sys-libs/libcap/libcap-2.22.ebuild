@@ -22,6 +22,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-2.22-build-system-fixes.patch
+	epatch "${FILESDIR}"/${PN}-2.22-no-perl.patch
 	epatch "${FILESDIR}"/${PN}-2.20-ignore-RAISE_SETFCAP-install-failures.patch
 	epatch "${FILESDIR}"/${PN}-2.21-include.patch
 	sed -i \

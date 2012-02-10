@@ -13,9 +13,6 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-DEPEND=""
-RDEPEND=""
-
 src_unpack(){
 	unpack ${A}
 	cd "${S}"
@@ -23,6 +20,7 @@ src_unpack(){
 	epatch "${FILESDIR}"/${P}-ppc-asm.patch
 	epatch "${FILESDIR}"/${P}-sh4.patch
 	epatch "${FILESDIR}"/${P}-fix-makefile-am-generic.patch
+	epatch "${FILESDIR}"/${P}-x32.patch
 	eautoreconf
 }
 

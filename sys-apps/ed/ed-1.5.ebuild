@@ -27,9 +27,7 @@ src_configure() {
 	# custom configure script ... econf wont work
 	./configure \
 		--prefix="${EPREFIX}"/ \
-		--datadir="${EPREFIX}"/usr/share \
-		${EXTRA_ECONF} \
-		|| die
+		--datadir="${EPREFIX}"/usr/share
 }
 
 src_install() {

@@ -19,3 +19,14 @@ src_prepare () {
 	epatch "${FILESDIR}"/${P}-asneeded.patch
 	tc-export CC
 }
+
+#src_compile() {
+#	emake \
+#		CFLAGS="${CFLAGS}" \
+#		CC=$(tc-getCC)
+#}
+
+#src_install() {
+#	dobin ${PN}
+#	dodoc README
+#}

@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -13,8 +13,9 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-DEPEND=">=net-libs/libnfnetlink-1.0.0"
-RDEPEND=${DEPEND}
+RDEPEND=">=net-libs/libnfnetlink-1.0.0"
+DEPEND="${RDEPEND}
+	dev-util/pkgconfig"
 
 pkg_setup() {
 	linux-info_pkg_setup

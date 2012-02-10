@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -22,7 +22,7 @@ SLOT="0"
 IUSE="+zeroconf elibc_glibc"
 
 DEPEND=""
-RDEPEND="!<sys-apps/openrc-0.6.0"
+RDEPEND=""
 
 src_unpack() {
 	unpack ${A}

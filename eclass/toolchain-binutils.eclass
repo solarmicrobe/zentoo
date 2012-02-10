@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # Maintainer: Toolchain Ninjas <toolchain@gentoo.org>
@@ -20,6 +20,7 @@ else
 	99999999)  BTYPE="cvs";;
 	9999)      BTYPE="git";;
 	9999_pre*) BTYPE="snap";;
+	*.*.*.*.*) BTYPE="hjlu";;
 	*)         BTYPE="rel";;
 	esac
 fi
@@ -62,13 +63,9 @@ HOMEPAGE="http://sources.redhat.com/binutils/"
 
 case ${BTYPE} in
 	cvs|git) SRC_URI="" ;;
-	snap) SRC_URI="ftp://gcc.gnu.org/pub/binutils/snapshots/binutils-${BVER}.tar.bz2";;
-	rel)
-		SRC_URI="mirror://kernel/linux/devel/binutils/binutils-${BVER}.tar.bz2
-			mirror://kernel/linux/devel/binutils/test/binutils-${BVER}.tar.bz2
-			mirror://gnu/binutils/binutils-${BVER}.tar.bz2"
-		# disable kernel mirrors until kernel.org is back up #383579
-		SRC_URI="mirror://gnu/binutils/binutils-${BVER}.tar.bz2"
+	snap) SRC_URI="ftp://gcc.gnu.org/pub/binutils/snapshots/binutils-${BVER}.tar.bz2" ;;
+	hjlu) SRC_URI="mirror://kernel/linux/devel/binutils/binutils-${BVER}.tar.bz2" ;;
+	rel) SRC_URI="mirror://gnu/binutils/binutils-${BVER}.tar.bz2" ;;
 esac
 add_src_uri() {
 	[[ -z $2 ]] && return

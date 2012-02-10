@@ -14,7 +14,7 @@ PHP_EXT_S="${WORKDIR}/${MY_P}/php"
 PHP_EXT_OPTIONAL_USE="php"
 inherit eutils multilib php-ext-source-r2
 
-DESCRIPTION="An ISO-C:1999 API for the generation of DCE 1.1, ISO/IEC 11578:1996 and RFC 4122 compliant UUID."
+DESCRIPTION="An ISO-C:1999 API and corresponding CLI for the generation of DCE 1.1, ISO/IEC 11578:1996 and RFC 4122 compliant UUID."
 HOMEPAGE="http://www.ossp.org/pkg/lib/uuid/"
 SRC_URI="ftp://ftp.ossp.org/pkg/lib/uuid/${MY_P}.tar.gz"
 LICENSE="as-is"
