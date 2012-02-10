@@ -1,11 +1,11 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="4"
 PYTHON_DEPEND="python? 2"
 SUPPORT_PYTHON_ABIS="1"
-RESTRICT_PYTHON_ABIS="3.* *-jython"
+RESTRICT_PYTHON_ABIS="3.* *-jython *-pypy-*"
 
 inherit autotools eutils python toolchain-funcs
 
@@ -26,6 +26,7 @@ pkg_setup() {
 	if use python; then
 		python_pkg_setup
 	fi
+	DOCS="AUTHORS ChangeLog FEATURES NEWS README TODO"
 }
 
 src_prepare() {
@@ -39,6 +40,9 @@ src_prepare() {
 
 	# Fix generate-id() to not expose object addresses, bug #358615
 	epatch "${FILESDIR}/${P}-id-generation.patch"
+
+	# Fix off-by-one in xsltCompilePatternInternal, bug #402861
+	epatch "${FILESDIR}/${P}-pattern-out-of-bounds-read.patch"
 
 	eautoreconf
 	epunt_cxx
@@ -88,7 +92,7 @@ src_test() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die
+	default
 
 	if use python; then
 		installation() {
@@ -103,7 +107,6 @@ src_install() {
 
 	mv -vf "${ED}"/usr/share/doc/${PN}-python-${PV} \
 		"${ED}"/usr/share/doc/${PF}/python
-	dodoc AUTHORS ChangeLog FEATURES NEWS README TODO || die
 
 	if ! use static-libs; then
 		# Remove useless .la files
