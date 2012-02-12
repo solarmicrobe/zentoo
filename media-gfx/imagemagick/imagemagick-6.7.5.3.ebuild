@@ -14,7 +14,7 @@ SRC_URI="mirror://${PN}/${MY_P}.tar.xz"
 LICENSE="imagemagick"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="autotrace bzip2 corefonts cxx djvu fftw fontconfig fpx graphviz gs hdri jbig jpeg jpeg2k lcms lqr lzma opencl openexr openmp pango perl png q32 q64 q8 raw static-libs svg test tiff truetype webp wmf X xml zlib"
+IUSE="autotrace bzip2 +corefonts cxx djvu fftw fontconfig fpx graphviz gs hdri jbig jpeg jpeg2k lcms lqr lzma opencl openexr openmp pango perl png q32 q64 q8 raw static-libs svg test tiff truetype webp wmf X xml zlib"
 
 RDEPEND=">=sys-devel/libtool-2.2.6b
 	autotrace? ( >=media-gfx/autotrace-0.31.1 )
