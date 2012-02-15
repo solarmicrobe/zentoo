@@ -13,7 +13,7 @@ inherit ruby-fakegem
 DESCRIPTION="Chef handler for sending exceptions to Airbrake"
 HOMEPAGE="http://github.com/morgoth/airbrake_handler"
 SRC_URI="https://github.com/morgoth/${PN}/tarball/v${PV} -> ${P}.tgz"
-S="${WORKDIR}/morgoth-${PN}-*"
+S="${WORKDIR}/morgoth-${PN}-11a4f86"
 
 LICENSE="Apache-2.0"
 SLOT="0"
