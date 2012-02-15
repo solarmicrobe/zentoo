@@ -12,7 +12,7 @@ inherit ruby-fakegem
 
 DESCRIPTION="A base library for Airbrake error reporting"
 HOMEPAGE="http://github.com/toolmantim/toadhopper"
-SRC_URI="https://github.com/toolmantim/${PN}/tarball/v${PV} -> ${P}.tgz"
+SRC_URI="https://github.com/toolmantim/${PN}/tarball/2066c5f5 -> ${P}.tgz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
