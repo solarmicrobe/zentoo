@@ -12,14 +12,14 @@ inherit ruby-fakegem
 
 DESCRIPTION="Chef handler for sending exceptions to Airbrake"
 HOMEPAGE="http://github.com/morgoth/airbrake_handler"
-SRC_URI="https://github.com/morgoth/${PN}/tarball/v${PV} -> ${P}.tgz"
+SRC_URI="https://github.com/zenops/${PN}/tarball/abd800a -> ${P}.tgz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RUBY_S="morgoth-${PN}-*"
+RUBY_S="zenops-${PN}-*"
 
 ruby_add_rdepend "
 	>=app-admin/chef-0.9.0
