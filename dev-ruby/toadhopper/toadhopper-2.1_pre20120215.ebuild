@@ -22,5 +22,5 @@ IUSE=""
 RUBY_S="toolmantim-${PN}-*"
 
 each_ruby_prepare() {
-	sed -i -e 's@OpenSSL::X509::DEFAULT_CERT_FILE@"/etc/ssl/certs/ca-certificates.pem"@g' lib/toadhopper.rb
+	sed -i -e 's@OpenSSL::X509::DEFAULT_CERT_FILE@"/etc/ssl/certs/ca-certificates.crt"@g' lib/toadhopper.rb
 }
