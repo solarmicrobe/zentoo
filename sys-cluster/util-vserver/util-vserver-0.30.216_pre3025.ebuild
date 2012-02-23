@@ -1,8 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit eutils bash-completion
+EAPI=4
+
+inherit eutils bash-completion-r1
 
 MY_P=${P/_/-}
 S="${WORKDIR}"/${MY_P}
@@ -23,7 +25,7 @@ CDEPEND="dev-libs/beecrypt
 	sys-apps/iproute2
 	|| ( >=sys-apps/coreutils-6.10-r1 sys-apps/mktemp )"
 
-DEPEND=">=dev-libs/dietlibc-0.30-r2
+DEPEND=">=dev-libs/dietlibc-0.33_pre20110403
 	${CDEPEND}"
 
 RDEPEND="${CDEPEND}"
@@ -42,10 +44,19 @@ pkg_setup() {
 	einfo
 }
 
-src_compile() {
+src_test() {
+	# do not use $D from portage by accident (#297982)
+	sed -i -e 's/^\$D //' "${S}"/src/testsuite/vunify-test.sh
+	default
+}
+
+src_configure() {
 	econf --with-vrootdir=${VDIRBASE} \
 		--with-initscripts=gentoo \
-		--localstatedir=/var || die "econf failed!"
+		--localstatedir=/var
+}
+
+src_compile() {
 	emake || die "emake failed!"
 }
 
@@ -62,26 +73,18 @@ src_install() {
 	keepdir "${VDIRBASE}"
 	keepdir "${VDIRBASE}"/.pkg
 
-	# remove legacy config file
-	rm -f "${D}"/etc/vservers.conf
-
 	# bash-completion
-	dobashcompletion "${FILESDIR}"/bash_completion util-vserver
+	newbashcomp "${FILESDIR}"/bash_completion ${PN}
 
 	dodoc README ChangeLog NEWS AUTHORS THANKS util-vserver.spec
-}
-
-pkg_preinst() {
-	has_version "<${CATEGORY}/${PN}-0.30.211"
-	old_init_script_warn=$?
 }
 
 pkg_postinst() {
 	# Create VDIRBASE in postinst, so it is (a) not unmerged and (b) also
 	# present when merging.
 
-	[ ! -d "${VDIRBASE}" ] && mkdir -p "${VDIRBASE}" &> /dev/null
-	setattr --barrier "${VDIRBASE}" &> /dev/null
+	mkdir -p "${VDIRBASE}"
+	setattr --barrier "${VDIRBASE}"
 
 	rm /etc/vservers/.defaults/vdirbase
 	ln -sf "${VDIRBASE}" /etc/vservers/.defaults/vdirbase
@@ -94,32 +97,4 @@ pkg_postinst() {
 	elog
 	elog " rc-update add vprocunhide default"
 	elog
-
-	if [[ $old_init_script_warn = 0 ]] ; then
-		ewarn "Please make sure, that you remove the old init-script from any"
-		ewarn "runlevel and remove it from your init.d dir!"
-		ewarn
-		ewarn "# rc-update del vservers"
-		ewarn "# rm -f ${ROOT}etc/init.d/vservers"
-		ewarn
-		ewarn "Since util-vserver-0.30.211 all Gentoo specific wrappers"
-		ewarn "have been merged upstream, and may now have a slightly"
-		ewarn "different syntax, i.e. you have to update scripts that"
-		ewarn "depend on these wrappers (vesync, vemerge, vupdateworld"
-		ewarn "and vdispatch-conf)"
-		ewarn
-		ewarn "Additionally the init scripts have changed and now use"
-		ewarn "upstream scripts as backend. An init script to start"
-		ewarn "virtual servers in the 'default' group/mark has been"
-		ewarn "installed by this ebuild:"
-		ewarn
-		ewarn "  rc-update add vservers.default default"
-		ewarn
-		ewarn "To start vservers in other groups/marks, you have to"
-		ewarn "symlink the default init script the same way you do"
-		ewarn "with net.* scripts:"
-		ewarn
-		ewarn "  ln -s /etc/init.d/vservers.default /etc/init.d/vservers.<mark>"
-		ewarn
-	fi
 }
