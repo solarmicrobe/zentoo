@@ -4,10 +4,10 @@
 
 EAPI="3"
 PYTHON_DEPEND="python? 2"
-PYTHON_USE_WITH="-build xml"
+PYTHON_USE_WITH="xml"
 PYTHON_USE_WITH_OPT="python"
 SUPPORT_PYTHON_ABIS="1"
-RESTRICT_PYTHON_ABIS="3.* *-jython"
+RESTRICT_PYTHON_ABIS="3.* *-jython 2.7-pypy-*"
 
 inherit libtool flag-o-matic eutils python autotools prefix
 
@@ -89,6 +89,9 @@ src_prepare() {
 
 	# Heap-based overflow in parsing long entity references
 	epatch "${FILESDIR}/${P}-allocation-error-copying-entities.patch"
+
+	# Make hash functions less predictable to prevent DoS
+	epatch "${FILESDIR}/${P}-hash-randomization.patch"
 
 	# Please do not remove, as else we get references to PORTAGE_TMPDIR
 	# in /usr/lib/python?.?/site-packages/libxml2mod.la among things.
