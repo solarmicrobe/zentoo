@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -48,7 +48,7 @@ RDEPEND="!app-emulation/virtualbox-bin
 		media-libs/libsdl[X,video]
 	)
 	vnc? ( >=net-libs/libvncserver-0.9.7 )
-	java? ( >=virtual/jre-1.5 )"
+	java? ( virtual/jre:1.6 )"
 DEPEND="${RDEPEND}
 	>=dev-util/kbuild-0.1.999
 	>=dev-lang/yasm-0.6.2
@@ -66,7 +66,7 @@ DEPEND="${RDEPEND}
 		dev-texlive/texlive-fontsrecommended
 		dev-texlive/texlive-fontsextra
 	)
-	java? ( >=virtual/jdk-1.5 )
+	java? ( virtual/jdk:1.6 )
 	dev-util/pkgconfig
 	alsa? ( >=media-libs/alsa-lib-1.0.13 )
 	!headless? ( x11-libs/libXinerama )
@@ -167,9 +167,6 @@ src_prepare() {
 
 	# Don't build vboxpci.ko module (D'oh!)
 	epatch "${FILESDIR}"/${PN}-4.1.2-vboxpci-build.patch
-
-	# Fixed compilation with yasm-1.2.0 (bug #391189)
-	epatch "${FILESDIR}"/${PN}-4.1.6-yasm120-fix.patch
 
 	# Use PAM only when pam USE flag is enbaled (bug #376531)
 	if ! use pam ; then
@@ -306,7 +303,14 @@ src_install() {
 			newmenu "${FILESDIR}"/${PN}-ose.desktop-2 ${PN}.desktop
 		fi
 
-		newicon	"${S}"/src/VBox/Frontends/VirtualBox/images/OSE/VirtualBox_32px.png ${PN}.png
+		pushd "${S}"/src/VBox/Resources/OSE &>/dev/null || die
+		for size in 16 20 32 40 48 64 128 ; do
+			insinto /usr/share/icons/hicolor/${size}x${size}/apps
+			newins ${PN}-${size}px.png ${PN}.png
+		done
+		insinto /usr/share/pixmaps
+		newins ${PN}-48px.png ${PN}.png
+		popd &>/dev/null || die
 	else
 		doins VBoxHeadless || die
 		fowners root:vboxusers /usr/$(get_libdir)/${PN}/VBoxHeadless
@@ -314,6 +318,7 @@ src_install() {
 		pax-mark -m "${D}"/usr/$(get_libdir)/${PN}/VBoxHeadless
 	fi
 
+	insinto /usr/$(get_libdir)/${PN}
 	# Install EFI Firmware files (bug #320757)
 	pushd "${S}"/src/VBox/Devices/EFI/FirmwareBin &>/dev/null || die
 	for fwfile in VBoxEFI{32,64}.fd ; do

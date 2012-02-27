@@ -16,7 +16,7 @@ inherit eutils toolchain-funcs multilib
 
 # Return all the flag variables that our high level funcs operate on.
 all-flag-vars() {
-	echo {C,CPP,CXX,F,FC,LD}FLAGS
+	echo {C,CPP,CXX,CCAS,F,FC,LD}FLAGS
 }
 
 # {C,CXX,F,FC}FLAGS that we allow in strip-flags
@@ -100,7 +100,7 @@ _filter-var() {
 # @FUNCTION: filter-flags
 # @USAGE: <flags>
 # @DESCRIPTION:
-# Remove particular <flags> from {C,CPP,CXX,F,FC,LD}FLAGS.  Accepts shell globs.
+# Remove particular <flags> from {C,CPP,CXX,CCAS,F,FC,LD}FLAGS.  Accepts shell globs.
 filter-flags() {
 	_filter-hardened "$@"
 	local v

@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: linux-mod.eclass
@@ -127,7 +127,7 @@ EXPORT_FUNCTIONS pkg_setup pkg_preinst pkg_postinst src_install src_compile pkg_
 IUSE="kernel_linux"
 SLOT="0"
 DESCRIPTION="Based on the $ECLASS eclass"
-RDEPEND="kernel_linux? ( sys-apps/module-init-tools )"
+RDEPEND="kernel_linux? ( virtual/modutils )"
 DEPEND="${RDEPEND}
 	sys-apps/sed
 	kernel_linux? ( virtual/linux-sources )"
