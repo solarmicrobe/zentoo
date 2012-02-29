@@ -42,4 +42,6 @@ src_install() {
 		insinto "${EXT_DIR}"
 		newins ioncube_loader_lin_${slot/php}.so "${PHP_EXT_NAME}.so" || die "Unable to install extension"
 	done
+
+	php-ext-source-r2_createinifiles
 }
