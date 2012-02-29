@@ -28,6 +28,10 @@ RESTRICT="test"
 
 S="${WORKDIR}"/${PN}
 
+src_configure() {
+	:
+}
+
 src_compile() {
 	:
 }
