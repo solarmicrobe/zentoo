@@ -6,6 +6,7 @@ EAPI="2"
 PHP_EXT_NAME="ioncube"
 PHP_EXT_INI="yes"
 PHP_EXT_ZENDEXT="yes"
+PHP_EXT_SKIP_PHPIZE="yes"
 DOCS="README.txt"
 
 inherit php-ext-source-r2
@@ -17,7 +18,7 @@ SRC_URI="http://www.zentoo.org/distfiles/ioncube_loaders_lin_x86-64-${PV}.tar.gz
 LICENSE="ionCube-Loaders"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="+session"
+IUSE=""
 
 DEPEND=""
 RDEPEND="${DEPEND}"
