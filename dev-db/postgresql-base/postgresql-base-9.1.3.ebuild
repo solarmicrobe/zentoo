@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -16,7 +16,7 @@ S="${WORKDIR}/postgresql-${PV}"
 DESCRIPTION="PostgreSQL libraries and clients"
 HOMEPAGE="http://www.postgresql.org/"
 SRC_URI="mirror://postgresql/source/v${PV}/postgresql-${PV}.tar.bz2
-		 http://dev.gentoo.org/~titanofold/postgresql-patches-${SLOT}.tbz2"
+		 http://dev.gentoo.org/~titanofold/postgresql-patches-9.1-r1.tbz2"
 LICENSE="POSTGRESQL"
 
 # No tests to be done for clients and libraries
@@ -54,7 +54,7 @@ RDEPEND="!!dev-db/libpq
 "
 
 DEPEND="${RDEPEND}
-		>=sys-apps/sandbox-2.0
+		!!<sys-apps/sandbox-2.0
 		sys-devel/bison
 		sys-devel/flex
 		nls? ( sys-devel/gettext )
@@ -62,8 +62,12 @@ DEPEND="${RDEPEND}
 
 PDEPEND="doc? ( ~dev-db/postgresql-docs-${PV} )"
 
+# Support /var/run or /run for the socket directory
+[[ ! -d /run ]] && RUNDIR=/var
+
 src_prepare() {
-	epatch "${WORKDIR}/autoconf.patch" "${WORKDIR}/base.patch" \
+	epatch "${WORKDIR}/autoconf.patch" \
+		"${WORKDIR}/base.patch" \
 		"${WORKDIR}/bool.patch"
 
 	eprefixify src/include/pg_config_manual.h
@@ -73,6 +77,10 @@ src_prepare() {
 
 	# because psql/help.c includes the file
 	ln -s "${S}/src/include/libpq/pqsignal.h" "${S}/src/bin/psql/" || die
+
+	sed -e "s|@RUNDIR@|${RUNDIR}|g" \
+		-i src/include/pg_config_manual.h || \
+		die "RUNDIR sed failed"
 
 	eautoconf
 }

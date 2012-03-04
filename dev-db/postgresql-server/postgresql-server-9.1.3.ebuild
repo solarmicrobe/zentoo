@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="4"
 PYTHON_DEPEND="python? 2"
 
 WANT_AUTOMAKE="none"
@@ -16,8 +16,8 @@ S="${WORKDIR}/postgresql-${PV}"
 DESCRIPTION="PostgreSQL server"
 HOMEPAGE="http://www.postgresql.org/"
 SRC_URI="mirror://postgresql/source/v${PV}/postgresql-${PV}.tar.bz2
-		 http://dev.gentoo.org/~titanofold/postgresql-patches-${SLOT}.tbz2
-		 http://dev.gentoo.org/~titanofold/postgresql-initscript-1.2.tbz2"
+		 http://dev.gentoo.org/~titanofold/postgresql-patches-9.1-r1.tbz2
+		 http://dev.gentoo.org/~titanofold/postgresql-initscript-2.1.tbz2"
 LICENSE="POSTGRESQL"
 
 LINGUAS="af cs de en es fa fr hr hu it ko nb pl pt_BR ro ru sk sl sv tr zh_CN zh_TW"
@@ -48,6 +48,9 @@ DEPEND="${RDEPEND}
 	xml? ( dev-util/pkgconfig )"
 PDEPEND="doc? ( ~dev-db/postgresql-docs-${PV} )"
 
+# Support /var/run or /run for the socket directory
+[[ ! -d /run ]] && RUNDIR=/var
+
 pkg_setup() {
 	enewgroup postgres 70
 	enewuser postgres 70 /bin/bash /var/lib/postgresql postgres
@@ -56,22 +59,30 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${WORKDIR}/autoconf.patch" "${WORKDIR}/bool.patch" \
-		"${WORKDIR}/pg_ctl-exit-status.patch" "${WORKDIR}/server.patch"
+	epatch "${WORKDIR}/autoconf.patch" \
+		"${WORKDIR}/bool.patch" \
+		"${WORKDIR}/pg_ctl-exit-status.patch" \
+		"${WORKDIR}/server.patch"
 
 	eprefixify src/include/pg_config_manual.h
 
 	if use test ; then
 		epatch "${WORKDIR}/regress.patch"
 		sed -e "s|@SOCKETDIR@|${T}|g" -i src/test/regress/pg_regress{,_main}.c
-		sed -e "s|/no/such/location|${S}/src/test/regress/tmp_check/no/such/location|g" -i src/test/regress/{input,output}/tablespace.source
+		sed -e "s|/no/such/location|${S}/src/test/regress/tmp_check/no/such/location|g" \
+			-i src/test/regress/{input,output}/tablespace.source
 	else
 		echo "all install:" > "${S}/src/test/regress/GNUmakefile"
 	fi
 
-	eautoconf
+	sed -e "s|@RUNDIR@|${RUNDIR}|g" \
+		-i src/include/pg_config_manual.h "${WORKDIR}/postgresql.init" || \
+		die "RUNDIR sed failed"
+	sed -e "s|@SLOT@|${SLOT}|g" \
+		-i "${WORKDIR}/postgresql.init" "${WORKDIR}/postgresql.confd" || \
+		die "SLOT sed failed"
 
-#	use perl && epatch "${WORKDIR}/perl-ExtUtils-ParseXS.patch"
+	eautoconf
 }
 
 src_configure() {
@@ -124,35 +135,53 @@ src_install() {
 	echo "postgres_ebuilds=\"\${postgres_ebuilds} ${PF}\"" > \
 		"${ED}/etc/eselect/postgresql/slots/${SLOT}/server"
 
-	sed -e "s/@SLOT@/${SLOT}/g" -i "${WORKDIR}"/postgresql.confd
-	newconfd "${WORKDIR}/postgresql.confd" postgresql-${SLOT} || die "Inserting conf failed"
-	sed -e "s/@SLOT@/${SLOT}/g" -i "${WORKDIR}"/postgresql.init
-	newinitd "${WORKDIR}/postgresql.init" postgresql-${SLOT} || die "Inserting conf failed"
+	newconfd "${WORKDIR}/postgresql.confd" postgresql-${SLOT} || \
+		die "Inserting conf failed"
+	newinitd "${WORKDIR}/postgresql.init" postgresql-${SLOT} || \
+		die "Inserting conf failed"
 
 	use pam && pamd_mimic system-auth postgresql auth account session
 
-	keepdir /var/run/postgresql
-	fperms 0770 /var/run/postgresql
-	use prefix || fowners postgres:postgres /var/run/postgresql
+	if use prefix ; then
+		keepdir ${RUNDIR}/run/postgresql
+		fperms 0770 ${RUNDIR}/run/postgresql
+	fi
 }
 
 pkg_postinst() {
 	postgresql-config update
 
-	elog "The Unix-domain socket is located in:"
-	elog "    ${EROOT%/}/var/run/postgresql/"
+	elog "Gentoo specific documentation:"
+	elog "http://www.gentoo.org/doc/en/postgres-howto.xml"
 	elog
-	elog "If you have users and/or services that you would like to utilize the socket,"
-	elog "you must add them to the 'postgres' system group:"
+	elog "Official documentation:"
+	elog "http://www.postgresql.org/docs/${SLOT}/static/index.html"
+	elog
+	elog "The default location of the Unix-domain socket is:"
+	elog "    ${EROOT%/}${RUNDIR}/run/postgresql/"
+	elog
+	elog "If you have users and/or services that you would like to utilize the"
+	elog "socket, you must add them to the 'postgres' system group:"
 	elog "    usermod -a -G postgres <user>"
 	elog
-	elog "Before initializing the database, you may want to edit PG_INITDB_OPTS so that"
-	elog "it contains your preferred locale in:"
+	elog "Before initializing the database, you may want to edit PG_INITDB_OPTS"
+	elog "so that it contains your preferred locale in:"
 	elog "    ${EROOT%/}/etc/conf.d/postgresql-${SLOT}"
 	elog
 	elog "Then, execute the following command to setup the initial database"
 	elog "environment:"
 	elog "    emerge --config =${CATEGORY}/${PF}"
+}
+
+pkg_prerm() {
+	if [[ -z ${REPLACED_BY_VERSION} ]] ; then
+		ewarn "Have you dumped and/or migrated the ${SLOT} database cluster?"
+		ewarn "\thttp://www.gentoo.org/doc/en/postgres-howto.xml#doc_chap5"
+
+		ebegin "Resuming removal 10 seconds. Control-C to cancel"
+		sleep 10
+		eend 0
+	fi
 }
 
 pkg_postrm() {
