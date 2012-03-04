@@ -10,11 +10,13 @@ RUBY_FAKEGEM_EXTRADOC="CHANGELOG README.rdoc"
 
 RUBY_FAKEGEM_TASK_TEST="spec"
 
+RUBY_FAKEGEM_VERSION=${PV/_rc/.rc.}
+
 inherit ruby-fakegem
 
 DESCRIPTION="Ohai profiles your system and emits JSON"
 HOMEPAGE="http://wiki.opscode.com/display/chef/Ohai"
-SRC_URI="https://github.com/opscode/${PN}/tarball/${PV} -> ${P}.tgz"
+SRC_URI="https://github.com/zenops/${PN}/tarball/6c8ee0b6ad -> ${P}.tgz"
 RUBY_S="opscode-${PN}-*"
 
 LICENSE="Apache-2.0"
@@ -25,6 +27,7 @@ IUSE=""
 ruby_add_bdepend "test? ( dev-ruby/rspec:2 dev-ruby/sigar )"
 
 ruby_add_rdepend "
+	dev-ruby/ipaddress
 	dev-ruby/yajl-ruby
 	dev-ruby/mixlib-cli
 	dev-ruby/mixlib-config
