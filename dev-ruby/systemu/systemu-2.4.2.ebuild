@@ -8,14 +8,21 @@ USE_RUBY="ruby18"
 RUBY_FAKEGEM_TASK_DOC=""
 RUBY_FAKEGEM_TASK_TEST=""
 
+RUBY_FAKEGEM_EXTRADOC="README"
+
 inherit ruby-fakegem
 
-DESCRIPTION="AMQP client implementation in Ruby/EventMachine"
-HOMEPAGE="http://amqp.rubyforge.org/"
+DESCRIPTION="Universal capture of STDOUT and STDERR and handling of child process PID"
+HOMEPAGE="http://codeforpeople.com/lib/ruby/systemu/"
 
 LICENSE="Ruby"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-ruby_add_rdepend ">=dev-ruby/eventmachine-0.12.4"
+all_ruby_install() {
+	all_fakegem_install
+
+	insinto /usr/share/doc/${PF}
+	doins -r samples
+}

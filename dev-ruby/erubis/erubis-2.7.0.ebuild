@@ -41,5 +41,13 @@ each_ruby_prepare() {
 }
 
 each_ruby_test() {
-	PATH="${S}/bin:${PATH}" RUBYLIB="${S}/lib" ${RUBY} test/test.rb || die
+	case ${RUBY} in
+		# http://rubyforge.org/tracker/index.php?func=detail&aid=29484&group_id=1320&atid=5201
+		*ruby19)
+			einfo "Tests are not compatible with ruby 1.9.3 with Psych as YAML module."
+			;;
+		*)
+			PATH="${S}/bin:${PATH}" RUBYLIB="${S}/lib" ${RUBY} -I. test/test.rb || die
+			;;
+	esac
 }

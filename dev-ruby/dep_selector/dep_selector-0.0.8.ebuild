@@ -18,8 +18,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-DEPEND=">=dev-libs/gecode-3.5.0"
-RDEPEND="${DEPEND}"
+DEPEND="${DEPEND} >=dev-libs/gecode-3.5.0"
+RDEPEND="${RDEPEND} >=dev-libs/gecode-3.5.0"
 
 each_ruby_configure() {
 	${RUBY} -Cext/dep_gecode extconf.rb || die "extconf.rb failed"

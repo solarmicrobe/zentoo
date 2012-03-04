@@ -5,8 +5,10 @@
 EAPI="2"
 USE_RUBY="ruby18"
 
-RUBY_FAKEGEM_TASK_DOC=""
-RUBY_FAKEGEM_TASK_TEST=""
+RUBY_FAKEGEM_TASK_TEST="spec"
+
+RUBY_FAKEGEM_DOCDIR="rdoc"
+RUBY_FAKEGEM_EXTRADOC="README TODO"
 
 inherit ruby-fakegem
 
@@ -17,5 +19,11 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
+
+# Tests fail but it is not clear if this is a regression because
+# previous revisions did not try to run them. Restricting for now.
+RESTRICT="test"
+
+ruby_add_bdepend "test? ( dev-ruby/rspec:0 )"
 
 ruby_add_rdepend "~dev-ruby/merb-core-${PV}"

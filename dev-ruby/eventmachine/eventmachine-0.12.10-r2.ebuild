@@ -54,6 +54,10 @@ each_ruby_compile() {
 	done
 }
 
+each_ruby_test() {
+	${RUBY} -Ilib -S testrb tests/test_*.rb || die
+}
+
 all_ruby_install() {
 	all_fakegem_install
 

@@ -24,16 +24,11 @@ RDEPEND=">=dev-db/couchdb-0.10.0
 ruby_add_rdepend "~app-admin/chef-${PV}
 	>=dev-ruby/dep_selector-0.0.3
 	>=dev-ruby/merb-assets-1.1.0
-	<dev-ruby/merb-assets-1.2
 	>=dev-ruby/merb-core-1.1.0
-	<dev-ruby/merb-core-1.2
 	>=dev-ruby/merb-helpers-1.1.0
-	<dev-ruby/merb-helpers-1.2
 	>=dev-ruby/merb-param-protection-1.1.0
-	<dev-ruby/merb-param-protection-1.2
 	>=dev-ruby/mixlib-authentication-1.1.3
 	>=dev-ruby/uuidtools-2.1.1
-	<dev-ruby/uuidtools-2.2
 	www-servers/thin"
 
 each_ruby_install() {
