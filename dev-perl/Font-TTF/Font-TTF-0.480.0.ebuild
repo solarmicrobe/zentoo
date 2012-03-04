@@ -1,8 +1,11 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=4
+
 MODULE_AUTHOR=MHOSKEN
+MODULE_VERSION=0.48
 inherit perl-module
 
 DESCRIPTION="module for compiling and altering fonts"
@@ -12,9 +15,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-DEPEND="virtual/perl-IO-Compress
-	dev-perl/XML-Parser
-	dev-lang/perl"
-RDEPEND="${DEPEND}"
+RDEPEND="virtual/perl-IO-Compress
+	dev-perl/XML-Parser"
+DEPEND="${RDEPEND}"
 
 SRC_TEST="do"

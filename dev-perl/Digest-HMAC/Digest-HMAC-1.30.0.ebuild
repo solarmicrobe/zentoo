@@ -1,10 +1,11 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=4
 
 MODULE_AUTHOR=GAAS
+MODULE_VERSION=1.03
 inherit perl-module
 
 DESCRIPTION="Keyed Hashing for Message Authentication"
@@ -14,7 +15,7 @@ KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="virtual/perl-Digest-MD5
-	dev-perl/Digest-SHA1"
+	virtual/perl-Digest-SHA"
 DEPEND="${RDEPEND}"
 
 SRC_TEST="do"

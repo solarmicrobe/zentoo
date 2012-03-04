@@ -1,11 +1,11 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 
 MODULE_AUTHOR=GAAS
-MODULE_VERSION=3.67
+MODULE_VERSION=3.69
 inherit perl-module
 
 DESCRIPTION="Parse <HEAD> section of HTML documents"

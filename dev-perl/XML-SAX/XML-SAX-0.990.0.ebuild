@@ -1,29 +1,29 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=4
+
 MODULE_AUTHOR=GRANTM
+MODULE_VERSION=0.99
 inherit perl-module eutils
 
 DESCRIPTION="Perl module for using and building Perl SAX2 XML parsers, filters, and drivers"
 
-LICENSE="|| ( Artistic GPL-2 )"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-DEPEND=">=dev-perl/XML-NamespaceSupport-1.04
+RDEPEND="
+	dev-perl/XML-SAX-Base
+	>=dev-perl/XML-NamespaceSupport-1.40.0
 	>=dev-libs/libxml2-2.4.1
-	dev-lang/perl"
-RDEPEND="${DEPEND}"
+"
+DEPEND="${RDEPEND}"
 
 SRC_TEST="do"
 
-src_unpack() {
-	local installvendorlib
-	eval $(perl '-V:installvendorlib')
-	unpack ${A}
-	cd "${S}"
+src_prepare() {
 	sed -i \
 		-e 's/if (\$write_ini_ok)/if (0 \&\& $write_ini_ok)/' \
 		Makefile.PL || die

@@ -1,10 +1,11 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=4
 
 MODULE_AUTHOR=HACKER
+MODULE_VERSION=1.02
 inherit perl-module
 
 DESCRIPTION="XMPP Perl Library"
