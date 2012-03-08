@@ -16,8 +16,8 @@ inherit ruby-fakegem
 
 DESCRIPTION="Ohai profiles your system and emits JSON"
 HOMEPAGE="http://wiki.opscode.com/display/chef/Ohai"
-SRC_URI="https://github.com/zenops/${PN}/tarball/2bbf1ad -> ${P}.tgz"
-RUBY_S="zenops-${PN}-*"
+SRC_URI="https://github.com/opscode/${PN}/tarball/${RUBY_FAKEGEM_VERSION} -> ${P}.tgz"
+RUBY_S="opscode-${PN}-*"
 
 LICENSE="Apache-2.0"
 SLOT="0"
