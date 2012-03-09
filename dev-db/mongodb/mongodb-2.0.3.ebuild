@@ -47,6 +47,9 @@ pkg_setup() {
 }
 
 src_prepare() {
+	# https://jira.mongodb.org/browse/SERVER-5259
+	cp "${FILESDIR}"/SConstruct "${S}"/SConstruct
+
 	epatch "${FILESDIR}/${PN}-2.0-fix-scons.patch"
 
 	# drop -Werror
