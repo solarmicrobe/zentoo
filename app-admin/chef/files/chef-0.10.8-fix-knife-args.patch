@@ -1,0 +1,317 @@
+commit 747ef1c772fe4143451cb6407229ffb6f30d4b36
+Author: Marc Paradise <marc@opscode.com>
+Date:   Wed Dec 7 21:52:25 2011 -0500
+
+    CHEF-2641 updated knife to use standard -no prefix
+
+diff --git a/chef/distro/common/markdown/man1/knife-bootstrap.mkd b/chef/distro/common/markdown/man1/knife-bootstrap.mkd
+index d5515a7..1058a7a 100644
+--- a/distro/common/markdown/man1/knife-bootstrap.mkd
++++ b/distro/common/markdown/man1/knife-bootstrap.mkd
+@@ -29,8 +29,8 @@ __knife__ __bootstrap__ _(options)_
+     Execute the bootstrap via sudo
+   * `-d`, `--distro DISTRO`:
+     Bootstrap a distro using a template
+-  * `--no-host-key-verify`:
+-    Disable host key verification
++  * `--[no-]host-key-verify`:
++    Enable host key verification, which is the default behavior.
+ 
+ ## DESCRIPTION
+ 
+diff --git a/chef/distro/common/markdown/man1/knife-cookbook-site.mkd b/chef/distro/common/markdown/man1/knife-cookbook-site.mkd
+index 81024db..7c2b0fe 100644
+--- a/distro/common/markdown/man1/knife-cookbook-site.mkd
++++ b/distro/common/markdown/man1/knife-cookbook-site.mkd
+@@ -11,8 +11,8 @@ __knife__ __cookbook site__ _sub-command_ _(options)_
+ ## INSTALL
+ __cookbook site install COOKBOOK [VERSION]__ _(options)_
+ 
+-  * `-D`, `--no-dependencies `:
+-    Do not install dependencies automatically
++  * `-D`, `--skip-dependencies `:
++    Skip automatic installation of dependencies.
+   * `-o`, `--cookbook-path PATH`:
+     Install cookbooks to PATH
+   * `-B`, `--branch BRANCH`:
+@@ -35,7 +35,7 @@ changes as a separate patch.  When an updated upstream version becomes
+ available, you will be able to merge the upstream changes while
+ maintaining your local modifications.
+ 
+-Unless _-D_ is specified, the process is applied recursively to all the
++Unless _--skip-dependencies_ is specified, the process is applied recursively to all the
+ cookbooks _COOKBOOK_ depends on (via metadata _dependencies_).
+ 
+ ## DOWNLOAD
+diff --git a/chef/distro/common/markdown/man1/knife-node.mkd b/chef/distro/common/markdown/man1/knife-node.mkd
+index 71b3ffe..72b7d00 100644
+--- a/distro/common/markdown/man1/knife-node.mkd
++++ b/distro/common/markdown/man1/knife-node.mkd
+@@ -41,7 +41,7 @@ regular expression literals in scripting languages).
+ ## CREATE
+ __knife node create__ _name_ _(options)_
+ 
+-Create a new node. Unless the --no-editor option is given, an empty node
++Create a new node. Unless the --disable-editing option is given, an empty node
+ object will be created and displayed in your text editor. If the editor
+ exits with a successful exit status, the node data will be posted to the
+ Chef Server to create the node.
+@@ -100,7 +100,7 @@ __knife node show__ _node name_ _(options)_
+     Display more, but not all, of the node's data when using the default
+     _summary_ format
+ 
+-Displays the node identified by _node name_ on stdout. 
++Displays the node identified by _node name_ on stdout.
+ 
+ ## RUN LIST ITEM FORMAT
+ Run list items may be either roles or recipes. When adding a role to a
+diff --git a/chef/distro/common/markdown/man1/knife-ssh.mkd b/chef/distro/common/markdown/man1/knife-ssh.mkd
+index 1a82c5a..ffff61c 100644
+--- a/distro/common/markdown/man1/knife-ssh.mkd
++++ b/distro/common/markdown/man1/knife-ssh.mkd
+@@ -21,9 +21,8 @@ __knife__ __ssh QUERY COMMAND__ _(options)_
+     The ssh port
+   * `-i`, `--identity-file IDENTITY_FILE`:
+     The SSH identity file used for authentication
+-  * `--no-host-key-verify`:
+-    Disable host key verification
+-    
++  * `--[no-]host-key-verify`:
++    Verify host key, enabled by default.
+ 
+ ## DESCRIPTION
+ 
+diff --git a/chef/distro/common/markdown/man1/knife.mkd b/chef/distro/common/markdown/man1/knife.mkd
+index ea9e686..57438d4 100644
+--- a/distro/common/markdown/man1/knife.mkd
++++ b/distro/common/markdown/man1/knife.mkd
+@@ -48,7 +48,7 @@ documentation using `knife help TOPIC`.
+     Which format to use for output. See FORMATS for details.
+   * `-V`, `--verbose`:
+     More verbose output.  Use twice for max verbosity
+-  * `-n`, `--no-editor`:
++  * `-d`, `--disable-editing`:
+     Do not open EDITOR, just accept the data as is
+   * `-u`, `--user` USER:
+     API Client Username, corresponds to `Chef::Config` `node_name`.
+@@ -60,10 +60,8 @@ documentation using `knife help TOPIC`.
+     Say yes to all prompts for confirmation
+   * `--defaults`:
+     Accept default values for all questions
+-  * `--color`:
+-    Use colored output
+-  * `--no-color`:
+-    Don't use colors in the output
++  * `--[no-]color`:
++    Use colored output. Color enabled by default.
+   * `-h`, `--help`:
+     Show the available options for a command.
+ 
+@@ -124,7 +122,7 @@ If the config file exists, knife uses these settings for __GENERAL OPTIONS__ def
+     and is listed as the license in the cookbook metadata. Currently
+     supported licenses are "apachev2" and "none". Any other values will
+     result in an empty license in the metadata (needs to be filled in by the
+-    author), and no comment preamble in the default recipe. Currently supported 
++    author), and no comment preamble in the default recipe. Currently supported
+     readme formats are "md", "mkd", "txt", and "rdoc".  Any other value will
+     result in an unformatted README.
+ 
+@@ -134,7 +132,7 @@ _~/.chef/knife.rb_
+ 
+ Ruby DSL configuration file for knife. See __CONFIGURATION__.
+ 
+-## FORMATS 
++## FORMATS
+ 
+ The amount of content displayed and the output format are
+ modified by the `--format` option. If no alternate format is selected,
+@@ -145,7 +143,7 @@ Valid formats are:
+   * `summary`:
+     displays the node in a custom, summarized format (default)
+   * `text`:
+-    displays the node data in its entirety using the colorized tree display 
++    displays the node data in its entirety using the colorized tree display
+   * `json`:
+     displays the node in JSON format
+   * `yaml`:
+@@ -181,7 +179,7 @@ recommended though, and git fits with a lot of the workflow paradigms.
+ ## ENVIRONMENT
+   * `EDITOR`:
+     The text editor to use for editing data. The --editor option takes
+-    precedence over this value, and the --no-editor option supresses
++    precedence over this value, and the --disable-editing option supresses
+     data editing entirely.
+ 
+ ## SEE ALSO
+diff --git a/chef/lib/chef/application/knife.rb b/chef/lib/chef/application/knife.rb
+index 879e109..629cd9f 100644
+--- a/lib/chef/application/knife.rb
++++ b/lib/chef/application/knife.rb
+@@ -41,16 +41,10 @@ class Chef::Application::Knife < Chef::Application
+     :default => 0
+ 
+   option :color,
+-    :long         => '--color',
++    :long         => '--[no-]color',
+     :boolean      => true,
+     :default      => true,
+-    :description  => "Use colored output"
+-
+-  option :no_color,
+-    :long         => '--no-color',
+-    :boolean      => true,
+-    :default      => false,
+-    :description  => "Don't use colors in the output"
++    :description  => "Use colored output, defaults to enabled"
+ 
+   option :environment,
+     :short        => "-E ENVIRONMENT",
+@@ -63,11 +57,12 @@ class Chef::Application::Knife < Chef::Application
+     :description  => "Set the editor to use for interactive commands",
+     :default      => ENV['EDITOR']
+ 
+-  option :no_editor,
+-    :short        => "-n",
+-    :long         => "--no-editor",
++  option :disable_editing,
++    :short        => "-d",
++    :long         => "--disable-editing",
+     :description  => "Do not open EDITOR, just accept the data as is",
+-    :boolean      => true
++    :boolean      => true,
++    :defaut       => false
+ 
+   option :help,
+     :short        => "-h",
+diff --git a/chef/lib/chef/knife.rb b/chef/lib/chef/knife.rb
+index 211901d..6c2db5a 100644
+--- a/lib/chef/knife.rb
++++ b/lib/chef/knife.rb
+@@ -306,11 +306,11 @@ class Chef
+         read_config_file(config[:config_file])
+       else
+         # ...but do log a message if no config was found.
+-        Chef::Config[:color] = config[:color] && !config[:no_color]
++        Chef::Config[:color] = config[:color]
+         ui.warn("No knife configuration file found")
+       end
+ 
+-      Chef::Config[:color] = config[:color] && !config[:no_color]
++      Chef::Config[:color] = config[:color]
+ 
+       case config[:verbosity]
+       when 0
+diff --git a/chef/lib/chef/knife/bootstrap.rb b/chef/lib/chef/knife/bootstrap.rb
+index a634c43..3507a5e 100644
+--- a/lib/chef/knife/bootstrap.rb
++++ b/lib/chef/knife/bootstrap.rb
+@@ -100,11 +100,11 @@ class Chef
+         :proc => lambda { |o| o.split(/[\s,]+/) },
+         :default => []
+ 
+-      option :no_host_key_verify,
+-        :long => "--no-host-key-verify",
+-        :description => "Disable host key verification",
++      option :host_key_verify,
++        :long => "--[no-]host-key-verify",
++        :description => "Verify host key, enabled by default.",
+         :boolean => true,
+-        :default => false
++        :default => true
+ 
+       def load_template(template=nil)
+         # Are we bootstrapping using an already shipped template?
+@@ -180,7 +180,7 @@ class Chef
+         ssh.config[:ssh_port] = Chef::Config[:knife][:ssh_port] || config[:ssh_port]
+         ssh.config[:identity_file] = config[:identity_file]
+         ssh.config[:manual] = true
+-        ssh.config[:no_host_key_verify] = config[:no_host_key_verify]
++        ssh.config[:host_key_verify] = config[:host_key_verify]
+         ssh.config[:on_error] = :raise
+         ssh
+       end
+diff --git a/chef/lib/chef/knife/configure.rb b/chef/lib/chef/knife/configure.rb
+index b306a0f..ea45419 100644
+--- a/lib/chef/knife/configure.rb
++++ b/lib/chef/knife/configure.rb
+@@ -83,7 +83,7 @@ EOH
+           client_create.config[:admin] = true
+           client_create.config[:file] = new_client_key
+           client_create.config[:yes] = true
+-          client_create.config[:no_editor] = true
++          client_create.config[:disable_editing] = true
+           client_create.run
+         else
+           ui.msg("*****")
+diff --git a/chef/lib/chef/knife/cookbook_site_install.rb b/chef/lib/chef/knife/cookbook_site_install.rb
+index 06de099..e41f995 100644
+--- a/lib/chef/knife/cookbook_site_install.rb
++++ b/lib/chef/knife/cookbook_site_install.rb
+@@ -34,9 +34,10 @@ class Chef
+ 
+       option :no_deps,
+        :short => "-D",
+-       :long => "--no-dependencies",
++       :long => "--skip-dependencies",
+        :boolean => true,
+-       :description => "Do not install dependencies automatically"
++       :default => false,
++       :description => "Skips automatic dependency installation."
+ 
+       option :cookbook_path,
+         :short => "-o PATH:PATH",
+diff --git a/chef/lib/chef/knife/core/node_editor.rb b/chef/lib/chef/knife/core/node_editor.rb
+index bbbe158..8bcf024 100644
+--- a/lib/chef/knife/core/node_editor.rb
++++ b/lib/chef/knife/core/node_editor.rb
+@@ -32,7 +32,7 @@ class Chef
+       end
+ 
+       def edit_node
+-        abort "You specified the --no-editor option, nothing to edit" if config[:no_editor]
++        abort "You specified the --disable_editing option, nothing to edit" if config[:disable_editing]
+         assert_editor_set!
+ 
+         updated_node_data = edit_data(view)
+diff --git a/chef/lib/chef/knife/core/ui.rb b/chef/lib/chef/knife/core/ui.rb
+index ecdffeb..808f0d1 100644
+--- a/lib/chef/knife/core/ui.rb
++++ b/lib/chef/knife/core/ui.rb
+@@ -146,7 +146,7 @@ class Chef
+       def edit_data(data, parse_output=true)
+         output = Chef::JSONCompat.to_json_pretty(data)
+ 
+-        if (!config[:no_editor])
++        if (!config[:disable_editing])
+           filename = "knife-edit-"
+           0.upto(20) { filename += rand(9).to_s }
+           filename << ".js"
+diff --git a/chef/lib/chef/knife/ssh.rb b/chef/lib/chef/knife/ssh.rb
+index 42dff9f..d9711c4 100644
+--- a/lib/chef/knife/ssh.rb
++++ b/lib/chef/knife/ssh.rb
+@@ -76,11 +76,11 @@ class Chef
+         :long => "--identity-file IDENTITY_FILE",
+         :description => "The SSH identity file used for authentication"
+ 
+-      option :no_host_key_verify,
+-        :long => "--no-host-key-verify",
+-        :description => "Disable host key verification",
++      option :host_key_verify,
++        :long => "--[no-]host-key-verify",
++        :description => "Verify host key, enabled by default.",
+         :boolean => true,
+-        :default => false
++        :default => true
+ 
+       def session
+         config[:on_error] ||= :skip
+@@ -134,7 +134,7 @@ class Chef
+           session_opts[:port] = Chef::Config[:knife][:ssh_port] || config[:ssh_port]
+           session_opts[:logger] = Chef::Log.logger if Chef::Log.level == :debug
+ 
+-          if config[:no_host_key_verify]
++          if !config[:host_key_verify]
+             session_opts[:paranoid] = false
+             session_opts[:user_known_hosts_file] = "/dev/null"
+           end
