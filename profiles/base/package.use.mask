@@ -1,9 +1,44 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.305 2012/01/29 14:52:52 wired Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.317 2012/03/03 07:28:31 ssuominen Exp $
 
 # This file requires >=portage-2.1.1
 # New entries go on top.
+
+# Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (25 Feb 2012)
+# directfb build issues, bug #405817.
+www-plugins/gnash directfb
+
+# Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (24 Feb 2012)
+# lirc support is broken in older gnash
+<www-plugins/gnash-0.8.10 lirc
+
+# Zac Medico <zmedico@gentoo.org> (18 Feb 2012)
+# Mask USE=pypy1_8 for sys-apps/portage, since pypy has limited KEYWORDS.
+sys-apps/portage pypy1_8
+
+# Justin Lecher <jlec@gentoo.org> (13. Feb 2012)
+# Is broken somehow, upstream informed
+>=sci-chemistry/pymol-1.5.0.1 vmd
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (11 Feb 2012)
+# Requires >=sys-apps/systemd-31, which is masked and keyworded only for two
+# arches.
+gnome-extra/gnome-screensaver systemd
+
+# Samuli Suominen <ssuominen@gentoo.org> (10 Feb 2012)
+# Masked for being broken wrt #401327 so ImageMagick can be
+# stabilized for security wrt #402999
+# TODO: Report this to upstream
+media-gfx/imagemagick q64
+
+# Bernard Cafarelli <voyageur@gentoo.org> (08 Feb 2012)
+# libobjc2/clang experimental support
+>=gnustep-base/gnustep-make-2.6.2 libobjc2
+
+# Christoph Junghans <ottxor@gentoo.org> (04 Feb 2012)
+# mips only use flags
+>=sci-libs/fftw-3 paired-single zbus
 
 # Alex Alexander <wired@gentoo.org> (29 Jan 2012)
 # Experimental use flags
@@ -54,11 +89,6 @@ sys-devel/gcc libssp
 # Samuli Suominen <ssuominen@gentoo.org> (06 Dec 2011)
 # NuppelVideo is available on x86 only
 media-video/transcode nuv pic
-
-# Andreas K. Huettel <dilfridge@gentoo.org> (01 Dec 2011)
-# The phonon xine backend is unmaintained and makes trouble
-media-libs/phonon xine
-kde-base/phonon-kde xine
 
 # Davide Pesavento <pesa@gentoo.org> (30 Nov 2011)
 # JavaScriptCore JIT is supported only on amd64/arm/x86, so
@@ -146,10 +176,6 @@ app-emulation/qemu-kvm rbd
 # PPS should work on all arches, but only keyworded on amd64/x86
 >=net-misc/ntp-4.2.6_p3-r1 parse-clocks
 
-# Bernard Cafarelli <voyageur@gentoo.org> (6 Jun 2011)
-# libobjc2/clang only works on some arches
-gnustep-base/gnustep-make libobjc2
-
 # Andrey Grozin <grozin@gentoo.org> (29 Mar 2011)
 # dev-lang/swig-2.0.2 with -octave generated .cpp files
 # incompatible with >=sci-mathematics/octave-3.4.0
@@ -209,10 +235,6 @@ media-libs/mesa llvm
 # This feature is marked as experimental by upstream.
 dev-lang/ruby-enterprise fastthreading
 
-# Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (12 Jul 2010)
-# lirc support is broken in the snapshot
->=www-plugins/gnash-0.8.7_p20100706 lirc
-
 # Nirbheek Chauhan <nirbheek@gentoo.org> (29 Jun 2010)
 # Mask clutter till clutter games are usable
 =gnome-extra/gnome-games-2.3* clutter
@@ -270,10 +292,6 @@ media-video/totem tracker
 # Broken on so many setups it is just insane.
 # Unmask if you really know what you are doing.
 <sys-apps/groff-1.20.1-r2 linguas_ja
-
-# Samuli Suominen <ssuominen@gentoo.org) (14 Oct 2009)
-# Conflict with dev-libs/libffi in ld.so.conf.
-sys-devel/gcc libffi
 
 # Samuli Suominen <ssuominen@gentoo.org> (09 Oct 2009)
 # log4cxx has known memory leaking issues wrt bug #287697,
