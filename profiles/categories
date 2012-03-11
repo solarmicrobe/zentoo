@@ -32,6 +32,7 @@ media-fonts
 media-gfx
 media-libs
 net-analyzer
+net-dialup
 net-dns
 net-firewall
 net-fs
