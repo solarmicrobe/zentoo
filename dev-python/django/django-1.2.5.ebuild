@@ -30,7 +30,7 @@ DEPEND="${RDEPEND}
 
 S="${WORKDIR}/${MY_P}"
 
-DOCS="docs/README AUTHORS"
+DOCS="docs/* AUTHORS"
 
 pkg_setup() {
 	python_pkg_setup
