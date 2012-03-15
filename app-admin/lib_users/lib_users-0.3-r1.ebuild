@@ -5,7 +5,7 @@
 EAPI=3
 PYTHON_DEPEND="2"
 
-inherit python
+inherit eutils python
 
 DESCRIPTION="goes through /proc and finds all cases of libraries being mapped
 but marked as deleted"
@@ -25,6 +25,7 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-except-ioerror.patch
 	python_convert_shebangs -r 2 .
 }
 
