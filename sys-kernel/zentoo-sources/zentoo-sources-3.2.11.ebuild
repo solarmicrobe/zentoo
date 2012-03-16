@@ -3,10 +3,7 @@
 # $Header: $
 
 ETYPE="sources"
-VSPV="2.3.2.7"
-
-#K_USEPV=1
-#K_NOSETEXTRAVERSION=1
+VSPV="2.3.2.8"
 
 inherit kernel-2
 detect_version
