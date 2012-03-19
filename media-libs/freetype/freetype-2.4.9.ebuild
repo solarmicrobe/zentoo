@@ -1,10 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="4"
 
-inherit autotools autotools-utils eutils flag-o-matic libtool multilib
+inherit autotools eutils flag-o-matic libtool multilib
 
 DESCRIPTION="A high-quality and portable font engine"
 HOMEPAGE="http://www.freetype.org/"
@@ -124,10 +124,6 @@ src_install() {
 			mkdir -p "${ED}/usr/include/freetype2/internal4fontforge/$(dirname ${header})"
 			cp ${header} "${ED}/usr/include/freetype2/internal4fontforge/$(dirname ${header})"
 		done
-	fi
-
-	if ! use static-libs; then
-		 remove_libtool_files || die "failed removing libtool files"
 	fi
 }
 
