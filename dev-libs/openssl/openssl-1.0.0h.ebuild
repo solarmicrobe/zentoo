@@ -43,7 +43,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.0.0a-ldflags.patch #327421
 	epatch "${FILESDIR}"/${PN}-1.0.0d-fbsd-amd64.patch #363089
 	epatch "${FILESDIR}"/${PN}-1.0.0d-windres.patch #373743
-	epatch "${FILESDIR}"/${PN}-1.0.0e-pkg-config.patch
+	epatch "${FILESDIR}"/${PN}-1.0.0h-pkg-config.patch
 	epatch "${FILESDIR}"/${PN}-1.0.0e-parallel-build.patch
 	epatch "${FILESDIR}"/${PN}-1.0.0e-x32.patch
 	epatch_user #332661
