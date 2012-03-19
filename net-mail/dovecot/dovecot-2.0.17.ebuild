@@ -8,7 +8,7 @@ inherit eutils versionator ssl-cert
 
 MY_P="${P/_/.}"
 major_minor="$( get_version_component_range 1-2 )"
-sieve_version="0.2.4"
+sieve_version="0.2.5"
 SRC_URI="http://dovecot.org/releases/${major_minor}/${MY_P}.tar.gz
 	sieve? (
 	http://www.rename-it.nl/dovecot/${major_minor}/dovecot-${major_minor}-pigeonhole-${sieve_version}.tar.gz
