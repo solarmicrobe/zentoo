@@ -14,7 +14,7 @@ SRC_URI="mirror://cran/src/base/R-2/${P}.tar.gz
 LICENSE="|| ( GPL-2 GPL-3 ) LGPL-2.1"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="bash-completion cairo doc icu java jpeg lapack minimal nls openmp perl png profile readline static-libs tiff tk X"
+IUSE="bash-completion +cairo doc icu java jpeg lapack minimal nls openmp perl png profile readline static-libs tiff tk X"
 REQUIRED_USE="png? ( || ( cairo X ) ) jpeg? ( || ( cairo X ) ) tiff? ( || ( cairo X ) )"
 
 CDEPEND="app-arch/bzip2
