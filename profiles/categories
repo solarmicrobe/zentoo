@@ -15,6 +15,7 @@ app-shells
 app-text
 app-vim
 dev-db
+dev-haskell
 dev-java
 dev-lang
 dev-libs
