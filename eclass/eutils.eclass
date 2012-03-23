@@ -526,7 +526,8 @@ epatch() {
 # Applies user-provided patches to the source tree. The patches are
 # taken from /etc/portage/patches/<CATEGORY>/<PF|P|PN>/, where the first
 # of these three directories to exist will be the one to use, ignoring
-# any more general directories which might exist as well.
+# any more general directories which might exist as well. They must end
+# in ".patch" to be applied.
 #
 # User patches are intended for quick testing of patches without ebuild
 # modifications, as well as for permanent customizations a user might
