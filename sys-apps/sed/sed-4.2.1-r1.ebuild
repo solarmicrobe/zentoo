@@ -13,8 +13,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="acl nls selinux static"
 
-RDEPEND="nls? ( virtual/libintl )
-	acl? ( virtual/acl )"
+RDEPEND="acl? ( virtual/acl )
+	nls? ( virtual/libintl )"
 DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 

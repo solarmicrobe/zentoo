@@ -103,7 +103,7 @@ php-ext-source-r2_src_unpack() {
 	unpack ${A}
 	local slot orig_s="${PHP_EXT_S}"
 	for slot in $(php_get_slots); do
-		cp -r "${orig_s}" "${WORKDIR}/${slot}"
+		cp -r "${orig_s}" "${WORKDIR}/${slot}" || die "Failed to copy source ${orig_s} to PHP target directory"
 	done
 }
 

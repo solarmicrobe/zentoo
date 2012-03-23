@@ -1,6 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
+
+EAPI="4"
 
 inherit eutils toolchain-funcs flag-o-matic
 
@@ -17,13 +19,14 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="crypt ipv6 static"
 
-DEPEND="crypt? ( dev-libs/libmix )"
-RDEPEND="${DEPEND}"
+LIB_DEPEND="crypt? ( dev-libs/libmix[static-libs(+)] )"
+RDEPEND="!static? ( ${LIB_DEPEND//\[static-libs(+)]} )"
+DEPEND="${RDEPEND}
+	static? ( ${LIB_DEPEND} )"
 
 S=${WORKDIR}
 
-src_unpack() {
-	unpack ${MY_P}.tgz ${P}-patches-${PATCH_VER}.tar.bz2
+src_prepare() {
 	epatch "${DISTDIR}"/nc-v6-20000918.patch.gz patch
 	sed -i 's:#define HAVE_BIND:#undef HAVE_BIND:' netcat.c
 	sed -i 's:#define FD_SETSIZE 16:#define FD_SETSIZE 1024:' netcat.c #34250
@@ -36,11 +39,11 @@ src_compile() {
 	use static && export STATIC="-static"
 	use crypt && XFLAGS="${XFLAGS} -DAESCRYPT" && XLIBS="${XLIBS} -lmix"
 	[[ ${CHOST} == *-solaris* ]] && XLIBS="${XLIBS} -lnsl -lsocket"
-	make -e CC="$(tc-getCC) ${CFLAGS} ${LDFLAGS}" nc || die
+	emake -e CC="$(tc-getCC) ${CFLAGS} ${LDFLAGS}" nc
 }
 
 src_install() {
-	dobin nc || die "dobin failed"
+	dobin nc
 	dodoc README* netcat.blurb debian-*
 	doman nc.1
 	docinto scripts

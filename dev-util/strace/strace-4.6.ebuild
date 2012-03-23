@@ -4,11 +4,12 @@
 
 EAPI="3"
 
-inherit flag-o-matic
+inherit flag-o-matic eutils autotools
 
 DESCRIPTION="A useful diagnostic, instructional, and debugging tool"
 HOMEPAGE="http://sourceforge.net/projects/strace/"
-SRC_URI="mirror://sourceforge/${PN}/${P}.tar.xz"
+SRC_URI="mirror://sourceforge/${PN}/${P}.tar.xz
+	mirror://gentoo/${P}-x32.patch.xz"
 
 LICENSE="BSD"
 SLOT="0"
@@ -19,6 +20,13 @@ IUSE="static aio"
 DEPEND="aio? ( >=dev-libs/libaio-0.3.106 )
 	sys-kernel/linux-headers"
 RDEPEND=""
+
+src_prepare() {
+	if has x32 $(get_all_abis) ; then
+		epatch "${WORKDIR}"/${P}-x32.patch
+		eautoreconf
+	fi
+}
 
 src_configure() {
 	filter-lfs-flags # configure handles this sanely

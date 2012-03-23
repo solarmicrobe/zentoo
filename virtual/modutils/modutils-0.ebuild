@@ -12,4 +12,4 @@ KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""
-RDEPEND="|| ( >=sys-apps/module-init-tools-3.2 sys-apps/kmod sys-apps/modutils )"
+RDEPEND="|| ( sys-apps/kmod >=sys-apps/module-init-tools-3.2 sys-apps/modutils )"

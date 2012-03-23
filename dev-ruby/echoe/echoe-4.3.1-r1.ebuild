@@ -19,7 +19,7 @@ RUBY_FAKEGEM_GEMSPEC="echoe.gemspec"
 inherit ruby-fakegem
 
 DESCRIPTION="Packaging tool that provides Rake tasks for common operations"
-HOMEPAGE="http://blog.evanweaver.com/files/doc/fauna/echoe/files/"
+HOMEPAGE="http://fauna.github.com/fauna/echoe/files/README.html"
 
 LICENSE="AFL-3.0 MIT"
 SLOT="0"

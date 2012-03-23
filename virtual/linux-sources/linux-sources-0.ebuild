@@ -14,8 +14,4 @@ KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""
-RDEPEND="|| (
-		sys-kernel/zentoo-sources
-		sys-kernel/vanilla-sources
-		sys-kernel/vserver-sources
-	)"
+RDEPEND="sys-kernel/zentoo-sources"

@@ -4,7 +4,7 @@
 
 EAPI="3"
 SUPPORT_PYTHON_ABIS="1"
-RESTRICT_PYTHON_ABIS="*-jython"
+RESTRICT_PYTHON_ABIS="*-jython 2.7-pypy-* *-jython"
 
 inherit distutils eutils
 

@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -26,7 +26,7 @@ RDEPEND="dbus? ( sys-apps/dbus )
 
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
-	|| ( app-arch/xz-utils app-arch/lzma-utils )"
+	|| ( app-arch/xz-utils app-arch/lzma )"
 
 S="${WORKDIR}/${PN}-${MY_PV}"
 

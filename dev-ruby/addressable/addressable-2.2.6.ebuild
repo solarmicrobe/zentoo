@@ -24,13 +24,20 @@ IUSE=""
 
 ruby_add_bdepend "test? ( dev-ruby/rspec:0 )"
 
+all_ruby_prepare() {
+	# Remove spec-related tasks so that we don't need to require rspec
+	# just to build the documentation, bug 383611.
+	sed -i -e '/spectask/d' Rakefile || die
+	rm tasks/spec.rake || die
+}
+
 each_ruby_test() {
 	case ${RUBY} in
 		*jruby)
 			ewarn "Tests disabled because they crash jruby."
 			;;
 		*)
-			each_fakegem_test
+			${RUBY} -I lib -S spec spec || die "Tests failed."
 			;;
 	esac
 }

@@ -6,4 +6,7 @@
 	<email>pva@gentoo.org</email>
 	<name>Peter Volkov</name>
 </maintainer>
+<use>
+<flag name='natspec'>Use <pkg>dev-libs/libnatspec</pkg> to correctly decode non-ascii file names archived in Windows.</flag>
+</use>
 </pkgmetadata>

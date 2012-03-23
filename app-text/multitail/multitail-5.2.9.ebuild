@@ -22,6 +22,8 @@ src_prepare() {
 	epatch \
 		"${FILESDIR}"/5.2.2-as-needed.patch \
 		"${FILESDIR}"/5.2.6-buffer-overflow.patch
+
+	use x86-interix && epatch "${FILESDIR}"/${PN}-5.2.6-interix.patch
 }
 
 src_configure() {

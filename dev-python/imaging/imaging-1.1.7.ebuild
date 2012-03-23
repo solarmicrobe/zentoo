@@ -7,7 +7,7 @@ PYTHON_DEPEND="2"
 PYTHON_USE_WITH="tk"
 PYTHON_USE_WITH_OPT="tk"
 SUPPORT_PYTHON_ABIS="1"
-RESTRICT_PYTHON_ABIS="3.* *-jython"
+RESTRICT_PYTHON_ABIS="3.* *-jython 2.7-pypy-*"
 
 inherit eutils multilib distutils
 

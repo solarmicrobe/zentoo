@@ -30,7 +30,7 @@ ruby_add_rdepend ">=dev-ruby/memcache-client-1.5.8"
 
 # libxml-ruby and nokogiri are not strictly needed, but there are tests
 # using this code.
-ruby_add_bdepend "test? ( virtual/ruby-test-unit >=dev-ruby/libxml-2.0.0 dev-ruby/nokogiri )"
+ruby_add_bdepend "test? ( virtual/ruby-test-unit >=dev-ruby/libxml-2.0.0 dev-ruby/nokogiri dev-ruby/mocha )"
 
 all_ruby_prepare() {
 	# don't support older mocha versions as the optional codepath

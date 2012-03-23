@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,7 +21,7 @@ S="${WORKDIR}/${MY_P}"
 SLOT="${PV:0:4}"
 
 DESCRIPTION="Used to generate Makefile.in from Makefile.am"
-HOMEPAGE="http://sources.redhat.com/automake/"
+HOMEPAGE="http://www.gnu.org/software/automake/"
 
 LICENSE="GPL-2"
 KEYWORDS="amd64"

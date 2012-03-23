@@ -71,6 +71,7 @@ src_install() {
 	cp -pPR * "${D}"/ || die
 
 	mv "${ED}"/usr/share/doc/{ca-certificates,${PF}} || die
+	prepalldocs
 
 	echo 'CONFIG_PROTECT_MASK="/etc/ca-certificates.conf"' > 98ca-certificates
 	doenvd 98ca-certificates

@@ -17,7 +17,7 @@ IUSE="cjk pcre png readline static-libs zlib"
 # ncurses for ncurses5-config to get terminfo directory
 RDEPEND="sys-libs/ncurses
 	pcre? ( dev-libs/libpcre )
-	png? ( >=media-libs/libpng-1.4 )
+	png? ( >=media-libs/libpng-1.2:0 )
 	cjk? ( dev-libs/oniguruma )
 	readline? ( sys-libs/readline )
 	zlib? ( sys-libs/zlib )"

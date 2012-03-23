@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -16,7 +16,7 @@ IUSE="tcpd debug selinux pam"
 RDEPEND="pam? ( virtual/pam )
 	tcpd? ( sys-apps/tcp-wrappers )
 	selinux? ( sec-policy/selinux-dante )
-	userland_GNU? ( sys-apps/shadow )"
+	userland_GNU? ( virtual/shadow )"
 DEPEND="${RDEPEND}
 	sys-devel/flex
 	sys-devel/bison

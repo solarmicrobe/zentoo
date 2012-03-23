@@ -2,7 +2,11 @@
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
 	<maintainer>
-		<email>nyhm@gentoo.org</email>
+		<email>tristan@gentoo.org</email>
 		<name>Tristan Heaven</name>
+	</maintainer>
+	<maintainer>
+		<email>radhermit@gentoo.org</email>
+		<name>Tim Harder</name>
 	</maintainer>
 </pkgmetadata>

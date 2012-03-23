@@ -2,7 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI=4
+
 SUPPORT_PYTHON_ABIS="1"
 DISTUTILS_SRC_TEST="setup.py"
 
@@ -31,51 +32,39 @@ S="${WORKDIR}/${MY_P}"
 DOCS="CHANGES"
 PYTHON_MODNAME="jinja2"
 
-set_global_options() {
-	if [[ "$(python_get_implementation)" != "Jython" ]]; then
-		DISTUTILS_GLOBAL_OPTIONS=("--with-debugsupport")
-	else
-		DISTUTILS_GLOBAL_OPTIONS=()
-	fi
-}
-
-distutils_src_compile_pre_hook() {
-	set_global_options
-}
+DISTUTILS_GLOBAL_OPTIONS=("*-cpython --with-debugsupport")
 
 src_compile(){
 	distutils_src_compile
 
 	if use doc; then
 		einfo "Generation of documentation"
-		cd docs
-		PYTHONPATH=".." emake html || die "Building of documentation failed"
+		pushd docs > /dev/null
+		PYTHONPATH=".." emake html
+		popd > /dev/null
 	fi
-}
-
-distutils_src_test_pre_hook() {
-	set_global_options
-}
-
-distutils_src_install_pre_hook() {
-	set_global_options
 }
 
 src_install(){
 	distutils_src_install
 	python_clean_installation_image
 
+	delete_tests() {
+		rm -fr "${ED}$(python_get_sitedir)/jinja2/testsuite"
+	}
+	python_execute_function -q delete_tests
+
 	if use doc; then
-		dohtml -r docs/_build/html/* || die "Installation of documentation failed"
+		dohtml -r docs/_build/html/*
 	fi
 
 	if use examples; then
 		insinto /usr/share/doc/${PF}
-		doins -r examples || die "Installation of examples failed"
+		doins -r examples
 	fi
 
 	if use vim-syntax; then
 		insinto /usr/share/vim/vimfiles/syntax
-		doins ext/Vim/* || die "Installation of Vim syntax files failed"
+		doins ext/Vim/*
 	fi
 }

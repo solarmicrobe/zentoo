@@ -21,7 +21,7 @@ IUSE=""
 RDEPEND=""
 
 ruby_add_rdepend "~app-admin/chef-${PV}
-	>=dev-ruby/amqp-0.6.7:0
+	>=dev-ruby/amqp-0.6.7
 	>=dev-ruby/bunny-0.6.0
 	>=dev-ruby/em-http-request-0.2.11
 	>=dev-ruby/eventmachine-0.12.10

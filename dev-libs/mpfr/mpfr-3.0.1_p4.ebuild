@@ -48,6 +48,7 @@ src_install() {
 	mv "${D}"/usr/share/doc/{${PN},${PF}} || die
 	dodoc AUTHORS BUGS ChangeLog NEWS README TODO
 	dohtml *.html
+	prepalldocs
 }
 
 pkg_preinst() {

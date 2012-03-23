@@ -33,6 +33,7 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}"/${PN}-3.0.9-x32.patch
 	elibtoolize
 }
 

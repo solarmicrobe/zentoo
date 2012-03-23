@@ -2,17 +2,19 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-DESCRIPTION="Virtual for the device filesystem manager"
-HOMEPAGE=""
-SRC_URI=""
+EAPI="2"
 
-LICENSE=""
+DESCRIPTION="Virtual for the device filesystem manager"
+
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""
-RDEPEND="|| ( sys-fs/udev
+RDEPEND="|| (
+		sys-fs/udev
+		sys-apps/busybox[mdev]
 		sys-fs/devfsd
 		sys-fs/static-dev
-		sys-freebsd/freebsd-sbin )"
+		sys-freebsd/freebsd-sbin
+	)"

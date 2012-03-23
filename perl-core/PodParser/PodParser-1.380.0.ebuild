@@ -15,7 +15,6 @@ KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="dev-lang/perl"
-RDEPEND="${DEPEND}"
 
 S=${WORKDIR}/${MY_P}
 

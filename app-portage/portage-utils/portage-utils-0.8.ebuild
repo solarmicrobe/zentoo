@@ -29,6 +29,7 @@ src_configure() {
 
 src_install() {
 	emake install DESTDIR="${D}" || die
+	prepalldocs
 
 	exeinto /etc/portage/bin
 	doexe "${FILESDIR}"/post_sync || die

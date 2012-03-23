@@ -37,16 +37,6 @@ RDEPEND="${DEPEND}"
 # $1 - directory in ${S} to insert from
 # $2 ... list of files to install
 php-lib-r1_src_install() {
-	has_php
-
-	# install to the correct phpX folder, if not specified
-	# fall back to /usr/share/php
-	if [[ -n "${PHP_SHARED_CAT}" ]] ; then
-		PHP_LIB_DIR="/usr/share/${PHP_SHARED_CAT}/${PHP_LIB_NAME}"
-	else
-		PHP_LIB_DIR="/usr/share/php/${PHP_LIB_NAME}"
-	fi
-
 	local x
 
 	S_DIR="$1"
@@ -54,7 +44,7 @@ php-lib-r1_src_install() {
 
 	for x in $@ ; do
 		SUBDIR="$(dirname ${x})"
-		insinto "${PHP_LIB_DIR}/${SUBDIR}"
+		insinto "/usr/share/php/${PHP_LIB_NAME}/${SUBDIR}"
 		doins "${S_DIR}/${x}"
 	done
 

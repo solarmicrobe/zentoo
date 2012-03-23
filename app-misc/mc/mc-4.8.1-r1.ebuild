@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit base flag-o-matic
+inherit eutils flag-o-matic
 
 MY_P=${P/_/-}
 
@@ -38,6 +38,12 @@ DEPEND="${RDEPEND}
 	"
 
 S=${WORKDIR}/${MY_P}
+
+src_prepare() {
+	epatch "${FILESDIR}"/${PN}-4.8.1-muldefs.patch #403343
+	epatch "${FILESDIR}"/${PN}-4.8.1-muldefs-in.patch #403343
+	epatch "${FILESDIR}"/${PN}-4.8.1-fix-vfs-test.patch #403343
+}
 
 src_configure() {
 	local myscreen=ncurses

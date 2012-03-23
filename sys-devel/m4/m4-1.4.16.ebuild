@@ -19,6 +19,10 @@ IUSE="examples"
 DEPEND="app-arch/xz-utils"
 RDEPEND=""
 
+src_prepare() {
+	epatch "${FILESDIR}"/${P}-fix-test-readlink.patch #376639
+}
+
 src_configure() {
 	# Disable automagic dependency over libsigsegv; see bug #278026
 	export ac_cv_libsigsegv=no
@@ -35,10 +39,13 @@ src_test() {
 
 src_install() {
 	emake install DESTDIR="${D}" || die
+	# autoconf-2.60 for instance, first checks gm4, then m4.  If we don't have
+	# gm4, it might find gm4 from outside the prefix on for instance Darwin
+	use prefix && dosym /usr/bin/m4 /usr/bin/gm4
 	dodoc BACKLOG ChangeLog NEWS README* THANKS TODO
 	if use examples ; then
 		docinto examples
 		dodoc examples/*
-		rm -f "${D}"/usr/share/doc/${PF}/examples/Makefile*
+		rm -f "${ED}"/usr/share/doc/${PF}/examples/Makefile*
 	fi
 }

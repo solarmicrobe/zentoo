@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: ruby-ng.eclass
@@ -383,7 +383,14 @@ _ruby_each_implementation() {
 		unset RUBY
 	done
 
-	[[ ${invoked} == "no" ]] && die "You need to select at least one Ruby implementation by setting RUBY_TARGETS in /etc/make.conf."
+	if [[ ${invoked} == "no" ]]; then
+		eerror "You need to select at least one compatible Ruby installation target via RUBY_TARGETS in make.conf."
+		eerror "Compatible targets for this package are: ${USE_RUBY}"
+		eerror
+		eerror "See http://www.gentoo.org/proj/en/prog_lang/ruby/index.xml#doc_chap3 for more information."
+		eerror
+		die "No compatible Ruby target selected."
+	fi
 }
 
 # @FUNCTION: ruby-ng_pkg_setup

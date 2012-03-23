@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -66,10 +66,13 @@ src_configure() {
 	fi
 
 	if use gnutls; then
-		myconf+=" --with-ssl=gnutls --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt"
+		myconf+=" --with-ssl=gnutls --with-ca-bundle=${EPREFIX}/etc/ssl/certs/ca-certificates.crt"
 	elif use ssl; then
 		myconf+=" --with-ssl=openssl"
 	fi
+
+	# work around broken check, we really need -lintl on Solaris
+	[[ ${CHOST} == *-solaris* ]] && export ne_cv_libsfor_bindtextdomain=-lintl
 
 	econf \
 		--enable-shared \

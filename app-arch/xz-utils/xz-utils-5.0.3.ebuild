@@ -7,11 +7,18 @@
 
 EAPI="2"
 
-MY_P="${PN/-utils}-${PV/_}"
-SRC_URI="http://tukaani.org/xz/${MY_P}.tar.gz"
-KEYWORDS="amd64"
-S=${WORKDIR}/${MY_P}
-EXTRA_DEPEND=
+if [[ ${PV} == "9999" ]] ; then
+	EGIT_REPO_URI="git://ctrl.tukaani.org/xz.git"
+	inherit git autotools
+	SRC_URI=""
+	EXTRA_DEPEND="sys-devel/gettext dev-vcs/cvs >=sys-devel/libtool-2" #272880 286068
+else
+	MY_P="${PN/-utils}-${PV/_}"
+	SRC_URI="http://tukaani.org/xz/${MY_P}.tar.gz"
+	KEYWORDS="amd64"
+	S=${WORKDIR}/${MY_P}
+	EXTRA_DEPEND=
+fi
 
 inherit eutils multilib
 
@@ -44,8 +51,10 @@ src_configure() {
 
 src_install() {
 	emake install DESTDIR="${D}" || die
+	rm "${D}"/usr/*/liblzma.la || die # dependency_libs=''
 	rm "${D}"/usr/share/doc/xz/COPYING* || die
 	mv "${D}"/usr/share/doc/{xz,${PF}} || die
+	prepalldocs
 	dodoc AUTHORS ChangeLog NEWS README THANKS
 }
 

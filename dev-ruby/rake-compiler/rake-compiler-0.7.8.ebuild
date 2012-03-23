@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=2
-USE_RUBY="ruby18 ree18 ruby19 jruby"
+USE_RUBY="ruby18 ree18 jruby"
 
 # Tests for now seem only to work when rubygems is fully installed for
 # the implementation and that for now only means Ruby 1.8
@@ -33,7 +33,7 @@ ruby_add_rdepend "dev-ruby/rake"
 
 each_ruby_prepare() {
 	case ${RUBY} in
-		*ruby19|*jruby)
+		*jruby)
 			# Remove this task so that it won't load on Ruby 1.9 and JRuby
 			# that lack the package_task file. It is, though, needed for the
 			# tests
@@ -48,9 +48,6 @@ each_ruby_prepare() {
 
 each_ruby_test() {
 	case ${RUBY} in
-		*ruby19)
-			ewarn "Tests disabled for this implementation. Long story, check ebuild if you want."
-			;;
 		*jruby)
 			${RUBY} -S spec spec || die "Tests failed."
 			;;

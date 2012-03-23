@@ -6,7 +6,7 @@ EAPI="4"
 PYTHON_DEPEND="utils? 2"
 # Avoid runtime dependency on python when USE=test
 
-inherit autotools gnome.org libtool eutils flag-o-matic multilib pax-utils python toolchain-funcs virtualx
+inherit autotools gnome.org libtool eutils flag-o-matic gnome2-utils multilib pax-utils python toolchain-funcs virtualx
 
 DESCRIPTION="The GLib library of C routines"
 HOMEPAGE="http://www.gtk.org/"
@@ -194,11 +194,12 @@ src_install() {
 }
 
 src_test() {
+	gnome2_environment_reset
+
 	unset DBUS_SESSION_BUS_ADDRESS
 	export XDG_CONFIG_DIRS=/etc/xdg
 	export XDG_DATA_DIRS=/usr/local/share:/usr/share
 	export G_DBUS_COOKIE_SHA1_KEYRING_DIR="${T}/temp"
-	export XDG_DATA_HOME="${T}"
 	unset GSETTINGS_BACKEND # bug 352451
 
 	# Related test is a bit nitpicking

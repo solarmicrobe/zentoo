@@ -12,7 +12,8 @@ KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="|| (
-	dev-java/icedtea6-bin
+	=dev-java/icedtea-6*
+	=dev-java/icedtea-bin-6*
 	=dev-java/sun-jdk-1.6.0*
 )"
 

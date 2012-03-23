@@ -6,7 +6,7 @@ EAPI="3"
 
 PYTHON_DEPEND="python? 2"
 SUPPORT_PYTHON_ABIS="1"
-RESTRICT_PYTHON_ABIS="3.*"
+RESTRICT_PYTHON_ABIS="3.* *-jython"
 GNOME_ORG_MODULE="gamin"
 
 inherit autotools eutils flag-o-matic libtool python gnome.org

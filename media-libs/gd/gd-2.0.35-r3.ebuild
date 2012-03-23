@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -10,7 +10,7 @@ DESCRIPTION="A graphics library for fast image creation"
 HOMEPAGE="http://libgd.org/ http://www.boutell.com/gd/"
 SRC_URI="http://libgd.org/releases/${P}.tar.bz2"
 
-LICENSE="|| ( as-is BSD )"
+LICENSE="as-is BSD"
 SLOT="2"
 KEYWORDS="amd64"
 IUSE="fontconfig jpeg png static-libs truetype xpm zlib"
@@ -21,7 +21,8 @@ RDEPEND="fontconfig? ( media-libs/fontconfig )
 	truetype? ( >=media-libs/freetype-2.1.5 )
 	xpm? ( x11-libs/libXpm x11-libs/libXt )
 	zlib? ( sys-libs/zlib )"
-DEPEND="${RDEPEND}"
+DEPEND="${RDEPEND}
+	dev-util/pkgconfig"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-libpng14.patch #305101
@@ -33,7 +34,7 @@ src_prepare() {
 	local make_sed=( -e '/^noinst_PROGRAMS/s:noinst:check:' )
 	use png || make_sed+=( -e '/_PROGRAMS/s:(gdparttopng|gdtopng|gd2topng|pngtogd|pngtogd2|webpng)::g' )
 	use zlib || make_sed+=( -e '/_PROGRAMS/s:(gd2topng|gd2copypal|gd2togif|giftogd2|gdparttopng|pngtogd2)::g' )
-	sed -i "${make_sed[@]}" Makefile.am || die
+	sed -i -r "${make_sed[@]}" Makefile.am || die
 
 	eautoreconf
 }

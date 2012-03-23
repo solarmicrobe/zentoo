@@ -443,9 +443,9 @@ distutils_src_install() {
 			while read -r line; do
 				einfo "        $(echo "${line}" | sed -e "s/.*types\.ModuleType('\([^']\+\)').*/\1/")"
 			done < "${nspkg_pth_file}"
-			if ! has "${EAPI:-0}" 0 1 2 3; then
-				rm -f "${nspkg_pth_file}" || die "Deletion of '${nspkg_pth_file}' failed"
-			fi
+			#if ! has "${EAPI:-0}" 0 1 2 3; then
+			#	rm -f "${nspkg_pth_file}" || die "Deletion of '${nspkg_pth_file}' failed"
+			#fi
 		done
 		einfo
 	fi

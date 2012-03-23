@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit flag-o-matic toolchain-funcs eutils
+inherit toolchain-funcs unpacker
 
 DESCRIPTION="ELF related utils for ELF 32/64 binaries that can check files for security relevant properties"
 HOMEPAGE="http://hardened.gentoo.org/pax-utils.xml"
@@ -19,11 +19,6 @@ IUSE="caps"
 RDEPEND="caps? ( sys-libs/libcap )"
 DEPEND="${RDEPEND}
 	app-arch/xz-utils"
-
-src_unpack() {
-	# avoid newer EAPI for easy upgrade paths
-	xz -dc "${DISTDIR}/${A}" | tar xf - || die
-}
 
 src_compile() {
 	emake CC="$(tc-getCC)" USE_CAP=$(use caps && echo yes) || die

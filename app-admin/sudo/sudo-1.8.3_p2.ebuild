@@ -24,7 +24,7 @@ SRC_URI="http://www.sudo.ws/sudo/dist/${uri_prefix}${MY_P}.tar.gz
 LICENSE="as-is BSD"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="pam offensive ldap selinux skey"
+IUSE="ldap nls pam offensive selinux skey"
 
 DEPEND="pam? ( virtual/pam )
 	skey? ( >=sys-auth/skey-1.1.5-r1 )
@@ -32,14 +32,14 @@ DEPEND="pam? ( virtual/pam )
 		>=net-nds/openldap-2.1.30-r1
 		dev-libs/cyrus-sasl
 	)
-	>=app-misc/editor-wrapper-3
-	sys-libs/zlib
-	virtual/editor
-	virtual/mta"
-RDEPEND="selinux? ( sec-policy/selinux-sudo )
+	sys-libs/zlib"
+RDEPEND="${DEPEND}
+	selinux? ( sec-policy/selinux-sudo )
 	ldap? ( dev-lang/perl )
 	pam? ( sys-auth/pambase )
-	${DEPEND}"
+	>=app-misc/editor-wrapper-3
+	virtual/editor
+	virtual/mta"
 DEPEND="${DEPEND}
 	sys-devel/bison"
 
@@ -112,6 +112,7 @@ src_configure() {
 		$(use_with offensive all-insults) \
 		$(use_with ldap ldap_conf_file /etc/ldap.conf.sudo) \
 		$(use_with ldap) \
+		$(use_enable nls) \
 		$(use_with pam) \
 		$(use_with skey) \
 		$(use_with selinux) \

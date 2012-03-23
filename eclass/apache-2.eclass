@@ -1,7 +1,5 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-
-EAPI="2"
 
 # @ECLASS: apache-2.eclass
 # @MAINTAINER:

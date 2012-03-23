@@ -10,7 +10,7 @@ IPV6_VERSION="0.4.11"
 DESCRIPTION="OpenVPN is a robust and highly flexible tunneling application compatible with many OSes."
 SRC_URI="http://swupdate.openvpn.net/community/releases/${P}.tar.gz
 		ipv6? (
-			http://cloud.github.com/downloads/jjo/openvpn-ipv6/${PN}-2.1.1-ipv6-${IPV6_VERSION}.patch.gz
+			mirror://github/jjo/openvpn-ipv6/${PN}-2.1.1-ipv6-${IPV6_VERSION}.patch.gz
 		)
 		eurephia? (
 			mirror://sourceforge/eurephia/${PN}-2.1.0_eurephia.patch

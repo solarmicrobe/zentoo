@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -36,7 +36,7 @@ RDEPEND="pam? ( virtual/pam )
 	>=sys-libs/zlib-1.2.3
 	tcpd? ( >=sys-apps/tcp-wrappers-7.6 )
 	X? ( x11-apps/xauth )
-	userland_GNU? ( sys-apps/shadow )"
+	userland_GNU? ( virtual/shadow )"
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	virtual/os-headers

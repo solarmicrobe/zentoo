@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,6 +21,8 @@ DEPEND="|| ( <dev-lang/php-5.3[pcre] >=dev-lang/php-5.3 )
 		dev-lang/php[cli,xml,zlib]"
 
 RDEPEND="${DEPEND}"
+
+PDEPEND="dev-php/pear"
 
 S="${WORKDIR}"
 

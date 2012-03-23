@@ -11,5 +11,5 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="dev-libs/libffi"
+RDEPEND=">=dev-libs/libffi-3.0.9"
 DEPEND=""

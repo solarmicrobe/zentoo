@@ -2,6 +2,7 @@
 difftree.log
 distfiles/
 eix.cache.*
+etc/
 etc/make.conf
 local/
 metadata/cache/

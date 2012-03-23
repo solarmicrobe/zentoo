@@ -1,8 +1,9 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
+XORG_EAUTORECONF=yes
 inherit xorg-2 toolchain-funcs versionator
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/pixman"
@@ -12,7 +13,6 @@ KEYWORDS="amd64"
 IUSE="altivec iwmmxt mmx neon sse2"
 
 PATCHES=( "${FILESDIR}"/${P}-posix-test.patch )
-XORG_EAUTORECONF="yes"
 
 pkg_setup() {
 	xorg-2_pkg_setup

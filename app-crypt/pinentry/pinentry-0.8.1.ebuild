@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -73,13 +73,14 @@ src_configure() {
 		$(use_enable ncurses fallback-curses) \
 		$(use_enable qt4 pinentry-qt4) \
 		$(use_with caps libcap) \
+		--without-x \
 		${myconf}
 }
 
 src_install() {
 	emake DESTDIR="${D}" install || die
 	dodoc AUTHORS ChangeLog NEWS README THANKS TODO
-	rm -f "${D}"/usr/bin/pinentry || die
+	rm -f "${ED}"/usr/bin/pinentry || die
 }
 
 pkg_postinst() {

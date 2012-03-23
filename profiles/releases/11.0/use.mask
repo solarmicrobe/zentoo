@@ -91,6 +91,7 @@ gnome
 gnome-keyring
 gnuplot
 gnustep
+gnutls
 gphoto2
 gps
 gsl
@@ -291,6 +292,7 @@ xemacs
 xface
 xft
 xine
+xinetd
 xinerama
 xmp
 xmpp
@@ -308,6 +310,7 @@ zsh-completion
 
 # ruby targets we don't support
 ruby_targets_jruby
+ruby_targets_rbx
 ruby_targets_ree18
 ruby_targets_ruby19
 

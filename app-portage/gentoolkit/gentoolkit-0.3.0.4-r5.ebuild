@@ -21,8 +21,13 @@ IUSE=""
 KEYWORDS="amd64"
 
 # Note: argparse is provided in python 2.7 and 3.2 (Bug 346005)
+# Note: dev-lang/python dependencies are so emerge will print a blocker if any
+# installed slot of python is not built with +xml.  This is used since
+# PYTHON_USE_WITH just dies in the middle of the emerge. See bug 399331.
 DEPEND="sys-apps/portage"
 RDEPEND="${DEPEND}
+	>=dev-lang/python-2.6[xml]
+	!>=dev-lang/python-2.6[-xml]
 	!<=app-portage/gentoolkit-dev-0.2.7
 	dev-python/argparse
 	|| ( >=sys-apps/coreutils-8.15 app-misc/realpath sys-freebsd/freebsd-bin )

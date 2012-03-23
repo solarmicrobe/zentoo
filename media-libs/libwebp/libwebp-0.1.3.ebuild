@@ -13,7 +13,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="static-libs"
 
-RDEPEND=">=media-libs/libpng-1.4:0
+RDEPEND=">=media-libs/libpng-1.2:0
 	virtual/jpeg"
 DEPEND="${RDEPEND}"
 

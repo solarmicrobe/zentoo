@@ -99,6 +99,18 @@ _python_check_python_abi_matching() {
 	fi
 }
 
+_python_implementation() {
+	if [[ "${CATEGORY}/${PN}" == "dev-lang/python" ]]; then
+		return 0
+	elif [[ "${CATEGORY}/${PN}" == "dev-java/jython" ]]; then
+		return 0
+	elif [[ "${CATEGORY}/${PN}" == "dev-python/pypy" ]]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
 _python_package_supporting_installation_for_multiple_python_abis() {
 	if has "${EAPI:-0}" 0 1 2 3 4; then
 		if [[ -n "${SUPPORT_PYTHON_ABIS}" ]]; then
@@ -244,8 +256,11 @@ _python_parse_PYTHON_DEPEND() {
 	fi
 }
 
-DEPEND=">=app-admin/eselect-python-20091230"
-RDEPEND="${DEPEND}"
+if _python_implementation; then
+	DEPEND=">=app-admin/eselect-python-20091230"
+	RDEPEND="${DEPEND}"
+	PDEPEND="app-admin/python-updater"
+fi
 
 if [[ -n "${PYTHON_DEPEND}" ]]; then
 	_python_parse_PYTHON_DEPEND
@@ -294,8 +309,8 @@ if ! has "${EAPI:-0}" 0 1 && [[ -n ${PYTHON_USE_WITH} || -n ${PYTHON_USE_WITH_OR
 	if [[ -n "${PYTHON_USE_WITH_OPT}" ]]; then
 		_PYTHON_USE_WITH_ATOMS="${PYTHON_USE_WITH_OPT}? ( ${_PYTHON_USE_WITH_ATOMS} )"
 	fi
-	DEPEND+=" ${_PYTHON_USE_WITH_ATOMS}"
-	RDEPEND+=" ${_PYTHON_USE_WITH_ATOMS}"
+	DEPEND+="${DEPEND:+ }${_PYTHON_USE_WITH_ATOMS}"
+	RDEPEND+="${RDEPEND:+ }${_PYTHON_USE_WITH_ATOMS}"
 	unset _PYTHON_ATOM _PYTHON_USE_WITH_ATOMS _PYTHON_USE_WITH_ATOMS_ARRAY
 fi
 
@@ -304,18 +319,6 @@ unset _PYTHON_ATOMS
 # ================================================================================================
 # =================================== MISCELLANEOUS FUNCTIONS ====================================
 # ================================================================================================
-
-_python_implementation() {
-	if [[ "${CATEGORY}/${PN}" == "dev-lang/python" ]]; then
-		return 0
-	elif [[ "${CATEGORY}/${PN}" == "dev-java/jython" ]]; then
-		return 0
-	elif [[ "${CATEGORY}/${PN}" == "dev-python/pypy" ]]; then
-		return 0
-	else
-		return 1
-	fi
-}
 
 _python_abi-specific_local_scope() {
 	[[ " ${FUNCNAME[@]:2} " =~ " "(_python_final_sanity_checks|python_execute_function|python_mod_optimize|python_mod_cleanup)" " ]]
@@ -1020,10 +1023,12 @@ python_execute_function() {
 			}
 		elif [[ "${EBUILD_PHASE}" == "test" ]]; then
 			python_default_function() {
-				if emake -j1 -n check &> /dev/null; then
-					emake -j1 check "$@"
-				elif emake -j1 -n test &> /dev/null; then
-					emake -j1 test "$@"
+				# Stolen from portage's _eapi0_src_test()
+				local emake_cmd="${MAKE:-make} ${MAKEOPTS} ${EXTRA_EMAKE}"
+				if ${emake_cmd} -j1 -n check &> /dev/null; then
+					${emake_cmd} -j1 check "$@"
+				elif ${emake_cmd} -j1 -n test &> /dev/null; then
+					${emake_cmd} -j1 test "$@"
 				fi
 			}
 		elif [[ "${EBUILD_PHASE}" == "install" ]]; then

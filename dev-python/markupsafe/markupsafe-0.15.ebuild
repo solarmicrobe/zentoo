@@ -26,7 +26,7 @@ RDEPEND=""
 S="${WORKDIR}/${MY_P}"
 
 set_global_options() {
-	if [[ "$(python_get_implementation)" != "Jython" ]]; then
+	if [[ "$(python_get_implementation)" = "CPython" ]]; then
 		DISTUTILS_GLOBAL_OPTIONS=("--with-speedups")
 	else
 		DISTUTILS_GLOBAL_OPTIONS=()

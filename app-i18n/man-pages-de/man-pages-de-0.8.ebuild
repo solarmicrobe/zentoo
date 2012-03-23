@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-MY_PN="manpages-de"
+MY_PN=manpages-de
 
 DESCRIPTION="A somewhat comprehensive collection of Linux german man page translations"
 HOMEPAGE="http://alioth.debian.org/projects/manpages-de/"
@@ -14,14 +14,13 @@ KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="virtual/man"
-S="${WORKDIR}/${MY_PN}-${PV}"
 
-src_compile() {
-	:;
-}
+S=${WORKDIR}/${MY_PN}-${PV}
+
+src_compile() { :; }
 
 src_install() {
-	make MANDIR="${D}"/usr/share/man/de install  || die
+	emake MANDIR="${D}"/usr/share/man/de install || die
 	dodoc CHANGES README
 
 	# Remove man pages provided by other packages

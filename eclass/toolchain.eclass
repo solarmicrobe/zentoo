@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # Maintainer: Toolchain Ninjas <toolchain@gentoo.org>
@@ -8,10 +8,22 @@ HOMEPAGE="http://gcc.gnu.org/"
 LICENSE="GPL-2 LGPL-2.1"
 RESTRICT="strip" # cross-compilers need controlled stripping
 
-inherit eutils versionator libtool toolchain-funcs flag-o-matic gnuconfig multilib fixheadtails
+inherit eutils versionator libtool toolchain-funcs flag-o-matic gnuconfig multilib fixheadtails pax-utils
+
+if [[ ${PV} == *_pre9999* ]] ; then
+	EGIT_REPO_URI="git://gcc.gnu.org/git/gcc.git"
+	# naming style:
+	# gcc-4.7.1_pre9999 -> gcc-4_7-branch
+	#  Note that the micro version is required or lots of stuff will break.
+	#  To checkout master set gcc_LIVE_BRANCH="master" in the ebuild before
+	#  inheriting this eclass.
+	EGIT_BRANCH="${PN}-${PV%.?_pre9999}-branch"
+	EGIT_BRANCH=${EGIT_BRANCH//./_}
+	inherit git-2
+fi
 
 EXPORT_FUNCTIONS pkg_setup src_unpack src_compile src_test pkg_preinst src_install pkg_postinst pkg_prerm pkg_postrm
-DESCRIPTION="Based on the ${ECLASS} eclass"
+DESCRIPTION="The GNU Compiler Collection"
 
 FEATURES=${FEATURES/multilib-strict/}
 #----<< eclass stuff >>----
@@ -90,7 +102,7 @@ if [[ ${PN} != "kgcc64" && ${PN} != gcc-* ]] ; then
 	[[ -n ${SPECS_VER} ]] && IUSE+=" nossp"
 
 	if tc_version_is_at_least 3 ; then
-		IUSE+=" bootstrap doc gcj gtk hardened libffi multilib objc"
+		IUSE+=" bootstrap doc gcj gtk hardened multilib objc"
 
 		tc_version_is_at_least "4.0" && IUSE+=" objc-gc mudflap"
 		tc_version_is_at_least "4.1" && IUSE+=" libssp objc++"
@@ -137,7 +149,7 @@ if in_iuse graphite ; then
 	RDEPEND+="
 	    graphite? (
 	        >=dev-libs/cloog-ppl-0.15.10
-	        >=dev-libs/ppl-0.10
+	        >=dev-libs/ppl-0.11
 	    )"
 fi
 
@@ -163,7 +175,7 @@ if in_iuse gcj ; then
 	DEPEND+=" gcj? ( gtk? ( ${GCJ_GTK_DEPS} ) ${GCJ_DEPS} )"
 fi
 
-PDEPEND=">=sys-devel/gcc-config-1.4"
+PDEPEND=">=sys-devel/gcc-config-1.5"
 
 #----<< DEPEND >>----
 
@@ -261,7 +273,7 @@ get_gcc_src_uri() {
 		GCC_SRC_URI="ftp://gcc.gnu.org/pub/gcc/prerelease-${PRERELEASE}/gcc-${PRERELEASE}.tar.bz2"
 	elif [[ -n ${SNAPSHOT} ]] ; then
 		GCC_SRC_URI="ftp://sources.redhat.com/pub/gcc/snapshots/${SNAPSHOT}/gcc-${SNAPSHOT}.tar.bz2"
-	else
+	elif [[ ${PV} != *9999* ]] ; then
 		GCC_SRC_URI="mirror://gnu/gcc/gcc-${GCC_PV}/gcc-${GCC_RELEASE_VER}.tar.bz2"
 		# we want all branch updates to be against the main release
 		[[ -n ${BRANCH_UPDATE} ]] && \
@@ -532,6 +544,13 @@ copy_minispecs_gcc_specs() {
 
 #---->> pkg_* <<----
 toolchain_pkg_setup() {
+	if [[ -n ${PRERELEASE}${SNAPSHOT} || ${PV} == *9999* ]] &&
+	   [[ -z ${I_PROMISE_TO_SUPPLY_PATCHES_WITH_BUGS} ]]
+	then
+		die "Please \`export I_PROMISE_TO_SUPPLY_PATCHES_WITH_BUGS=1\` or define it in your make.conf if you want to use this version." \
+			"This is to try and cut down on people filing bugs for a compiler we do not currently support."
+	fi
+
 	# Setup variables which would normally be in the profile
 	if is_crosscompile ; then
 		multilib_env ${CTARGET}
@@ -694,12 +713,15 @@ do_gcc_rename_java_bins() {
 	done
 }
 toolchain_src_unpack() {
-	export BRANDING_GCC_PKGVERSION="Gentoo ${GCC_PVR}"
-
 	[[ -z ${UCLIBC_VER} ]] && [[ ${CTARGET} == *-uclibc* ]] && die "Sorry, this version does not support uClibc"
 
-	[[ -z ${GCC_SVN} ]] && gcc_quick_unpack
+	if [[ ${PV} == *9999* ]]; then
+		git-2_src_unpack
+	else
+		gcc_quick_unpack
+	fi
 
+	export BRANDING_GCC_PKGVERSION="Gentoo ${GCC_PVR}"
 	cd "${S}"
 
 	if ! use vanilla ; then
@@ -720,14 +742,6 @@ toolchain_src_unpack() {
 	epatch_user
 
 	use hardened && make_gcc_hard
-
-	if is_libffi ; then
-		# move the libffi target out of gcj and into all
-		sed -i \
-			-e '/^libgcj=/s:target-libffi::' \
-			-e '/^target_lib/s:=":="target-libffi :' \
-			"${S}"/configure || die
-	fi
 
 	# install the libstdc++ python into the right location
 	# http://gcc.gnu.org/PR51368
@@ -750,7 +764,12 @@ toolchain_src_unpack() {
 
 	gcc_version_patch
 	if tc_version_is_at_least 4.1 ; then
-		if [[ -n ${SNAPSHOT} || -n ${PRERELEASE} || -n ${GCC_SVN} ]] ; then
+		if [[ -n ${SNAPSHOT} || -n ${PRERELEASE} ]] ; then
+			# BASE-VER must be a three-digit version number
+			# followed by an optional -pre string
+			#   eg. 4.5.1, 4.6.2-pre20120213, 4.7.0-pre9999
+			# If BASE-VER differs from ${PV/_/-} then libraries get installed in
+			# the wrong directory.
 			echo ${PV/_/-} > "${S}"/gcc/BASE-VER
 		fi
 	fi
@@ -778,6 +797,10 @@ toolchain_src_unpack() {
 	if tc_version_is_at_least 3.3 && ! tc_version_is_at_least 4.0 ; then
 		do_gcc_rename_java_bins
 	fi
+
+	# Prevent libffi from being installed
+	sed -i -e 's/\(install.*:\) install-.*recursive/\1/' "${S}"/libffi/Makefile.in
+	sed -i -e 's/\(install-data-am:\).*/\1/' "${S}"/libffi/include/Makefile.in
 
 	# Fixup libtool to correctly generate .la files with portage
 	cd "${S}"
@@ -1061,20 +1084,19 @@ gcc_do_configure() {
 	tc_version_is_at_least "4.3" && confgcc+=" $(use_enable fixed-point)"
 
 	# Graphite support was added in 4.4, which depends on external libraries
-	# for optimizations.  Up to 4.6 we use cloog-ppl (cloog fork with Parma PPL
-	# backend).  Later versions will use upstream cloog with the ISL backend.  We
-	# disable the PPL version check so we can use >=ppl-0.11.
+	# for optimizations.  Current versions use cloog-ppl (cloog fork with Parma
+	# PPL backend).  Sometime in the future we will use upstream cloog with the
+	# ISL backend (note: PPL will still be a requirement).  cloog-ppl's include
+	# path was modified to prevent collisions between the two packages (library
+	# names are different).
+	#
+	# We disable the PPL version check so we can use >=ppl-0.11.
 	if tc_version_is_at_least "4.4"; then
 		confgcc+=" $(use_with graphite ppl)"
 		confgcc+=" $(use_with graphite cloog)"
 		if use graphite; then
 			confgcc+=" --disable-ppl-version-check"
-			# this will be removed when cloog-ppl-0.15.10 goes stable
-			if has_version '>=dev-libs/cloog-ppl-0.15.10'; then
-				confgcc+=" --with-cloog-include=/usr/include/cloog-ppl"
-			else
-				confgcc+=" --with-cloog-include=/usr/include/cloog"
-			fi
+			confgcc+=" --with-cloog-include=/usr/include/cloog-ppl"
 		fi
 	fi
 
@@ -1474,26 +1496,26 @@ toolchain_src_install() {
 
 	gcc_slot_java
 
-	# Move <cxxabi.h> to compiler-specific directories
-	[[ -f ${D}${STDCXX_INCDIR}/cxxabi.h ]] && \
-		mv -f "${D}"${STDCXX_INCDIR}/cxxabi.h "${D}"${LIBPATH}/include/
-
 	# These should be symlinks
 	dodir /usr/bin
 	cd "${D}"${BINPATH}
-	for x in cpp gcc g++ c++ g77 gcj gcjh gfortran gccgo ; do
+	# Ugh: we really need to auto-detect this list.
+	#      It's constantly out of date.
+	for x in cpp gcc g++ c++ gcov g77 gcj gcjh gfortran gccgo ; do
 		# For some reason, g77 gets made instead of ${CTARGET}-g77...
 		# this should take care of that
 		[[ -f ${x} ]] && mv ${x} ${CTARGET}-${x}
 
-		if [[ -f ${CTARGET}-${x} ]] && ! is_crosscompile ; then
-			ln -sf ${CTARGET}-${x} ${x}
+		if [[ -f ${CTARGET}-${x} ]] ; then
+			if ! is_crosscompile ; then
+				ln -sf ${CTARGET}-${x} ${x}
+				dosym ${BINPATH}/${CTARGET}-${x} \
+					/usr/bin/${x}-${GCC_CONFIG_VER}
+			fi
 
 			# Create version-ed symlinks
 			dosym ${BINPATH}/${CTARGET}-${x} \
 				/usr/bin/${CTARGET}-${x}-${GCC_CONFIG_VER}
-			dosym ${BINPATH}/${CTARGET}-${x} \
-				/usr/bin/${x}-${GCC_CONFIG_VER}
 		fi
 
 		if [[ -f ${CTARGET}-${x}-${GCC_CONFIG_VER} ]] ; then
@@ -1501,17 +1523,6 @@ toolchain_src_install() {
 			ln -sf ${CTARGET}-${x} ${CTARGET}-${x}-${GCC_CONFIG_VER}
 		fi
 	done
-
-	# I do not know if this will break gcj stuff, so I'll only do it for
-	#	objc for now; basically "ffi.h" is the correct file to include,
-	#	but it gets installed in .../GCCVER/include and yet it does
-	#	"#include <ffitarget.h>" which (correctly, as it's an "extra" file)
-	#	is installed in .../GCCVER/include/libffi; the following fixes
-	#	ffi.'s include of ffitarget.h - Armando Di Cianno <fafhrd@gentoo.org>
-	if [[ -d ${D}${LIBPATH}/include/libffi ]] ; then
-		mv -i "${D}"${LIBPATH}/include/libffi/* "${D}"${LIBPATH}/include || die
-		rm -r "${D}"${LIBPATH}/include/libffi || die
-	fi
 
 	# Now do the fun stripping stuff
 	env RESTRICT="" CHOST=${CHOST} prepstrip "${D}${BINPATH}"
@@ -1584,6 +1595,12 @@ toolchain_src_install() {
 	# Don't scan .gox files for executable stacks - false positives
 	export QA_EXECSTACK="usr/lib*/go/*/*.gox"
 	export QA_WX_LOAD="usr/lib*/go/*/*.gox"
+
+	# Disable RANDMMAP so PCH works. #301299
+	if tc_version_is_at_least 4.3 ; then
+		pax-mark -r "${D}${PREFIX}/libexec/gcc/${CTARGET}/${GCC_CONFIG_VER}/cc1"
+		pax-mark -r "${D}${PREFIX}/libexec/gcc/${CTARGET}/${GCC_CONFIG_VER}/cc1plus"
+	fi
 }
 
 gcc_slot_java() {
@@ -1697,7 +1714,7 @@ gcc_quick_unpack() {
 		unpack gcc-${PRERELEASE}.tar.bz2
 	elif [[ -n ${SNAPSHOT} ]] ; then
 		unpack gcc-${SNAPSHOT}.tar.bz2
-	else
+	elif [[ ${PV} != *9999* ]] ; then
 		unpack gcc-${GCC_RELEASE_VER}.tar.bz2
 		# We want branch updates to be against a release tarball
 		if [[ -n ${BRANCH_UPDATE} ]] ; then
@@ -2005,10 +2022,6 @@ is_gcj() {
 is_go() {
 	gcc-lang-supported go || return 1
 	use cxx && use_if_iuse go
-}
-
-is_libffi() {
-	use_if_iuse libffi
 }
 
 is_objc() {

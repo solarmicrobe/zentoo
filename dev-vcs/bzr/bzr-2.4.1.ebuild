@@ -5,7 +5,7 @@
 EAPI="3"
 PYTHON_DEPEND="2:2.6"
 SUPPORT_PYTHON_ABIS="1"
-RESTRICT_PYTHON_ABIS="2.[45] 3.*"
+RESTRICT_PYTHON_ABIS="2.[45] 3.* 2.7-pypy-*"
 
 inherit bash-completion distutils elisp-common eutils versionator
 

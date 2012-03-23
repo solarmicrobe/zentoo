@@ -87,9 +87,7 @@ if version_is_at_least 2.19 ; then
 	IUSE+=" zlib"
 fi
 if use multislot ; then
-	SLOT="${CTARGET}-${BVER}"
-elif is_cross ; then
-	SLOT="${CTARGET}"
+	SLOT="${BVER}"
 else
 	SLOT="0"
 fi
@@ -265,6 +263,7 @@ toolchain-binutils_src_compile() {
 		--includedir=${INCPATH} \
 		--enable-64-bit-bfd \
 		--enable-shared \
+		--enable-threads \
 		--disable-werror \
 		--with-bugurl=http://bugs.gentoo.org/ \
 		$(use_enable static-libs static) \

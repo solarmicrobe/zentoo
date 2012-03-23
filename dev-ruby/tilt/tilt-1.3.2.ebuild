@@ -22,9 +22,15 @@ IUSE=""
 
 RUBY_PATCHES=( "${P}-thread_id.patch" )
 
-ruby_add_bdepend "test? ( virtual/ruby-test-unit )"
+ruby_add_bdepend "test? ( virtual/ruby-test-unit dev-ruby/nokogiri )"
 ruby_add_rdepend ">=dev-ruby/builder-2.0.0"
 
 # Tests fail when markaby is not new enough, but it's optional.
 DEPEND="${DEPEND} !!<dev-ruby/markaby-0.6.9-r1"
 RDEPEND="${RDEPEND}"
+
+all_ruby_prepare() {
+	# Remove rdoc template tests since these are no longer compatible
+	# with newer versions.
+	rm test/tilt_rdoctemplate_test.rb || die
+}

@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -13,7 +13,6 @@ IUSE=""
 
 DEPEND="dev-lang/perl
 	sys-libs/db"
-RDEPEND="${DEPEND}"
 
 SRC_TEST="do"
 

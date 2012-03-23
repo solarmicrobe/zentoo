@@ -285,6 +285,7 @@ _unpacker() {
 	esac
 
 	# then figure out if there are any archiving aspects
+	arch=""
 	case ${m} in
 	*.tgz|*.tbz|*.tbz2|*.txz|*.tar.*|*.tar)
 		arch="tar --no-same-owner -xof" ;;
@@ -292,7 +293,12 @@ _unpacker() {
 		arch="unpack_deb" ;;
 	*.run)
 		arch="unpack_makeself" ;;
-	*) arch="" ;;
+	*.bin)
+		# Makeself archives can be annoyingly named
+		if head -c 100 "${a}" | grep -qs '#.*Makeself' ; then
+			arch="unpack_makeself"
+		fi
+		;;
 	esac
 
 	# finally do the unpack

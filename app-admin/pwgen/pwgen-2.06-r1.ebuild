@@ -16,7 +16,6 @@ KEYWORDS="amd64"
 IUSE="livecd"
 
 DEPEND=""
-RDEPEND=""
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PV}-special-char.patch

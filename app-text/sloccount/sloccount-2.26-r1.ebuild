@@ -37,5 +37,6 @@ src_compile() {
 
 src_install() {
 	einstall PREFIX="${D}/usr" DOC_DIR="${D}/usr/share/doc/${PF}/" || die
+	prepalldocs
 	dohtml *html
 }

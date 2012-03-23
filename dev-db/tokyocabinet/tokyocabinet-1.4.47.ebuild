@@ -27,6 +27,8 @@ src_prepare() {
 	# cflags fix - remove -O2 at end of line and -fomit-frame-pointer
 	sed -i -e 's/-O3"$/"/' configure.in || die
 	sed -i -e 's/-fomit-frame-pointer//' configure.in || die
+	# flag only works on x86 derivatives, remove everywhere else
+	if ! use x86 && ! use amd64; then sed -i -e 's/ -minline-all-stringops//' configure.in; fi
 	eautoreconf || die
 }
 
