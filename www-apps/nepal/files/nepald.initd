@@ -1,0 +1,17 @@
+#!/sbin/runscript
+
+start() {
+	ebegin "Starting ${SVCNAME}"
+	start-stop-daemon --start \
+		--pidfile /var/run/nepald.pid \
+		--background --make-pidfile \
+		--exec /usr/sbin/nepald
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping ${SVCNAME}"
+	start-stop-daemon --stop \
+		--pidfile /var/run/nepald.pid
+	eend $?
+}
