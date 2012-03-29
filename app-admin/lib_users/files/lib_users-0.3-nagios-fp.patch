@@ -1,0 +1,25 @@
+commit 57e32b87ac738f427807879cea9c29455e4c7a20
+Author: Benedikt Böhm <bb@xnull.de>
+Date:   Thu Mar 29 11:59:32 2012 +0200
+
+    skip false-positives from nagios
+
+diff --git a/lib_users.py b/lib_users.py
+index 2abafb3..0dba41b 100755
+--- a/lib_users.py
++++ b/lib_users.py
+@@ -18,7 +18,13 @@ PROCFSBASE = "/proc/"
+ __version__ = "0.3"
+ 
+ # These are no true libs so don't make our process a deleted libs user
+-NOLIBS = ["/SYSV*", "/dev/zero", "/dev/shm/*", "/drm"]
++NOLIBS = [
++    "/SYSV*",
++    "/dev/zero",
++    "/dev/shm/*",
++    "/drm",
++    "/var/nagios/spool/checkresults/neb*",
++]
+ 
+ def get_deleted_libs(map_file):
+     """

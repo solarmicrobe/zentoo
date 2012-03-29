@@ -26,6 +26,7 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-except-ioerror.patch
+	epatch "${FILESDIR}"/${P}-nagios-fp.patch
 	python_convert_shebangs -r 2 .
 }
 
