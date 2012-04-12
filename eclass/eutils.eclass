@@ -1001,7 +1001,7 @@ strip-linguas() {
 		fi
 	done
 	[[ -n ${nols} ]] \
-		&& ewarn "Sorry, but ${PN} does not support the LINGUAS:" ${nols}
+		&& einfo "Sorry, but ${PN} does not support the LINGUAS:" ${nols}
 	export LINGUAS=${newls:1}
 }
 

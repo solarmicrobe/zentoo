@@ -538,7 +538,7 @@ apache-2_src_install() {
 	for i in /var/lib/dav /var/log/apache2 /var/cache/apache2 ; do
 		keepdir ${i}
 		fowners apache:apache ${i}
-		fperms 0755 ${i}
+		fperms 0750 ${i}
 	done
 }
 
@@ -549,6 +549,12 @@ apache-2_src_install() {
 # because the default webroot is a copy of the files that exist elsewhere and we
 # don't want them to be managed/removed by portage when apache is upgraded.
 apache-2_pkg_postinst() {
+	# fix previously wrong set permissions Bug#398899
+	einfo "Sanitizing directory permissions ..."
+	for i in /var/lib/dav /var/log/apache2 /var/cache/apache2 ; do
+		chmod 0750 ${i}
+	done
+
 	if use ssl && [[ ! -e "${ROOT}/etc/ssl/apache2/server.pem" ]]; then
 		SSL_ORGANIZATION="${SSL_ORGANIZATION:-Apache HTTP Server}"
 		install_cert /etc/ssl/apache2/server
