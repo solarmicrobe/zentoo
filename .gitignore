@@ -1,5 +1,5 @@
+*.log
 .promptignore
-difftree.log
 distfiles/
 eix.cache.*
 etc/
@@ -9,4 +9,3 @@ metadata/cache/
 metadata/timestamp.chk
 packages/
 profiles/use.local.desc
-repoman.log
