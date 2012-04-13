@@ -14,13 +14,13 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
 
-IUSE="readline +static +static-libs clvm cman +lvm1 selinux"
+IUSE="readline static static-libs clvm cman +lvm1 selinux +udev"
 
 DEPEND_COMMON="!!sys-fs/device-mapper
 	readline? ( sys-libs/readline )
-	clvm? ( =sys-cluster/dlm-2*
-			cman? ( =sys-cluster/cman-2* ) )
-	>=sys-fs/udev-151-r4"
+	clvm? ( =sys-cluster/libdlm-3*
+			cman? ( =sys-cluster/cman-3* ) )
+	udev? ( >=sys-fs/udev-151-r4 )"
 
 RDEPEND="${DEPEND_COMMON}
 	!<sys-apps/openrc-0.4
@@ -34,13 +34,14 @@ RDEPEND="${RDEPEND}
 
 DEPEND="${DEPEND_COMMON}
 		dev-util/pkgconfig
-		>=sys-devel/binutils-2.20.1-r1"
+		>=sys-devel/binutils-2.20.1-r1
+		static? ( || ( >=sys-fs/udev-181[static-libs] <sys-fs/udev-181 ) )"
 
 S="${WORKDIR}/${PN/lvm/LVM}.${PV}"
 
 pkg_setup() {
 	local CONFIG_CHECK="~SYSVIPC"
-	local WARNING_SYSVIPC="CONFIG_SYSVIPC:\tis not set (required for udev sync)\n"
+	use udev && local WARNING_SYSVIPC="CONFIG_SYSVIPC:\tis not set (required for udev sync)\n"
 	check_extra_config
 	# 1. Genkernel no longer copies /sbin/lvm blindly.
 	# 2. There are no longer any linking deps in /usr.
@@ -74,16 +75,16 @@ src_prepare() {
 
 	epatch "${FILESDIR}"/${PN}-2.02.63-always-make-static-libdm.patch
 	epatch "${FILESDIR}"/lvm2-2.02.56-lvm2create_initrd.patch
-	# bug 318513
-	epatch "${FILESDIR}"/${PN}-2.02.64-dmeventd-libs.patch
+	# bug 318513 - merged upstream
+	#epatch "${FILESDIR}"/${PN}-2.02.64-dmeventd-libs.patch
 	# bug 301331
 	epatch "${FILESDIR}"/${PN}-2.02.67-createinitrd.patch
 	# bug 330373
-	epatch "${FILESDIR}"/${PN}-2.02.73-locale-muck.patch
+	epatch "${FILESDIR}"/${PN}-2.02.92-locale-muck.patch
 	# --as-needed
 	epatch "${FILESDIR}"/${PN}-2.02.70-asneeded.patch
 	# bug 332905
-	epatch "${FILESDIR}"/${PN}-2.02.72-dynamic-static-ldflags.patch
+	epatch "${FILESDIR}"/${PN}-2.02.92-dynamic-static-ldflags.patch
 	# bug 361429 - merged upstream in .85
 	#epatch "${FILESDIR}"/${PN}-2.02.84-udev-pkgconfig.patch
 
@@ -91,6 +92,9 @@ src_prepare() {
 	#epatch "${FILESDIR}"/${PN}-2.02.73-asneeded.patch
 
 	epatch "${FILESDIR}"/${PN}-2.02.88-respect-cc.patch
+
+	# Upstream bug of LVM path
+	epatch "${FILESDIR}"/${PN}-2.02.95-lvmpath.patch
 
 	eautoreconf
 }
@@ -103,6 +107,7 @@ src_configure() {
 	myconf="${myconf} --enable-cmdlib"
 	myconf="${myconf} --enable-applib"
 	myconf="${myconf} --enable-fsadm"
+	myconf="${myconf} --enable-lvmetad"
 
 	# Most of this package does weird stuff.
 	# The build options are tristate, and --without is NOT supported
@@ -124,6 +129,7 @@ src_configure() {
 	# so we cannot disable them
 	myconf="${myconf} --with-mirrors=internal"
 	myconf="${myconf} --with-snapshots=internal"
+	myconf="${myconf} --with-thin=internal"
 
 	if use lvm1 ; then
 		myconf="${myconf} --with-lvm1=${buildmode}"
@@ -158,7 +164,8 @@ src_configure() {
 
 	myconf="${myconf}
 			--with-dmeventd-path=/sbin/dmeventd"
-	econf $(use_enable readline) \
+	econf \
+		$(use_enable readline) \
 		$(use_enable selinux) \
 		--enable-pkgconfig \
 		--with-confdir="${EPREFIX}/etc" \
@@ -166,9 +173,9 @@ src_configure() {
 		--with-staticdir="${EPREFIX}/sbin" \
 		--libdir="${EPREFIX}/$(get_libdir)" \
 		--with-usrlibdir="${EPREFIX}/usr/$(get_libdir)" \
-		--enable-udev_rules \
-		--enable-udev_sync \
-		--with-udevdir="${EPREFIX}/lib/udev/rules.d/" \
+		$(use_enable udev udev_rules) \
+		$(use_enable udev udev_sync) \
+		$(use_with udev udevdir "${EPREFIX}/lib/udev/rules.d/") \
 		${myconf} \
 		CLDFLAGS="${LDFLAGS}" || die
 }
@@ -188,7 +195,7 @@ src_install() {
 
 	dodoc README VERSION* WHATS_NEW WHATS_NEW_DM doc/*.{conf,c,txt}
 	insinto /$(get_libdir)/rcscripts/addons
-	newins "${FILESDIR}"/lvm2-start.sh-2.02.67-r1 lvm-start.sh || die
+	newins "${FILESDIR}"/lvm2-start.sh-2.02.95 lvm-start.sh || die
 	newins "${FILESDIR}"/lvm2-stop.sh-2.02.67-r1 lvm-stop.sh || die
 	newinitd "${FILESDIR}"/lvm.rc-2.02.67-r1 lvm || die
 	newinitd "${FILESDIR}"/lvm-monitoring.initd-2.02.67-r2 lvm-monitoring || die
@@ -231,7 +238,9 @@ src_install() {
 	#newins "${FILESDIR}"/64-device-mapper.rules-2.02.56-r3 64-device-mapper.rules || die
 
 	# do not rely on /lib -> /libXX link
-	sed -e "s-/lib/rcscripts/-/$(get_libdir)/rcscripts/-" -i "${ED}"/etc/init.d/*
+	sed -i \
+		-e "s|/lib/rcscripts/|/$(get_libdir)/rcscripts/|" \
+		"${ED}"/etc/init.d/* || die
 
 	elog "USE flag nocman is deprecated and replaced"
 	elog "with the cman USE flag."
