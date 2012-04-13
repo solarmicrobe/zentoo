@@ -5,15 +5,16 @@
 # genkernel-9999        -> latest Git branch "master"
 # genkernel-VERSION     -> normal genkernel release
 
-VERSION_BUSYBOX='1.18.1'
-VERSION_DMAP='1.02.22'
-VERSION_DMRAID='1.0.0.rc14'
-VERSION_MDADM='3.1.4'
-VERSION_E2FSPROGS='1.41.14'
-VERSION_FUSE='2.7.4'
+EAPI="3"
+
+VERSION_BUSYBOX='1.19.3'
+VERSION_DMRAID='1.0.0.rc16-3'
+VERSION_MDADM='3.1.5'
+VERSION_E2FSPROGS='1.42'
+VERSION_FUSE='2.8.6'
 VERSION_ISCSI='2.0-872'
-VERSION_LVM='2.02.74'
-VERSION_UNIONFS_FUSE='0.22'
+VERSION_LVM='2.02.88'
+VERSION_UNIONFS_FUSE='0.24'
 VERSION_GPG='1.4.11'
 
 MY_HOME="http://wolf31o2.org"
@@ -26,8 +27,6 @@ COMMON_URI="${DM_HOME}/dmraid-${VERSION_DMRAID}.tar.bz2
 		mirror://kernel/linux/utils/raid/mdadm/mdadm-${VERSION_MDADM}.tar.bz2
 		${RH_HOME}/lvm2/LVM2.${VERSION_LVM}.tgz
 		${RH_HOME}/lvm2/old/LVM2.${VERSION_LVM}.tgz
-		${RH_HOME}/dm/device-mapper.${VERSION_DMAP}.tgz
-		${RH_HOME}/dm/old/device-mapper.${VERSION_DMAP}.tgz
 		${BB_HOME}/busybox-${VERSION_BUSYBOX}.tar.bz2
 		mirror://kernel/linux/kernel/people/mnc/open-iscsi/releases/open-iscsi-${VERSION_ISCSI}.tar.gz
 		mirror://sourceforge/e2fsprogs/e2fsprogs-${VERSION_E2FSPROGS}.tar.gz
@@ -59,11 +58,16 @@ HOMEPAGE="http://www.gentoo.org"
 LICENSE="GPL-2"
 SLOT="0"
 RESTRICT=""
-IUSE="ibm selinux"
+IUSE="crypt ibm selinux"
 
 DEPEND="sys-fs/e2fsprogs
 	selinux? ( sys-libs/libselinux )"
-RDEPEND="${DEPEND} app-arch/cpio"
+RDEPEND="${DEPEND}
+		crypt? ( sys-fs/cryptsetup[static] )
+		app-arch/cpio
+		app-misc/pax-utils
+		!<sys-apps/openrc-0.9.9"
+# pax-utils is used for lddtree
 
 if [[ ${PV} == 9999* ]]; then
 	DEPEND="${DEPEND} app-text/asciidoc"
@@ -88,7 +92,6 @@ src_install() {
 	# This block updates genkernel.conf
 	sed \
 		-e "s:VERSION_BUSYBOX:$VERSION_BUSYBOX:" \
-		-e "s:VERSION_DMAP:$VERSION_DMAP:" \
 		-e "s:VERSION_MDADM:$VERSION_MDADM:" \
 		-e "s:VERSION_DMRAID:$VERSION_DMRAID:" \
 		-e "s:VERSION_E2FSPROGS:$VERSION_E2FSPROGS:" \
@@ -121,7 +124,6 @@ src_install() {
 		"${DISTDIR}"/mdadm-${VERSION_MDADM}.tar.bz2 \
 		"${DISTDIR}"/dmraid-${VERSION_DMRAID}.tar.bz2 \
 		"${DISTDIR}"/LVM2.${VERSION_LVM}.tgz \
-		"${DISTDIR}"/device-mapper.${VERSION_DMAP}.tgz \
 		"${DISTDIR}"/e2fsprogs-${VERSION_E2FSPROGS}.tar.gz \
 		"${DISTDIR}"/busybox-${VERSION_BUSYBOX}.tar.bz2 \
 		"${DISTDIR}"/fuse-${VERSION_FUSE}.tar.gz \
@@ -131,6 +133,8 @@ src_install() {
 		"${D}"/var/cache/genkernel/src || die "Copying distfiles..."
 
 	dobashcompletion "${FILESDIR}"/genkernel.bash
+	insinto /etc
+	doins "${FILESDIR}"/initramfs.mounts
 }
 
 pkg_postinst() {
