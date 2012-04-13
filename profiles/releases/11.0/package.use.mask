@@ -77,3 +77,6 @@ net-misc/curl ssh
 
 # skip gui dependencies
 dev-libs/gecode gist
+
+# only support headless X11
+x11-base/xorg-server xorg
