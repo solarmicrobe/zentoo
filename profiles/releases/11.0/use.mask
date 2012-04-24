@@ -312,7 +312,6 @@ zsh-completion
 ruby_targets_jruby
 ruby_targets_rbx
 ruby_targets_ree18
-ruby_targets_ruby19
 
 # unsupported linguas
 linguas_af
