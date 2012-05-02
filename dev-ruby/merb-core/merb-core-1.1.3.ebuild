@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI="2"
-USE_RUBY="ruby18"
+USE_RUBY="ruby18 ruby19"
 
 # Tools to generate docs are missing from gem distribution.
 RUBY_FAKEGEM_TASK_DOC="doc:rdoc"

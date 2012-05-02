@@ -20,8 +20,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-ruby_add_bdepend "doc? ( dev-ruby/hoe )
-	test? ( dev-ruby/hoe virtual/ruby-test-unit )"
+ruby_add_bdepend "doc? ( dev-ruby/hoe dev-ruby/rubyforge )
+	test? ( dev-ruby/hoe virtual/ruby-test-unit dev-ruby/rubyforge )"
 
 all_ruby_prepare() {
 	# when rcov is installed, and a new enough Hoe is installed as

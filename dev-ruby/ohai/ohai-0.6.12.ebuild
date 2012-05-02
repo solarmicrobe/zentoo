@@ -3,20 +3,18 @@
 # $Header: $
 
 EAPI=4
-USE_RUBY="ruby18"
+USE_RUBY="ruby18 ruby19"
 
 RUBY_FAKEGEM_TASK_DOC=""
 RUBY_FAKEGEM_EXTRADOC="CHANGELOG README.rdoc"
 
 RUBY_FAKEGEM_TASK_TEST="spec"
 
-RUBY_FAKEGEM_VERSION=${PV/_rc/.rc.}
-
 inherit ruby-fakegem
 
 DESCRIPTION="Ohai profiles your system and emits JSON"
 HOMEPAGE="http://wiki.opscode.com/display/chef/Ohai"
-SRC_URI="https://github.com/opscode/${PN}/tarball/${RUBY_FAKEGEM_VERSION} -> ${P}.tgz"
+SRC_URI="https://github.com/opscode/${PN}/tarball/${PV} -> ${P}.tgz"
 RUBY_S="opscode-${PN}-*"
 
 LICENSE="Apache-2.0"
