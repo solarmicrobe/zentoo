@@ -10,7 +10,7 @@ inherit eutils python
 DESCRIPTION="goes through /proc and finds all cases of libraries being mapped
 but marked as deleted"
 HOMEPAGE="http://schwarzvogel.de/software-misc.shtml"
-SRC_URI="http://schwarzvogel.de/pkgs/${P}.tar.gz"
+SRC_URI="https://github.com/zentoo/lib_users/tarball/v${PV} -> zentoo-${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -20,13 +20,13 @@ IUSE="test"
 DEPEND="test? ( dev-python/nose )"
 RDEPEND=""
 
+S="${WORKDIR}/zentoo-${PN}-cf3819c"
+
 pkg_setup() {
 	python_set_active_version 2
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-except-ioerror.patch
-	epatch "${FILESDIR}"/${P}-nagios-fp.patch
 	python_convert_shebangs -r 2 .
 }
 
