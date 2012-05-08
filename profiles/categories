@@ -4,6 +4,7 @@ app-backup
 app-benchmarks
 app-cdr
 app-crypt
+app-dicts
 app-doc
 app-editors
 app-emacs
@@ -68,3 +69,4 @@ x11-base
 x11-libs
 x11-misc
 x11-proto
+x11-themes

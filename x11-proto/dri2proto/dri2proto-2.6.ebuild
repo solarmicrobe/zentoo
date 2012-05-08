@@ -5,8 +5,7 @@
 EAPI=4
 inherit xorg-2
 
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/xorg/util/macros"
-DESCRIPTION="X.Org autotools utility macros"
+DESCRIPTION="X.Org DRI2 protocol headers"
 
 KEYWORDS="amd64"
 IUSE=""

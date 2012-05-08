@@ -57,8 +57,8 @@ pax-mark() {
 	# Try paxctl, then scanelf.  paxctl is preferred.
 	if type -p paxctl > /dev/null && has PT ${PAX_MARKINGS}; then
 		# Try paxctl, the upstream supported tool.
-		elog "PT PaX marking -${flags}"
-		_pax_list_files elog "$@"
+		einfo "PT PaX marking -${flags}"
+		_pax_list_files einfo "$@"
 		for f in "$@"; do
 			# First, try modifying the existing PAX_FLAGS header
 			paxctl -q${flags} "${f}" && continue
@@ -90,8 +90,8 @@ pax-mark() {
 	elif type -p scanelf > /dev/null && [[ ${PAX_MARKINGS} != "none" ]]; then
 		# Try scanelf, the Gentoo swiss-army knife ELF utility
 		# Currently this sets PT if it can, no option to control what it does.
-		elog "Fallback PaX marking -${flags}"
-		_pax_list_files elog "$@"
+		einfo "Fallback PaX marking -${flags}"
+		_pax_list_files einfo "$@"
 		scanelf -Xxz ${flags} "$@"
 	elif [[ ${PAX_MARKINGS} != "none" ]]; then
 		# Out of options!

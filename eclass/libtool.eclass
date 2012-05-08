@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: libtool.eclass
@@ -181,6 +181,7 @@ elibtoolize() {
 	case ${CHOST} in
 		*-aix*)     elt_patches+=" hardcode aixrtl aix-noundef" ;; #213277
 		*-darwin*)  elt_patches+=" darwin-ltconf darwin-ltmain darwin-conf" ;;
+		*-solaris*) elt_patches+=" sol2-conf" ;;
 		*-freebsd*) elt_patches+=" fbsd-conf fbsd-ltconf" ;;
 		*-hpux*)    elt_patches+=" hpux-conf deplibs hc-flag-ld hardcode hardcode-relink relink-prog no-lc" ;;
 		*-irix*)    elt_patches+=" irix-ltmain" ;;
@@ -331,7 +332,7 @@ elibtoolize() {
 						fi
 					done
 					;;
-				mint-conf|gold-conf)
+				mint-conf|gold-conf|sol2-conf)
 					ret=1
 					local subret=1
 					if [[ -e ${d}/configure ]]; then
