@@ -37,6 +37,7 @@ src_configure() {
 	local ncursesw
 	use unicode && ncursesw="w"
 	econf \
+		--disable-rpath-hack \
 		$(use_enable nls) \
 		$(use_with !minimal libtool) \
 		--with-ncurses${ncursesw}

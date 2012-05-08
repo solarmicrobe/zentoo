@@ -57,7 +57,7 @@ RDEPEND=">=sys-devel/libtool-2.2.6b
 DEPEND="${RDEPEND}
 	!media-gfx/graphicsmagick[imagemagick]
 	app-arch/xz-utils
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	>=sys-apps/sed-4
 	X? ( x11-proto/xextproto )"
 

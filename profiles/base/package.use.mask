@@ -1,9 +1,76 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.324 2012/03/23 08:08:47 johu Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.347 2012/05/07 16:00:46 ssuominen Exp $
 
 # This file requires >=portage-2.1.1
 # New entries go on top.
+
+# Samuli Suominen <ssuominen@gentoo.org> (07 May 2012)
+# This entry can be removed by anyone after =media-video/vlc-1.1*
+# has left the tree. Mask out deprecated xulrunner support.
+# Bug 407567.
+=media-video/vlc-1.1* nsplugin
+
+# Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (02 May 2012)
+# Causes crashes and build failures, not needed by any package, bug #412177
+<x11-libs/cairo-1.12 qt4
+
+# Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (01 May 2012)
+# Experimental. Needs x11-libs/glamor keyworded first, bug #414295
+=x11-drivers/xf86-video-intel-2* glamor
+
+# Johannes Huber <johu@gentoo.org> (19 Apr 2012)
+# Required dep >=net-libs/telepathy-farstream is masked by gnome herd. Feel
+# free to remove this entry, if mask is lifted.
+net-libs/telepathy-qt farstream
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (13 Apr 2012)
+# Masked in base and unmasked on arches where app-misc/geoclue and
+# app-accessibility/at-spi2-core are available.
+net-libs/webkit-gtk geoloc webkit2
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (13 Apr 2012)
+# Packages with optional systemd support. Masked in base and unmasked on arches
+# where sys-apps/systemd is available.
+gnome-extra/gnome-screensaver systemd
+gnome-extra/gnome-system-monitor systemd
+net-misc/networkmanager systemd
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (12 Apr 2012)
+# Temporary mask-in-base, unmask-in-arch for dev-python/mako keywording for
+# gobject-introspection[doctool], bug #411761
+dev-libs/gobject-introspection doctool
+
+# Sebastian Pipping <sping@gentoo.org> (12 Apr 2012)
+# Compilation fails due to a bug in dev-libs/gobject-introspection
+# that has yet to be resolved upstream.
+# See <https://bugzilla.gnome.org/show_bug.cgi?id=673580#c5> for details
+>=media-libs/babl-0.1.8 introspection
+>=media-libs/gegl-0.2 introspection
+
+# Michał Górny <mgorny@gentoo.org> (11 Apr 2012)
+# JIT compilation in libzpaq generates code for x86/amd64.
+app-arch/libzpaq jit
+
+# Alexis Ballier <aballier@gentoo.org> (8 Apr 2012)
+# mask x264-encoder[ffmpegsource] on all versions but latest one
+# ffmpegsource which is pulled in is only ~arch and not ready to be
+# stabilised ( bug #410341 ). x264 needs to be stabilied for bug #401069
+<media-video/x264-encoder-0.0.20120327 ffmpegsource
+
+# Michael Sterrett <mr_bones_@gentoo.org> (30 Mar 2012)
+# Broken for awhile.  Unmask when dev-util/kdevelop-php-docs is keyworded properly
+dev-util/kdevelop-php doc
+
+# Arun Raghavan <ford_prefect@gentoo.org> (28 Mar 2012)
+# webrtc-audio-processing is only supported on x86/amd64. Possibly arm can be
+# added.
+media-sound/pulseaudio webrtc-aec
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (27 Mar 2012)
+# Requires libxkbcommon from the x11 overlay
+dev-cpp/gtkmm wayland
+x11-libs/gtk+ wayland
 
 # Johannes Huber <johu@gentoo.org> (23 Mar 2012)
 # Broken dep, see bug #389833.
@@ -37,16 +104,9 @@ sys-apps/portage pypy1_8
 # Is broken somehow, upstream informed
 >=sci-chemistry/pymol-1.5.0.1 vmd
 
-# Alexandre Rostovtsev <tetromino@gentoo.org> (11 Feb 2012)
-# Requires >=sys-apps/systemd-31, which is masked and keyworded only for two
-# arches.
-gnome-extra/gnome-screensaver systemd
-
 # Samuli Suominen <ssuominen@gentoo.org> (10 Feb 2012)
-# Masked for being broken wrt #401327 so ImageMagick can be
-# stabilized for security wrt #402999
-# TODO: Report this to upstream
-media-gfx/imagemagick q64
+# Looks like 6.7.6.4 worksagain wrt bug #401327
+<media-gfx/imagemagick-6.7.6.4 q64
 
 # Bernard Cafarelli <voyageur@gentoo.org> (08 Feb 2012)
 # libobjc2/clang experimental support
@@ -58,28 +118,24 @@ media-gfx/imagemagick q64
 
 # Alex Alexander <wired@gentoo.org> (29 Jan 2012)
 # Experimental use flags
-~x11-libs/qt-assistant-4.8.0 c++0x qpa
-~x11-libs/qt-core-4.8.0 c++0x qpa
-~x11-libs/qt-declarative-4.8.0 c++0x qpa
-~x11-libs/qt-dbus-4.8.0 c++0x qpa
-~x11-libs/qt-demo-4.8.0 c++0x qpa
-~x11-libs/qt-gui-4.8.0 c++0x qpa
-~x11-libs/qt-multimedia-4.8.0 c++0x qpa
-~x11-libs/qt-opengl-4.8.0 c++0x qpa
-~x11-libs/qt-openvg-4.8.0 c++0x qpa
-~x11-libs/qt-phonon-4.8.0 c++0x qpa
-~x11-libs/qt-qt3support-4.8.0 c++0x qpa
-~x11-libs/qt-script-4.8.0 c++0x qpa
-~x11-libs/qt-sql-4.8.0 c++0x qpa
-~x11-libs/qt-svg-4.8.0 c++0x qpa
-~x11-libs/qt-test-4.8.0 c++0x qpa
-~x11-libs/qt-webkit-4.8.0 c++0x qpa
-~x11-libs/qt-xmlpatterns-4.8.0 c++0x qpa
-
-# Johannes Huber <johu@gentoo.org> (25 Jan 2012)
-# Required >=net-libs/telepathy-glib-0.17.2 version is not tree yet. 
-# Remove this entry if it's available.
->=net-libs/telepathy-qt-0.9.0 glib
+=x11-libs/qt-assistant-4.8* c++0x qpa
+=x11-libs/qt-bearer-4.8* c++0x qpa
+=x11-libs/qt-core-4.8* c++0x qpa
+=x11-libs/qt-declarative-4.8* c++0x qpa
+=x11-libs/qt-dbus-4.8* c++0x qpa
+=x11-libs/qt-demo-4.8* c++0x qpa
+=x11-libs/qt-gui-4.8* c++0x qpa
+=x11-libs/qt-multimedia-4.8* c++0x qpa
+=x11-libs/qt-opengl-4.8* c++0x qpa
+=x11-libs/qt-openvg-4.8* c++0x qpa
+=x11-libs/qt-phonon-4.8* c++0x qpa
+=x11-libs/qt-qt3support-4.8* c++0x qpa
+=x11-libs/qt-script-4.8* c++0x qpa
+=x11-libs/qt-sql-4.8* c++0x qpa
+=x11-libs/qt-svg-4.8* c++0x qpa
+=x11-libs/qt-test-4.8* c++0x qpa
+=x11-libs/qt-webkit-4.8* c++0x qpa
+=x11-libs/qt-xmlpatterns-4.8* c++0x qpa
 
 # Samuli Suominen <ssuominen@gentoo.org> (10 Jan 2012)
 # This is required only for Linux, so mask it here and unmask in
@@ -240,7 +296,8 @@ media-libs/mesa llvm
 # Tomáš Chvátal <scarabeus@gentoo.org> (8 Sep 2010)
 # drm don't even build here so mask everywhere expect live.
 # openvg require openvg-1.1 implemenatation so mask until there is some
-<x11-libs/cairo-9999 drm openvg
+<x11-libs/cairo-9999 drm
+<x11-libs/cairo-1.12 openvg
 
 # Alex Legler <a3li@gentoo.org> (1 Sep 2010)
 # This feature is marked as experimental by upstream.

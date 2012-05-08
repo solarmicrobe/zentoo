@@ -22,7 +22,7 @@ RDEPEND="fontconfig? ( media-libs/fontconfig )
 	xpm? ( x11-libs/libXpm x11-libs/libXt )
 	zlib? ( sys-libs/zlib )"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-libpng14.patch #305101
@@ -35,6 +35,10 @@ src_prepare() {
 	use png || make_sed+=( -e '/_PROGRAMS/s:(gdparttopng|gdtopng|gd2topng|pngtogd|pngtogd2|webpng)::g' )
 	use zlib || make_sed+=( -e '/_PROGRAMS/s:(gd2topng|gd2copypal|gd2togif|giftogd2|gdparttopng|pngtogd2)::g' )
 	sed -i -r "${make_sed[@]}" Makefile.am || die
+
+	cat <<-EOF > acinclude.m4
+	m4_ifndef([AM_ICONV],[m4_define([AM_ICONV],[:])])
+	EOF
 
 	eautoreconf
 }

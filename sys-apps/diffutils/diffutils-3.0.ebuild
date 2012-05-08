@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ inherit flag-o-matic
 
 DESCRIPTION="Tools to make diffs and compare files"
 HOMEPAGE="http://www.gnu.org/software/diffutils/"
-SRC_URI="ftp://alpha.gnu.org/gnu/diffutils/${P}.tar.gz
+SRC_URI="mirror://gnu-alpha/diffutils/${P}.tar.gz
 	mirror://gnu/diffutils/${P}.tar.gz"
 
 LICENSE="GPL-2"

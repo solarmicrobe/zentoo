@@ -14,7 +14,7 @@
 # This eclass uses the mysql-autotools and mysql-cmake eclasses for the
 # specific bits related to the build system.
 # It provides the src_unpack, src_prepare, src_configure, src_compile,
-# scr_install, pkg_preinst, pkg_postinst, pkg_config and pkg_postrm
+# src_install, pkg_preinst, pkg_postinst, pkg_config and pkg_postrm
 # phase hooks.
 
 # @ECLASS-VARIABLE: BUILD
@@ -79,14 +79,6 @@ fi
 # mysql_upgrade.
 MYSQL_PV_MAJOR="$(get_version_component_range 1-2 ${PV})"
 
-# Cluster is a special case...
-if [[ "${PN}" == "mysql-cluster" ]]; then
-	case $PV in
-		6.1*|7.0*|7.1*) MYSQL_PV_MAJOR=5.1 ;;
-	esac
-fi
-
-
 # @ECLASS-VARIABLE: MYSQL_VERSION_ID
 # @DESCRIPTION:
 # MYSQL_VERSION_ID will be:
@@ -109,23 +101,6 @@ MYSQL_VERSION_ID=${MYSQL_VERSION_ID##"0"}
 # This eclass should only be used with at least mysql-5.1.50
 mysql_version_is_at_least "5.1.50" || die "This eclass should only be used with >=mysql-5.1.50"
 
-# @ECLASS-VARIABLE: MYSQL_COMMUNITY_FEATURES
-# @DESCRIPTION:
-# Specifiy if community features are available. Possible values are 1 (yes)
-# and 0 (no).
-# Community features are available in mysql-community
-# AND in the re-merged mysql-5.0.82 and newer
-if [ "${PN}" == "mysql-community" -o "${PN}" == "mariadb" ]; then
-	MYSQL_COMMUNITY_FEATURES=1
-elif [ "${MYSQL_PV_MAJOR}" == "5.1" ]; then
-	MYSQL_COMMUNITY_FEATURES=1
-elif mysql_version_is_at_least "5.4.0"; then
-	MYSQL_COMMUNITY_FEATURES=1
-else
-	MYSQL_COMMUNITY_FEATURES=0
-fi
-
-
 # @ECLASS-VARIABLE: XTRADB_VER
 # @DEFAULT_UNSET
 # @DESCRIPTION:
@@ -140,7 +115,7 @@ fi
 if [ -z "${SERVER_URI}" ]; then
 	[ -z "${MY_PV}" ] && MY_PV="${PV//_/-}"
 	if [ "${PN}" == "mariadb" ]; then
-		MARIA_FULL_PV="$(replace_version_separator 3 '-' ${PV})"
+		MARIA_FULL_PV="$(replace_version_separator 3 '-' ${MY_PV})"
 		MARIA_FULL_P="${PN}-${MARIA_FULL_PV}"
 		SERVER_URI="
 		http://ftp.osuosl.org/pub/mariadb/${MARIA_FULL_P}/kvm-tarbake-jaunty-x86/${MARIA_FULL_P}.tar.gz
@@ -150,23 +125,14 @@ if [ -z "${SERVER_URI}" ]; then
 		http://mirrors.fe.up.pt/pub/${PN}/${MARIA_FULL_P}/kvm-tarbake-jaunty-x86/${MARIA_FULL_P}.tar.gz
 		http://ftp-stud.hs-esslingen.de/pub/Mirrors/${PN}/${MARIA_FULL_P}/kvm-tarbake-jaunty-x86/${MARIA_FULL_P}.tar.gz
 		"
-	# The community and cluster builds are on the mirrors
-	elif [[ "${MYSQL_COMMUNITY_FEATURES}" == "1" || ${PN} == "mysql-cluster" ]] ; then
-		if [[ "${PN}" == "mysql-cluster" ]] ; then
-			URI_DIR="MySQL-Cluster"
-			URI_FILE="mysql-cluster-gpl"
-		else
-			URI_DIR="MySQL"
-			URI_FILE="mysql"
-		fi
+	else
+		URI_DIR="MySQL"
+		URI_FILE="mysql"
 		URI_A="${URI_FILE}-${MY_PV}.tar.gz"
 		MIRROR_PV=$(get_version_component_range 1-2 ${PV})
 		# Recently upstream switched to an archive site, and not on mirrors
 		SERVER_URI="http://downloads.mysql.com/archives/${URI_FILE}-${MIRROR_PV}/${URI_A}
 					mirror://mysql/Downloads/${URI_DIR}-${PV%.*}/${URI_A}"
-	# The (old) enterprise source is on the primary site only
-	elif [ "${PN}" == "mysql" ]; then
-		SERVER_URI="ftp://ftp.mysql.com/pub/mysql/src/mysql-${MY_PV}.tar.gz"
 	fi
 fi
 
@@ -187,9 +153,6 @@ if [[ "${PN}" == "mariadb" ]]; then
 	HOMEPAGE="http://mariadb.org/"
 	DESCRIPTION="MariaDB is a MySQL fork with 3rd-party patches and additional storage engines merged."
 fi
-if [[ "${PN}" == "mysql-community" ]]; then
-	DESCRIPTION="${DESCRIPTION} (obsolete, move to dev-db/mysql)"
-fi
 LICENSE="GPL-2"
 SLOT="0"
 
@@ -205,15 +168,11 @@ esac
 IUSE="${IUSE} latin1"
 
 IUSE="${IUSE} extraengine"
-if [[ ${PN} != "mysql-cluster" ]] ; then
-	IUSE="${IUSE} cluster"
-fi
+IUSE="${IUSE} cluster"
 
 IUSE="${IUSE} max-idx-128"
 IUSE="${IUSE} berkdb"
-
-[[ ${MYSQL_COMMUNITY_FEATURES} == 1 ]] \
-&& IUSE="${IUSE} +community profiling"
+IUSE="${IUSE} +community profiling"
 
 [[ ${PN} == "mariadb" ]] \
 && IUSE="${IUSE} libevent"
@@ -248,7 +207,7 @@ DEPEND="
 && DEPEND="${DEPEND} libevent? ( >=dev-libs/libevent-1.4 )"
 
 # Having different flavours at the same time is not a good idea
-for i in "mysql" "mysql-community" "mysql-cluster" "mariadb" ; do
+for i in "mysql" "mariadb" ; do
 	[[ ${i} == ${PN} ]] ||
 	DEPEND="${DEPEND} !dev-db/${i}"
 done
@@ -289,7 +248,6 @@ PDEPEND="perl? ( >=dev-perl/DBD-mysql-2.9004 )"
 # For other stuff to bring us in
 PDEPEND="${PDEPEND} =virtual/mysql-${MYSQL_PV_MAJOR}"
 
-
 #
 # External patches
 #
@@ -325,13 +283,14 @@ if pbxt_patch_available; then
 	PBXT_SRC_URI="http://www.primebase.org/download/${PBXT_P}.tar.gz mirror://sourceforge/pbxt/${PBXT_P}.tar.gz"
 	SRC_URI="${SRC_URI} pbxt? ( ${PBXT_SRC_URI} )"
 
-	# PBXT_NEWSTYLE means pbxt is in storage/ and gets enabled as other plugins
-	# vs. built outside the dir
-	if pbxt_available; then
+fi
 
-		IUSE="${IUSE} pbxt"
-		PBXT_NEWSTYLE=1
-	fi
+# PBXT_NEWSTYLE means pbxt is in storage/ and gets enabled as other plugins
+# vs. built outside the dir
+if pbxt_available; then
+
+	IUSE="${IUSE} pbxt"
+	PBXT_NEWSTYLE=1
 fi
 
 if xtradb_patch_available; then
@@ -424,14 +383,10 @@ mysql-v2_pkg_setup() {
 	enewgroup mysql 60 || die "problem adding 'mysql' group"
 	enewuser mysql 60 -1 /dev/null mysql || die "problem adding 'mysql' user"
 
-	if [ "${PN}" != "mysql-cluster" ] && use cluster; then
+	if use cluster; then
 		ewarn "Upstream has noted that the NDB cluster support in the 5.0 and"
 		ewarn "5.1 series should NOT be put into production. In the near"
 		ewarn "future, it will be disabled from building."
-		ewarn ""
-		ewarn "If you need NDB support, you should instead move to the new"
-		ewarn "mysql-cluster package that represents that upstream NDB"
-		ewarn "development."
 	fi
 }
 

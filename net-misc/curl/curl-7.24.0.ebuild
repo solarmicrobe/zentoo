@@ -30,7 +30,7 @@ RDEPEND="ldap? ( net-nds/openldap )
 
 DEPEND="${RDEPEND}
 	sys-apps/ed
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	test? (
 		sys-apps/diffutils
 		dev-lang/perl

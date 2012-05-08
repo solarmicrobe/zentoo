@@ -4,6 +4,8 @@
 #
 # Bugs: pauldv@gentoo.org
 
+inherit eutils
+
 IUSE="doc test examples"
 
 EXPORT_FUNCTIONS src_test
@@ -174,13 +176,7 @@ db_src_test() {
 			[[ -f "${t}" ]] && testbase="${t}" && break
 		done
 		echo "source ${t}" > testrunner.tcl
-		testJobs=`echo "${MAKEOPTS}" | \
-				sed -e "s/.*-j\([0-9]\+\).*/\1/"`
-		if [[ ${testJobs} =~ [[:digit:]]+ ]]; then
-			echo "run_parallel ${testJobs} run_std" >> testrunner.tcl
-		else
-			echo 'run_std' >>testrunner.tcl
-		fi
+		echo "run_parallel $(makeopts_job) run_std" >> testrunner.tcl
 
 		tclsh testrunner.tcl
 		egrep -qs '^FAIL' ALL.OUT* && die "Some tests failed, please see ${S}/ALL.OUT*"

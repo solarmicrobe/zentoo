@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -32,7 +32,6 @@ src_unpack() {
 
 src_prepare() {
 	if ! use vanilla ; then
-		epunt_cxx
 		cd libltdl/m4
 		epatch "${FILESDIR}"/1.5.20/${PN}-1.5.20-use-linux-version-in-fbsd.patch #109105
 		cd ..

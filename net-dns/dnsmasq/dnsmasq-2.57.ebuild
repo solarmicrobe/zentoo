@@ -25,7 +25,7 @@ RDEPEND="dbus? ( sys-apps/dbus )
 	)"
 
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	|| ( app-arch/xz-utils app-arch/lzma )"
 
 S="${WORKDIR}/${PN}-${MY_PV}"

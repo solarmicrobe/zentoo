@@ -66,6 +66,9 @@ src_configure() {
 	use anonres && append-cppflags -DANON_CAN_RESUME
 	use resolveids && append-cppflags -DALWAYS_RESOLVE_IDS
 
+	# Do not auto-use SSP -- let the user select this.
+	export ax_cv_check_cflags___fstack_protector_all=no
+
 	econf \
 		--with-altlog \
 		--with-cookie \

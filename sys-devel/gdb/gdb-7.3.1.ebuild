@@ -37,7 +37,7 @@ case ${PV} in
 	;;
 *)
 	# Normal upstream release
-	SRC_URI="http://ftp.gnu.org/gnu/gdb/${P}.tar.bz2
+	SRC_URI="mirror://gnu/gdb/${P}.tar.bz2
 		ftp://sources.redhat.com/pub/gdb/releases/${P}.tar.bz2"
 	;;
 esac

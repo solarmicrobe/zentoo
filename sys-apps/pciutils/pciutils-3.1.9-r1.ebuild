@@ -22,6 +22,7 @@ RDEPEND="${DEPEND}"
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-3.1.7-install-lib.patch #273489
 	epatch "${FILESDIR}"/${PN}-3.1.7-fbsd.patch #262321
+	epatch "${FILESDIR}"/${PN}-3.1.9-static-pc.patch
 
 	if use static-libs ; then
 		cp -pPR "${S}" "${S}.static" || die

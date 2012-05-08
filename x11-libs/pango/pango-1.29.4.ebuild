@@ -30,7 +30,7 @@ RDEPEND=">=dev-libs/glib-2.29.5:2
 		x11-libs/libX11
 		>=x11-libs/libXft-2.0.0 )"
 DEPEND="${RDEPEND}
-	>=dev-util/pkgconfig-0.9
+	virtual/pkgconfig
 	>=dev-util/gtk-doc-am-1.13
 	doc? (
 		>=dev-util/gtk-doc-1.13
@@ -77,7 +77,17 @@ pkg_postinst() {
 	multilib_enabled && PANGO_CONFDIR+="/${CHOST}"
 
 	mkdir -p "${PANGO_CONFDIR}"
-	pango-querymodules \
+	local pango_conf="${PANGO_CONFDIR}/pango.modules"
+	local tmp_file=$(mktemp -t tmp.XXXXXXXXXXgdk_pixbuf_ebuild)
+
+	# be atomic!
+	if pango-querymodules \
 		"${EROOT}"usr/$(get_libdir)/pango/1.6.0/modules/*.so \
-		> "${PANGO_CONFDIR}"/pango.modules
+			> "${tmp_file}"; then
+		cat "${tmp_file}" > "${pango_conf}" || {
+			rm "${tmp_file}"; die; }
+	else
+		ewarn "Cannot update pango.modules, file generation failed"
+	fi
+	rm "${tmp_file}"
 }

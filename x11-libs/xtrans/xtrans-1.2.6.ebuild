@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,7 +15,10 @@ IUSE="doc"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-	doc? ( app-text/xmlto )"
+	doc? (
+		app-text/xmlto
+		app-text/docbook-xml-dtd:4.3
+	)"
 
 pkg_setup() {
 	CONFIGURE_OPTIONS="$(use_enable doc docs)

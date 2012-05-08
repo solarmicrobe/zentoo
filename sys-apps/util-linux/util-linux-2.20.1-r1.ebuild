@@ -5,7 +5,8 @@
 EAPI="3"
 
 EGIT_REPO_URI="git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git"
-inherit eutils toolchain-funcs libtool flag-o-matic
+AUTOTOOLS_AUTO_DEPEND="no"
+inherit eutils toolchain-funcs libtool flag-o-matic autotools
 [[ ${PV} == "9999" ]] && inherit git autotools
 
 MY_PV=${PV/_/-}
@@ -39,7 +40,8 @@ RDEPEND="!sys-process/schedutils
 	slang? ( sys-libs/slang )"
 DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )
-	virtual/os-headers"
+	virtual/os-headers
+	uclibc? ( ${AUTOTOOLS_DEPEND} )"
 
 src_prepare() {
 	if [[ ${PV} == "9999" ]] ; then
@@ -49,7 +51,10 @@ src_prepare() {
 	else
 		use loop-aes && epatch "${WORKDIR}"/util-linux-*.diff
 	fi
-	use uclibc && sed -i -e s/versionsort/alphasort/g -e s/strverscmp.h/dirent.h/g mount/lomount.c
+	if use uclibc ; then
+		epatch "${FILESDIR}"/${P}-no-printf-alloc.patch #406303
+		eautoreconf
+	fi
 	elibtoolize
 }
 

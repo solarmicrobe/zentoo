@@ -27,7 +27,7 @@ RDEPEND="net-libs/libtirpc
 	selinux? ( sec-policy/selinux-rpcbind )
 	tcpd? ( sys-apps/tcp-wrappers )"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 src_prepare() {
 	if [[ ${PV} == "9999" ]] ; then

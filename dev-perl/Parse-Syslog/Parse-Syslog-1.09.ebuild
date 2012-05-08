@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2008 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -16,4 +16,3 @@ SRC_TEST="do"
 DEPEND="dev-lang/perl
 		virtual/perl-Time-Local
 		dev-perl/File-Tail"
-RDEPEND="${DEPEND}"

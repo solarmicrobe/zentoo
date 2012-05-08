@@ -71,7 +71,7 @@ S=${WORKDIR}/${MY_P}
 
 busybox_config_option() {
 	case $1 in
-		y) sed -i -e "s:.*\<CONFIG_$2\>.*set:${new}:g" .config;;
+		y) sed -i -e "s:.*\<CONFIG_$2\>.*set:CONFIG_$2=y:g" .config;;
 		n) sed -i -e "s:CONFIG_$2=y:# CONFIG_$2 is not set:g" .config;;
 		*) use $1 \
 		       && busybox_config_option y $2 \

@@ -57,9 +57,9 @@ RDEPEND="sys-libs/ncurses
 	)"
 
 DEPEND="${RDEPEND}
-	alsa? ( dev-util/pkgconfig )
-	dbus? ( dev-util/pkgconfig )
-	X? ( dev-util/pkgconfig )
+	alsa? ( virtual/pkgconfig )
+	dbus? ( virtual/pkgconfig )
+	X? ( virtual/pkgconfig )
 	gzip-el? ( app-arch/gzip )"
 
 RDEPEND="${RDEPEND}
@@ -101,17 +101,16 @@ src_prepare() {
 }
 
 src_configure() {
-	ALLOWED_FLAGS=""
 	strip-flags
 	filter-flags -fstrict-aliasing
 	append-flags $(test-flags -fno-strict-aliasing)
 
 	if use sh; then
-		replace-flags -O[1-9] -O0		#262359
+		replace-flags "-O[1-9]" -O0		#262359
 	elif use ia64; then
-		replace-flags -O[2-9] -O1		#325373
+		replace-flags "-O[2-9]" -O1		#325373
 	else
-		replace-flags -O[3-9] -O2
+		replace-flags "-O[3-9]" -O2
 	fi
 
 	local myconf

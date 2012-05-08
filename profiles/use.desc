@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/use.desc,v 1.479 2012/03/18 14:12:48 ssuominen Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/use.desc,v 1.483 2012/05/07 22:55:41 hasufell Exp $
 
 # Keep them sorted
 
@@ -162,7 +162,7 @@ jingle - Enables voice calls for jabber
 joystick - Add support for joysticks in all packages
 jpeg - Adds JPEG image support
 jpeg2k - Support for JPEG 2000, a wavelet-based image compression format
-kde - Adds support for kde-base/kde (K Desktop Enviroment)
+kde - Adds support for KDE (K Desktop Environment)
 kdeprefix - Makes a KDE prefixed install into /usr/kde/${SLOT} if enabled or into /usr (FHS compatible) otherwise
 kerberos - Adds kerberos support
 kolab - Adds support for the Kolab groupware server
@@ -318,6 +318,7 @@ sqlite - Adds support for sqlite - embedded sql database
 sqlite3 - Adds support for sqlite3 - embedded sql database
 sse - fast floating point optimization for PentiumIII+ class chips
 sse2 - faster floating point optimization for SSE2 capable chips
+sse3 - faster floating point optimization for SSE3 capable chips
 ssl - Adds support for Secure Socket Layer connections
 startup-notification - Enable application startup event feedback mechanism
 static - !!do not set this during bootstrap!! Causes binaries to be statically linked instead of dynamically
@@ -359,6 +360,7 @@ vnc - Enable VNC (remote desktop viewer) support
 vorbis - Adds support for the OggVorbis audio codec
 wavpack - Add support for wavpack audio compression tools
 wddx - Adds support for Web Distributed Data eXchange
+webkit - Add support for the WebKit HTML rendering/layout engine
 wifi - Enable wireless network functions
 win32codecs - use win32codecs package for dll avi decoding support (wmv and what not)
 wmf - Adds support for the Windows Metafile vector image format
@@ -381,7 +383,6 @@ xosd - Sends display using the X On Screen Display library
 xpm - Adds support for XPM graphics format
 xscreensaver - Adds support for XScreenSaver extension
 xsl - Check/Support flag for XSL library (version 1)
-xulrunner - Build native browser integration against xulrunner instead of firefox or seamonkey
 xv - Adds in optional support for the Xvideo extension (an X API for video playback)
 xvid - Adds support for xvid.org's open-source mpeg-4 codec
 yahoo - Enable Yahoo Messenger IM protocol support

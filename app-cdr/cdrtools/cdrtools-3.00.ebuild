@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -56,6 +56,8 @@ src_prepare() {
 		rules1.top || die "sed rules1.top"
 	sed -i -e "/^\(CC\|DYNLD\|LDCC\|MKDEP\)/s|gcc|${tcCC}|" \
 		-e "/^\(CC++\|DYNLDC++\|LDCC++\|MKC++DEP\)/s|g++|${tcCXX}|" \
+		-e "/COPTOPT=/s/-O//" \
+		-e 's/$(GCCOPTOPT)//' \
 		cc-gcc.rul || die "sed cc-gcc.rul"
 	sed -i -e "s|^#CONFFLAGS +=\t-cc=\$(XCC_COM)$|CONFFLAGS +=\t-cc=${tcCC}|g" \
 		rules.cnf || die "sed rules.cnf"

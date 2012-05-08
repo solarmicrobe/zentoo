@@ -22,7 +22,7 @@ IUSE="doc test"
 RDEPEND=">=dev-libs/glib-2.29.7:2
 	virtual/libffi"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	sys-devel/flex
 	virtual/yacc
 	doc? ( >=dev-util/gtk-doc-1.15 )"

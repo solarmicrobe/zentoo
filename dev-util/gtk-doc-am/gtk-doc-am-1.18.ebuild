@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -24,7 +24,7 @@ DEPEND="${RDEPEND}
 	!<dev-util/gtk-doc-${MAJ_PV}"
 # pkg-config is used by gtkdoc-rebase at runtime
 # PDEPEND to avoid circular deps, bug 368301
-PDEPEND="dev-util/pkgconfig"
+PDEPEND="virtual/pkgconfig"
 
 # This ebuild doesn't even compile anything, causing tests to fail when updating (bug #316071)
 RESTRICT="test"

@@ -33,7 +33,7 @@ CDEPEND="app-arch/bzip2
 	X? ( x11-libs/libXmu x11-misc/xdg-utils )"
 
 DEPEND="${CDEPEND}
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	doc? (
 			virtual/latex-base
 			dev-texlive/texlive-fontsrecommended

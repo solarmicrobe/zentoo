@@ -22,7 +22,7 @@ DEPEND="
 	>=app-arch/libarchive-2.8.0
 	>=net-misc/curl-7.20.0-r1[ssl]
 	>=dev-libs/expat-2.0.1
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	sys-libs/zlib
 	ncurses? ( sys-libs/ncurses )
 	qt4? ( x11-libs/qt-gui:4 )

@@ -15,7 +15,7 @@ IUSE=""
 
 RDEPEND=">=net-libs/libnfnetlink-1.0.0"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 pkg_setup() {
 	linux-info_pkg_setup

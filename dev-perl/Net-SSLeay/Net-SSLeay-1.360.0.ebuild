@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,7 +21,7 @@ DEPEND="${RDEPEND}"
 #		dev-perl/Test-Warn
 #		dev-perl/Test-NoWarnings )"
 
-#SRC_TEST=do
+SRC_TEST=do
 
 export OPTIMIZE="$CFLAGS"
 export OPENSSL_PREFIX=${EPREFIX}/usr

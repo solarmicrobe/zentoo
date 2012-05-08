@@ -28,11 +28,6 @@ RDEPEND="${DEPEND}
 	sys-apps/openrc"
 RESTRICT="test"
 
-src_prepare() {
-	# monkey patch to remove network special case
-	sed -i -e '116,123d' init.d/udev
-}
-
 src_compile()
 {
 	return 0

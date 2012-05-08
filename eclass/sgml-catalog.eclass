@@ -56,6 +56,7 @@ sgml-catalog_pkg_postinst() {
 	while (( $# )); do
 		if [[ ! -e "${EPREFIX}$2" ]]; then
 			ewarn "${EPREFIX}$2 doesn't appear to exist, although it ought to!"
+			shift 2
 			continue
 		fi
 		einfo "Now adding ${EPREFIX}$2 to ${EPREFIX}$1 and ${EPREFIX}/etc/sgml/catalog"

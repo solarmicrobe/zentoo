@@ -37,11 +37,11 @@ COMMON_DEPEND="selinux? ( sys-libs/libselinux )
 	introspection? ( dev-libs/gobject-introspection )
 	>=sys-apps/kmod-5
 	>=sys-apps/util-linux-2.20
-	>=sys-libs/glibc-2.10"
+	!<sys-libs/glibc-2.10"
 
 DEPEND="${COMMON_DEPEND}
 	keymap? ( dev-util/gperf )
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	virtual/os-headers
 	!<sys-kernel/linux-headers-2.6.34"
 

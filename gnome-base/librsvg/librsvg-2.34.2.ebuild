@@ -30,7 +30,7 @@ RDEPEND=">=media-libs/fontconfig-1.0.1
 	gtk3? ( >=x11-libs/gtk+-2.90.0:3 )
 	introspection? ( >=dev-libs/gobject-introspection-0.10.8 )"
 DEPEND="${RDEPEND}
-	>=dev-util/pkgconfig-0.12
+	virtual/pkgconfig
 	doc? ( >=dev-util/gtk-doc-1.13 )
 
 	>=dev-util/gtk-doc-am-1.13"
@@ -76,7 +76,7 @@ pkg_postinst() {
 	# causes segfault if set, see bug 375615
 	unset __GL_NO_DSO_FINALIZER
 
-	tmp_file=$(mktemp --suffix=gdk_pixbuf_ebuild)
+	tmp_file=$(mktemp -t tmp.XXXXXXXXXXlibrsvg_ebuild)
 	# be atomic!
 	gdk-pixbuf-query-loaders > "${tmp_file}"
 	if [ "${?}" = "0" ]; then
@@ -91,7 +91,7 @@ pkg_postrm() {
 	# causes segfault if set, see bug 375615
 	unset __GL_NO_DSO_FINALIZER
 
-	tmp_file=$(mktemp --suffix=gdk_pixbuf_ebuild)
+	tmp_file=$(mktemp -t tmp.XXXXXXXXXXlibrsvg_ebuild)
 	# be atomic!
 	gdk-pixbuf-query-loaders > "${tmp_file}"
 	if [ "${?}" = "0" ]; then

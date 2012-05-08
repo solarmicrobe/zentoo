@@ -55,6 +55,11 @@ src_unpack() {
 			-e 's/ttyS1/cuaa1/g' \
 			inittab #121786
 	fi
+	if use x86 || use amd64 ; then
+		sed -i \
+			-e '/ttyS[01]/s:9600:115200:' \
+			inittab
+	fi
 	[[ -n ${insert} ]] && echo "# Architecture specific features"$'\n'"${insert}" >> inittab
 }
 

@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -7,7 +7,7 @@ inherit eutils flag-o-matic libtool
 
 DESCRIPTION="A library for manipulating FlashPIX images"
 HOMEPAGE="http://www.i3a.org/"
-SRC_URI="ftp://ftp.imagemagick.org/pub/ImageMagick/delegates/${P}-1.tar.bz2"
+SRC_URI="mirror://imagemagick/delegates/${P}-1.tar.bz2"
 
 LICENSE="as-is"
 SLOT="0"

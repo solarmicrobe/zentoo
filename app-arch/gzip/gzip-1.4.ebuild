@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ inherit eutils flag-o-matic
 
 DESCRIPTION="Standard GNU compressor"
 HOMEPAGE="http://www.gnu.org/software/gzip/"
-SRC_URI="ftp://alpha.gnu.org/gnu/gzip/${P}.tar.gz
+SRC_URI="mirror://gnu-alpha/gzip/${P}.tar.gz
 	mirror://gnu/gzip/${P}.tar.gz
 	mirror://gentoo/${P}.tar.gz"
 

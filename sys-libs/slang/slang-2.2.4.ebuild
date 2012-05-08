@@ -55,7 +55,7 @@ src_compile() {
 src_install() {
 	emake DESTDIR="${D}" install-elf $(use static-libs && echo install-static)
 
-	rm -rf "${D}"/usr/share/doc/{slang,slsh}
+	rm -rf "${ED}"/usr/share/doc/{slang,slsh}
 
 	dodoc NEWS README *.txt doc/{,internal,text}/*.txt
 	dohtml doc/slangdoc.html slsh/doc/html/*.html

@@ -66,7 +66,7 @@ RDEPEND=">=app-admin/eselect-python-20091230
 DEPEND=">=sys-devel/autoconf-2.65
 		${RDEPEND}
 		$([[ "${PV}" == *_pre* ]] && echo "=${CATEGORY}/${PN}-${PV%%.*}*")
-		dev-util/pkgconfig
+		virtual/pkgconfig
 		$([[ "${PV}" =~ ^[[:digit:]]+\.[[:digit:]]+_pre ]] && echo "doc? ( dev-python/sphinx )")
 		!sys-devel/gcc[libffi]"
 RDEPEND+=" !build? ( app-misc/mime-types )

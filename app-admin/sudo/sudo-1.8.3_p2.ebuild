@@ -51,6 +51,7 @@ MAKEOPTS+=" SAMPLES="
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.8.3_p1-linguas.patch
+	epatch "${FILESDIR}"/${PN}-1.8.3_p1-no-utmpx.patch
 	elibtoolize
 }
 

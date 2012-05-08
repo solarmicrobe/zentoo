@@ -4,6 +4,8 @@
 
 EAPI="4"
 
+inherit toolchain-funcs
+
 DESCRIPTION="Extracts files from Microsoft .cab files"
 HOMEPAGE="http://www.cabextract.org.uk/"
 SRC_URI="http://www.cabextract.org.uk/${P}.tar.gz"
@@ -19,6 +21,10 @@ RDEPEND="extra-tools? ( dev-lang/perl )"
 # it properly leading to undefined references to rpl_fnmatch().  This may be
 # removed in the future if building still works by setting "yes" to "no".
 export ac_cv_func_fnmatch_works=yes
+
+src_compile() {
+	emake AR="$(tc-getAR)"
+}
 
 src_install() {
 	emake DESTDIR="${D}" install

@@ -252,8 +252,27 @@ unpack_deb() {
 
 	unpack_banner "${deb}"
 
-	ar x "${deb}"
-	unpack ./data.tar*
+	# on AIX ar doesn't work out as their ar used a different format
+	# from what GNU ar (and thus what .deb files) produce
+	if [[ -n ${EPREFIX} ]] ; then
+		{
+			read # global header
+			[[ ${REPLY} = "!<arch>" ]] || die "${deb} does not seem to be a deb archive"
+			local f timestamp uid gid mode size magic
+			while read f timestamp uid gid mode size magic ; do
+				[[ -n ${f} && -n ${size} ]] || continue # ignore empty lines
+				if [[ ${f} = "data.tar"* ]] ; then
+					head -c "${size}" > "${f}"
+				else
+					head -c "${size}" > /dev/null # trash it
+				fi
+			done
+		} < "${deb}"
+	else
+		ar x "${deb}"
+	fi
+
+	unpacker ./data.tar*
 }
 
 # @FUNCTION: _unpacker
@@ -272,8 +291,8 @@ _unpacker() {
 	# first figure out the decompression method
 	case ${m} in
 	*.bz2|*.tbz|*.tbz2)
-		local bzcmd=${PORTAGE_BZIP2_COMMAND:-$(type -P pbzip2 || bzip2)}
-		local bzuncmd=${PORTAGE_BUNZIP2_COMMAND:-${PORTAGE_BZIP2_COMMAND} -d}
+		local bzcmd=${PORTAGE_BZIP2_COMMAND:-$(type -P pbzip2 || type -P bzip2)}
+		local bzuncmd=${PORTAGE_BUNZIP2_COMMAND:-${bzcmd} -d}
 		: ${UNPACKER_BZ2:=${bzuncmd}}
 		comp="${UNPACKER_BZ2} -c"
 		;;
@@ -310,7 +329,9 @@ _unpacker() {
 	[[ ${arch} != unpack_* ]] && unpack_banner "${a}"
 
 	if [[ -z ${arch} ]] ; then
-		${comp} "${a}" > "${a%.*}"
+		# Need to decompress the file into $PWD #408801
+		local _a=${a%.*}
+		${comp} "${a}" > "${_a##*/}"
 	elif [[ -z ${comp} ]] ; then
 		${arch} "${a}"
 	else

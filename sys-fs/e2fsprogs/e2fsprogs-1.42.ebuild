@@ -2,12 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=3
+
 case ${PV} in
 *_pre*) UP_PV="${PV%_pre*}-WIP-${PV#*_pre}" ;;
 *)      UP_PV=${PV} ;;
 esac
-
-EAPI="3"
 
 inherit eutils flag-o-matic multilib toolchain-funcs
 
@@ -25,7 +25,7 @@ RDEPEND="~sys-libs/${PN}-libs-${PV}
 	nls? ( virtual/libintl )"
 DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	sys-apps/texinfo"
 
 S=${WORKDIR}/${P%_pre*}

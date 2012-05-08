@@ -2,12 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=2
+
 case ${PV} in
 *_pre*) UP_PV="${PV%_pre*}-WIP-${PV#*_pre}" ;;
 *)      UP_PV=${PV} ;;
 esac
-
-EAPI="2"
 
 inherit toolchain-funcs
 
@@ -24,7 +24,7 @@ RDEPEND="!sys-libs/com_err
 	!sys-libs/ss
 	!<sys-fs/e2fsprogs-1.41.8"
 DEPEND="nls? ( sys-devel/gettext )
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 S=${WORKDIR}/${P%_pre*}
 

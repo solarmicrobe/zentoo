@@ -9,7 +9,7 @@ H_SUPPORTEDARCH="alpha amd64 arm bfin cris hppa m68k mips ia64 ppc ppc64 s390 sh
 inherit kernel-2
 detect_version
 
-PATCH_VER="1"
+PATCH_VER="2"
 SRC_URI="mirror://gentoo/gentoo-headers-base-${PV}.tar.xz"
 [[ -n ${PATCH_VER} ]] && SRC_URI="${SRC_URI} mirror://gentoo/gentoo-headers-${PV}-${PATCH_VER}.tar.xz"
 

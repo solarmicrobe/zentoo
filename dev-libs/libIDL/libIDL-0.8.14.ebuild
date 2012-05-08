@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -18,7 +18,7 @@ RDEPEND=">=dev-libs/glib-2.4"
 DEPEND="${RDEPEND}
 	sys-devel/flex
 	virtual/yacc
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 DOCS="AUTHORS BUGS ChangeLog HACKING MAINTAINERS NEWS README"
 G2CONF="--disable-static"

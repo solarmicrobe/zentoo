@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # @DEPRECATED
@@ -178,7 +178,7 @@ if [[ -z "${FONT}" ]] \
 fi
 
 DEPEND="${DEPEND}
-	>=dev-util/pkgconfig-0.18"
+	virtual/pkgconfig"
 
 if [[ "${PN/util-macros}" = "${PN}" ]]; then
 	DEPEND="${DEPEND}

@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # Authors:
@@ -122,7 +122,7 @@ else
 			dev-util/ctags
 			!aqua? (
 				gtk? (
-					dev-util/pkgconfig
+					virtual/pkgconfig
 				)
 			)"
 		RDEPEND="${RDEPEND}

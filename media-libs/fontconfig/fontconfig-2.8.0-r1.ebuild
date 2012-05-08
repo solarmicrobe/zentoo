@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,7 +21,7 @@ IUSE="doc"
 RDEPEND=">=media-libs/freetype-2.2.1
 	>=dev-libs/expat-1.95.3"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	doc? (
 		app-text/docbook-sgml-utils[jadetex]
 		=app-text/docbook-sgml-dtd-3.1*

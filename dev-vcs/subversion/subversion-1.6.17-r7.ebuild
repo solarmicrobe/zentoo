@@ -46,11 +46,11 @@ DEPEND="${CDEPEND}
 	!!<sys-apps/sandbox-1.6
 	ctypes-python? ( dev-python/ctypesgen )
 	doc? ( app-doc/doxygen )
-	gnome-keyring? ( dev-util/pkgconfig )
+	gnome-keyring? ( virtual/pkgconfig )
 	java? ( >=virtual/jdk-1.5 )
-	kde? ( dev-util/pkgconfig )
+	kde? ( virtual/pkgconfig )
 	nls? ( sys-devel/gettext )
-	webdav-neon? ( dev-util/pkgconfig )"
+	webdav-neon? ( virtual/pkgconfig )"
 
 PATCHES=(
 		"${FILESDIR}/${PN}-1.6.0-disable_linking_against_unneeded_libraries.patch"

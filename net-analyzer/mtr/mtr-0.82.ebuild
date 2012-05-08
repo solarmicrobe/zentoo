@@ -20,7 +20,7 @@ RDEPEND="
 	sys-libs/ncurses
 	gtk? ( x11-libs/gtk+:2 )"
 DEPEND="${RDEPEND}
-	gtk? ( dev-util/pkgconfig )"
+	gtk? ( virtual/pkgconfig )"
 
 src_prepare() {
 	epatch "${FILESDIR}"/0.80-impl-dec.patch

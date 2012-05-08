@@ -19,7 +19,7 @@ IUSE="kerberos static-libs"
 RDEPEND="kerberos? ( net-libs/libgssglue )"
 DEPEND="${RDEPEND}
 	app-arch/xz-utils
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 src_unpack() {
 	unpack ${A}

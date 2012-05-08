@@ -1,10 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: git-2.eclass
 # @MAINTAINER:
-# Donnie Berkholz <dberkholz@gentoo.org>
 # Michał Górny <mgorny@gentoo.org>
+# Donnie Berkholz <dberkholz@gentoo.org>
 # @BLURB: Eclass for fetching and unpacking git repositories.
 # @DESCRIPTION:
 # Eclass for easing maitenance of live ebuilds using git as remote repository.
@@ -277,7 +277,8 @@ git-2_prepare_storedir() {
 		if [[ ${EGIT_PROJECT} ]]; then
 			clone_dir=${EGIT_PROJECT}
 		else
-			clone_dir=${EGIT_REPO_URI##*/}
+			local strippeduri=${EGIT_REPO_URI%/.git}
+			clone_dir=${strippeduri##*/}
 		fi
 		EGIT_DIR=${EGIT_STORE_DIR}/${clone_dir}
 

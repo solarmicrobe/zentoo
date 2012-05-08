@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -58,7 +58,7 @@ src_configure() {
 	# fixes bug 225403
 	#append-flags "-D_GNU_SOURCE"
 
-	if ! has_version dev-util/pkgconfig; then
+	if ! has_version virtual/pkgconfig; then
 		export DAEMON_CFLAGS="-I/usr/include/glib-2.0 -I/usr/$(get_libdir)/glib-2.0/include"
 		export DAEMON_LIBS="-lglib-2.0"
 	fi

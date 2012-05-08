@@ -116,9 +116,7 @@ fi
 
 # Support upgrade paths here or people get pissed
 if use multislot ; then
-	SLOT="${CTARGET}-${GCC_CONFIG_VER}"
-elif is_crosscompile; then
-	SLOT="${CTARGET}-${GCC_BRANCH_VER}"
+	SLOT="${GCC_CONFIG_VER}"
 else
 	SLOT="${GCC_BRANCH_VER}"
 fi

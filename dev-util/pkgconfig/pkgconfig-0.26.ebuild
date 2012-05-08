@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -16,8 +16,11 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="elibc_FreeBSD hardened"
 
-RDEPEND="dev-libs/glib:2
-	>=dev-libs/popt-1.15"
+RDEPEND=">=dev-libs/glib-2.28
+	>=dev-libs/popt-1.16
+	!dev-util/pkgconf[pkg-config]
+	!dev-util/pkg-config-lite
+	!dev-util/pkgconfig-openbsd[pkg-config]"
 DEPEND="${RDEPEND}"
 
 S=${WORKDIR}/${MY_P}

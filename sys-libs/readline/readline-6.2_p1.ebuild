@@ -35,11 +35,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-# We must be certain that we have a bash that is linked
-# to its internal readline, else we may get problems.
 RDEPEND=">=sys-libs/ncurses-5.2-r2"
-DEPEND="${RDEPEND}
-	>=app-shells/bash-2.05b-r2"
+DEPEND="${RDEPEND}"
 
 S=${WORKDIR}/${MY_P}
 

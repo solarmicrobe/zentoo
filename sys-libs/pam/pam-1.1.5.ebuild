@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -33,7 +33,7 @@ DEPEND="${RDEPEND}
 	>=sys-devel/libtool-2
 	sys-devel/flex
 	nls? ( sys-devel/gettext )
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 PDEPEND="sys-auth/pambase
 	vim-syntax? ( app-vim/pam-syntax )"
 RDEPEND="${RDEPEND}

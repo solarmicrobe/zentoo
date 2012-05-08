@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -28,8 +28,13 @@ src_prepare() {
 
 	epatch "${FILESDIR}"/${P}-configure.in.patch
 	epatch "${FILESDIR}"/${P}-man_MANS.patch
+	epatch "${FILESDIR}"/${P}-htmldir.patch
 
 	eautoreconf
+}
+
+src_configure() {
+	econf --htmldir="${EPREFIX}/usr/share/doc/${PF}/html"
 }
 
 src_install() {

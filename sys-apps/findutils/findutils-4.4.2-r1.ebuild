@@ -8,7 +8,7 @@ SELINUX_PATCH="findutils-4.4.2-selinux.diff"
 
 DESCRIPTION="GNU utilities for finding files"
 HOMEPAGE="http://www.gnu.org/software/findutils/"
-SRC_URI="ftp://alpha.gnu.org/gnu/${PN}/${P}.tar.gz
+SRC_URI="mirror://gnu-alpha/${PN}/${P}.tar.gz
 	mirror://gnu/${PN}/${P}.tar.gz"
 
 LICENSE="GPL-2"

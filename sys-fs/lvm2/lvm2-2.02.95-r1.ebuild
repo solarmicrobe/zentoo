@@ -33,7 +33,7 @@ RDEPEND="${RDEPEND}
 		!<sys-fs/cryptsetup-1.1.2"
 
 DEPEND="${DEPEND_COMMON}
-		dev-util/pkgconfig
+		virtual/pkgconfig
 		>=sys-devel/binutils-2.20.1-r1
 		static? ( || ( >=sys-fs/udev-181[static-libs] <sys-fs/udev-181 ) )"
 

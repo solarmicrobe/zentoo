@@ -16,7 +16,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="libedit nls readline static static-libs"
 
-RDEPEND=">=sys-apps/util-linux-2.17.2
+RDEPEND="!static? ( >=sys-apps/util-linux-2.17.2 )
 	!<sys-fs/xfsdump-3
 	readline? (
 		sys-libs/readline
@@ -24,6 +24,7 @@ RDEPEND=">=sys-apps/util-linux-2.17.2
 	)
 	!readline? ( libedit? ( dev-libs/libedit ) )"
 DEPEND="${RDEPEND}
+	static? ( || ( sys-apps/util-linux[static-libs] <sys-apps/util-linux-2.20 ) )
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {

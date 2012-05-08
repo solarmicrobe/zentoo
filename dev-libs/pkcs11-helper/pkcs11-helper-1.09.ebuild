@@ -17,7 +17,7 @@ RDEPEND=">=dev-libs/openssl-0.9.7
 	gnutls? ( >=net-libs/gnutls-1.4.4 )
 	nss? ( dev-libs/nss )"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	doc? ( >=app-doc/doxygen-1.4.7 )"
 
 src_configure() {

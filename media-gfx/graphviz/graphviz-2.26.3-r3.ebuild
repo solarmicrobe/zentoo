@@ -43,7 +43,7 @@ RDEPEND="
 	ruby?	( dev-lang/ruby )
 	tcl?	( >=dev-lang/tcl-8.3 )"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	sys-devel/flex
 	java?	( dev-lang/swig )
 	nls?	( >=sys-devel/gettext-0.14.5 )

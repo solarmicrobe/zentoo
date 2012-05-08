@@ -19,8 +19,7 @@ IUSE="nls"
 RDEPEND="!sys-freebsd/freebsd-bin
 	nls? ( virtual/libintl )"
 DEPEND="${RDEPEND}
-	nls? ( sys-devel/gettext )
-	elibc_mintlib? ( virtual/libiconv )"
+	nls? ( sys-devel/gettext )"
 
 src_unpack() {
 	unpack ${PN}_${PV}.tar.gz
@@ -32,7 +31,6 @@ src_unpack() {
 		cd deb
 		unpack ${PN}_${PV}_i386.deb
 		unpack ./data.tar.gz
-		gunzip -r usr/share/man || die "gunzip failed"
 	fi
 }
 
@@ -46,7 +44,7 @@ src_prepare() {
 
 src_compile() {
 	tc-export CC
-	use !elibc_glibc && append-libs -lintl
+	use nls && use !elibc_glibc && append-libs -lintl
 	[[ ${CHOST} == *-mint* ]] && append-libs "-liconv"
 	if [[ ${CHOST} == *-irix* || ${CHOST} == *-interix[35]* ]] ; then
 		append-flags -I"${EPREFIX}"/usr/$(get_libdir)/gnulib/include
@@ -54,12 +52,12 @@ src_compile() {
 		append-libs -lgnu
 	fi
 
-	emake VERSION="${PV}" SUBDIRS="src man $(use nls && echo po)" \
+	emake VERSION="${PV}" SUBDIRS="src man $(usex nls po '')" \
 		|| die "emake failed"
 }
 
 src_install() {
-	emake VERSION="${PV}" SUBDIRS="src man $(use nls && echo po)" \
+	emake VERSION="${PV}" SUBDIRS="src man $(usex nls po '')" \
 		DESTDIR="${D}" install || die "emake install failed"
 	newdoc debian/changelog ChangeLog.debian || die
 

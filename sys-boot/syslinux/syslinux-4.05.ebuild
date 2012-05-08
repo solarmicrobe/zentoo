@@ -59,5 +59,5 @@ src_compile() {
 
 src_install() {
 	emake INSTALLSUBDIRS=utils INSTALLROOT="${D}" MANDIR=/usr/share/man install || die
-	dodoc README NEWS doc/* || die
+	dodoc README NEWS doc/*.txt || die
 }

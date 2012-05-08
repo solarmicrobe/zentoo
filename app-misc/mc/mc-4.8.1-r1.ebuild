@@ -32,7 +32,7 @@ RDEPEND=">=dev-libs/glib-2.8:2
 		x11-libs/libSM )"
 DEPEND="${RDEPEND}
 	app-arch/xz-utils
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	nls? ( sys-devel/gettext )
 	test? ( dev-libs/check )
 	"

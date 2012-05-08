@@ -37,7 +37,7 @@ RDEPEND="expat? ( dev-libs/expat )
 	nls? ( virtual/libintl )
 	zlib? ( sys-libs/zlib )"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 src_prepare() {
 	local lingua linguas

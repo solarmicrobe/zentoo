@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/package.use.mask,v 1.119 2012/03/18 14:08:40 ssuominen Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/package.use.mask,v 1.127 2012/04/27 09:38:17 dagger Exp $
 
 # When you add an entry to the top of this file, add your name, the date, and
 # an explanation of why something is getting masked. Please be extremely
@@ -17,6 +17,37 @@
 #
 
 #--- END OF EXAMPLES ---
+
+# Robert Piasek <dagger@gentoo.org> (26 Apr 2012)
+# Packages with optional systemd support. Masked in base and unmasked on arches
+# where sys-apps/systemd is available.
+>sys-auth/polkit-0.104-r1 -systemd
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (13 Apr 2012)
+# Masked in base and unmasked on arches where app-misc/geoclue and
+# app-accessibility/at-spi2-core are available.
+net-libs/webkit-gtk -geoloc -webkit2
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (13 Apr 2012)
+# Packages with optional systemd support. Masked in base and unmasked on arches
+# where sys-apps/systemd is available.
+gnome-extra/gnome-screensaver -systemd
+gnome-extra/gnome-system-monitor -systemd
+net-misc/networkmanager -systemd
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (12 Apr 2012)
+# Temporary mask-in-base, unmask-in-arch for dev-python/mako keywording for
+# gobject-introspection[doctool], bug #411761
+dev-libs/gobject-introspection -doctool
+
+# Michał Górny <mgorny@gentoo.org> (11 Apr 2012)
+# JIT compilation in libzpaq generates code for x86/amd64.
+app-arch/libzpaq -jit
+
+# Arun Raghavan <ford_prefect@gentoo.org> (29 Mar 2012)
+# webrtc-audio-processing is only supported on x86/amd64. Possibly arm can be
+# added.
+media-sound/pulseaudio -webrtc-aec
 
 # Bernard Cafarelli <voyageur@gentoo.org> (27 Feb 2012)
 # Masked in base profile, supported on this arch

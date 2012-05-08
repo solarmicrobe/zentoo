@@ -33,7 +33,7 @@ RDEPEND="
 	tcl? ( dev-lang/tcl )"
 
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	sys-apps/gawk"
 
 DISTUTILS_SETUP_FILES=("bindings/python|setup.py")

@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -26,7 +26,7 @@ IUSE="bzip2 +cxx unicode zlib static-libs +recursion-limit"
 RDEPEND="bzip2? ( app-arch/bzip2 )
 	zlib? ( sys-libs/zlib )"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	userland_GNU? ( >=sys-apps/findutils-4.4.0 )"
 
 S=${WORKDIR}/${MY_P}

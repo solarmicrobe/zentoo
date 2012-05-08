@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,7 +15,8 @@ KEYWORDS="amd64"
 IUSE=""
 SLOT="1"
 
-DEPEND=">=dev-perl/Apache-Test-1.27
+DEPEND="<www-servers/apache-2.4
+	>=dev-perl/Apache-Test-1.27
 	>=virtual/perl-CGI-3.08
 	>=virtual/perl-IO-Compress-1.09
 	dev-lang/perl

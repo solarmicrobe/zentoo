@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -25,7 +25,7 @@ RDEPEND="threadsafe? ( >=dev-libs/nspr-4.8.6 )"
 DEPEND="${RDEPEND}
 	app-arch/zip
 	=dev-lang/python-2*[threads]
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 pkg_setup(){
 	python_set_active_version 2
