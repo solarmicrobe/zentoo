@@ -1,10 +1,11 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
+PYTHON_DEPEND="2"
 
-inherit eutils
+inherit eutils python
 
 DESCRIPTION="RabbitMQ is a high-performance AMQP-compliant message broker written in Erlang."
 HOMEPAGE="http://www.rabbitmq.com/"
@@ -17,14 +18,19 @@ IUSE=""
 
 RDEPEND="dev-lang/erlang"
 DEPEND="${RDEPEND}
+	app-arch/zip
+	app-arch/unzip
 	app-text/docbook-xml-dtd:4.5
 	app-text/xmlto
 	dev-libs/libxslt
+	dev-python/simplejson
 "
 
 pkg_setup() {
 	enewgroup rabbitmq
 	enewuser rabbitmq -1 -1 /var/lib/rabbitmq rabbitmq
+	python_set_active_version 2
+	python_pkg_setup
 }
 
 src_compile() {
@@ -34,7 +40,7 @@ src_compile() {
 
 src_install() {
 	# erlang module
-	local targetdir="/usr/$(get_libdir)/erlang/lib/${P}"
+	local targetdir="/usr/$(get_libdir)/erlang/lib/rabbitmq_server-${PV}"
 
 	einfo "Setting correct RABBITMQ_HOME in scripts"
 	sed -e "s:^RABBITMQ_HOME=.*:RABBITMQ_HOME=\"${targetdir}\":g" \
@@ -42,10 +48,10 @@ src_install() {
 
 	einfo "Installing Erlang modules to ${targetdir}"
 	insinto "${targetdir}"
-	doins -r ebin include
+	doins -r ebin include plugins
 
 	einfo "Installing server scripts to /usr/sbin"
-	for script in rabbitmq-env rabbitmq-server rabbitmqctl rabbitmq-multi; do
+	for script in rabbitmq-env rabbitmq-server rabbitmqctl rabbitmq-defaults rabbitmq-plugins; do
 		exeinto /usr/libexec/rabbitmq
 		doexe scripts/${script}
 		newsbin "${FILESDIR}"/rabbitmq-script-wrapper ${script}
@@ -53,14 +59,14 @@ src_install() {
 
 	# create the directory where our log file will go.
 	diropts -m 0770 -o rabbitmq -g rabbitmq
-	keepdir /var/log/rabbitmq
+	keepdir /var/log/rabbitmq /etc/rabbitmq
 
 	# create the mnesia directory
 	diropts -m 0770 -o rabbitmq -g rabbitmq
 	dodir /var/lib/rabbitmq{,/mnesia}
 
 	# install the init script
-	newinitd "${FILESDIR}"/rabbitmq-server.init-r1 rabbitmq
+	newinitd "${FILESDIR}"/rabbitmq-server.init-r3 rabbitmq
 
 	# install documentation
 	doman docs/*.[15]
