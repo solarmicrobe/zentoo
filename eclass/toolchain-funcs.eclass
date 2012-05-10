@@ -186,6 +186,7 @@ tc-is-cross-compiler() {
 # softfloat flags in the case where support is optional, but
 # rejects softfloat flags where the target always lacks an fpu.
 tc-is-softfloat() {
+	local CTARGET=${CTARGET:-${CHOST}}
 	case ${CTARGET} in
 		bfin*|h8300*)
 			echo "only" ;;
