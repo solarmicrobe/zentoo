@@ -1,6 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
+
+EAPI="4"
 
 inherit toolchain-funcs
 
@@ -13,9 +15,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
+src_prepare() {
 	sed -i \
 		-e "/^CFLAGS/ s:-O2:${CFLAGS}:" \
 		-e "/^LDFLAGS/ s:-s:${LDFLAGS}:" \
@@ -23,12 +23,12 @@ src_unpack() {
 }
 
 src_compile() {
-	emake STRIP=: CC="$(tc-getCC)" || die "compile error"
+	emake STRIP=: CC="$(tc-getCC)"
 }
 
 src_install() {
 	into /
-	dosbin hdparm contrib/idectl || die "dosbin"
+	dosbin hdparm contrib/idectl
 
 	newinitd "${FILESDIR}"/hdparm-init-8 hdparm
 	newconfd "${FILESDIR}"/hdparm-conf.d.3 hdparm
