@@ -226,6 +226,7 @@ pulseaudio
 python3
 qdbm
 qmail-spp
+qt3support
 qt4
 quicktime
 radius
