@@ -1313,14 +1313,19 @@ usex() { use "$1" && echo "${2-yes}$4" || echo "${3-no}$5" ; } #382963
 # @USAGE: [${MAKEOPTS}]
 # @DESCRIPTION:
 # Searches the arguments (defaults to ${MAKEOPTS}) and extracts the jobs number
-# specified therein.  i.e. if the user has MAKEOPTS=-j9, this will show "9".
+# specified therein.  Useful for running non-make tools in parallel too.
+# i.e. if the user has MAKEOPTS=-j9, this will show "9".
 # We can't return the number as bash normalizes it to [0, 255].  If the flags
 # haven't specified a -j flag, then "1" is shown as that is the default `make`
-# uses.  Useful for running non-make tools in parallel too.
+# uses.  Since there's no way to represent infinity, we return 999 if the user
+# has -j without a number.
 makeopts_jobs() {
 	[[ $# -eq 0 ]] && set -- ${MAKEOPTS}
-	local x jobs
-	for x ; do [[ ${x} == -j* ]] && jobs=${x#-j} ; done
+	# This assumes the first .* will be more greedy than the second .*
+	# since POSIX doesn't specify a non-greedy match (i.e. ".*?").
+	local jobs=$(echo " $* " | sed -r -n \
+		-e 's:.*[[:space:]](-j|--jobs[=[:space:]])[[:space:]]*([0-9]+).*:\2:p' \
+		-e 's:.*[[:space:]](-j|--jobs)[[:space:]].*:999:p')
 	echo ${jobs:-1}
 }
 
