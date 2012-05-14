@@ -22,8 +22,27 @@ pkg_setup() {
 	python_pkg_setup
 }
 
+src_prepare() {
+	# don't force 32-bits mode on Darwin
+	sed -i -e '/-arch i386/d' build/gyp/pylib/gyp/generator/make.py || die
+	# force using Makefiles, instead of Xcode project file on Darwin
+	sed -i -e '/darwin/s/xcode/make/' build/gyp/pylib/gyp/__init__.py || die
+	# don't refuse to build shared_libs because we build somewhere else
+	sed -i \
+		-e '/params\.get.*mac.*darwin.*linux/s/mac/darwin/' \
+		-e "/if GetFlavor(params) == 'mac':/s/mac/darwin/" \
+		-e "/^  if flavor == 'mac':/s/mac/darwin/" \
+		build/gyp/pylib/gyp/generator/make.py || die
+	# make sure our v8.dylib doesn't end up being empty and give it a proper
+	# install_name (soname)
+	sed -i \
+		-e '/^LINK_COMMANDS_MAC =/,/^SHARED_HEADER =/s#-shared#-dynamiclib -all_load -install_name '"${EPREFIX}/usr/$(get_libdir)/libv8$(get_libname $(get_version_component_range 1-3))"'#' \
+		build/gyp/pylib/gyp/generator/make.py || die
+}
+
 src_compile() {
 	tc-export AR CC CXX RANLIB
+	export LINK="${CXX}"
 
 	# Use target arch detection logic from bug #354601.
 	case ${CHOST} in
@@ -97,7 +116,8 @@ pkg_preinst() {
 
 	eshopts_push -s nullglob
 
-	for candidate in "${EROOT}usr/$(get_libdir)"/libv8$(get_libname).*; do
+	for candidate in "${EROOT}usr/$(get_libdir)"/libv8-*$(get_libname) \
+		"${EROOT}usr/$(get_libdir)"/libv8$(get_libname).*; do
 		baselib=${candidate##*/}
 		if [[ ! -e "${ED}usr/$(get_libdir)/${baselib}" ]]; then
 			preserved_libs+=( "${EPREFIX}/usr/$(get_libdir)/${baselib}" )
