@@ -1,18 +1,18 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 SCONS_MIN_VERSION="1.2.0"
 
-inherit eutils multilib scons-utils versionator
+inherit eutils multilib pax-utils scons-utils versionator
 
 MY_P=${PN}-src-r${PV/_rc/-rc}
 
 DESCRIPTION="A high-performance, open source, schema-free document-oriented database"
 HOMEPAGE="http://www.mongodb.org"
 SRC_URI="http://downloads.mongodb.org/src/${MY_P}.tar.gz
-	mms-agent? ( http://dev.gentoo.org/~ultrabug/20111027-10gen-mms-agent.zip )"
+	mms-agent? ( http://dev.gentoo.org/~ultrabug/20120514-10gen-mms-agent.zip )"
 
 LICENSE="AGPL-3 Apache-2.0"
 SLOT="0"
@@ -38,7 +38,6 @@ pkg_setup() {
 	enewuser mongodb -1 -1 /var/lib/${PN} mongodb
 
 	scons_opts=" --cxx=$(tc-getCXX) --use-system-all --sharedclient"
-
 	if use v8; then
 		scons_opts+=" --usev8"
 	else
@@ -47,20 +46,15 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# https://jira.mongodb.org/browse/SERVER-5259
-	cp "${FILESDIR}"/SConstruct "${S}"/SConstruct
-
 	epatch "${FILESDIR}/${PN}-2.0-fix-scons.patch"
 
 	# drop -Werror
-	sed -i -e '/Werror/d' SConstruct
+	sed -i -e '/Werror/d' SConstruct || die
 
-	sed -i \
-		-e "s:jsapi.h:js/jsapi.h:g" \
-		-e "s:jsobj.h:js/jsobj.h:g" \
-		-e "s:jsdate.h:js/jsdate.h:g" \
-		-e "s:jsregexp.h:js/jsregexp.h:g" \
-		scripting/engine_spidermonkey.h
+	sed -i -e "s@jsapi.h@js/jsapi.h@g" \
+		-e "s@jsobj.h@js/jsobj.h@g" \
+		-e "s@jsdate.h@js/jsdate.h@g" \
+		-e "s@jsregexp.h@js/jsregexp.h@g" scripting/engine_spidermonkey.h || die
 }
 
 src_compile() {
@@ -71,6 +65,8 @@ src_install() {
 	escons ${scons_opts} --full --nostrip install --prefix="${D}"/usr
 
 	use static-libs || rm "${D}/usr/$(get_libdir)/libmongoclient.a"
+
+	use v8 && pax-mark m "${D}"/usr/bin/{mongo,mongod}
 
 	for x in /var/{lib,log,run}/${PN}; do
 		keepdir "${x}"
