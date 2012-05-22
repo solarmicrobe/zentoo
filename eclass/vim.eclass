@@ -86,13 +86,13 @@ else
 		gpm?     ( >=sys-libs/gpm-1.19.3 )
 		perl?    ( dev-lang/perl )
 		acl?     ( kernel_linux? ( sys-apps/acl ) )
-		ruby?    ( =dev-lang/ruby-1.8* )"
+		ruby?    ( =dev-lang/ruby-1.9* )"
 	RDEPEND="${RDEPEND}
 		cscope?  ( dev-util/cscope )
 		gpm?     ( >=sys-libs/gpm-1.19.3 )
 		perl?    ( dev-lang/perl )
 		acl?     ( kernel_linux? ( sys-apps/acl ) )
-		ruby?    ( =dev-lang/ruby-1.8* )
+		ruby?    ( =dev-lang/ruby-1.9* )
 		!<app-vim/align-30-r1
 		!<app-vim/vimbuddy-0.9.1-r1
 		!<app-vim/autoalign-11

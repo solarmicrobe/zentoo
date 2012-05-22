@@ -6,7 +6,7 @@ FEATURES="splitdebug"
 USE="${USE} -dri -vhosts"
 
 # add a bunch of global USE flags
-USE="${USE} bash-completion bzip2 caps fontconfig gs idn jpeg pcre png svg tiff truetype urandom vim-syntax"
+USE="${USE} bash-completion bzip2 caps fontconfig gs idn jpeg pcre png svg syslog tiff truetype urandom vim-syntax"
 
 # create and use binary packages
 EMERGE_DEFAULT_OPTS="--quiet-build --buildpkg --with-bdeps=y --binpkg-respect-use=y --rebuilt-binaries=n --keep-going --usepkg --getbinpkg"

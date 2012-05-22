@@ -1,13 +1,13 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=2
-USE_RUBY="ruby18"
+USE_RUBY="ruby19"
 
 inherit ruby-ng
 
-DESCRIPTION="Virtual ebuild for the Ruby OpenSSL bindings"
+DESCRIPTION="Virtual ebuild for a ruby interpreter with threading enabled."
 HOMEPAGE=""
 SRC_URI=""
 
@@ -16,7 +16,7 @@ SLOT="${USE_RUBY}"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="dev-lang/ruby:1.8[ssl]"
+RDEPEND="dev-lang/ruby:1.9"
 
 pkg_setup() { :; }
 src_unpack() { :; }

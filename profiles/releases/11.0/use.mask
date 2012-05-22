@@ -310,6 +310,7 @@ zeroconf
 zsh-completion
 
 # ruby targets we don't support
+ruby_targets_ruby18
 ruby_targets_jruby
 ruby_targets_rbx
 ruby_targets_ree18

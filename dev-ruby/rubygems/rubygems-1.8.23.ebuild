@@ -23,7 +23,7 @@ RDEPEND="
 	ruby_targets_ruby19? ( >=dev-lang/ruby-1.9.3_rc1 )"
 
 # index_gem_repository.rb
-PDEPEND="server? ( dev-ruby/builder[ruby_targets_ruby18] )"
+PDEPEND="server? ( dev-ruby/builder )"
 
 # Tests fail when YARD is installed.. but just the rdoc-related stuff,
 # so it's not a mistake.
