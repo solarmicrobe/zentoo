@@ -37,6 +37,9 @@ ruby_add_rdepend "
 
 all_ruby_install() {
 	all_fakegem_install
-	keepdir /etc/ganymed
+
+	insinto /etc/ganymed
+	doins "${S}"/lib/ganymed/config.yml
+
 	newinitd "${FILESDIR}/ganymed.initd" ${PN}
 }
