@@ -5,8 +5,9 @@
 description="Ganymed is an event collection daemon"
 
 pidfile="/var/run/ganymed.pid"
+config_file="/etc/ganymed/config.yml"
 command="/usr/bin/ganymed"
-command_args="-d -e production -p ${pidfile}"
+command_args="-d -e production -p ${pidfile} -c ${config_file}"
 
 depend() {
 	need net
