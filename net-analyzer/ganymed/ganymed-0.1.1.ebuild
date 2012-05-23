@@ -34,3 +34,9 @@ ruby_add_rdepend "
 	dev-ruby/sys-filesystem
 	>=dev-ruby/ohai-0.6.12
 "
+
+all_ruby_install() {
+	all_fakegem_install
+	keepdir /etc/ganymed
+	newinitd "${FILESDIR}/ganymed.initd"
+}
