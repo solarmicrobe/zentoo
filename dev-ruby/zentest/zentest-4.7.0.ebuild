@@ -1,10 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=2
 
-USE_RUBY="ruby18 ree18 jruby"
+USE_RUBY="ruby18 ree18 ruby19 jruby"
 
 RUBY_FAKEGEM_NAME=ZenTest
 
@@ -24,17 +24,11 @@ IUSE=""
 
 ruby_add_bdepend "
 	doc? (
-		>=dev-ruby/hoe-2.6.1
+		>=dev-ruby/hoe-2.10
 		dev-ruby/hoe-seattlerb
 	)
 	test? (
-		>=dev-ruby/hoe-2.6.1
+		>=dev-ruby/hoe-2.10
 		dev-ruby/hoe-seattlerb
 		virtual/ruby-minitest
 	)"
-
-each_ruby_test() {
-	# JRuby needs the extended objectspace. We do it here
-	# unconditional in this easy way.
-	JRUBY_OPTS="${JRUBY_OPTS} -X+O" each_fakegem_test
-}
