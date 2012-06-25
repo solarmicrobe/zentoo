@@ -9,6 +9,8 @@ PHP_EXT_ZENDEXT="yes"
 PHP_EXT_SKIP_PHPIZE="yes"
 DOCS="README.txt"
 
+S="${WORKDIR}"/${PN}
+
 inherit php-ext-source-r2
 
 DESCRIPTION="PHP extension for using memcached."
@@ -25,8 +27,6 @@ RDEPEND="${DEPEND}"
 
 # upstream does not ship any testsuite, so the PHPize test-runner fails.
 RESTRICT="test"
-
-S="${WORKDIR}"/${PN}
 
 src_configure() {
 	:
