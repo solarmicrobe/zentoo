@@ -9,13 +9,16 @@ depend() {
 
 start() {
 	ebegin "Starting NewRelic System Monitor"
-	start-stop-daemon --quiet --start --user newrelic --exec /usr/sbin/nrsysmond -- \
-		-c /etc/newrelic/nrsysmond.cfg -p /var/run/newrelic/nrsysmond.pid
+	start-stop-daemon --start \
+		--user newrelic \
+		--exec /usr/sbin/nrsysmond -- \
+		-c /etc/newrelic/nrsysmond.cfg \
+		-p /var/run/newrelic/nrsysmond.pid
 	eend $?
 }
 
 stop() {
 	ebegin "Stopping NewRelic System Monitor"
-	start-stop-daemon --quiet --stop --user newrelic --pid-file /var/run/newrelic/nrsysmond.pid
+	start-stop-daemon --stop --pidfile /var/run/newrelic/nrsysmond.pid
 	eend $?
 }
