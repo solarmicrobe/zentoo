@@ -25,6 +25,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.0.6-progress.patch
 	epatch "${FILESDIR}"/${PN}-1.0.3-no-test.patch
 	epatch "${FILESDIR}"/${PN}-1.0.4-POSIX-shell.patch #193365
+	epatch "${FILESDIR}"/${PN}-1.0.6-mingw.patch #393573
 
 	# - Use right man path
 	# - Generate symlinks instead of hardlinks

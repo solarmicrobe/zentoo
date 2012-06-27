@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI="3"
-inherit eutils toolchain-funcs flag-o-matic prefix
+inherit eutils toolchain-funcs flag-o-matic multilib prefix
 
 DESCRIPTION="Return the canonicalized absolute pathname"
 HOMEPAGE="http://packages.debian.org/unstable/utils/realpath"
@@ -19,7 +19,8 @@ IUSE="nls"
 RDEPEND="!sys-freebsd/freebsd-bin
 	nls? ( virtual/libintl )"
 DEPEND="${RDEPEND}
-	nls? ( sys-devel/gettext )"
+	nls? ( sys-devel/gettext )
+	elibc_mintlib? ( virtual/libiconv )"
 
 src_unpack() {
 	unpack ${PN}_${PV}.tar.gz

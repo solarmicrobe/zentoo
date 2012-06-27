@@ -31,6 +31,10 @@ src_prepare() {
 	distutils_src_prepare
 	epatch "${FILESDIR}/${P}-python3.patch"
 	epatch "${FILESDIR}/python-abi-support.patch"
+
+	cp config/jdk-defaults-{x86,amd64}-fbsd.conf || die #415397
+	echo "*= icedtea-7 icedtea-6 icedtea-bin-7 icedtea-bin-6" \
+		> config/jdk-defaults-arm.conf || die #305773
 }
 
 src_test() {

@@ -33,7 +33,8 @@ src_prepare() {
 		"${FILESDIR}/${PN}-glibc-2.10.patch" \
 		"${FILESDIR}/${PN}-0.1.5-gentoo-docdir.patch" \
 		"${FILESDIR}/${PN}-0.1.5_p2-qa.patch" \
-		"${FILESDIR}/${P}-kash-link-pthread.patch"
+		"${FILESDIR}/${P}-kash-link-pthread.patch" \
+		"${FILESDIR}/${P}-gold.patch"
 
 	cd "${S}/src/kmk"
 	eautoreconf

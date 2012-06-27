@@ -18,7 +18,8 @@ SRC_URI="ftp://ftp.isc.org/isc/bind9/${MY_PV}/${MY_P}.tar.gz"
 LICENSE="as-is"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="doc gssapi idn ipv6 pkcs11 ssl urandom xml"
+IUSE="doc gssapi idn ipv6 ssl urandom xml"
+# no PKCS11 currently as it requires OpenSSL to be patched, also see bug 409687
 
 DEPEND="ssl? ( dev-libs/openssl )
 	xml? ( dev-libs/libxml2 )
@@ -58,7 +59,6 @@ src_configure() {
 		$(use_with ssl openssl) \
 		$(use_with xml libxml2) \
 		$(use_with gssapi) \
-		$(use_with pkcs11) \
 		${myconf}
 
 	# bug #151839

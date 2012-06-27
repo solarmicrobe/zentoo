@@ -15,7 +15,7 @@
 # This eclass provides a unified interface for compiling and installing standalone
 # PHP extensions (modules).
 
-inherit flag-o-matic autotools
+inherit flag-o-matic autotools multilib
 
 EXPORT_FUNCTIONS src_unpack src_prepare src_configure src_compile src_install
 
@@ -220,7 +220,7 @@ php_init_slot_env() {
 php-ext-source-r2_buildinilist() {
 	# Work out the list of <ext>.ini files to edit/add to
 	if [[ -z "${PHPSAPILIST}" ]] ; then
-		PHPSAPILIST="apache2 cli cgi fpm"
+		PHPSAPILIST="apache2 cli cgi fpm embed"
 	fi
 
 	PHPINIFILELIST=""

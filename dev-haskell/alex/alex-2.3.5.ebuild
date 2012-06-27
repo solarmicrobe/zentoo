@@ -37,7 +37,7 @@ src_prepare() {
 
 	if use doc; then
 		cd "${S}/doc/"
-		eautoreconf
+		eautoreconf || die "eautoreconf for docs failed"
 	fi
 }
 
@@ -46,7 +46,7 @@ src_configure() {
 
 	if use doc; then
 		cd "${S}/doc/"
-		econf
+		econf || die "econf for docs failed"
 	fi
 }
 

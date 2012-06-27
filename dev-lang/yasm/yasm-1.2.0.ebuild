@@ -30,6 +30,8 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-fix_cython_check.patch"
+	# ksh doesn't grok $(xxx), makes aclocal fail
+	sed -i -e '1c\#!/usr/bin/env sh' YASM-VERSION-GEN.sh || die
 	eautoreconf
 }
 

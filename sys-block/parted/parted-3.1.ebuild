@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="4"
 
 WANT_AUTOMAKE="1.11"
 
@@ -21,7 +21,7 @@ IUSE="+debug device-mapper nls readline selinux static-libs test"
 # to fix bug 85999
 RDEPEND="
 	>=sys-fs/e2fsprogs-1.27
-	>=sys-libs/ncurses-5.2
+	>=sys-libs/ncurses-5.7-r7
 	nls? ( >=sys-devel/gettext-0.12.1-r2 )
 	readline? ( >=sys-libs/readline-5.2 )
 	selinux? ( sys-libs/libselinux )
@@ -70,8 +70,8 @@ src_test() {
 }
 
 src_install() {
-	emake install DESTDIR="${D}" || die "Install failed"
+	emake install DESTDIR="${D}"
 	dodoc AUTHORS BUGS ChangeLog NEWS README THANKS TODO
 	dodoc doc/{API,FAT,USER.jp}
-	find "${ED}" -name '*.la' -exec rm -f '{}' +
+	find "${ED}" -name '*.la' -exec rm -f {} +
 }

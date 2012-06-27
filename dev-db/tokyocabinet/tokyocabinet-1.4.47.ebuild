@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -29,7 +29,7 @@ src_prepare() {
 	sed -i -e 's/-fomit-frame-pointer//' configure.in || die
 	# flag only works on x86 derivatives, remove everywhere else
 	if ! use x86 && ! use amd64; then sed -i -e 's/ -minline-all-stringops//' configure.in; fi
-	eautoreconf || die
+	eautoreconf
 }
 
 src_configure() {

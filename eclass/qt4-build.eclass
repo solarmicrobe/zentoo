@@ -32,19 +32,22 @@ case ${QT4_BUILD_TYPE} in
 	live)
 		EGIT_REPO_URI="git://gitorious.org/qt/qt.git
 			https://git.gitorious.org/qt/qt.git"
-		EGIT_BRANCH="${PV%.9999}"
+		EGIT_BRANCH=${PV%.9999}
 		;;
 	release)
-		SRC_URI="http://get.qt.nokia.com/qt/source/${MY_P}.tar.gz"
+		if version_is_at_least 4.8.1; then
+			SRC_URI="http://releases.qt-project.org/qt4/source/${MY_P}.tar.gz"
+		else
+			SRC_URI="http://get.qt.nokia.com/qt/source/${MY_P}.tar.gz"
+		fi
 		;;
 esac
 
 IUSE="aqua debug pch"
-if [[ ${CATEGORY}/${PN} != x11-libs/qt-xmlpatterns ]]; then
-	IUSE+=" +exceptions"
-fi
+[[ ${CATEGORY}/${PN} != x11-libs/qt-xmlpatterns ]] && IUSE+=" +exceptions"
 if version_is_at_least 4.8; then
-	IUSE+=" c++0x qpa"
+	[[ ${CATEGORY}/${PN} != x11-libs/qt-webkit ]] && IUSE+=" c++0x"
+	version_is_at_least 4.8.3 || IUSE+=" qpa"
 fi
 
 DEPEND="virtual/pkgconfig"
@@ -53,42 +56,42 @@ if [[ ${QT4_BUILD_TYPE} == live ]]; then
 fi
 
 RDEPEND="
-	!<x11-libs/qt-assistant-${PV}
-	!>x11-libs/qt-assistant-${PV}-r9999
-	!<x11-libs/qt-bearer-${PV}
-	!>x11-libs/qt-bearer-${PV}-r9999
-	!<x11-libs/qt-core-${PV}
-	!>x11-libs/qt-core-${PV}-r9999
-	!<x11-libs/qt-dbus-${PV}
-	!>x11-libs/qt-dbus-${PV}-r9999
-	!<x11-libs/qt-declarative-${PV}
-	!>x11-libs/qt-declarative-${PV}-r9999
-	!<x11-libs/qt-demo-${PV}
-	!>x11-libs/qt-demo-${PV}-r9999
-	!<x11-libs/qt-gui-${PV}
-	!>x11-libs/qt-gui-${PV}-r9999
-	!<x11-libs/qt-multimedia-${PV}
-	!>x11-libs/qt-multimedia-${PV}-r9999
-	!<x11-libs/qt-opengl-${PV}
-	!>x11-libs/qt-opengl-${PV}-r9999
-	!<x11-libs/qt-openvg-${PV}
-	!>x11-libs/qt-openvg-${PV}-r9999
-	!<x11-libs/qt-phonon-${PV}
-	!>x11-libs/qt-phonon-${PV}-r9999
-	!<x11-libs/qt-qt3support-${PV}
-	!>x11-libs/qt-qt3support-${PV}-r9999
-	!<x11-libs/qt-script-${PV}
-	!>x11-libs/qt-script-${PV}-r9999
-	!<x11-libs/qt-sql-${PV}
-	!>x11-libs/qt-sql-${PV}-r9999
-	!<x11-libs/qt-svg-${PV}
-	!>x11-libs/qt-svg-${PV}-r9999
-	!<x11-libs/qt-test-${PV}
-	!>x11-libs/qt-test-${PV}-r9999
-	!<x11-libs/qt-webkit-${PV}
-	!>x11-libs/qt-webkit-${PV}-r9999
-	!<x11-libs/qt-xmlpatterns-${PV}
-	!>x11-libs/qt-xmlpatterns-${PV}-r9999
+	!<x11-libs/qt-assistant-${PV}:4
+	!>x11-libs/qt-assistant-${PV}-r9999:4
+	!<x11-libs/qt-bearer-${PV}:4
+	!>x11-libs/qt-bearer-${PV}-r9999:4
+	!<x11-libs/qt-core-${PV}:4
+	!>x11-libs/qt-core-${PV}-r9999:4
+	!<x11-libs/qt-dbus-${PV}:4
+	!>x11-libs/qt-dbus-${PV}-r9999:4
+	!<x11-libs/qt-declarative-${PV}:4
+	!>x11-libs/qt-declarative-${PV}-r9999:4
+	!<x11-libs/qt-demo-${PV}:4
+	!>x11-libs/qt-demo-${PV}-r9999:4
+	!<x11-libs/qt-gui-${PV}:4
+	!>x11-libs/qt-gui-${PV}-r9999:4
+	!<x11-libs/qt-multimedia-${PV}:4
+	!>x11-libs/qt-multimedia-${PV}-r9999:4
+	!<x11-libs/qt-opengl-${PV}:4
+	!>x11-libs/qt-opengl-${PV}-r9999:4
+	!<x11-libs/qt-openvg-${PV}:4
+	!>x11-libs/qt-openvg-${PV}-r9999:4
+	!<x11-libs/qt-phonon-${PV}:4
+	!>x11-libs/qt-phonon-${PV}-r9999:4
+	!<x11-libs/qt-qt3support-${PV}:4
+	!>x11-libs/qt-qt3support-${PV}-r9999:4
+	!<x11-libs/qt-script-${PV}:4
+	!>x11-libs/qt-script-${PV}-r9999:4
+	!<x11-libs/qt-sql-${PV}:4
+	!>x11-libs/qt-sql-${PV}-r9999:4
+	!<x11-libs/qt-svg-${PV}:4
+	!>x11-libs/qt-svg-${PV}-r9999:4
+	!<x11-libs/qt-test-${PV}:4
+	!>x11-libs/qt-test-${PV}-r9999:4
+	!<x11-libs/qt-webkit-${PV}:4
+	!>x11-libs/qt-webkit-${PV}-r9999:4
+	!<x11-libs/qt-xmlpatterns-${PV}:4
+	!>x11-libs/qt-xmlpatterns-${PV}-r9999:4
 "
 
 S=${WORKDIR}/${MY_P}
@@ -99,31 +102,16 @@ S=${WORKDIR}/${MY_P}
 qt4-build_pkg_setup() {
 	[[ ${EAPI} == 2 ]] && use !prefix && EPREFIX=
 
-	# Protect users by not allowing downgrades between releases
-	# Downgrading revisions within the same release should be allowed
-	if has_version '>'${CATEGORY}/${P}-r9999; then
+	# Protect users by not allowing downgrades between releases.
+	# Downgrading revisions within the same release should be allowed.
+	if has_version ">${CATEGORY}/${P}-r9999:4"; then
 		if [[ -z ${I_KNOW_WHAT_I_AM_DOING} ]]; then
-			eerror
-			eerror "Sanity check to keep you from breaking your system:"
-			eerror "  Downgrading Qt is completely unsupported and will break your system!"
-			eerror
+			eerror "    ***  Sanity check to keep you from breaking your system  ***"
+			eerror "Downgrading Qt is completely unsupported and will break your system!"
 			die "aborting to save your system"
 		else
 			ewarn "Downgrading Qt is completely unsupported and will break your system!"
 		fi
-	fi
-
-	if [[ ${PN} == qt-webkit ]]; then
-		eshopts_push -s extglob
-		if is-flagq '-g?(gdb)?([1-9])'; then
-			echo
-			ewarn "You have enabled debug info (probably have -g or -ggdb in your CFLAGS/CXXFLAGS)."
-			ewarn "You may experience really long compilation times and/or increased memory usage."
-			ewarn "If compilation fails, please try removing -g/-ggdb before reporting a bug."
-			ewarn "For more info check out bug #307861"
-			echo
-		fi
-		eshopts_pop
 	fi
 
 	PATH="${S}/bin${PATH:+:}${PATH}"
@@ -138,27 +126,42 @@ qt4-build_pkg_setup() {
 			QT4_EXTRACT_DIRECTORIES="src/gui/kernel/qapplication_mac.mm
 				${QT4_EXTRACT_DIRECTORIES}"
 	fi
-
-	if ! version_is_at_least 4.1 $(gcc-version); then
-		ewarn "Using a GCC version lower than 4.1 is not supported."
-	fi
 }
 
-# @ECLASS-VARIABLE: QT4_TARGET_DIRECTORIES
-# @DESCRIPTION:
-# Arguments for build_target_directories. Takes the directories in which the
-# code should be compiled. This is a space-separated list.
-
 # @ECLASS-VARIABLE: QT4_EXTRACT_DIRECTORIES
+# @DEFAULT_UNSET
 # @DESCRIPTION:
 # Space-separated list including the directories that will be extracted from
 # Qt tarball.
+
+# @ECLASS-VARIABLE: QT4_TARGET_DIRECTORIES
+# @DEFAULT_UNSET
+# @DESCRIPTION:
+# Arguments for build_target_directories. Takes the directories in which the
+# code should be compiled. This is a space-separated list.
 
 # @FUNCTION: qt4-build_src_unpack
 # @DESCRIPTION:
 # Unpacks the sources.
 qt4-build_src_unpack() {
 	setqtenv
+
+	if ! version_is_at_least 4.1 $(gcc-version); then
+		ewarn "Using a GCC version lower than 4.1 is not supported."
+	fi
+
+	if [[ ${PN} == qt-webkit ]]; then
+		eshopts_push -s extglob
+		if is-flagq '-g?(gdb)?([1-9])'; then
+			echo
+			ewarn "You have enabled debug info (probably have -g or -ggdb in your CFLAGS/CXXFLAGS)."
+			ewarn "You may experience really long compilation times and/or increased memory usage."
+			ewarn "If compilation fails, please try removing -g/-ggdb before reporting a bug."
+			ewarn "For more info check out https://bugs.gentoo.org/307861"
+			echo
+		fi
+		eshopts_pop
+	fi
 
 	case ${QT4_BUILD_TYPE} in
 		live)
@@ -205,11 +208,9 @@ qt4-build_src_prepare() {
 	fi
 
 	if version_is_at_least 4.7; then
-		# fix libX11 dependency on non X packages
+		# avoid X11 dependency in non-gui packages
 		local nolibx11_pkgs="qt-core qt-dbus qt-script qt-sql qt-test qt-xmlpatterns"
 		has ${PN} ${nolibx11_pkgs} && qt_nolibx11
-
-		qt_assistant_cleanup
 	fi
 
 	if use aqua; then
@@ -240,14 +241,7 @@ qt4-build_src_prepare() {
 	fi
 
 	if use_if_iuse c++0x; then
-		echo
-		ewarn "You are about to build Qt4 using the C++11 standard. Even though"
-		ewarn "this is an official standard, some of the reverse dependencies"
-		ewarn "may fail to compile or link againt the Qt4 libraries. Before"
-		ewarn "reporting a bug, make sure your bug is reproducible with c++0x"
-		ewarn "disabled."
-		echo
-		append-flags -std=c++0x
+		append-cxxflags -std=c++0x
 	fi
 
 	# Unsupported old gcc versions - hardened needs this :(
@@ -412,8 +406,9 @@ qt4-build_src_configure() {
 	# exceptions USE flag
 	conf+=" $(in_iuse exceptions && qt_use exceptions || echo -exceptions)"
 
-	# disable RPATH on Qt >= 4.8 (bug 380415)
-	version_is_at_least 4.8 && conf+=" -no-rpath"
+	# disable rpath on Qt >= 4.8 (bug 380415)
+	# but leave it enabled on prefix (bug 417169)
+	version_is_at_least 4.8 && use !prefix && conf+=" -no-rpath"
 
 	# precompiled headers don't work on hardened, where the flag is masked
 	conf+=" $(qt_use pch)"
@@ -579,8 +574,9 @@ setqtenv() {
 	QT_INSTALL_PREFIX=${EPREFIX}/usr/$(get_libdir)/qt4
 
 	PLATFORM=$(qt_mkspecs_dir)
-
 	unset QMAKESPEC
+
+	export XDG_CONFIG_HOME="${T}"
 }
 
 # @FUNCTION: prepare_directories
@@ -863,36 +859,6 @@ qt_mkspecs_dir() {
 	fi
 
 	echo "${spec}"
-}
-
-# @FUNCTION: qt_assistant_cleanup
-# @INTERNAL
-# @DESCRIPTION:
-# Tries to clean up tools.pro for qt-assistant ebuilds.
-# Meant to be called in src_prepare().
-# Since Qt 4.7.4 this function is a no-op.
-qt_assistant_cleanup() {
-	# apply patching to qt-assistant ebuilds only
-	[[ ${PN} != qt-assistant ]] && return
-
-	# no longer needed for 4.7.4 and later
-	version_is_at_least 4.7.4 && return
-
-	# different versions (and branches...) may need different handling,
-	# add a case if you need special handling
-	case "${MY_PV_EXTRA}" in
-		*kde-qt*)
-			sed -e "/^[ \t]*porting/,/^[ \t]*win32.*activeqt$/d" \
-				-e "/mac/,/^embedded.*makeqpf$/d" \
-				-i tools/tools.pro || die "patching tools.pro failed"
-		;;
-		*)
-			sed -e "/^[ \t]*porting/,/^[ \t]*win32.*activeqt$/d" \
-				-e "/mac/,/^embedded.*makeqpf$/d" \
-				-e "s/^\([ \t]*pixeltool\) /\1 qdoc3 /" \
-				-i tools/tools.pro || die "patching tools.pro failed"
-		;;
-	esac
 }
 
 # @FUNCTION: qt_nolibx11

@@ -90,7 +90,7 @@ fi
 : ${XORG_PACKAGE_NAME:=${PN}}
 
 if [[ -n ${GIT_ECLASS} ]]; then
-	: ${EGIT_REPO_URI:="git://anongit.freedesktop.org/git/xorg/${XORG_MODULE}${XORG_PACKAGE_NAME} http://anongit.freedesktop.org/git/xorg/${XORG_MODULE}${XORG_PACKAGE_NAME}"}
+	: ${EGIT_REPO_URI:="git://anongit.freedesktop.org/xorg/${XORG_MODULE}${XORG_PACKAGE_NAME} http://anongit.freedesktop.org/git/xorg/${XORG_MODULE}${XORG_PACKAGE_NAME}"}
 elif [[ -n ${XORG_BASE_INDIVIDUAL_URI} ]]; then
 	SRC_URI="${XORG_BASE_INDIVIDUAL_URI}/${XORG_MODULE}${P}.tar.bz2"
 fi
@@ -417,7 +417,7 @@ xorg-2_src_configure() {
 			eqawarn "to preserve namespace."
 		fi
 
-		local xorgconfadd=(${CONFIGURE_OPTIONS})
+		local xorgconfadd=(${CONFIGURE_OPTIONS} ${XORG_CONFIGURE_OPTIONS})
 	else
 		local xorgconfadd=("${XORG_CONFIGURE_OPTIONS[@]}")
 	fi
@@ -467,8 +467,8 @@ xorg-2_src_install() {
 		dodoc "${S}"/ChangeLog || die "dodoc failed"
 	fi
 
-	# Don't install libtool archives (even with static-libs)
-	remove_libtool_files all
+	# Don't install libtool archives (even for modules)
+	prune_libtool_files --all
 
 	[[ -n ${FONT} ]] && remove_font_metadata
 }

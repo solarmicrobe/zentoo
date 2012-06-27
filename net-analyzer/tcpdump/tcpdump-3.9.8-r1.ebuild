@@ -1,8 +1,8 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit flag-o-matic toolchain-funcs eutils
+inherit flag-o-matic toolchain-funcs eutils user
 
 DESCRIPTION="A Tool for network monitoring and data acquisition"
 HOMEPAGE="http://www.tcpdump.org/"

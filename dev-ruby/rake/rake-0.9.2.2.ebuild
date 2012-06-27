@@ -41,7 +41,7 @@ all_ruby_compile() {
 }
 
 each_ruby_test() {
-	${RUBY} bin/rake test || die "tests failed"
+	${RUBY} -Ilib bin/rake test || die "tests failed"
 }
 
 all_ruby_install() {

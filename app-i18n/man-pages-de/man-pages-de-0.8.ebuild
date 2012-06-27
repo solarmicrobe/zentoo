@@ -13,6 +13,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
+DEPEND="dev-lang/perl"
 RDEPEND="virtual/man"
 
 S=${WORKDIR}/${MY_PN}-${PV}

@@ -1,21 +1,20 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 
-inherit eutils
+inherit user
 
 DESCRIPTION="NewRelic System Monitor"
 HOMEPAGE="http://www.newrelic.com/"
 SRC_URI="http://download.newrelic.com/server_monitor/release/${P}-linux.tar.gz"
+
 LICENSE="as-is"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 RESTRICT="strip"
-#DEPEND=""
-RDEPEND="${DEPEND}"
 
 S="${WORKDIR}/${P}-linux"
 

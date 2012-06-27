@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit eutils fdo-mime flag-o-matic linux-info pax-utils python qt4-r2 toolchain-funcs java-pkg-opt-2
+inherit eutils fdo-mime flag-o-matic linux-info multilib pax-utils python qt4-r2 toolchain-funcs java-pkg-opt-2
 
 if [[ ${PV} == "9999" ]] ; then
 	# XXX: should finish merging the -9999 ebuild into this one ...

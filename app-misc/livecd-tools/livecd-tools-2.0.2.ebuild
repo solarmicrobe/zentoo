@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,6 +21,7 @@ LICENSE="GPL-2"
 IUSE=""
 
 RDEPEND="dev-util/dialog
+	net-dialup/mingetty
 	>=sys-apps/baselayout-2
 	>=sys-apps/openrc-0.8.2-r1
 	sys-apps/pciutils

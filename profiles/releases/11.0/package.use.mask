@@ -83,3 +83,6 @@ x11-base/xorg-server xorg
 
 # no cryptsetup for genkernel
 sys-kernel/genkernel crypt
+
+# backups to S3 are not feasible
+app-backup/duplicity s3

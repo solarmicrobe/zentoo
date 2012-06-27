@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit eutils versionator libtool toolchain-funcs flag-o-matic gnuconfig multilib
+inherit eutils versionator libtool toolchain-funcs flag-o-matic gnuconfig multilib multiprocessing
 
 DESCRIPTION="GNU libc6 (also called glibc2) C library"
 HOMEPAGE="http://www.gnu.org/software/libc/libc.html"
@@ -33,7 +33,7 @@ esac
 MANPAGE_VER=""                                 # pregenerated manpages
 INFOPAGE_VER=""                                # pregenerated infopages
 LIBIDN_VER=""                                  # it's integrated into the main tarball now
-PATCH_VER="8"                                  # Gentoo patchset
+PATCH_VER="10"                                 # Gentoo patchset
 PORTS_VER=${RELEASE_VER}                       # version of glibc ports addon
 LT_VER=""                                      # version of linuxthreads addon
 NPTL_KERN_VER=${NPTL_KERN_VER:-"2.6.9"}        # min kernel version nptl requires
@@ -69,21 +69,10 @@ fi
 is_crosscompile() {
 	[[ ${CHOST} != ${CTARGET} ]]
 }
-alt_libdir() {
-	if is_crosscompile ; then
-		echo /usr/${CTARGET}/$(get_libdir)
-	else
-		echo /$(get_libdir)
-	fi
-}
 
-if is_crosscompile ; then
-	SLOT="${CTARGET}-2.2"
-else
-	# Why SLOT 2.2 you ask yourself while sippin your tea ?
-	# Everyone knows 2.2 > 0, duh.
-	SLOT="2.2"
-fi
+# Why SLOT 2.2 you ask yourself while sippin your tea ?
+# Everyone knows 2.2 > 0, duh.
+SLOT="2.2"
 
 # General: We need a new-enough binutils for as-needed
 # arch: we need to make sure our binutils/gcc supports TLS
@@ -205,8 +194,7 @@ pkg_setup() {
 }
 
 eblit-src_unpack-pre() {
-	[[ ${CHOST} == x86_64* ]] && has x32 $(get_all_abis) \
-		|| GLIBC_PATCH_EXCLUDE+=" 1200_all_glibc-${PV}-x32.patch"
+	GLIBC_PATCH_EXCLUDE+=" 1200_all_glibc-${PV}-x32.patch"
 }
 
 eblit-src_unpack-post() {
@@ -242,6 +230,22 @@ eblit-src_unpack-post() {
 			-e 's:-fstack-protector$:-fstack-protector-all:' \
 			nscd/Makefile \
 			|| die "Failed to ensure nscd builds with ssp-all"
+	fi
+}
+
+eblit-pkg_preinst-post() {
+	if [[ ${CTARGET} == arm* ]] ; then
+		# Backwards compat support for renaming hardfp ldsos #417287
+		local oldso='/lib/ld-linux.so.3'
+		local nldso='/lib/ld-linux-armhf.so.3'
+		if [[ -e ${D}${nldso} ]] ; then
+			if scanelf -qRyi "${ROOT}$(alt_prefix)"/*bin/ | grep -s "^${oldso}" ; then
+				ewarn "Symlinking old ldso (${oldso}) to new ldso (${nldso})."
+				ewarn "Please rebuild all packages using this old ldso as compat"
+				ewarn "support will be dropped in the future."
+				ln -s "${nldso##*/}" "${D}$(alt_prefix)${oldso}"
+			fi
+		fi
 	fi
 }
 

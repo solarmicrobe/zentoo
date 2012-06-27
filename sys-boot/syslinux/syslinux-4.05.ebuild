@@ -17,7 +17,8 @@ RDEPEND="sys-fs/mtools
 		dev-perl/Crypt-PasswdMD5
 		dev-perl/Digest-SHA1"
 DEPEND="${RDEPEND}
-	dev-lang/nasm"
+	dev-lang/nasm
+	<sys-kernel/linux-headers-3.4"
 
 S=${WORKDIR}/${P/_/-}
 

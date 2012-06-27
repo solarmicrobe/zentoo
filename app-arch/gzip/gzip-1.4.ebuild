@@ -25,6 +25,7 @@ src_unpack() {
 	#epatch "${FILESDIR}"/${PN}-1.3.5-rsync.patch
 	epatch "${FILESDIR}"/${PN}-1.3.8-install-symlinks.patch
 	epatch "${FILESDIR}"/${P}-assembler.patch #309079
+	epatch "${FILESDIR}"/${P}-no-gets.patch
 }
 
 src_compile() {

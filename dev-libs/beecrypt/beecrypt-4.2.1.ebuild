@@ -46,6 +46,7 @@ src_prepare() {
 	use python && python_convert_shebangs -r 2 .
 
 	epatch "${FILESDIR}"/${P}-build-system.patch
+	epatch "${FILESDIR}"/${P}-gcc-4.7.patch
 	eautoreconf
 }
 

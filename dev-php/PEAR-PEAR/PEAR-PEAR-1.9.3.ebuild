@@ -4,7 +4,7 @@
 
 EAPI="3"
 
-inherit depend.php
+inherit depend.php eutils
 
 PEAR="${PV}"
 

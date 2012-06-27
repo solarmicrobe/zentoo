@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit eutils toolchain-funcs flag-o-matic
+inherit eutils toolchain-funcs flag-o-matic multilib
 
 if [[ ${PV} == "9999" ]] ; then
 	EGIT_REPO_URI="git://git.kernel.org/pub/scm/linux/kernel/git/shemminger/iproute2.git"
@@ -84,9 +84,12 @@ src_install() {
 
 	emake \
 		DESTDIR="${D}" \
-		SBINDIR=/sbin \
-		DOCDIR=/usr/share/doc/${PF} \
-		MANDIR=/usr/share/man \
+		LIBDIR="${EPREFIX}"/$(get_libdir) \
+		SBINDIR="${EPREFIX}"/sbin \
+		CONFDIR="${EPREFIX}"/etc/iproute2 \
+		DOCDIR="${EPREFIX}"/usr/share/doc/${PF} \
+		MANDIR="${EPREFIX}"/usr/share/man \
+		ARPDDIR="${EPREFIX}"/var/lib/arpd \
 		install
 
 	dolib.a lib/libnetlink.a

@@ -4,7 +4,7 @@
 
 EAPI="3"
 
-inherit flag-o-matic toolchain-funcs
+inherit flag-o-matic multilib toolchain-funcs
 
 DESCRIPTION="Utility to trace the route of IP packets"
 HOMEPAGE="http://traceroute.sourceforge.net/"

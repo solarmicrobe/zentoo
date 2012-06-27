@@ -22,9 +22,9 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	sys-devel/gettext"
 
-# TODO: Add proper desc for mi
+# describe properly mi
 LANGS="af bg ca cs cy da de el en eo es et fo fr ga gl he hr hu ia id it ku lt
-lv mk ms nb nl nn pl pt ro ru sk sl sv sw tn uk zu"
+lv mk ms nb nl nn pl pt ro ru sk sl sq sv sw tn uk zu"
 
 DICT_DEP="app-dicts/myspell-en"
 for lang in ${LANGS}; do
@@ -83,10 +83,4 @@ src_install() {
 	pushd "${ED}"/usr/$(get_libdir)/ >/dev/null
 	ln -s lib${PN}{-$(get_major_version).$(get_version_component_range 2).so.0.0.0,.so}
 	popd >/dev/null
-}
-
-pkg_postinst() {
-	elog "To use this package you will also need a dictionary."
-	elog "Hunspell uses myspell format dictionaries; find them"
-	elog "in the app-dicts category as myspell-<LANG>."
 }

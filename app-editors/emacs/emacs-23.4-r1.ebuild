@@ -201,8 +201,6 @@ src_compile() {
 }
 
 src_install () {
-	local i m
-
 	emake install DESTDIR="${D}"
 
 	rm "${ED}"/usr/bin/emacs-${FULL_VERSION}-${EMACS_SUFFIX} \
@@ -211,6 +209,7 @@ src_install () {
 		|| die "moving Emacs executable failed"
 
 	# move man pages to the correct place
+	local m
 	for m in "${ED}"/usr/share/man/man1/* ; do
 		mv "${m}" "${m%.1}-${EMACS_SUFFIX}.1" || die "mv man failed"
 	done
@@ -279,7 +278,7 @@ pkg_preinst() {
 	local infodir=/usr/share/info/${EMACS_SUFFIX} f
 	if [[ -f ${ED}${infodir}/dir.orig ]]; then
 		mv "${ED}"${infodir}/dir{.orig,} || die "moving info dir failed"
-	else
+	elif [[ -d "${ED}"${infodir} ]]; then
 		# this should not happen in EAPI 4
 		ewarn "Regenerating Info directory index in ${infodir} ..."
 		rm -f "${ED}"${infodir}/dir{,.*}

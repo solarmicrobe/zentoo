@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -22,6 +22,7 @@ DEPEND="${RDEPEND}"
 src_prepare() {
 	ln -s makefiles/configure.in .
 	ln -s makefiles/Makefile.am .
+	sed -i '/^AM_C_PROTOTYPES$/d' configure.in || die #420223
 
 	eautoreconf
 }

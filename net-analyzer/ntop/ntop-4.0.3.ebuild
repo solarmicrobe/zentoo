@@ -4,7 +4,7 @@
 
 EAPI="2"
 
-inherit eutils autotools
+inherit autotools eutils user
 
 DESCRIPTION="Network traffic analyzer with web interface"
 HOMEPAGE="http://www.ntop.org/products/ntop/"

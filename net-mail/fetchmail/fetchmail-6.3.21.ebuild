@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -23,7 +23,7 @@ RDEPEND="hesiod? ( net-dns/hesiod )
 	ssl? ( >=dev-libs/openssl-0.9.6 )
 	kerberos? ( virtual/krb5 >=dev-libs/openssl-0.9.6 )
 	nls? ( virtual/libintl )
-	elibc_FreeBSD? ( sys-libs/e2fsprogs-libs )
+	!elibc_glibc? ( sys-libs/e2fsprogs-libs )
 	socks? ( net-proxy/dante )"
 DEPEND="${RDEPEND}
 	sys-devel/flex
@@ -56,8 +56,8 @@ src_configure() {
 		--enable-NTLM \
 		--enable-SDPS \
 		$(use_enable nls) \
-		$(use_with ssl) \
-		$(use kerberos && echo "--with-ssl" ) \
+		$(use_with ssl ssl ${EPREFIX}/usr) \
+		$(use kerberos && echo "--with-ssl=${EPREFIX}/usr" ) \
 		$(use_with kerberos gssapi) \
 		$(use_with kerberos kerberos5) \
 		$(use_with hesiod) \

@@ -9,6 +9,7 @@ MODULE_VERSION=1.90
 inherit perl-module
 
 DESCRIPTION="A Perl module to parse XSL Transformational sheets using gnome's libXSLT"
+SRC_URI+=" http://dev.gentoo.org/~tove/distfiles/dev-perl/XML-LibXML/XML-LibXML-1.900.0-patch.tar.bz2"
 
 SLOT="0"
 KEYWORDS="amd64"
@@ -29,6 +30,11 @@ DEPEND="${DEPEND}
 "
 
 SRC_TEST="do"
+
+EPATCH_SUFFIX=patch
+PATCHES=(
+	"${WORKDIR}"/${MY_PN:-${PN}}-patch
+)
 
 # rac can't discern any difference between the build with or without
 # this, and if somebody wants to reactivate it, get it out of global

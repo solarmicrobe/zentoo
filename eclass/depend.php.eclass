@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: depend.php.eclass
@@ -14,7 +14,7 @@
 # for specific PHP features, SAPIs etc. Also provides dodoc-php wrapper to install
 # documentation for PHP packages to php-specific location.
 
-inherit eutils phpconfutils
+inherit eutils multilib phpconfutils
 
 # PHP5-only depend functions
 

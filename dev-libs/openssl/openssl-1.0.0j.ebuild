@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit eutils flag-o-matic toolchain-funcs
+inherit eutils flag-o-matic toolchain-funcs multilib
 
 REV="1.7"
 DESCRIPTION="full-strength general purpose cryptography library (including SSL v2/v3 and TLS v1)"
@@ -32,7 +32,11 @@ PDEPEND="app-misc/ca-certificates"
 
 src_unpack() {
 	unpack ${P}.tar.gz
-	cp "${DISTDIR}"/${PN}-c_rehash.sh.${REV} "${WORKDIR}"/c_rehash || die
+	SSL_CNF_DIR="/etc/ssl"
+	sed \
+		-e "/^DIR=/s:=.*:=${SSL_CNF_DIR}:" \
+		"${DISTDIR}"/${PN}-c_rehash.sh.${REV} \
+		> "${WORKDIR}"/c_rehash || die #416717
 }
 
 src_prepare() {
@@ -112,7 +116,7 @@ src_configure() {
 		$(use_ssl rfc3779) \
 		$(use_ssl zlib) \
 		--prefix=/usr \
-		--openssldir=/etc/ssl \
+		--openssldir=${SSL_CNF_DIR} \
 		--libdir=$(get_libdir) \
 		shared threads \
 		|| die
@@ -161,9 +165,9 @@ src_install() {
 	use static-libs || rm -f "${D}"/usr/lib*/lib*.a
 
 	# create the certs directory
-	dodir /etc/ssl/certs
-	cp -RP certs/* "${D}"/etc/ssl/certs/ || die
-	rm -r "${D}"/etc/ssl/certs/{demo,expired}
+	dodir ${SSL_CNF_DIR}/certs
+	cp -RP certs/* "${D}"${SSL_CNF_DIR}/certs/ || die
+	rm -r "${D}"${SSL_CNF_DIR}/certs/{demo,expired}
 
 	# Namespace openssl programs to prevent conflicts with other man pages
 	cd "${D}"/usr/share/man
@@ -191,7 +195,7 @@ src_install() {
 	echo 'SANDBOX_PREDICT="/dev/crypto"' > "${D}"/etc/sandbox.d/10openssl
 
 	diropts -m0700
-	keepdir /etc/ssl/private
+	keepdir ${SSL_CNF_DIR}/private
 }
 
 pkg_preinst() {
@@ -200,8 +204,8 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
-	ebegin "Running 'c_rehash ${ROOT}etc/ssl/certs/' to rebuild hashes #333069"
-	c_rehash "${ROOT}etc/ssl/certs" >/dev/null
+	ebegin "Running 'c_rehash ${ROOT%/}${SSL_CNF_DIR}/certs/' to rebuild hashes #333069"
+	c_rehash "${ROOT%/}${SSL_CNF_DIR}/certs" >/dev/null
 	eend $?
 
 	has_version ${CATEGORY}/${PN}:0.9.8 && return 0

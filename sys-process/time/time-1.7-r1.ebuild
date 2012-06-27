@@ -1,9 +1,9 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-WANT_AUTOMAKE="latest"
-WANT_AUTOCONF="latest"
+EAPI="4"
+
 inherit eutils autotools
 
 DESCRIPTION="displays info about resources used by a program"
@@ -15,17 +15,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND=""
-
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
+src_prepare() {
 	epatch "${FILESDIR}"/${P}-build.patch
 	epatch "${FILESDIR}"/${PV}-info-dir-entry.patch
 	eautoreconf
-}
-
-src_install() {
-	emake install DESTDIR="${D}" || die
-	dodoc ChangeLog README AUTHORS NEWS
 }

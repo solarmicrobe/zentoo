@@ -4,7 +4,7 @@
 
 EAPI=2
 
-inherit eutils
+inherit eutils user
 
 DESCRIPTION="Munin Server Monitoring Tool"
 HOMEPAGE="http://munin.projects.linpro.no/"

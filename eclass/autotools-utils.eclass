@@ -12,7 +12,7 @@
 # out of source build with overridable build dir location, static archives
 # handling, libtool files removal.
 #
-# Please note note that autotools-utils does not support mixing of its phase
+# Please note that autotools-utils does not support mixing of its phase
 # functions with regular econf/emake calls. If necessary, please call
 # autotools-utils_src_compile instead of the latter.
 #
@@ -110,14 +110,11 @@ esac
 # Note that dependencies are added for autoconf, automake and libtool only.
 # If your package needs one of the external tools listed above, you need to add
 # appropriate packages to DEPEND yourself.
-[[ ${AUTOTOOLS_AUTORECONF} ]] || _autotools_auto_dep=no
+[[ ${AUTOTOOLS_AUTORECONF} ]] || : ${AUTOTOOLS_AUTO_DEPEND:=no}
 
-AUTOTOOLS_AUTO_DEPEND=${_autotools_auto_dep} \
 inherit autotools eutils libtool
 
 EXPORT_FUNCTIONS src_prepare src_configure src_compile src_install src_test
-
-unset _autotools_auto_dep
 
 # @ECLASS-VARIABLE: AUTOTOOLS_BUILD_DIR
 # @DEFAULT_UNSET
@@ -206,6 +203,10 @@ _check_build_dir() {
 remove_libtool_files() {
 	debug-print-function ${FUNCNAME} "$@"
 	local removing_all
+
+	eqawarn "The remove_libtool_files() function was deprecated."
+	eqawarn "Please use prune_libtool_files() from eutils eclass instead."
+
 	[[ ${#} -le 1 ]] || die "Invalid number of args to ${FUNCNAME}()"
 	if [[ ${#} -eq 1 ]]; then
 		case "${1}" in
@@ -261,15 +262,6 @@ remove_libtool_files() {
 			rm -f "${f}" || die
 		fi
 	done
-
-	# check for invalid eclass use
-	# this is the most commonly used function, so do it here
-	_check_build_dir
-	if [[ ! -d "${AUTOTOOLS_BUILD_DIR}" ]]; then
-		eqawarn "autotools-utils used but autotools-utils_src_configure was never called."
-		eqawarn "This is not supported and never was. Please report a bug against"
-		eqawarn "the offending ebuild. This will become a fatal error in a near future."
-	fi
 }
 
 # @FUNCTION: autotools-utils_autoreconf
@@ -277,6 +269,10 @@ remove_libtool_files() {
 # Reconfigure the sources (like gnome-autogen.sh or eautoreconf).
 autotools-utils_autoreconf() {
 	debug-print-function ${FUNCNAME} "$@"
+
+	eqawarn "The autotools-utils_autoreconf() function was deprecated."
+	eqawarn "Please call autotools-utils_src_prepare()"
+	eqawarn "with AUTOTOOLS_AUTORECONF set instead."
 
 	# Override this func to not require unnecessary eaclocal calls.
 	autotools_check_macro() {
@@ -326,25 +322,22 @@ autotools-utils_autoreconf() {
 		autotools_run_tool gnome-doc-prepare --copy --force
 	fi
 
-	# We need to perform the check twice to know whether to run eaclocal.
-	# (_elibtoolize does that itself)
 	if [[ $(autotools_check_macro AC_PROG_LIBTOOL AM_PROG_LIBTOOL LT_INIT) ]]
 	then
 		_elibtoolize --copy --force --install
-	else
-		eaclocal
 	fi
 
+	eaclocal
 	eautoconf
 	eautoheader
 	FROM_EAUTORECONF=sure eautomake
 
 	local x
-	for x in $(autotools_get_subdirs); do
+	for x in $(autotools_check_macro_val AC_CONFIG_SUBDIRS); do
 		if [[ -d ${x} ]] ; then
-			pushd "${x}" >/dev/null
+			pushd "${x}" >/dev/null || die
 			autotools-utils_autoreconf
-			popd >/dev/null
+			popd >/dev/null || die
 		fi
 	done
 }
@@ -377,7 +370,7 @@ autotools-utils_src_prepare() {
 		fi
 	fi
 
-	[[ ${want_autoreconf} ]] && autotools-utils_autoreconf
+	[[ ${want_autoreconf} ]] && eautoreconf
 	elibtoolize --patch-only
 }
 
@@ -420,9 +413,9 @@ autotools-utils_src_configure() {
 	econfargs+=("${myeconfargs[@]}")
 
 	mkdir -p "${AUTOTOOLS_BUILD_DIR}" || die "mkdir '${AUTOTOOLS_BUILD_DIR}' failed"
-	pushd "${AUTOTOOLS_BUILD_DIR}" > /dev/null
+	pushd "${AUTOTOOLS_BUILD_DIR}" > /dev/null || die
 	econf "${econfargs[@]}" "$@"
-	popd > /dev/null
+	popd > /dev/null || die
 }
 
 # @FUNCTION: autotools-utils_src_compile
@@ -432,9 +425,9 @@ autotools-utils_src_compile() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	_check_build_dir
-	pushd "${AUTOTOOLS_BUILD_DIR}" > /dev/null
+	pushd "${AUTOTOOLS_BUILD_DIR}" > /dev/null || die
 	emake "$@" || die 'emake failed'
-	popd > /dev/null
+	popd > /dev/null || die
 }
 
 # @FUNCTION: autotools-utils_src_install
@@ -449,9 +442,9 @@ autotools-utils_src_install() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	_check_build_dir
-	pushd "${AUTOTOOLS_BUILD_DIR}" > /dev/null
+	pushd "${AUTOTOOLS_BUILD_DIR}" > /dev/null || die
 	emake DESTDIR="${D}" "$@" install || die "emake install failed"
-	popd > /dev/null
+	popd > /dev/null || die
 
 	# Move docs installed by autotools (in EAPI < 4).
 	if [[ ${EAPI} == [23] ]] \
@@ -486,7 +479,7 @@ autotools-utils_src_install() {
 	fi
 
 	# Remove libtool files and unnecessary static libs
-	remove_libtool_files
+	prune_libtool_files
 }
 
 # @FUNCTION: autotools-utils_src_test
@@ -496,8 +489,8 @@ autotools-utils_src_test() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	_check_build_dir
-	pushd "${AUTOTOOLS_BUILD_DIR}" > /dev/null
+	pushd "${AUTOTOOLS_BUILD_DIR}" > /dev/null || die
 	# Run default src_test as defined in ebuild.sh
 	default_src_test
-	popd > /dev/null
+	popd > /dev/null || die
 }

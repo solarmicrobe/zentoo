@@ -51,7 +51,8 @@ DOCS=(
 src_prepare() {
 	epatch \
 		"${FILESDIR}/${PN}-4.0.2.91-lafile.patch" \
-		"${FILESDIR}/${PN}-4.0.3-autoconf-2.64.patch"
+		"${FILESDIR}/${PN}-4.0.3-autoconf-2.64.patch" \
+		"${FILESDIR}/${PN}-4.3.5-autopoint.patch"
 	eautoreconf
 }
 

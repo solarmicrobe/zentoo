@@ -27,7 +27,7 @@ S=${WORKDIR}
 maint_pkg_create() {
 	cd "${S}"
 
-	local ver=$(head -n 1 ChangeLog | awk '{print $1}' | sed -e 's:-::g')
+	local ver=$(gawk '{ gsub(/-/, "", $1); print $1; exit }' ChangeLog)
 	[[ ${#ver} != 8 ]] && die "invalid version '${ver}'"
 
 	cp "${FILESDIR}"/${PV}/*.patch . || die

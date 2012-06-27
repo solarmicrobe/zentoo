@@ -10,6 +10,3 @@ DESCRIPTION="X.Org autotools utility macros"
 
 KEYWORDS="amd64"
 IUSE=""
-
-RDEPEND=""
-DEPEND="${RDEPEND}"

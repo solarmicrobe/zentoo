@@ -14,7 +14,7 @@ SRC_URI="mirror://${PN}/${MY_P}.tar.xz"
 LICENSE="imagemagick"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="autotrace bzip2 +corefonts cxx djvu fftw fontconfig fpx graphviz gs hdri jbig jpeg jpeg2k lcms lqr lzma opencl openexr openmp pango perl png q32 q64 q8 raw static-libs svg test tiff truetype webp wmf X xml zlib"
+IUSE="autotrace bzip2 +corefonts cxx djvu fftw fontconfig fpx graphviz hdri jbig jpeg jpeg2k lcms lqr lzma opencl openexr openmp pango perl png postscript q32 q64 q8 raw static-libs svg test tiff truetype webp wmf X xml zlib"
 
 RDEPEND=">=sys-devel/libtool-2.2.6b
 	autotrace? ( >=media-gfx/autotrace-0.31.1 )
@@ -25,7 +25,6 @@ RDEPEND=">=sys-devel/libtool-2.2.6b
 	fontconfig? ( media-libs/fontconfig )
 	fpx? ( >=media-libs/libfpx-1.3.0-r1 )
 	graphviz? ( >=media-gfx/graphviz-2.6 )
-	gs? ( app-text/ghostscript-gpl )
 	jbig? ( media-libs/jbigkit )
 	jpeg? ( virtual/jpeg )
 	jpeg2k? ( media-libs/jasper )
@@ -36,6 +35,7 @@ RDEPEND=">=sys-devel/libtool-2.2.6b
 	pango? ( x11-libs/pango )
 	perl? ( >=dev-lang/perl-5.8.6-r6 )
 	png? ( media-libs/libpng:0 )
+	postscript? ( app-text/ghostscript-gpl )
 	raw? ( media-gfx/ufraw )
 	svg? ( >=gnome-base/librsvg-2.9.0 )
 	tiff? ( media-libs/tiff:0 )
@@ -100,14 +100,14 @@ src_configure() {
 		$(use_with X x) \
 		$(use_with zlib) \
 		$(use_with autotrace) \
-		$(use_with gs dps) \
+		$(use_with postscript dps) \
 		$(use_with djvu) \
 		--with-dejavu-font-dir="${EPREFIX}/usr/share/fonts/dejavu" \
 		$(use_with fftw) \
 		$(use_with fpx) \
 		$(use_with fontconfig) \
 		$(use_with truetype freetype) \
-		$(use_with gs gslib) \
+		$(use_with postscript gslib) \
 		$(use_with graphviz gvc) \
 		$(use_with jbig) \
 		$(use_with jpeg) \

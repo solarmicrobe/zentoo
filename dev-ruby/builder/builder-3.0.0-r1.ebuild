@@ -20,8 +20,9 @@ SLOT="3"
 KEYWORDS="amd64"
 IUSE=""
 
-ruby_add_bdepend "test? ( virtual/ruby-test-unit )"
+ruby_add_bdepend "doc? ( dev-ruby/rdoc )"
 
+RDEPEND="${RDEPEND}"
 DEPEND+=" doc? ( dev-util/ctags )"
 
 all_ruby_prepare() {

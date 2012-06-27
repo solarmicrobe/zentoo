@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -11,14 +11,14 @@ SRC_URI="ftp://ftp.iastate.edu/pub/utah-raster/${P}.tar.Z"
 LICENSE="as-is"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="gif gs tiff X"
+IUSE="gif postscript tiff X"
 
 DEPEND="X? ( x11-libs/libXext
 			x11-proto/xextproto
 		)
 	gif? ( media-libs/giflib )
 	tiff? ( media-libs/tiff )
-	gs? ( app-text/ghostscript-gpl )"
+	postscript? ( app-text/ghostscript-gpl )"
 
 S=${WORKDIR}
 
@@ -47,7 +47,7 @@ src_unpack() {
 	cp "${FILESDIR}"/gentoo-config config/gentoo
 	cat >> config/gentoo <<-EOF
 	$(urt_config X X11)
-	$(urt_config gs POSTSCRIPT)
+	$(urt_config postscript POSTSCRIPT)
 	$(urt_config tiff TIFF)
 	ExtraCFLAGS = ${CFLAGS}
 	MFLAGS = ${MAKEOPTS}

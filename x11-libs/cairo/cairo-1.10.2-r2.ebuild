@@ -123,6 +123,8 @@ src_configure() {
 		"
 	fi
 
+	use elibc_FreeBSD && myopts+=" --disable-symbol-lookup"
+
 	# --disable-xcb-lib:
 	#	do not override good xlib backed by hardforcing rendering over xcb
 	econf \

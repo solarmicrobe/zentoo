@@ -4,7 +4,7 @@
 
 EAPI="2"
 
-inherit eutils toolchain-funcs
+inherit eutils toolchain-funcs user
 
 DESCRIPTION="Standard commands to read man pages"
 HOMEPAGE="http://primates.ximian.com/~flucifredi/man/"

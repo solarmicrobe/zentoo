@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: flag-o-matic.eclass
@@ -19,7 +19,7 @@ all-flag-vars() {
 	echo {C,CPP,CXX,CCAS,F,FC,LD}FLAGS
 }
 
-# {C,CXX,F,FC}FLAGS that we allow in strip-flags
+# {C,CPP,CXX,CCAS,F,FC,LD}FLAGS that we allow in strip-flags
 # Note: shell globs and character lists are allowed
 setup-allowed-flags() {
 	ALLOWED_FLAGS="-pipe"
@@ -44,12 +44,18 @@ setup-allowed-flags() {
 		-mtls-direct-seg-refs -mno-tls-direct-seg-refs -mflat -mno-flat \
 		-mno-faster-structs -mfaster-structs -m32 -m64 -mx32 -mabi \
 		-mlittle-endian -mbig-endian -EL -EB -fPIC -mlive-g0 -mcmodel \
-		-mstack-bias -mno-stack-bias -msecure-plt -m*-toc -D* -U*"
+		-mstack-bias -mno-stack-bias -msecure-plt -m*-toc -mfloat-abi=* \
+		-D* -U*"
 
 	# 4.5
 	ALLOWED_FLAGS+=" -mno-fma4 -mno-movbe -mno-xop -mno-lwp"
 	# 4.6
 	ALLOWED_FLAGS+=" -mno-fsgsbase -mno-rdrnd -mno-f16c -mno-bmi -mno-tbm"
+	# 4.7
+	ALLOWED_FLAGS+=" -mno-avx2 -mno-bmi2 -mno-fma -mno-lzcnt"
+
+	# CPPFLAGS and LDFLAGS
+	ALLOWED_FLAGS+=" -I* -L* -R* -Wl,*"
 
 	export ALLOWED_FLAGS
 	return 0
@@ -122,6 +128,15 @@ filter-lfs-flags() {
 	filter-flags -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
 }
 
+# @FUNCTION: filter-ldflags
+# @USAGE: <flags>
+# @DESCRIPTION:
+# Remove particular <flags> from LDFLAGS.  Accepts shell globs.
+filter-ldflags() {
+	_filter-var LDFLAGS "$@"
+	return 0
+}
+
 # @FUNCTION: append-cppflags
 # @USAGE: <flags>
 # @DESCRIPTION:
@@ -172,12 +187,33 @@ append-lfs-flags() {
 	append-cppflags -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
 }
 
+# @FUNCTION: append-ldflags
+# @USAGE: <flags>
+# @DESCRIPTION:
+# Add extra <flags> to the current LDFLAGS.
+append-ldflags() {
+	[[ $# -eq 0 ]] && return 0
+	local flag
+	for flag in "$@"; do
+		[[ ${flag} == -l* ]] && \
+			eqawarn "Appending a library link instruction (${flag}); libraries to link to should not be passed through LDFLAGS"
+	done
+
+	export LDFLAGS="${LDFLAGS} $*"
+	return 0
+}
+
 # @FUNCTION: append-flags
 # @USAGE: <flags>
 # @DESCRIPTION:
 # Add extra <flags> to your current {C,CXX,F,FC}FLAGS.
 append-flags() {
 	[[ $# -eq 0 ]] && return 0
+	case " $* " in
+	*' '-[DIU]*) eqawarn 'please use append-cppflags for preprocessor flags' ;;
+	*' '-L*|\
+	*' '-Wl,*)  eqawarn 'please use append-ldflags for linker flags' ;;
+	esac
 	append-cflags "$@"
 	append-cxxflags "$@"
 	append-fflags "$@"
@@ -310,7 +346,8 @@ filter-mfpmath() {
 
 # @FUNCTION: strip-flags
 # @DESCRIPTION:
-# Strip C[XX]FLAGS of everything except known good/safe flags.
+# Strip *FLAGS of everything except known good/safe flags.  This runs over all
+# flags returned by all_flag_vars().
 strip-flags() {
 	local x y var
 
@@ -544,31 +581,6 @@ append-libs() {
 		export LIBS="${LIBS} -l${flag}"
 	done
 
-	return 0
-}
-
-# @FUNCTION: append-ldflags
-# @USAGE: <flags>
-# @DESCRIPTION:
-# Add extra <flags> to the current LDFLAGS.
-append-ldflags() {
-	[[ $# -eq 0 ]] && return 0
-	local flag
-	for flag in "$@"; do
-		[[ ${flag} == -l* ]] && \
-			ewarn "Appending a library link instruction (${flag}); libraries to link to should not be passed through LDFLAGS"
-	done
-
-	export LDFLAGS="${LDFLAGS} $*"
-	return 0
-}
-
-# @FUNCTION: filter-ldflags
-# @USAGE: <flags>
-# @DESCRIPTION:
-# Remove particular <flags> from LDFLAGS.  Accepts shell globs.
-filter-ldflags() {
-	_filter-var LDFLAGS "$@"
 	return 0
 }
 

@@ -51,7 +51,7 @@ src_configure() {
 
 src_install() {
 	emake install DESTDIR="${D}" || die
-	rm "${D}"/usr/*/liblzma.la || die # dependency_libs=''
+	find "${D}"/usr/ -name liblzma.la -delete || die # dependency_libs=''
 	rm "${D}"/usr/share/doc/xz/COPYING* || die
 	mv "${D}"/usr/share/doc/{xz,${PF}} || die
 	prepalldocs

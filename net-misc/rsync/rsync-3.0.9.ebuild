@@ -15,10 +15,12 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="acl iconv ipv6 static xattr"
 
-DEPEND=">=dev-libs/popt-1.5
+RDEPEND=">=dev-libs/popt-1.5
 	acl? ( virtual/acl )
 	xattr? ( kernel_linux? ( sys-apps/attr ) )
 	iconv? ( virtual/libiconv )"
+DEPEND="${RDEPEND}
+	dev-lang/perl"
 
 S=${WORKDIR}/${P/_/}
 

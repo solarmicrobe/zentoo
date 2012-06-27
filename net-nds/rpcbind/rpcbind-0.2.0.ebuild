@@ -4,11 +4,11 @@
 
 EAPI="2"
 
-inherit autotools
+inherit autotools eutils
 
 if [[ ${PV} == "9999" ]] ; then
 	EGIT_REPO_URI="git://git.infradead.org/~steved/rpcbind.git"
-	inherit autotools git-2
+	inherit autotools eutils git-2
 	SRC_URI=""
 	#KEYWORDS=""
 else

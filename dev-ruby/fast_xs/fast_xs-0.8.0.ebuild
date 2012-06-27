@@ -22,7 +22,13 @@ KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_bdepend "doc? ( >=dev-ruby/hoe-2.3.2 )"
-ruby_add_bdepend "test? ( >=dev-ruby/hoe-2.3.2 virtual/ruby-test-unit )"
+ruby_add_bdepend "test? (
+	>=dev-ruby/hoe-2.3.2
+	virtual/ruby-test-unit
+	dev-ruby/rack
+)"
+
+USE_RUBY="ruby18" ruby_add_bdepend "test? ( www-servers/mongrel )"
 
 RUBY_PATCHES=( "${P}+ruby-1.9.patch" )
 
@@ -36,4 +42,13 @@ each_ruby_compile() {
 	cp ext/fast_xs/fast_xs$(get_modname) lib/ || die
 	emake -Cext/fast_xs_extra CFLAGS="${CFLAGS} -fPIC" archflag="${LDFLAGS}" || die "make extension failed"
 	cp ext/fast_xs_extra/fast_xs_extra$(get_modname) lib/ || die
+}
+
+each_ruby_test() {
+	# the Rakefile tries to run all the tests in a single process, but
+	# this breaks the monkey-patchers, we're forced to run them one by
+	# one.
+	for tu in test/test_*.rb; do
+		${RUBY} -Ilib $tu || die "test $tu failed"
+	done
 }

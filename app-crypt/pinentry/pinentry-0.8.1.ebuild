@@ -26,8 +26,8 @@ RDEPEND="app-admin/eselect-pinentry
 	caps? ( sys-libs/libcap )"
 DEPEND="${RDEPEND}
 	!static? (
-		gtk? ( dev-util/pkgconfig )
-		qt4? ( dev-util/pkgconfig )
+		gtk? ( virtual/pkgconfig )
+		qt4? ( virtual/pkgconfig )
 	)"
 
 pkg_setup() {

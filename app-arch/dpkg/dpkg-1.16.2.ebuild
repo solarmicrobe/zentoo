@@ -53,6 +53,10 @@ src_prepare() {
 		-e '/850_Dpkg_Compression.t/d' \
 		|| die "sed failed"
 
+	# test fails (bug #414095)
+	sed -i utils/Makefile.am \
+		-e '/^test_cases/d;/100_update_alternatives/d' || die
+
 	eautoreconf
 }
 

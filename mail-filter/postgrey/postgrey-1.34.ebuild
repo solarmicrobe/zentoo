@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit eutils
+inherit eutils user
 
 DESCRIPTION="Postgrey is a Postfix policy server implementing greylisting"
 HOMEPAGE="http://postgrey.schweikert.ch/"

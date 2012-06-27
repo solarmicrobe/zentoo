@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,7 +14,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="examples X linguas_ja"
 
-DEPEND=">=sys-apps/texinfo-4.7-r1
+RDEPEND=">=sys-apps/texinfo-4.7-r1
 	X? (
 		x11-libs/libX11
 		x11-libs/libXt
@@ -23,6 +23,8 @@ DEPEND=">=sys-apps/texinfo-4.7-r1
 		x11-libs/libSM
 		x11-libs/libICE
 	)"
+DEPEND="${RDEPEND}
+	linguas_ja? ( virtual/yacc )"
 
 src_unpack() {
 	unpack ${A}

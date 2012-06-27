@@ -48,7 +48,7 @@ RDEPEND="sys-libs/ncurses
 		kerberos? ( virtual/krb5 )
 		cxx? ( dev-libs/cyrus-sasl )
 	)
-	selinux? ( sec-policy/selinux-openldap )"
+	selinux? ( sec-policy/selinux-ldap )"
 DEPEND="${RDEPEND}
 	sys-apps/groff"
 

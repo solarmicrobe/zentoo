@@ -1,10 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # This is a common location for functions used in the sys-libs/db ebuilds
 #
 # Bugs: pauldv@gentoo.org
 
-inherit eutils
+inherit eutils multilib
 
 IUSE="doc test examples"
 

@@ -6,8 +6,9 @@ EAPI="4"
 GCONF_DEBUG="no"
 GNOME2_LA_PUNT="yes"
 PYTHON_DEPEND="2:2.5"
+PYTHON_USE_WITH="xml"
 
-inherit gnome2 multilib python
+inherit eutils gnome2 multilib python
 
 DESCRIPTION="Introspection infrastructure for generating gobject library bindings for various languages"
 HOMEPAGE="http://live.gnome.org/GObjectIntrospection/"

@@ -30,6 +30,9 @@ src_prepare() {
 
 	# avoid linking to -ltermcap race with some systems
 	sed -i -e '/^TERMCAP=/s:=.*:=:' configure || die
+	# we use the GNU linker also on Solaris
+	sed -i -e 's/-G -fPIC/-shared -fPIC/g' \
+		-e 's/-Wl,-h,/-Wl,-soname,/g' configure || die
 }
 
 src_configure() {

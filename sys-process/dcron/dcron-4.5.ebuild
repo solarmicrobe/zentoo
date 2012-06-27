@@ -4,7 +4,7 @@
 
 EAPI="2"
 
-inherit cron toolchain-funcs
+inherit cron toolchain-funcs eutils
 
 DESCRIPTION="A cute little cron from Matt Dillon"
 HOMEPAGE="http://www.jimpryor.net/linux/dcron.html http://apollo.backplane.com/FreeSrc/"

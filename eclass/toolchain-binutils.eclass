@@ -271,6 +271,7 @@ toolchain-binutils_src_compile() {
 		--libexecdir=${LIBPATH} \
 		--includedir=${INCPATH} \
 		--enable-64-bit-bfd \
+		--enable-obsolete \
 		--enable-shared \
 		--enable-threads \
 		--disable-werror \

@@ -1,10 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="2"
 
-inherit flag-o-matic
+inherit flag-o-matic eutils
 
 DESCRIPTION="The GNU info program and utilities"
 HOMEPAGE="http://www.gnu.org/software/texinfo/"

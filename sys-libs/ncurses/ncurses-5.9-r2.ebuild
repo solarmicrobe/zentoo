@@ -31,6 +31,7 @@ src_unpack() {
 	epatch "${FILESDIR}"/${PN}-5.8-gfbsd.patch
 	epatch "${FILESDIR}"/${PN}-5.7-nongnu.patch
 	epatch "${FILESDIR}"/${PN}-5.9-rxvt-unicode-9.15.patch #192083 #383871
+	epatch "${FILESDIR}"/${PN}-5.9-fix-clang-build.patch #417763
 	sed -i \
 		-e '/^PKG_CONFIG_LIBDIR/s:=.*:=$(libdir)/pkgconfig:' \
 		misc/Makefile.in || die
@@ -38,8 +39,8 @@ src_unpack() {
 
 src_compile() {
 	unset TERMINFO #115036
-	tc-export BUILD_CC
-	export BUILD_CPPFLAGS+=" -D_GNU_SOURCE" #214642
+	tc-export_build_env BUILD_{CC,CPP}
+	BUILD_CPPFLAGS+=" -D_GNU_SOURCE" #214642
 
 	# when cross-compiling, we need to build up our own tic
 	# because people often don't keep matching host/target
@@ -137,7 +138,7 @@ src_install() {
 	gen_usr_ldscript -a ncurses
 	use unicode && gen_usr_ldscript -a ncursesw
 	ln -sf libncurses.so "${D}"/usr/$(get_libdir)/libcurses.so || die
-	use static-libs || rm "${D}"/usr/$(get_libdir)/*.a
+	use static-libs || find "${D}"/usr/ -name '*.a' -a '!' -name '*curses++*.a' -delete
 
 #	if ! use berkdb ; then
 		# We need the basic terminfo files in /etc, bug #37026

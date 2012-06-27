@@ -40,6 +40,7 @@ coreaudio
 cscope
 cups
 custom-cflags
+d3d
 darcs
 db2
 dbase
@@ -274,12 +275,14 @@ v4l2
 vala
 vanilla
 vcd
+vdpau
 vhosts
 videos
 vorbis
 vpopmail
 vpx
 wavpack
+wayland
 wddx
 webkit
 webm
@@ -293,8 +296,8 @@ xemacs
 xface
 xft
 xine
-xinetd
 xinerama
+xinetd
 xmp
 xmpp
 xosd
@@ -303,11 +306,19 @@ xscreensaver
 xulrunner
 xv
 xvid
+xvmc
 yahoo
 yaz
 zemberek
 zeroconf
 zsh-completion
+
+# curl ssl libraries
+curl_ssl_axtls
+curl_ssl_cyassl
+curl_ssl_gnutls
+curl_ssl_nss
+curl_ssl_polarssl
 
 # ruby targets we don't support
 ruby_targets_ruby18

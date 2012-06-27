@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -9,7 +9,7 @@ inherit autotools
 MY_P=${P/geoip/GeoIP}
 
 DESCRIPTION="easily lookup countries by IP addresses, even when Reverse DNS entries don't exist"
-HOMEPAGE="http://www.maxmind.com/geoip/api/c.shtml"
+HOMEPAGE="http://www.maxmind.com/app/ip-location"
 SRC_URI="
 	http://www.maxmind.com/download/geoip/api/c/${MY_P}.tar.gz
 	ipv6? ( http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz )
@@ -48,7 +48,7 @@ src_install() {
 	dodoc AUTHORS ChangeLog README TODO conf/GeoIP.conf.default
 	rm "${ED}/etc/GeoIP.conf.default"
 	if ! use static-libs; then
-		rm -f "${D}"/usr/lib*/lib*.la
+		rm -f "${ED}"/usr/lib*/lib*.la
 	fi
 
 	if use ipv6; then

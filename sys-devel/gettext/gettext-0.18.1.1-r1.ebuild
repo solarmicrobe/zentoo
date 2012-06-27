@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -13,7 +13,7 @@ SRC_URI="mirror://gnu/${PN}/${P}.tar.gz"
 LICENSE="GPL-3 LGPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="acl doc emacs +git nls +cxx openmp elibc_glibc"
+IUSE="acl doc emacs git nls +cxx openmp elibc_glibc"
 
 DEPEND="virtual/libiconv
 	dev-libs/libxml2
@@ -26,6 +26,7 @@ PDEPEND="emacs? ( app-emacs/po-mode )"
 
 src_prepare() {
 	epunt_cxx
+	elibtoolize
 }
 
 src_configure() {

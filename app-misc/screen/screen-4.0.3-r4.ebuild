@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ EAPI="3"
 
 WANT_AUTOCONF="2.5"
 
-inherit eutils flag-o-matic toolchain-funcs pam autotools
+inherit eutils flag-o-matic toolchain-funcs pam autotools user
 
 DESCRIPTION="Full-screen window manager that multiplexes physical terminals between several processes"
 HOMEPAGE="http://www.gnu.org/software/screen/"

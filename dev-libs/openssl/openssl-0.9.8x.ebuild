@@ -6,7 +6,7 @@
 
 EAPI="2"
 
-inherit eutils flag-o-matic toolchain-funcs
+inherit eutils flag-o-matic toolchain-funcs multilib
 
 DESCRIPTION="Toolkit for SSL v2/v3 and TLS v1"
 HOMEPAGE="http://www.openssl.org/"

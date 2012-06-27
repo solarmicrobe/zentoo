@@ -76,6 +76,8 @@ src_compile() {
 		LINUX_PAM_VERSION=${linux_pam_version}
 }
 
+src_test() { :; }
+
 src_install() {
 	emake GIT=true DESTDIR="${ED}" install
 }

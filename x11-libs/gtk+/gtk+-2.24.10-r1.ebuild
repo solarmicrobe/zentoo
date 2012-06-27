@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit eutils flag-o-matic gnome.org libtool virtualx autotools
+inherit eutils flag-o-matic gnome.org virtualx autotools
 
 DESCRIPTION="Gimp ToolKit +"
 HOMEPAGE="http://www.gtk.org/"
@@ -80,6 +80,10 @@ set_gtk2_confdir() {
 }
 
 src_prepare() {
+	# gold detected underlinking
+	# Add missing libs, patch sent upstream
+	epatch "${FILESDIR}/${P}-gold.patch"
+
 	# use an arch-specific config directory so that 32bit and 64bit versions
 	# dont clash on multilib systems
 	epatch "${FILESDIR}/${PN}-2.21.3-multilib.patch"
