@@ -34,7 +34,7 @@ ruby_add_rdepend "
 	dev-ruby/sys-filesystem
 	>=dev-ruby/ohai-0.6.12
 	dev-ruby/ruby-inline
-	dev-ruby/ganymed-client
+	>=dev-ruby/ganymed-client-0.2.0
 "
 
 all_ruby_install() {
