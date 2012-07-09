@@ -14,5 +14,4 @@ KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""
-RDEPEND="|| ( app-editors/emacs:23
-		>=app-editors/emacs-vcs-23.1 )"
+RDEPEND="app-editors/emacs:23"

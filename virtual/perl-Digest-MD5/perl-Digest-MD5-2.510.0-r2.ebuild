@@ -2,14 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-DESCRIPTION="Virtual for Sys-Syslog"
+DESCRIPTION="Virtual for ${PN#perl-}"
 HOMEPAGE=""
 SRC_URI=""
 
 LICENSE=""
 SLOT="0"
 KEYWORDS="amd64"
-
 IUSE=""
-DEPEND=""
-RDEPEND="~perl-core/Sys-Syslog-${PV}"
+
+RDEPEND="|| ( =dev-lang/perl-5.16* =dev-lang/perl-5.14* ~perl-core/${PN#perl-}-${PV}  )"

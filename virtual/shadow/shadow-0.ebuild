@@ -12,5 +12,7 @@ KEYWORDS="amd64"
 IUSE=""
 
 # >=shadow-4-1 is required because of bug #367633 (user.eclass needs it).
+# On Prefix installations we sort of have to hope there is some shadow
+# available, on UNIX-like (or emulated) systems this usually is the case.
 DEPEND=""
-RDEPEND="|| ( >=sys-apps/shadow-4.1 sys-apps/hardened-shadow )"
+RDEPEND="!prefix? ( || ( >=sys-apps/shadow-4.1 sys-apps/hardened-shadow ) )"

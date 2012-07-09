@@ -39,7 +39,7 @@ HOMEPAGE="http://www.mozilla.com/firefox"
 
 KEYWORDS="amd64"
 SLOT="0"
-LICENSE="|| ( MPL-1.1 GPL-2 LGPL-2.1 )"
+LICENSE="MPL-1.1 GPL-2 LGPL-2.1"
 IUSE="bindist +crashreporter +ipc +minimal pgo selinux system-sqlite +webm"
 
 # More URIs appended below...
@@ -51,11 +51,11 @@ ASM_DEPEND=">=dev-lang/yasm-1.1"
 # Mesa 7.10 needed for WebGL + bugfixes
 RDEPEND="
 	>=sys-devel/binutils-2.16.1
-	>=dev-libs/nss-3.13.1
-	>=dev-libs/nspr-4.8.8
+	>=dev-libs/nss-3.13.5
+	>=dev-libs/nspr-4.9.1
 	>=dev-libs/glib-2.26:2
 	>=media-libs/mesa-7.10
-	media-libs/libpng[apng]
+	>=media-libs/libpng-1.5.9[apng]
 	virtual/libffi
 	system-sqlite? ( >=dev-db/sqlite-3.7.7.1[fts3,secure-delete,threadsafe,unlock-notify,debug=] )
 	webm? ( >=media-libs/libvpx-1.0.0
@@ -137,7 +137,7 @@ src_unpack() {
 
 src_prepare() {
 	# Apply our patches
-	EPATCH_EXCLUDE="6012_fix_shlibsign.patch" \
+	EPATCH_EXCLUDE="6012_fix_shlibsign.patch 6013_fix_abort_declaration.patch" \
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
 	epatch "${WORKDIR}/firefox"

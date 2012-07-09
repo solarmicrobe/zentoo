@@ -1,10 +1,11 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=4
 
 MODULE_AUTHOR=DANKOGAI
+MODULE_VERSION=2.43
 inherit perl-module
 
 DESCRIPTION="character encodings"

@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI=2
 
-DESCRIPTION="virtual for pkg-config"
+DESCRIPTION="Virtual for the pkg-config implementation"
 HOMEPAGE=""
 SRC_URI=""
 
@@ -13,10 +13,11 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-DEPEND="|| (
-		dev-util/pkgconfig
-		dev-util/pkg-config-lite
+DEPEND="
+	|| (
+		>=dev-util/pkgconfig-0.26
 		dev-util/pkgconf[pkg-config]
+		dev-util/pkg-config-lite
 		dev-util/pkgconfig-openbsd[pkg-config]
 	)"
 RDEPEND="${DEPEND}"

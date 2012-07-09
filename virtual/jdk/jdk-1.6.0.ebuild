@@ -11,10 +11,13 @@ SLOT="1.6"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="|| (
-	=dev-java/icedtea-6*
-	=dev-java/icedtea-bin-6*
-	=dev-java/sun-jdk-1.6.0*
-)"
+# icedtea-bin-1* is old versioning scheme of icedtea-bin-6*
+X86_OPTS="|| (
+		=dev-java/icedtea-bin-6*
+		=dev-java/sun-jdk-1.6.0*
+	)"
 
+RDEPEND="|| (
+		amd64? ( ${X86_OPTS} )
+	)"
 DEPEND=""

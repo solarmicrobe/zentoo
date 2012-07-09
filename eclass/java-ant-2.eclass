@@ -15,7 +15,7 @@
 # Licensed under the GNU General Public License, v2
 #
 
-inherit java-utils-2
+inherit java-utils-2 multilib
 
 # This eclass provides functionality for Java packages which use
 # ant to build. In particular, it will attempt to fix build.xml files, so that

@@ -13,9 +13,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="static-libs"
 
-RDEPEND="!prefix? ( >=media-libs/libjpeg-turbo-1.2.0:0[static-libs?] )
-	prefix? ( || (
+RDEPEND="|| (
 		>=media-libs/libjpeg-turbo-1.2.0:0[static-libs?]
 		>=media-libs/jpeg-8d:0[static-libs?]
-		) )"
+		)"
 DEPEND=""

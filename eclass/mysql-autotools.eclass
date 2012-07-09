@@ -16,7 +16,7 @@
 # the src_unpack, src_prepare, src_configure, src_compile, scr_install,
 # pkg_preinst, pkg_postinst, pkg_config and pkg_postrm phase hooks.
 
-inherit autotools
+inherit autotools flag-o-matic multilib
 
 #
 # HELPER FUNCTIONS:
@@ -396,7 +396,7 @@ mysql-autotools_src_prepare() {
 		popd >/dev/null
 	fi
 
-	if pbxt_available && [[ "${PBXT_NEWSTYLE}" != "1" ]] && use pbxt ; then
+	if pbxt_available && [[ "${PBXT_NEWSTYLE}" == "1" ]] && use pbxt ; then
 		einfo "Adding storage engine: PBXT"
 		pushd "${S}"/storage >/dev/null
 		i='pbxt'

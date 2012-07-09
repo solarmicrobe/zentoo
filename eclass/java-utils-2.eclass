@@ -1685,23 +1685,13 @@ java-pkg_get-jni-cflags() {
 }
 
 java-pkg_ensure-gcj() {
-	if ! built_with_use sys-devel/gcc gcj ; then
-		ewarn
-		ewarn "You must build gcc with the gcj support to build with gcj"
-		ewarn
-		ebeep 5
-		die "No GCJ support found!"
-	fi
+	# was enforcing sys-devel/gcc[gcj]
+	die "${FUNCNAME} was removed. Use use-deps available as of EAPI 2 instead. #261562"
 }
 
 java-pkg_ensure-test() {
-	if has test ${FEATURES} && ! has -test ${FEATURES} \
-		&& has test ${IUSE} && ! use test;
-	then
-		eerror "You specified FEATURES=test, but USE=test is needed"
-		eerror "to pull in the additional dependencies for testing"
-		die "Need USE=test enabled"
-	fi
+	# was enforcing USE=test if FEATURES=test
+	die "${FUNCNAME} was removed. Package mangers handle this already. #278965"
 }
 
 # ------------------------------------------------------------------------------

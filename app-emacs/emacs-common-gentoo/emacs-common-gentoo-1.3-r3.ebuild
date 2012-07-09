@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit elisp-common eutils fdo-mime gnome2-utils
+inherit elisp-common eutils fdo-mime gnome2-utils user
 
 DESCRIPTION="Common files needed by all GNU Emacs versions"
 HOMEPAGE="http://www.gentoo.org/proj/en/lisp/emacs/"
@@ -13,9 +13,18 @@ SRC_URI="mirror://gentoo/${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="X"
+IUSE="games X"
 
 PDEPEND="virtual/emacs"
+
+pkg_setup() {
+	if use games && [[ -z $(egetent passwd "${GAMES_USER_DED:-games}") ]]
+	then
+		enewgroup "${GAMES_GROUP:-games}" 35
+		enewuser "${GAMES_USER_DED:-games}" 36 /bin/bash \
+			"${GAMES_PREFIX:-/usr/games}" "${GAMES_GROUP:-games}"
+	fi
+}
 
 src_install() {
 	insinto "${SITELISP}"
@@ -24,6 +33,11 @@ src_install() {
 	keepdir /etc/emacs
 	insinto /etc/emacs
 	doins site-start.el
+
+	if use games; then
+		keepdir /var/lib/games/emacs
+		fowners "${GAMES_USER_DED:-games}" /var/lib/games/emacs
+	fi
 
 	if use X; then
 		local i
@@ -58,6 +72,19 @@ site-start-modified-p() {
 		"3917799317 397") return 1 ;;	# emacs-common-gentoo-1.2-r2
 		*) return 0 ;;
 	esac
+}
+
+pkg_preinst() {
+	if use games; then
+		local f
+		for f in /var/lib/games/emacs/{snake,tetris}-scores; do
+			if [[ -e ${EROOT}${f} ]]; then
+				cp "${EROOT}${f}" "${ED}${f}" || die
+			fi
+			touch "${ED}${f}" || die
+			chown "${GAMES_USER_DED:-games}" "${ED}${f}" || die
+		done
+	fi
 }
 
 pkg_postinst() {

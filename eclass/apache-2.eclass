@@ -466,7 +466,7 @@ apache-2_src_configure() {
 # This function runs `emake install' and generates, installs and adapts the gentoo
 # specific configuration files found in the tarball
 apache-2_src_install() {
-	make DESTDIR="${D}" install || die "make install failed"
+	emake DESTDIR="${D}" MKINSTALLDIRS="mkdir -p" install || die "make install failed"
 
 	# install our configuration files
 	keepdir /etc/apache2/vhosts.d

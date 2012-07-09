@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: base.eclass
@@ -8,8 +8,7 @@
 # Original author: Dan Armak <danarmak@gentoo.org>
 # @BLURB: The base eclass defines some default functions and variables.
 # @DESCRIPTION:
-# The base eclass defines some default functions and variables. Nearly
-# everything else inherits from here.
+# The base eclass defines some default functions and variables.
 
 if [[ ${___ECLASS_ONCE_BASE} != "recur -_+^+_- spank" ]] ; then
 ___ECLASS_ONCE_BASE="recur -_+^+_- spank"

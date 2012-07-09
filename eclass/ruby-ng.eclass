@@ -626,3 +626,68 @@ ruby_get_implementation() {
 			;;
 	esac
 }
+
+# @FUNCTION: ruby-ng_rspec
+# @DESCRIPTION:
+# This is simply a wrapper around the rspec command (executed by $RUBY})
+# which also respects TEST_VERBOSE and NOCOLOR environment variables.
+ruby-ng_rspec() {
+	if [[ ${DEPEND} != *"dev-ruby/rspec"* ]]; then
+		ewarn "Missing dev-ruby/rspec in \${DEPEND}"
+	fi
+
+	local rspec_params=
+	case ${NOCOLOR} in
+		1|yes|true)
+			rspec_params+=" --no-color"
+			;;
+		*)
+			rspec_params+=" --color"
+			;;
+	esac
+
+	case ${TEST_VERBOSE} in
+		1|yes|true)
+			rspec_params+=" --format documentation"
+			;;
+		*)
+			rspec_params+=" --format progress"
+			;;
+	esac
+
+	${RUBY} -S rspec ${rspec_params} "$@" || die "rspec failed"
+}
+
+# @FUNCTION: ruby-ng_testrb-2
+# @DESCRIPTION:
+# This is simply a replacement for the testrb command that load the test
+# files and execute them, with test-unit 2.x. This actually requires
+# either an old test-unit-2 version or 2.5.1-r1 or later, as they remove
+# their script and we installed a broken wrapper for a while.
+# This also respects TEST_VERBOSE and NOCOLOR environment variables.
+ruby-ng_testrb-2() {
+	if [[ ${DEPEND} != *"dev-ruby/test-unit"* ]]; then
+		ewarn "Missing dev-ruby/test-unit in \${DEPEND}"
+	fi
+
+	local testrb_params=
+	case ${NOCOLOR} in
+		1|yes|true)
+			testrb_params+=" --no-use-color"
+			;;
+		*)
+			testrb_params+=" --use-color=auto"
+			;;
+	esac
+
+	case ${TEST_VERBOSE} in
+		1|yes|true)
+			testrb_params+=" --verbose=verbose"
+			;;
+		*)
+			testrb_params+=" --verbose=normal"
+			;;
+	esac
+
+	${RUBY} -S testrb-2 ${testrb_params} "$@" || die "testrb-2 failed"
+}

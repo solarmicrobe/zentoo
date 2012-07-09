@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # @ECLASS: nsplugins.eclass
@@ -11,7 +11,7 @@
 # Reusable functions that promote sharing of netscape/moz plugins, also provides
 # share_plugins_dir function for mozilla applications.
 
-inherit eutils
+inherit eutils multilib
 
 DESCRIPTION="Based on the ${ECLASS} eclass"
 
@@ -49,6 +49,11 @@ pkg_mv_plugins() {
 # This function installs a plugin with dosym to PLUGINS_DIR.
 # First argument should be the plugin file.
 inst_plugin() {
+	if [[ -z "${1}" ]]; then
+		eerror "The plugin file \"${1}\" does not exist."
+		die "No such file or directory."
+	fi
+
 	dodir /usr/$(get_libdir)/${PLUGINS_DIR}
 	dosym ${1} /usr/$(get_libdir)/${PLUGINS_DIR}/$(basename ${1})
 }

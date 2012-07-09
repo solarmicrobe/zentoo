@@ -2,7 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-DESCRIPTION="Virtual for dev-libs/libffi"
+# The purpose of this ebuild is to provide quick fallback if and when we need to
+# switch back to internal copy of libffi from sys-devel/gcc.
+
+DESCRIPTION="A virtual for the Foreign Function Interface implementation"
 HOMEPAGE=""
 SRC_URI=""
 
@@ -11,5 +14,5 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND=">=dev-libs/libffi-3.0.9"
+RDEPEND=">=dev-libs/libffi-3.0.10"
 DEPEND=""

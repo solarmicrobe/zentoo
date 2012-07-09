@@ -11,6 +11,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="kernel_linux? ( || ( >=sys-apps/sysvinit-2.86-r6 sys-process/runit ) )
-	kernel_FreeBSD? ( sys-freebsd/freebsd-sbin )"
+RDEPEND="!prefix? (
+	kernel_linux? ( || ( >=sys-apps/sysvinit-2.86-r6 sys-process/runit ) )
+	kernel_FreeBSD? ( sys-freebsd/freebsd-sbin )
+	)"
 DEPEND=""

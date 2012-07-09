@@ -11,4 +11,4 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="|| ( =dev-lang/perl-5.14* ~perl-core/${PN#perl-}-${PV} )"
+RDEPEND="|| ( =dev-lang/perl-5.16* =dev-lang/perl-5.14* ~perl-core/${PN#perl-}-${PV}  )"

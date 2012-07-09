@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,7 +21,7 @@ RDEPEND="${DEPEND}
 
 src_install() {
 	emake DESTDIR="${D}" install install-doc-man
-	dodoc BUGS NEWS TODO
+	dodoc BUGS NEWS
 	dohtml manual.html README.html
 	newbashcomp contrib/tig-completion.bash ${PN}
 }
