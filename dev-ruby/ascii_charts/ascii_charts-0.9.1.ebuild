@@ -8,8 +8,6 @@ USE_RUBY="ruby18 ruby19"
 RUBY_FAKEGEM_TASK_DOC=""
 RUBY_FAKEGEM_TASK_TEST=""
 
-RUBY_FAKEGEM_EXTRADOC="README.md"
-
 inherit ruby-fakegem
 
 DESCRIPTION="Ruby library to draw simple ASCII charts"
