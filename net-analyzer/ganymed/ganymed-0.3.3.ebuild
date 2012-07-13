@@ -22,19 +22,22 @@ IUSE=""
 
 ruby_add_rdepend "
 	>=dev-ruby/activesupport-3.2
+	dev-ruby/ascii_charts
+	dev-ruby/em-websocket
 	>=dev-ruby/eventmachine-0.12.10
+	>=dev-ruby/ganymed-client-0.3.0
 	>=dev-ruby/madvertise-ext-0.1.2
 	>=dev-ruby/madvertise-logging-0.3.2
 	dev-ruby/mixlib-cli
-	dev-ruby/servolux
-	dev-ruby/msgpack
 	>=dev-ruby/mongo-1.6
-	dev-ruby/em-websocket
-	dev-ruby/yajl-ruby
-	dev-ruby/sys-filesystem
+	dev-ruby/msgpack
 	>=dev-ruby/ohai-0.6.12
+	dev-ruby/ripl
 	dev-ruby/ruby-inline
-	>=dev-ruby/ganymed-client-0.2.0
+	dev-ruby/servolux
+	dev-ruby/sys-filesystem
+	dev-ruby/terminal-table
+	dev-ruby/yajl-ruby
 "
 
 all_ruby_install() {
