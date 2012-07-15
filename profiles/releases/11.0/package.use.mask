@@ -32,7 +32,7 @@ app-admin/syslog-ng json sql
 net-dns/pdns opendbx
 
 # virtualbox
-app-emulation/virtualbox extensions vboxwebsrv
+app-emulation/virtualbox vboxwebsrv
 
 # collectd
 app-admin/collectd collectd_plugins_dbi
