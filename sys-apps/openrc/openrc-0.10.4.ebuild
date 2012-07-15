@@ -25,7 +25,7 @@ RDEPEND="virtual/init
 	elibc_glibc? ( >=sys-libs/glibc-2.5 )
 	ncurses? ( sys-libs/ncurses )
 	pam? ( sys-auth/pambase )
-	>=sys-apps/baselayout-2.0.0
+	>=sys-apps/baselayout-2.1-r1
 	kernel_linux? (
 		sys-process/psmisc
 	)
@@ -63,6 +63,7 @@ pkg_setup() {
 
 src_prepare() {
 	sed -i 's:0444:0644:' mk/sys.mk || die
+	sed -i "/^DIR/s:/openrc:/${PF}:" doc/Makefile || die #241342
 
 	if [[ ${PV} == "9999" ]] ; then
 		local ver="git-${EGIT_VERSION:0:6}"
@@ -105,7 +106,10 @@ src_install() {
 	gen_usr_ldscript libeinfo.so
 	gen_usr_ldscript librc.so
 
-	keepdir /$(get_libdir)/rc/{init.d,tmp}
+	if ! use kernel_linux; then
+		keepdir /$(get_libdir)/rc/init.d
+	fi
+	keepdir /$(get_libdir)/rc/tmp
 
 	# Backup our default runlevels
 	dodir /usr/share/"${PN}"
@@ -359,6 +363,13 @@ pkg_postinst() {
 		mv "${ROOT}"etc/conf.d/local.start "${ROOT}"etc/local.d/baselayout1.start
 		mv "${ROOT}"etc/conf.d/local.stop "${ROOT}"etc/local.d/baselayout1.stop
 		chmod +x "${ROOT}"etc/local.d/*{start,stop}
+	fi
+
+	if use kernel_linux && [[ "${ROOT}" = "/" ]]; then
+		if ! /$(get_libdir)/rc/sh/migrate-to-run.sh; then
+			ewarn "The dependency data could not be migrated to /run/openrc."
+			ewarn "This means you need to reboot your system."
+		fi
 	fi
 
 	# update the dependency tree after touching all files #224171
