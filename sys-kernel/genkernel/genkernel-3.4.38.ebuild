@@ -16,7 +16,6 @@ VERSION_LVM='2.02.88'
 VERSION_UNIONFS_FUSE='0.24'
 VERSION_GPG='1.4.11'
 
-MY_HOME="http://wolf31o2.org"
 RH_HOME="ftp://sources.redhat.com/pub"
 DM_HOME="http://people.redhat.com/~heinzm/sw/dmraid/src"
 BB_HOME="http://www.busybox.net/downloads"
@@ -27,7 +26,7 @@ COMMON_URI="${DM_HOME}/dmraid-${VERSION_DMRAID}.tar.bz2
 		${RH_HOME}/lvm2/LVM2.${VERSION_LVM}.tgz
 		${RH_HOME}/lvm2/old/LVM2.${VERSION_LVM}.tgz
 		${BB_HOME}/busybox-${VERSION_BUSYBOX}.tar.bz2
-		mirror://kernel/linux/kernel/people/mnc/open-iscsi/releases/open-iscsi-${VERSION_ISCSI}.tar.gz
+		http://www.open-iscsi.org/bits/open-iscsi-${VERSION_ISCSI}.tar.gz
 		mirror://sourceforge/fuse/fuse-${VERSION_FUSE}.tar.gz
 		http://podgorny.cz/unionfs-fuse/releases/unionfs-fuse-${VERSION_UNIONFS_FUSE}.tar.bz2
 		mirror://gnupg/gnupg/gnupg-${VERSION_GPG}.tar.bz2"
@@ -43,10 +42,7 @@ then
 else
 	inherit bash-completion-r1 eutils
 	SRC_URI="mirror://gentoo/${P}.tar.bz2
-		${MY_HOME}/sources/genkernel/${P}.tar.bz2
 		${COMMON_URI}"
-	# Please don't touch individual KEYWORDS.  Since this is maintained/tested by
-	# Release Engineering, it's easier for us to deal with all arches at once.
 	KEYWORDS="amd64"
 fi
 
