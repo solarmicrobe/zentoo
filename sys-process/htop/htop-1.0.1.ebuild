@@ -4,6 +4,9 @@
 
 EAPI=4
 
+# autotools for auto* dependencies
+inherit autotools
+
 DESCRIPTION="interactive process viewer"
 HOMEPAGE="http://htop.sourceforge.net"
 SRC_URI="mirror://sourceforge/${PN}/${P}.tar.gz"

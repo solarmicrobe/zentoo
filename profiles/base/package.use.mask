@@ -1,9 +1,50 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.365 2012/06/19 14:27:26 chithanh Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.381 2012/07/30 05:33:58 yngwin Exp $
 
 # This file requires >=portage-2.1.1
 # New entries go on top.
+
+# Ben de Groot <yngwin@gentoo.org> (30 Jul 2012)
+# fontconfig-infinality dependency not yet keyworded on most arches
+media-libs/freetype infinality
+
+# Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (26 Jul 2012)
+# Prevents install of gl.pc which breaks building of many packages, bug #428164
+=media-libs/mesa-8.1_rc1_pre20120724 osmesa
+
+# Ole Markus With <olemarkus@gentoo.org> (20 Jul 2012)
+# Kolab support broken with newer c-client. Masking use flag until either
+# problem is solved or the kolab patch is removed. Bug #416859
+dev-lang/php kolab
+
+# Ralph Sennhauser <sera@gentoo.org> (18 Jul 2012)
+# Requires masked eclipse-sdk.
+dev-lang/icc eclipse
+
+# Michael Weber<xmw@gentoo.org>  (18 Jun 2012)
+# Not fit for production
+www-client/netsurf pdf-writer javascript gstreamer
+
+# Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (16 Jul 2012)
+# Needs x11-libs/glamor stable first
+<x11-drivers/xf86-video-intel-2.20 glamor
+
+# Diego Elio Pettenò <flameeyes@gentoo.org> (16 Jul 2012)
+# Stop glibc/uclibc from using iconv in blender
+media-gfx/blender iconv
+
+# Rick Farina <zerochaos@gentoo.org> (09 July 2012)
+# libbtbb currently only tested on amd64/x86/arm, hopefully this won't always be needed
+net-analyzer/wireshark btbb
+
+# Rick Farina <zerochaos@gentoo.org> (05 July 2012)
+# cuda is available on x86/amd64 only
+app-crypt/johntheripper cuda
+
+# Mike Gilbert <floppym@gentoo.org> (29 Jun 2012)
+# sys-fs/zfs is not available everywhere.
+sys-boot/grub libzfs
 
 # Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (19 Jun 2012)
 # mask wayland flag for stable mesa, #419473
@@ -19,7 +60,7 @@ app-office/calligra postgres
 
 # Michael Weber<xmw@gentoo.org>  (02 Jun 2012)
 # Not fit for production (bug 404403, comment #5)
-dev-db/firebird client 
+dev-db/firebird client
 
 # Andreas K. Huettel <dilfridge@gentoo.org> (25 Mai 2012)
 # Requires icc which does not emerge (distfile unavailable)
@@ -37,10 +78,6 @@ media-libs/opencv ipp
 # Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (02 May 2012)
 # Causes crashes and build failures, not needed by any package, bug #412177
 <x11-libs/cairo-1.12 qt4
-
-# Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (01 May 2012)
-# Experimental. Needs x11-libs/glamor keyworded first, bug #414295
-=x11-drivers/xf86-video-intel-2* glamor
 
 # Johannes Huber <johu@gentoo.org> (19 Apr 2012)
 # Required dep >=net-libs/telepathy-farstream is masked by gnome herd. Feel
@@ -89,8 +126,9 @@ dev-cpp/gtkmm wayland
 x11-libs/gtk+ wayland
 
 # Johannes Huber <johu@gentoo.org> (23 Mar 2012)
-# Broken dep, see bug #389833.
-kde-base/kdelibs upnp
+# Broken dep upnp, see bug #389833.
+# Experimental udisks2 patch, see bug #424157
+kde-base/kdelibs upnp udisks2
 
 # Tim Harder <radhermit@gentoo.org> (22 Mar 2012)
 # Masked since skype isn't stable
@@ -319,9 +357,7 @@ dev-lang/ruby-enterprise fastthreading
 # Nirbheek Chauhan <nirbheek@gentoo.org> (26 Jun 2010)
 # Inter-process communication doesn't work on anything except x86/amd64/arm
 # due to lack of atomic ops, bug 325185
-net-libs/xulrunner ipc
 www-client/firefox ipc
-www-client/icecat ipc
 
 # Tomas Touceda <chiiph@gentoo.org> (13 Apr 2010)
 # Masked because libsvm module is broken with this release on every arch.

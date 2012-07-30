@@ -37,6 +37,9 @@ RDEPEND="${DEPEND}
 	)
 "
 
+# bug 390533
+RESTRICT="test"
+
 SITEFILE="50${PN}-gentoo.el"
 VIMFILE="${PN}.vim"
 

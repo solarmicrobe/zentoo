@@ -14,7 +14,7 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="ares idn ipv6 kerberos ldap ssh ssl static-libs test threads"
-IUSE="${IUSE} curl_ssl_axtls curl_ssl_cyassl curl_ssl_gnutls curl_ssl_nss +curl_ssl_openssl curl_ssl_polarssl"
+IUSE="${IUSE} curl_ssl_axtls curl_ssl_gnutls curl_ssl_nss +curl_ssl_openssl curl_ssl_polarssl"
 
 #lead to lots of false negatives, bug #285669
 RESTRICT="test"
@@ -62,7 +62,6 @@ REQUIRED_USE="threads? ( !ares )
 	ssl? (
 		^^ (
 			curl_ssl_axtls
-			curl_ssl_cyassl
 			curl_ssl_gnutls
 			curl_ssl_openssl
 			curl_ssl_nss
@@ -99,12 +98,6 @@ src_configure() {
 			einfo "NOTE: axtls is meant for embedded systems and"
 			einfo "may not be the best choice as an ssl provider"
 			myconf+=( --with-axtls )
-		fi
-		if use curl_ssl_cyassl; then
-			einfo "SSL provided by cyassl"
-			einfo "NOTE: cyassl is meant for embedded systems and"
-			einfo "may not be the best choice as an ssl provider"
-			myconf+=( --with-cyassl )
 		fi
 		if use curl_ssl_gnutls; then
 			einfo "SSL provided by gnutls"

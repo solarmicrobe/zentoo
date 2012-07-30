@@ -18,7 +18,7 @@ HOMEPAGE="http://www.postgresql.org/"
 SRC_URI="mirror://postgresql/source/v${PV}/postgresql-${PV}.tar.bz2
 		 http://dev.gentoo.org/~titanofold/postgresql-patches-9.1-r1.tbz2
 		 http://dev.gentoo.org/~titanofold/postgresql-initscript-2.1.tbz2"
-LICENSE="POSTGRESQL"
+LICENSE="POSTGRESQL GPL-2"
 
 LINGUAS="af cs de en es fa fr hr hu it ko nb pl pt_BR ro ru sk sl sv tr zh_CN zh_TW"
 IUSE="doc kernel_linux nls pam perl -pg_legacytimestamp python selinux tcl uuid xml"

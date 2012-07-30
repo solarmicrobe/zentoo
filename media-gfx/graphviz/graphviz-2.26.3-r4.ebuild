@@ -24,7 +24,7 @@ RDEPEND="
 	>=dev-libs/glib-2.11.1
 	>=media-libs/fontconfig-2.3.95
 	>=media-libs/freetype-2.1.10
-	>=media-libs/gd-2.0.28[fontconfig,jpeg,png,truetype]
+	>=media-libs/gd-2.0.28[fontconfig,jpeg,png,truetype,zlib]
 	>=media-libs/libpng-1.4
 	virtual/jpeg
 	virtual/libiconv

@@ -34,22 +34,6 @@ net-dns/pdns opendbx
 # virtualbox
 app-emulation/virtualbox vboxwebsrv
 
-# collectd
-app-admin/collectd collectd_plugins_dbi
-app-admin/collectd collectd_plugins_gmond
-app-admin/collectd collectd_plugins_ipmi
-app-admin/collectd collectd_plugins_libvirt
-app-admin/collectd collectd_plugins_notify_desktop
-app-admin/collectd collectd_plugins_notify_email
-app-admin/collectd collectd_plugins_nut
-app-admin/collectd collectd_plugins_onewire
-app-admin/collectd collectd_plugins_oracle
-app-admin/collectd collectd_plugins_ping
-app-admin/collectd collectd_plugins_routeros
-app-admin/collectd collectd_plugins_sensors
-app-admin/collectd collectd_plugins_tokyotyrant
-app-admin/collectd collectd_plugins_varnish
-
 # do not support X11 with these applications
 app-editors/emacs X
 app-editors/vim X
@@ -86,3 +70,7 @@ sys-kernel/genkernel crypt
 
 # backups to S3 are not feasible
 app-backup/duplicity s3
+
+# do not support sqlite2
+net-dns/pdns sqlite
+dev-lang/php sqlite

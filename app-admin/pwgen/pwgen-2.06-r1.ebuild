@@ -15,8 +15,6 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="livecd"
 
-DEPEND=""
-
 src_prepare() {
 	epatch "${FILESDIR}"/${PV}-special-char.patch
 	sed -i -e 's:$(prefix)/man/man1:$(mandir)/man1:g' Makefile.in

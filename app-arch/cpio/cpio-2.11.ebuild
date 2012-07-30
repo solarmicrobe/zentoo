@@ -17,6 +17,7 @@ IUSE="nls"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-stat.patch #328531
+	epatch "${FILESDIR}"/${P}-no-gets.patch #424974
 }
 
 src_configure() {

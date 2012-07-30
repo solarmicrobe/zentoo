@@ -4,7 +4,7 @@
 
 EAPI=2
 
-USE_RUBY="ruby18 ree18 ruby19"
+USE_RUBY="ruby18 ruby19 ree18"
 
 RUBY_FAKEGEM_TASK_TEST="spec"
 

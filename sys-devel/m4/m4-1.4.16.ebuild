@@ -21,6 +21,7 @@ RDEPEND=""
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-fix-test-readlink.patch #376639
+	epatch "${FILESDIR}"/${P}-no-gets.patch #424978
 }
 
 src_configure() {

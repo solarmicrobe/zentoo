@@ -23,11 +23,11 @@ case "${EAPI:-0}" in
 esac
 
 # @ECLASS-VARIABLE: MOZ_LANGS
-# @DEFAULT-UNSET
 # @DESCRIPTION:
 # Array containing the list of language pack xpis available for
 # this release. The list can be updated with scripts/get_langs.sh from the
 # mozilla overlay.
+# @DEFAULT-UNSET
 : ${MOZ_LANGS:=()}
 
 # @ECLASS-VARIABLE: MOZ_PV

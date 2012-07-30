@@ -36,8 +36,8 @@ src_configure() {
 		$(use_enable xattr xattr-support) \
 		$(use_enable ipv6) \
 		$(use_enable iconv) \
-		--with-rsyncd-conf=/etc/rsyncd.conf \
-		|| die
+		--with-rsyncd-conf=/etc/rsyncd.conf
+	touch proto.h-tstamp #421625
 }
 
 src_install() {

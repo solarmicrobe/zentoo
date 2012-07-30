@@ -80,6 +80,9 @@ src_install() {
 	newinitd "${FILESDIR}/${PN/db/s}.initd" ${PN/db/s}
 	newconfd "${FILESDIR}/${PN/db/s}.confd" ${PN/db/s}
 
+	insinto /etc/logrotate.d/
+	newins "${FILESDIR}/${PN}.logrotate" ${PN}
+
 	if use mms-agent; then
 		local MY_PN="mms-agent"
 		local MY_D="/opt/${MY_PN}"

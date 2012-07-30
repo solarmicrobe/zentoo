@@ -61,6 +61,7 @@ dvb
 dvd
 dvdr
 eds
+emacs
 emboss
 empress
 empress-bcs

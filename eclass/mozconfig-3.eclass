@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # mozconfig.eclass: the new mozilla.eclass
@@ -22,8 +22,8 @@ RDEPEND="app-arch/zip
 	>=x11-libs/gtk+-2.8.6:2
 	>=x11-libs/pango-1.10.1[X]
 	virtual/jpeg
-	virtual/freedesktop-icon-theme
 	alsa? ( media-libs/alsa-lib )
+	virtual/freedesktop-icon-theme
 	dbus? ( >=dev-libs/dbus-glib-0.72 )
 	libnotify? ( >=x11-libs/libnotify-0.4 )
 	startup-notification? ( >=x11-libs/startup-notification-0.8 )
@@ -42,9 +42,6 @@ mozconfig_config() {
 
 	mozconfig_use_enable alsa ogg
 	mozconfig_use_enable alsa wave
-	if has +crashreporter ${IUSE} ; then
-		mozconfig_use_enable crashreporter
-	fi
 	mozconfig_use_enable dbus
 	mozconfig_use_enable debug
 	mozconfig_use_enable debug tests
@@ -70,10 +67,10 @@ mozconfig_config() {
 			mozconfig_annotate '+webm -alsa' --enable-ogg
 			mozconfig_annotate '+webm -alsa' --enable-wave
 			mozconfig_annotate '+webm' --enable-webm
-			mozconfig_annotate '+webm' --with-system-libvpx="${EPREFIX}"/usr
+			mozconfig_annotate '+webm' --with-system-libvpx
 		else
 			mozconfig_use_enable webm
-			mozconfig_annotate '+webm' --with-system-libvpx="${EPREFIX}"/usr
+			mozconfig_annotate '+webm' --with-system-libvpx
 		fi
 	else
 		mozconfig_annotate '' --disable-webm

@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -67,6 +67,7 @@ src_prepare() {
 src_configure() {
 	set_opt I18N use nls
 	set_opt HAVE_HWIB has_version '>=sys-kernel/linux-headers-2.6'
+	set_opt HAVE_HWTR has_version '<sys-kernel/linux-headers-3.5'
 	if use static ; then
 		append-flags -static
 		append-ldflags -static

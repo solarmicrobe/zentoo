@@ -15,5 +15,4 @@ IUSE=""
 
 DEPEND=""
 
-# mail-mta/citadel is from sunrise
 RDEPEND="mail-mta/postfix"

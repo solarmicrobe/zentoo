@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit eutils
+inherit eutils autotools-utils
 
 MY_P="${P/lib}"
 
@@ -28,12 +28,8 @@ src_prepare() {
 	fi
 }
 
-src_configure() {
-	econf $(use_enable static-libs static)
-}
-
 src_install() {
-	default
+	autotools-utils_src_install
 	use doc && dohtml -r doc/html/.
 	if use examples ; then
 		docompress -x /usr/share/doc/${PF}/examples

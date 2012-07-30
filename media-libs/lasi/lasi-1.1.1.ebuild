@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit cmake-utils eutils
+inherit cmake-utils eutils multilib
 
 MY_PN=libLASi
 MY_P=${MY_PN}-${PV}
@@ -49,8 +49,7 @@ src_prepare() {
 src_configure() {
 	CMAKE_BUILD_TYPE=None
 	local mycmakeargs=(
-		-DCMAKE_SKIP_RPATH=OFF
-		-DUSE_RPATH=OFF
+		-DCMAKE_INSTALL_LIBDIR="${EPREFIX}"/usr/$(get_libdir)
 		)
 		use doc || mycmakeargs+=( -DDOXYGEN_EXECUTABLE= )
 	cmake-utils_src_configure

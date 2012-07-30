@@ -20,8 +20,8 @@ IUSE=""
 DEPEND=""
 RDEPEND="|| (
 	app-editors/vim
-	app-editors/emacs
 	app-misc/mc[edit]
+	sys-apps/ed
 )"
 
 # Packages outside app-editors providing an editor:

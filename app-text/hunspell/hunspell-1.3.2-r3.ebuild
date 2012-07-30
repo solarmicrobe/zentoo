@@ -23,8 +23,8 @@ DEPEND="${RDEPEND}
 	sys-devel/gettext"
 
 # describe properly mi
-LANGS="af bg ca cs cy da de el en eo es et fo fr ga gl he hr hu ia id it ku lt
-lv mk ms nb nl nn pl pt ro ru sk sl sq sv sw tn uk zu"
+LANGS="af bg ca cs cy da de el en eo es et fo fr ga gl he hr hu ia id is it km
+ku lt lv mk ms nb nl nn pl pt pt_BR ro ru sk sl sq sv sw tn uk zu"
 
 DICT_DEP="app-dicts/myspell-en"
 for lang in ${LANGS}; do

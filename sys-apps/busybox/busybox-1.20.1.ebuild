@@ -87,6 +87,7 @@ src_prepare() {
 
 	# patches go here!
 	epatch "${FILESDIR}"/${PN}-1.19.0-bb.patch
+	epatch "${FILESDIR}"/${PN}-1.20.0-udhcpc6-ipv6.patch
 	#epatch "${FILESDIR}"/${P}-*.patch
 	cp "${FILESDIR}"/ginit.c init/ || die
 

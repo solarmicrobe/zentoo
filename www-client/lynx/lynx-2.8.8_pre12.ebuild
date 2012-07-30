@@ -32,7 +32,10 @@ RDEPEND="sys-libs/ncurses[unicode?]
 	nls? ( virtual/libintl )
 	ssl? (
 		!gnutls? ( >=dev-libs/openssl-0.9.8 )
-		gnutls? ( >=net-libs/gnutls-2.6.4 )
+		gnutls? (
+			dev-libs/libgcrypt
+			>=net-libs/gnutls-2.6.4
+		)
 	)
 	bzip2? ( app-arch/bzip2 )
 	idn? ( net-dns/libidn )"
@@ -52,6 +55,7 @@ src_prepare() {
 	epatch "${FILESDIR}/lynx-2.8.7-configure-openssl.patch"
 	epatch "${FILESDIR}"/${PN}-2.8.6-mint.patch
 	epatch "${FILESDIR}"/lynx-2.8.8_pre12-parallel.patch
+	epatch "${FILESDIR}"/lynx-2.8.8_pre12-jobserver.patch
 }
 
 src_configure() {
@@ -62,9 +66,11 @@ src_configure() {
 		# the latter enabling openssl support so it should be
 		# _not_ be used if gnutls ssl implementation is desired
 		if use gnutls ; then
-			myargs+=" --with-gnutls" # ssl implementation = gnutls
+			# ssl implementation = gnutls
+			myargs+=" --with-gnutls=${EPREFIX}/usr"
 		else
-			myargs+=" --with-ssl"    # ssl implementation = openssl
+			# ssl implementation = openssl
+			myargs+=" --with-ssl=${EPREFIX}/usr"
 		fi
 	fi
 

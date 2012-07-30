@@ -83,6 +83,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}"/${MY_P}+glibc-2.16.patch
+
 	elibtoolize
 }
 

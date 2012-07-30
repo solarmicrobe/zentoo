@@ -6,40 +6,31 @@
 # Licensed under the GNU General Public License, v2
 #
 
-inherit java-utils-2
-
-# -----------------------------------------------------------------------------
-# @eclass-begin
-# @eclass-summary Eclass for Java Packages
-#
+# @ECLASS: java-pkg-2.eclass
+# @MAINTAINER:
+# java@gentoo.org
+# @AUTHOR:
+# Thomas Matthijs <axxo@gentoo.org>
+# @BLURB: Eclass for Java Packages
+# @DESCRIPTION:
 # This eclass should be inherited for pure Java packages, or by packages which
 # need to use Java.
-# -----------------------------------------------------------------------------
 
-# ------------------------------------------------------------------------------
-# @IUSE
-#
+inherit java-utils-2
+
+# @ECLASS-VARIABLE: JAVA_PKG_IUSE
+# @DEFAULT_UNSET
+# @DESCRIPTION:
 # Use JAVA_PKG_IUSE instead of IUSE for doc, source and examples so that
 # the eclass can automatically add the needed dependencies for the java-pkg_do*
 # functions.
-#
-# ------------------------------------------------------------------------------
 IUSE="${JAVA_PKG_IUSE}"
 
-# ------------------------------------------------------------------------------
-# @depend
-#
 # Java packages need java-config, and a fairly new release of Portage.
-#
 # JAVA_PKG_E_DEPEND is defined in java-utils.eclass.
-# ------------------------------------------------------------------------------
 DEPEND="${JAVA_PKG_E_DEPEND}"
 
-# ------------------------------------------------------------------------------
-# @rdepend
-#
 # Nothing special for RDEPEND... just the same as DEPEND.
-# ------------------------------------------------------------------------------
 RDEPEND="${DEPEND}"
 
 # Commons packages follow the same rules so do it here
@@ -53,39 +44,40 @@ case "${EAPI:-0}" in
 	*) EXPORT_FUNCTIONS pkg_setup src_prepare src_compile pkg_preinst ;;
 esac
 
-# ------------------------------------------------------------------------------
-# @eclass-pkg_setup
-#
+# @FUNCTION: java-pkg-2_pkg_setup
+# @DESCRIPTION:
 # pkg_setup initializes the Java environment
-# ------------------------------------------------------------------------------
+
 java-pkg-2_pkg_setup() {
 	java-pkg_init
 }
 
-# ------------------------------------------------------------------------------
-# @eclass-src_prepare
-#
+
+# @FUNCTION: java-pkg-2_src_prepare
+# @DESCRIPTION:
 # wrapper for java-utils-2_src_prepare
-# ------------------------------------------------------------------------------
+
 java-pkg-2_src_prepare() {
 	java-utils-2_src_prepare
 }
 
-# ------------------------------------------------------------------------------
-# @eclass-src_compile
-#
+
+# @FUNCTION: java-pkg-2_src_compile
+# @DESCRIPTION:
 # Default src_compile for java packages
-# variables:
-# EANT_BUILD_XML - controls the location of the build.xml (default: ./build.xml)
-# EANT_FILTER_COMPILER - Calls java-pkg_filter-compiler with the value
-# EANT_BUILD_TARGET - the ant target/targets to execute (default: jar)
-# EANT_DOC_TARGET - the target to build extra docs under the doc use flag
-#                   (default: javadoc; declare empty to disable completely)
-# EANT_GENTOO_CLASSPATH - @see eant documention in java-utils-2.eclass
-# EANT_EXTRA_ARGS - extra arguments to pass to eant
-# EANT_ANT_TASKS - modifies the ANT_TASKS variable in the eant environment
-# param: Parameters are passed to ant verbatim
-# ------------------------------------------------------------------------------
+#
+# @CODE
+# Variables:
+#   EANT_BUILD_XML - controls the location of the build.xml (default: ./build.xml)
+#   EANT_FILTER_COMPILER - Calls java-pkg_filter-compiler with the value
+#   EANT_BUILD_TARGET - the ant target/targets to execute (default: jar)
+#   EANT_DOC_TARGET - the target to build extra docs under the doc use flag
+#                     (default: javadoc; declare empty to disable completely)
+#   EANT_GENTOO_CLASSPATH - @see eant documention in java-utils-2.eclass
+#   EANT_EXTRA_ARGS - extra arguments to pass to eant
+#   EANT_ANT_TASKS - modifies the ANT_TASKS variable in the eant environment
+# @CODE
+
 java-pkg-2_src_compile() {
 	if [[ -e "${EANT_BUILD_XML:=build.xml}" ]]; then
 		[[ "${EANT_FILTER_COMPILER}" ]] && \
@@ -103,6 +95,12 @@ java-pkg-2_src_compile() {
 	fi
 }
 
+
+# @FUNCTION: java-pkg-2_supports-test
+# @INTERNAL
+# @DESCRIPTION:
+# test whether a build.xml has a test target.
+
 java-pkg-2_supports-test() {
 	python << EOF
 from xml.dom.minidom import parse
@@ -115,6 +113,10 @@ sys.exit(1)
 EOF
 	return $?
 }
+
+# @FUNCTION: java-pkg-2_src_test
+# @DESCRIPTION:
+# src_test, not exported.
 
 java-pkg-2_src_test() {
 	[[ -e "${EANT_BUILD_XML:=build.xml}" ]] || return
@@ -158,15 +160,10 @@ java-pkg-2_src_test() {
 	fi
 }
 
-# ------------------------------------------------------------------------------
-# @eclass-pkg_preinst
-#
+# @FUNCTION: java-pkg-2_pkg_preinst
+# @DESCRIPTION:
 # wrapper for java-utils-2_pkg_preinst
-# ------------------------------------------------------------------------------
+
 java-pkg-2_pkg_preinst() {
 	java-utils-2_pkg_preinst
 }
-
-# ------------------------------------------------------------------------------
-# @eclass-end
-# ------------------------------------------------------------------------------

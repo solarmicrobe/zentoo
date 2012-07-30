@@ -72,12 +72,12 @@ java-vm-2_pkg_postinst() {
 	# Note that we cannot rely on java-config here, as it will silently recognize
 	# e.g. icedtea6-bin as valid system VM if icedtea6 is set but invalid (e.g. due
 	# to the migration to icedtea-6)
-	if [[ ! -L "${JAVA_VM_SYSTEM}" ]]; then
+	if [[ ! -L "${ROOT}${JAVA_VM_SYSTEM}" ]]; then
 		java_set_default_vm_
 	else
-		local current_vm_path="$(readlink "${JAVA_VM_SYSTEM}")"
-		local current_vm="$(basename "${current_vm_path}")"
-		if [[ ! -L "${JAVA_VM_DIR}/${current_vm}" ]]; then
+		local current_vm_path=$(readlink "${ROOT}${JAVA_VM_SYSTEM}")
+		local current_vm=$(basename "${ROOT}${current_vm_path}")
+		if [[ ! -L "${ROOT}${JAVA_VM_DIR}/${current_vm}" ]]; then
 			java_set_default_vm_
 		fi
 	fi
@@ -105,7 +105,7 @@ java-vm_check-nsplugin() {
 
 	# Install a default nsplugin if we don't already have one
 	if in_iuse nsplugin && use nsplugin; then
-		if [[ ! -f "${EPREFIX}"/usr/${libdir}/nsbrowser/plugins/javaplugin.so ]]; then
+		if [[ ! -f "${ROOT}${EPREFIX}"/usr/${libdir}/nsbrowser/plugins/javaplugin.so ]]; then
 			einfo "No system nsplugin currently set."
 			java-vm_set-nsplugin
 		else
@@ -276,10 +276,12 @@ java-vm_set-pax-markings() {
 	local executables=( "${1}"/bin/* )
 	[[ -d "${1}"/jre ]] && executables+=( "${1}"/jre/bin/* )
 
-	# Usally disabeling MPROTECT is sufficent
-	local pax_markings="m"
+	# Ensure a PaX header is created.
+	local pax_markings="C"
+	# Usally disabeling MPROTECT is sufficent.
+	local pax_markings+="m"
 	# On x86 for heap sizes over 700MB disable SEGMEXEC and PAGEEXEC as well.
-	use x86 && pax_markings="msp"
+	use x86 && pax_markings+="sp"
 
 	pax-mark ${pax_markings} $(list-paxables "${executables[@]}")
 }

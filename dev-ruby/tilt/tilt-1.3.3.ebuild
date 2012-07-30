@@ -36,4 +36,7 @@ all_ruby_prepare() {
 
 	# Avoid test broken due to hash unordering in ruby 1.8. Fixed upstream.
 	sed -i -e '/template can end with any statement/,/ end/ s:^:#:' test/tilt_yajltemplate_test.rb || die
+
+	# Disable tests failing on whitespace differences and already fixed upstream.
+	sed -i -e '/"disabling coffee-script wrapper"/,/ end/ s:^:#:' test/tilt_coffeescripttemplate_test.rb || die
 }

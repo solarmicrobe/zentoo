@@ -25,6 +25,7 @@ QA_DT_NEEDED_x86_fbsd="usr/lib/libunwind.so.7.0.0"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.0.1-disable-setjmp.patch
+	epatch "${FILESDIR}"/${PN}-1.0.1-ia64.patch #425736
 	eautoreconf
 }
 

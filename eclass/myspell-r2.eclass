@@ -95,7 +95,9 @@ myspell-r2_src_install() {
 	# Remove licenses as they suffix them with .txt too
 	rm -rf COPYING*
 	rm -rf LICENSE*
+	rm -rf LICENCE*
 	rm -rf license*
+	rm -rf licence*
 	# Readme and so on
 	for x in *.txt README*; do
 		if [[ -f ${x} ]]; then
