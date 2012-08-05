@@ -20,4 +20,5 @@ RDEPEND="|| (
 		sys-fs/devfsd
 		sys-fs/static-dev
 		sys-freebsd/freebsd-sbin
+		>=sys-apps/systemd-186
 	)"
