@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=1
+EAPI=4
 
-inherit eutils
+inherit eutils systemd
 
 MY_P="${P/_alpha/-alpha}"
 MY_P="${MY_P/_beta/-beta}"
@@ -24,10 +24,7 @@ IUSE="+zeroconf elibc_glibc"
 DEPEND=""
 RDEPEND=""
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-
+src_prepare() {
 	if ! use zeroconf; then
 		elog "Disabling zeroconf support"
 		{
@@ -38,18 +35,21 @@ src_unpack() {
 	fi
 }
 
-src_compile() {
+src_configure() {
 	local hooks="--with-hook=ntp.conf"
 	use elibc_glibc && hooks="${hooks} --with-hook=yp.conf"
-	econf --prefix= --libexecdir=/$(get_libdir)/dhcpcd --dbdir=/var/lib/dhcpcd \
-		--localstatedir=/var ${hooks}
-	emake || die
+	econf \
+			--prefix="${EPREFIX}" \
+			--libexecdir="${EPREFIX}/lib/dhcpcd" \
+			--dbdir="${EPREFIX}/var/lib/dhcpcd" \
+		--localstatedir="${EPREFIX}/var" \
+		${hooks}
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die
-	dodoc README
-	newinitd "${FILESDIR}"/${PN}.initd-1 ${PN}
+	default
+	newinitd "${FILESDIR}"/${PN}.initd ${PN}
+	systemd_dounit "${FILESDIR}"/${PN}.service
 }
 
 pkg_postinst() {
@@ -86,4 +86,14 @@ pkg_postinst() {
 	elog "Also, users upgrading from 4.0 series should be aware that"
 	elog "the -N, -R and -Y command line options no longer exist."
 	elog "These are controled now by nohook options in dhcpcd.conf."
+
+	# Mea culpa, feel free to remove that after some time --mgorny.
+	if [[ -e "${ROOT}"/etc/systemd/system/network.target.wants/${PN}.service ]]
+	then
+		ebegin "Moving ${PN}.service to multi-user.target"
+		mv "${ROOT}"/etc/systemd/system/network.target.wants/${PN}.service \
+			"${ROOT}"/etc/systemd/system/multi-user.target.wants/
+		eend ${?} \
+			"Please try to re-enable dhcpcd.service"
+	fi
 }
