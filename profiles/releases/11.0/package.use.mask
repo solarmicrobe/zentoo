@@ -74,3 +74,6 @@ app-backup/duplicity s3
 # do not support sqlite2
 net-dns/pdns sqlite
 dev-lang/php sqlite
+
+# no thin provisioning support
+sys-fs/lvm2 thin

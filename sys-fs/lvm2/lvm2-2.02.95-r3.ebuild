@@ -14,19 +14,23 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
 
-IUSE="readline static static-libs clvm cman +lvm1 selinux +udev"
+IUSE="readline static static-libs clvm cman +lvm1 selinux +udev +thin"
 
 DEPEND_COMMON="!!sys-fs/device-mapper
 	readline? ( sys-libs/readline )
 	clvm? ( =sys-cluster/libdlm-3*
 			cman? ( =sys-cluster/cman-3* ) )
-	udev? ( >=sys-fs/udev-151-r4 )"
+	udev? ( || ( >=sys-fs/udev-151-r4 >=sys-apps/systemd-186 ) )"
 
+# /run is now required for locking during early boot. /var cannot be assumed to
+# be available.
 RDEPEND="${DEPEND_COMMON}
-	!<sys-apps/openrc-0.4
+	!<sys-apps/openrc-0.10.1
+	>=sys-apps/baselayout-2.1-r1
 	!!sys-fs/lvm-user
 	!!sys-fs/clvm
-	>=sys-apps/util-linux-2.16"
+	>=sys-apps/util-linux-2.16
+	thin? ( sys-block/thin-provisioning-tools )"
 
 # Upgrading to this LVM will break older cryptsetup
 RDEPEND="${RDEPEND}
@@ -44,7 +48,6 @@ pkg_setup() {
 	use udev && local WARNING_SYSVIPC="CONFIG_SYSVIPC:\tis not set (required for udev sync)\n"
 	check_extra_config
 	# 1. Genkernel no longer copies /sbin/lvm blindly.
-	# 2. There are no longer any linking deps in /usr.
 	if use static; then
 		elog "Warning, we no longer overwrite /sbin/lvm and /sbin/dmsetup with"
 		elog "their static versions. If you need the static binaries,"
@@ -96,6 +99,9 @@ src_prepare() {
 	# Upstream bug of LVM path
 	epatch "${FILESDIR}"/${PN}-2.02.95-lvmpath.patch
 
+	# Upstream patch for http://bugs.gentoo.org/424810
+	epatch "${FILESDIR}"/${PN}-2.02.95-udev185.patch
+
 	eautoreconf
 }
 
@@ -116,7 +122,6 @@ src_configure() {
 		einfo "Building static LVM, for usage inside genkernel"
 		buildmode="internal"
 		# This only causes the .static versions to become available
-		# For recent systems, there are no linkages against anything in /usr anyway.
 		# We explicitly provide the .static versions so that they can be included in
 		# initramfs environments.
 		myconf="${myconf} --enable-static_link"
@@ -129,7 +134,9 @@ src_configure() {
 	# so we cannot disable them
 	myconf="${myconf} --with-mirrors=internal"
 	myconf="${myconf} --with-snapshots=internal"
-	myconf="${myconf} --with-thin=internal"
+	use thin \
+		&& myconf="${myconf} --with-thin=internal" \
+		|| myconf="${myconf} --with-thin=none"
 
 	if use lvm1 ; then
 		myconf="${myconf} --with-lvm1=${buildmode}"
@@ -162,8 +169,6 @@ src_configure() {
 		myconf="${myconf} --with-clvmd=none --with-cluster=none"
 	fi
 
-	myconf="${myconf}
-			--with-dmeventd-path=/sbin/dmeventd"
 	econf \
 		$(use_enable readline) \
 		$(use_enable selinux) \
@@ -173,6 +178,9 @@ src_configure() {
 		--with-staticdir="${EPREFIX}/sbin" \
 		--libdir="${EPREFIX}/$(get_libdir)" \
 		--with-usrlibdir="${EPREFIX}/usr/$(get_libdir)" \
+		--with-default-run-dir=/run/lvm \
+		--with-default-locking-dir=/run/lock/lvm \
+		--with-dmeventd-path=/sbin/dmeventd \
 		$(use_enable udev udev_rules) \
 		$(use_enable udev udev_sync) \
 		$(use_with udev udevdir "${EPREFIX}/lib/udev/rules.d/") \
@@ -194,10 +202,7 @@ src_install() {
 	emake DESTDIR="${D}" install || die "Failed to emake install"
 
 	dodoc README VERSION* WHATS_NEW WHATS_NEW_DM doc/*.{conf,c,txt}
-	insinto /$(get_libdir)/rcscripts/addons
-	newins "${FILESDIR}"/lvm2-start.sh-2.02.95 lvm-start.sh || die
-	newins "${FILESDIR}"/lvm2-stop.sh-2.02.67-r1 lvm-stop.sh || die
-	newinitd "${FILESDIR}"/lvm.rc-2.02.67-r1 lvm || die
+	newinitd "${FILESDIR}"/lvm.rc-2.02.95-r2 lvm || die
 	newinitd "${FILESDIR}"/lvm-monitoring.initd-2.02.67-r2 lvm-monitoring || die
 	newconfd "${FILESDIR}"/lvm.confd-2.02.28-r2 lvm || die
 	if use clvm; then
@@ -217,11 +222,9 @@ src_install() {
 
 	insinto /etc
 	doins "${FILESDIR}"/dmtab
-	insinto /$(get_libdir)/rcscripts/addons
-	doins "${FILESDIR}"/dm-start.sh
 
 	# Device mapper stuff
-	newinitd "${FILESDIR}"/device-mapper.rc-2.02.67-r1 device-mapper || die
+	newinitd "${FILESDIR}"/device-mapper.rc-2.02.95-r2 device-mapper || die
 	newconfd "${FILESDIR}"/device-mapper.conf-1.02.22-r3 device-mapper || die
 
 	newinitd "${FILESDIR}"/dmeventd.initd-2.02.67-r1 dmeventd || die
