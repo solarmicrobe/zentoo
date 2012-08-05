@@ -4,7 +4,7 @@
 
 EAPI="2"
 
-inherit cron toolchain-funcs eutils
+inherit cron toolchain-funcs eutils systemd
 
 DESCRIPTION="A cute little cron from Matt Dillon"
 HOMEPAGE="http://www.jimpryor.net/linux/dcron.html http://apollo.backplane.com/FreeSrc/"
@@ -44,6 +44,8 @@ src_install() {
 
 	insinto /etc/logrotate.d
 	newins extra/crond.logrotate dcron
+
+	systemd_dounit "${FILESDIR}"/${PN}.service
 }
 
 pkg_postinst() {
