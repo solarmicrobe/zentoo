@@ -3,12 +3,12 @@
 # $Header: $
 
 EAPI=4
-USE_RUBY="ruby18 ree18 ruby19"
+
 # jruby fails tests, not investigated yet.
+USE_RUBY="ruby18 ree18 ruby19"
 
+RUBY_FAKEGEM_RECIPE_TEST="rspec"
 RUBY_FAKEGEM_TASK_DOC=""
-RUBY_FAKEGEM_TASK_TEST="none"
-
 RUBY_FAKEGEM_DOCDIR="doc"
 RUBY_FAKEGEM_EXTRADOC="README.md"
 
@@ -25,8 +25,8 @@ IUSE=""
 ruby_add_bdepend "test? ( >=dev-ruby/rr-0.10.2 dev-ruby/rspec:2 dev-ruby/activesupport )"
 ruby_add_rdepend ">=dev-ruby/polyglot-0.3.1"
 
-each_ruby_test() {
-	${RUBY} -S rspec spec || die
+all_ruby_prepare() {
+	sed -i -e '4i require "rspec/core/shared_context"' spec/spec_helper.rb || die
 }
 
 all_ruby_install() {

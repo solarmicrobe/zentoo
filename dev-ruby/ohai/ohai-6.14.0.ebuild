@@ -22,21 +22,20 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-ruby_add_bdepend "test? ( dev-ruby/rspec:2 dev-ruby/sigar )"
+RUBY_PATCHES=( "${FILESDIR}/ohai-6.14.0-multiple-ruby.patch" )
+
+ruby_add_bdepend "test? ( dev-ruby/rspec:2 )"
 
 ruby_add_rdepend "
 	dev-ruby/ipaddress
-	dev-ruby/yajl-ruby
 	dev-ruby/mixlib-cli
 	dev-ruby/mixlib-config
 	dev-ruby/mixlib-log
-	>=dev-ruby/systemu-2.2.0"
+	dev-ruby/systemu
+	dev-ruby/yajl-ruby"
 
 all_ruby_prepare() {
 	rm Gemfile || die
-	# Be more lenient to work with versions of systemu that we have in
-	# the tree.
-	sed -i -e 's/~> 2.2.0/>= 2.2.0/' ohai.gemspec || die
 }
 
 all_ruby_install() {

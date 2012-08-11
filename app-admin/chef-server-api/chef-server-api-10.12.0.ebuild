@@ -2,11 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
+EAPI=4
 USE_RUBY="ruby18 ruby19"
 
 RUBY_FAKEGEM_TASK_DOC=""
-RUBY_FAKEGEM_TASK_TEST=""
+RUBY_FAKEGEM_TASK_TEST="spec"
+
+RUBY_FAKEGEM_EXTRADOC="README.rdoc"
 
 inherit ruby-fakegem
 
@@ -17,6 +19,9 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
+
+# specs require root access
+RESTRICT="test"
 
 RDEPEND=">=dev-db/couchdb-0.10.0
 	>=net-misc/rabbitmq-server-1.7.0"

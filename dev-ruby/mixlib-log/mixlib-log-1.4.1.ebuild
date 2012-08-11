@@ -1,9 +1,9 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
-USE_RUBY="ruby18 ree18 ruby19"
+USE_RUBY="ruby18 ruby19 ree18"
 
 RUBY_FAKEGEM_TASK_TEST="spec features"
 
@@ -21,4 +21,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-ruby_add_bdepend "test? ( dev-ruby/rspec:0 dev-util/cucumber )"
+ruby_add_bdepend "test? (
+	dev-ruby/rspec:2
+	dev-util/cucumber
+)"

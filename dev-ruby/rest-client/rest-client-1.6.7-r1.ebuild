@@ -1,9 +1,9 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
-USE_RUBY="ruby18 ree18 ruby19"
+USE_RUBY="ruby18 ruby19 ree18"
 
 RUBY_FAKEGEM_TASK_TEST="spec"
 
@@ -18,6 +18,8 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
+
+RUBY_PATCHES=( "${FILESDIR}/rest-client-1.6.7-ruby19.patch" )
 
 ruby_add_bdepend "doc? ( dev-ruby/jeweler )"
 ruby_add_bdepend "test? ( dev-ruby/jeweler dev-ruby/rspec:0 dev-ruby/webmock )"

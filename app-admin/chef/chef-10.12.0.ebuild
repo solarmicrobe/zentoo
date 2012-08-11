@@ -2,11 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
+EAPI=4
 USE_RUBY="ruby18 ruby19"
 
 RUBY_FAKEGEM_TASK_DOC=""
-RUBY_FAKEGEM_TASK_TEST=""
+RUBY_FAKEGEM_TASK_TEST="spec"
+
+RUBY_FAKEGEM_EXTRADOC="README.rdoc"
 
 inherit ruby-fakegem user
 
@@ -18,25 +20,34 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
+# specs have various indempotency issues which result in the global Chef::Config
+# object to be replaced and subsequently fails other specs. Revisit this later.
+RESTRICT="test"
+
 ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	dev-ruby/erubis
-	dev-ruby/highline
+	>=dev-ruby/highline-1.6.9
 	>=dev-ruby/json-1.4.4
 	<=dev-ruby/json-1.6.1
 	>=dev-ruby/mixlib-authentication-1.1.0
 	>=dev-ruby/mixlib-cli-1.1.0
 	>=dev-ruby/mixlib-config-1.1.2
 	>=dev-ruby/mixlib-log-1.3.0
-	>=dev-ruby/mixlib-shellout-1.0.0
+	dev-ruby/mixlib-shellout
 	dev-ruby/moneta
 	>=dev-ruby/net-ssh-2.2.2
-	<dev-ruby/net-ssh-2.4.0
+	<dev-ruby/net-ssh-2.3
 	>=dev-ruby/net-ssh-multi-1.1
+	<dev-ruby/net-ssh-multi-1.2
 	>=dev-ruby/ohai-0.6.0
 	>=dev-ruby/rest-client-1.0.4
+	<dev-ruby/rest-client-1.7
 	dev-ruby/ruby-shadow
 	>=dev-ruby/treetop-1.4.9
-	dev-ruby/uuidtools"
+	<dev-ruby/treetop-1.5
+	dev-ruby/uuidtools
+	>=dev-ruby/yajl-ruby-1.1
+	<dev-ruby/yajl-ruby-2"
 
 all_ruby_install() {
 	all_fakegem_install
@@ -49,6 +60,9 @@ all_ruby_install() {
 	insinto /etc/chef
 	doins "${FILESDIR}/client.rb"
 	doins "${FILESDIR}/solo.rb"
+
+	doman distro/common/man/man1/*.1
+	doman distro/common/man/man8/*.8
 }
 
 pkg_setup() {

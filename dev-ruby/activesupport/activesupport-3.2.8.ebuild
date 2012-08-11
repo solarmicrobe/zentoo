@@ -41,10 +41,6 @@ ruby_add_bdepend "test? (
 	)"
 
 all_ruby_prepare() {
-	# don't support older mocha versions as the optional codepath
-	# breaks JRuby
-	epatch "${FILESDIR}"/${PN}-3.0.3-mocha-0.9.5.patch
-
 	# Set test environment to our hand.
 #	rm "${S}/../Gemfile" || die "Unable to remove Gemfile"
 	sed -i -e '/load_paths/d' test/abstract_unit.rb || die "Unable to remove load paths"
