@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=4
-USE_RUBY="ruby18 ruby19"
+USE_RUBY="ruby18"
 
 RUBY_FAKEGEM_TASK_DOC=""
 RUBY_FAKEGEM_EXTRADOC="CHANGELOG README.rdoc"
@@ -22,20 +22,21 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RUBY_PATCHES=( "${FILESDIR}/ohai-6.14.0-multiple-ruby.patch" )
-
-ruby_add_bdepend "test? ( dev-ruby/rspec:2 )"
+ruby_add_bdepend "test? ( dev-ruby/rspec:2 dev-ruby/sigar )"
 
 ruby_add_rdepend "
 	dev-ruby/ipaddress
+	dev-ruby/yajl-ruby
 	dev-ruby/mixlib-cli
 	dev-ruby/mixlib-config
 	dev-ruby/mixlib-log
-	dev-ruby/systemu
-	dev-ruby/yajl-ruby"
+	>=dev-ruby/systemu-2.2.0"
 
 all_ruby_prepare() {
 	rm Gemfile || die
+	# Be more lenient to work with versions of systemu that we have in
+	# the tree.
+	sed -i -e 's/~> 2.2.0/>= 2.2.0/' ohai.gemspec || die
 }
 
 all_ruby_install() {
