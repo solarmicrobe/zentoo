@@ -34,4 +34,7 @@ src_install() {
 	dosym /opt/splunk/bin/splunk /usr/bin/splunk
 
 	newinitd "${FILESDIR}"/splunk.initd splunk
+
+	echo "LDPATH=/opt/splunk/lib" > "${T}/99splunk"
+	doenvd "${T}/99splunk"
 }
