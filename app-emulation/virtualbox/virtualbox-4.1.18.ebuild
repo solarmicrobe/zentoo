@@ -48,7 +48,7 @@ RDEPEND="!app-emulation/virtualbox-bin
 		media-libs/libsdl[X,video]
 	)
 	vnc? ( >=net-libs/libvncserver-0.9.7 )
-	java? ( virtual/jre:1.6 )"
+	java? ( || ( virtual/jre:1.7 virtual/jre:1.6 ) )"
 DEPEND="${RDEPEND}
 	>=dev-util/kbuild-0.1.999
 	>=dev-lang/yasm-0.6.2
@@ -66,7 +66,7 @@ DEPEND="${RDEPEND}
 		dev-texlive/texlive-fontsrecommended
 		dev-texlive/texlive-fontsextra
 	)
-	java? ( virtual/jdk:1.6 )
+	java? ( || ( virtual/jdk:1.7 virtual/jdk:1.6 ) )
 	virtual/pkgconfig
 	alsa? ( >=media-libs/alsa-lib-1.0.13 )
 	!headless? ( x11-libs/libXinerama )
