@@ -77,3 +77,6 @@ dev-lang/php sqlite
 
 # no thin provisioning support
 sys-fs/lvm2 thin
+
+# no debug tools for btrfs
+sys-fs/btrfs-progs debug-utils

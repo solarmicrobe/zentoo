@@ -6,7 +6,7 @@ EAPI=2
 
 inherit eutils multilib
 
-MY_BUILD="77245"
+MY_BUILD="78361"
 MY_PN="Oracle_VM_VirtualBox_Extension_Pack"
 MY_P="${MY_PN}-${PV}-${MY_BUILD}"
 
@@ -21,6 +21,8 @@ IUSE=""
 RESTRICT="mirror strip"
 
 RDEPEND="~app-emulation/virtualbox-${PV}"
+
+QA_PREBUILT="/usr/$(get_libdir)/virtualbox/ExtensionPacks/${MY_PN}/.*"
 
 src_install() {
 	insinto /usr/$(get_libdir)/virtualbox/ExtensionPacks/${MY_PN}
