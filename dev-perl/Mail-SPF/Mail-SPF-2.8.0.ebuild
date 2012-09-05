@@ -1,12 +1,12 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 
 MODULE_AUTHOR=JMEHNLE
-MODULE_VERSION=v2.007
 MODULE_SECTION=mail-spf
+MODULE_VERSION=v2.8.0
 inherit perl-module
 
 DESCRIPTION="Sender Permitted From - Object Oriented"

@@ -5,7 +5,7 @@
 EAPI=4
 
 MODULE_AUTHOR=PHRED
-MODULE_VERSION=0.11
+MODULE_VERSION=0.12
 inherit perl-module
 
 DESCRIPTION="Perl module for Apache::Reload"

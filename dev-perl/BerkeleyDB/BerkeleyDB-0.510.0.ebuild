@@ -5,7 +5,7 @@
 EAPI=4
 
 MODULE_AUTHOR=PMQS
-MODULE_VERSION=0.50
+MODULE_VERSION=0.51
 inherit perl-module eutils db-use
 
 DESCRIPTION="This module provides Berkeley DB interface for Perl."

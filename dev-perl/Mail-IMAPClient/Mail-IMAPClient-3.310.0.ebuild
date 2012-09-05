@@ -5,7 +5,7 @@
 EAPI=4
 
 MODULE_AUTHOR=PLOBBES
-MODULE_VERSION=3.30
+MODULE_VERSION=3.31
 inherit perl-module
 
 DESCRIPTION="IMAP client module for Perl"

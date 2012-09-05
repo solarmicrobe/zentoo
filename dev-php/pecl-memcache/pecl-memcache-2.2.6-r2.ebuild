@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
 PHP_EXT_NAME="memcache"
 PHP_EXT_INI="yes"
 PHP_EXT_ZENDEXT="no"
@@ -24,9 +24,9 @@ RDEPEND="${DEPEND}"
 # upstream does not ship any testsuite, so the PHPize test-runner fails.
 RESTRICT='test'
 
-src_compile() {
+src_configure() {
 	my_conf="--enable-memcache --with-zlib-dir=/usr $(use_enable session memcache-session)"
-	php-ext-pecl-r2_src_compile
+	php-ext-source-r2_src_configure
 }
 
 src_install() {
@@ -36,9 +36,6 @@ src_install() {
 	php-ext-source-r2_addtoinifiles "memcache.max_failover_attempts" "20"
 	php-ext-source-r2_addtoinifiles "memcache.chunk_size" "32768"
 	php-ext-source-r2_addtoinifiles "memcache.default_port" "11211"
-	php-ext-source-r2_addtoinifiles "memcache.hash_strategy" "consistent"
+	php-ext-source-r2_addtoinifiles "memcache.hash_strategy" "standard"
 	php-ext-source-r2_addtoinifiles "memcache.hash_function" "crc32"
-	php-ext-source-r2_addtoinifiles "memcache.redundancy" "1"
-	php-ext-source-r2_addtoinifiles "memcache.session_redundancy" "2"
-	php-ext-source-r2_addtoinifiles "memcache.protocol" "ascii"
 }

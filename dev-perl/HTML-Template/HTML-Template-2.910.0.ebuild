@@ -1,11 +1,11 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 
-MODULE_AUTHOR=SAMTREGAR
-MODULE_VERSION=2.9
+MODULE_AUTHOR=WONKO
+MODULE_VERSION=2.91
 inherit perl-module
 
 DESCRIPTION="A Perl module to use HTML Templates"

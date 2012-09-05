@@ -5,7 +5,7 @@
 EAPI=4
 
 MODULE_AUTHOR=PHRED
-MODULE_VERSION=1.36
+MODULE_VERSION=1.37
 inherit depend.apache perl-module
 
 DESCRIPTION="Test.pm wrapper with helpers for testing Apache"

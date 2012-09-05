@@ -106,7 +106,7 @@ IUSE="${IUSE} bcmath berkdb bzip2 calendar cdb cjk
 	intl iodbc ipv6 +json kerberos ldap ldap-sasl libedit mhash
 	mssql mysql mysqlnd mysqli nls
 	oci8-instant-client odbc pcntl pdo +phar pic +posix postgres qdbm
-	readline recode +session sharedmem
+	readline recode selinux +session sharedmem
 	+simplexml snmp soap sockets spell sqlite sqlite3 ssl
 	sybase-ct sysvipc tidy +tokenizer truetype unicode wddx
 	+xml xmlreader xmlwriter xmlrpc xpm xsl zip zlib"
@@ -232,10 +232,11 @@ DEPEND="${DEPEND}
 	phar? ( !dev-php5/pecl-phar )
 	zip? ( !dev-php5/pecl-zip )"
 
-[[ -n $SUHOSIN_VERSION ]] && RDEPEND="${RDEPEND} suhosin? (
-=${CATEGORY}/${PN}-${SLOT}*[unicode] )"
-
 RDEPEND="${DEPEND}"
+
+[[ -n $SUHOSIN_VERSION ]] && RDEPEND="${RDEPEND} suhosin? ( =${CATEGORY}/${PN}-${SLOT}*[unicode] )"
+
+RDEPEND="${RDEPEND} fpm? ( selinux? ( sec-policy/selinux-phpfpm ) )"
 
 DEPEND="${DEPEND}
 	sys-devel/flex

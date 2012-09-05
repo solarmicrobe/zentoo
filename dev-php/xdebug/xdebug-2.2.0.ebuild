@@ -2,17 +2,21 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
 PHP_EXT_NAME="xdebug"
 PHP_EXT_INI="yes"
 PHP_EXT_ZENDEXT="yes"
 
-inherit php-ext-source-r2
-
-KEYWORDS="amd64"
+USE_PHP="php5-3 php5-4"
 
 MY_PV="${PV/_/}"
 MY_PV="${MY_PV/rc/RC}"
+
+S="${WORKDIR}/${PN}-${MY_PV}"
+
+inherit php-ext-source-r2
+
+KEYWORDS="amd64"
 
 DESCRIPTION="A PHP debugging and profiling extension"
 HOMEPAGE="http://www.xdebug.org/"
@@ -21,14 +25,12 @@ LICENSE="Xdebug"
 SLOT="0"
 IUSE=""
 
-S="${WORKDIR}/${PN}-${MY_PV}"
-
 DEPEND="!dev-php/ZendOptimizer"
 RDEPEND="${DEPEND}
 		~dev-php/xdebug-client-${PV}"
 
 src_install() {
-	dodoc NEWS README Changelog CREDITS
+	dodoc NEWS README CREDITS
 	php-ext-source-r2_src_install
 
 	php-ext-source-r2_addtoinifiles "xdebug.auto_trace" '"0"'
@@ -40,7 +42,7 @@ src_install() {
 	php-ext-source-r2_addtoinifiles "xdebug.collect_params" '"0"'
 	php-ext-source-r2_addtoinifiles "xdebug.collect_return" '"0"'
 	php-ext-source-r2_addtoinifiles "xdebug.collect_vars" '"0"'
-	php-ext-source-r2_addtoinifiles "xdebug.default_enable" '"0"'
+	php-ext-source-r2_addtoinifiles "xdebug.default_enable" '"1"'
 	php-ext-source-r2_addtoinifiles "xdebug.extended_info" '"1"'
 	php-ext-source-r2_addtoinifiles "xdebug.manual_url" '"http://www.php.net"'
 	php-ext-source-r2_addtoinifiles "xdebug.max_nesting_level" '"100"'

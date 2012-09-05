@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="4"
 
 inherit depend.php eutils
 
@@ -71,34 +71,34 @@ src_install() {
 
 	# adjust some scripts for current version
 	for i in pearcmd.php peclcmd.php ; do
-		dosed "s:@pear_version@:${PEAR}:g" /usr/share/php/${i}
+		sed "s:@pear_version@:${PEAR}:g" -i "${D}/usr/share/php/${i}"
 	done
 
 	for i in pear peardev pecl ; do
-		dosed "s:@bin_dir@:${EPREFIX}/usr/bin:g" /usr/bin/${i}
-		dosed "s:@php_dir@:${EPREFIX}/usr/share/php:g" /usr/bin/${i}
+		sed "s:@bin_dir@:${EPREFIX}/usr/bin:g" -i "${D}/usr/bin/${i}"
+		sed "s:@php_dir@:${EPREFIX}/usr/share/php:g" -i "${D}/usr/bin/${i}"
 	done
-	dosed "s:-d output_buffering=1:-d output_buffering=1 -d memory_limit=32M:g" /usr/bin/pear
+	sed "s:-d output_buffering=1:-d output_buffering=1 -d memory_limit=32M:g" -i "${D}/usr/bin/pear"
 
-	dosed "s:@package_version@:${PEAR}:g" /usr/share/php/PEAR/Command/Package.php
-	dosed "s:@PEAR-VER@:${PEAR}:g" /usr/share/php/PEAR/Dependency2.php
-	dosed "s:@PEAR-VER@:${PEAR}:g" /usr/share/php/PEAR/PackageFile/Parser/v1.php
-	dosed "s:@PEAR-VER@:${PEAR}:g" /usr/share/php/PEAR/PackageFile/Parser/v2.php
+	sed "s:@package_version@:${PEAR}:g" -i "${D}/usr/share/php/PEAR/Command/Package.php"
+	sed "s:@PEAR-VER@:${PEAR}:g" -i "${D}/usr/share/php/PEAR/Dependency2.php"
+	sed "s:@PEAR-VER@:${PEAR}:g" -i "${D}/usr/share/php/PEAR/PackageFile/Parser/v1.php"
+	sed "s:@PEAR-VER@:${PEAR}:g" -i "${D}/usr/share/php/PEAR/PackageFile/Parser/v2.php"
 
 	# finalize install
 	insinto /etc
 	newins "${FILESDIR}"/pear.conf-r2 pear.conf
-	dosed "s|s:PHPCLILEN:\"PHPCLI\"|s:${#PHPCLI}:\"${PHPCLI}\"|g" /etc/pear.conf
-	dosed "s|s:CACHEDIRLEN:\"CACHEDIR\"|s:${#PEAR_CACHEDIR}:\"${PEAR_CACHEDIR}\"|g" /etc/pear.conf
-	dosed "s|s:DOWNLOADDIRLEN:\"DOWNLOADDIR\"|s:${#PEAR_DOWNLOADDIR}:\"${PEAR_DOWNLOADDIR}\"|g" /etc/pear.conf
-	dosed "s|s:TEMPDIRLEN:\"TEMPDIR\"|s:${#PEAR_TEMPDIR}:\"${PEAR_TEMPDIR}\"|g" /etc/pear.conf
+	sed "s|s:PHPCLILEN:\"PHPCLI\"|s:${#PHPCLI}:\"${PHPCLI}\"|g" -i "${D}/etc/pear.conf"
+	sed "s|s:CACHEDIRLEN:\"CACHEDIR\"|s:${#PEAR_CACHEDIR}:\"${PEAR_CACHEDIR}\"|g" -i "${D}/etc/pear.conf"
+	sed "s|s:DOWNLOADDIRLEN:\"DOWNLOADDIR\"|s:${#PEAR_DOWNLOADDIR}:\"${PEAR_DOWNLOADDIR}\"|g" -i "${D}/etc/pear.conf"
+	sed "s|s:TEMPDIRLEN:\"TEMPDIR\"|s:${#PEAR_TEMPDIR}:\"${PEAR_TEMPDIR}\"|g" -i "${D}/etc/pear.conf"
 
 	# Change the paths for eprefix!
-	dosed "s|s:19:\"/usr/share/php/docs\"|s:$(( ${#EPREFIX}+19 )):\"${EPREFIX}/usr/share/php/docs\"|g" /etc/pear.conf
-	dosed "s|s:19:\"/usr/share/php/data\"|s:$(( ${#EPREFIX}+19 )):\"${EPREFIX}/usr/share/php/data\"|g" /etc/pear.conf
-	dosed "s|s:20:\"/usr/share/php/tests\"|s:$(( ${#EPREFIX}+20 )):\"${EPREFIX}/usr/share/php/tests\"|g" /etc/pear.conf
-	dosed "s|s:14:\"/usr/share/php\"|s:$(( ${#EPREFIX}+14 )):\"${EPREFIX}/usr/share/php\"|g" /etc/pear.conf
-	dosed "s|s:8:\"/usr/bin\"|s:$(( ${#EPREFIX}+8 )):\"${EPREFIX}/usr/bin\"|g" /etc/pear.conf
+	sed "s|s:19:\"/usr/share/php/docs\"|s:$(( ${#EPREFIX}+19 )):\"${EPREFIX}/usr/share/php/docs\"|g" -i "${D}/etc/pear.conf"
+	sed "s|s:19:\"/usr/share/php/data\"|s:$(( ${#EPREFIX}+19 )):\"${EPREFIX}/usr/share/php/data\"|g" -i "${D}/etc/pear.conf"
+	sed "s|s:20:\"/usr/share/php/tests\"|s:$(( ${#EPREFIX}+20 )):\"${EPREFIX}/usr/share/php/tests\"|g" -i "${D}/etc/pear.conf"
+	sed "s|s:14:\"/usr/share/php\"|s:$(( ${#EPREFIX}+14 )):\"${EPREFIX}/usr/share/php\"|g" -i "${D}/etc/pear.conf"
+	sed "s|s:8:\"/usr/bin\"|s:$(( ${#EPREFIX}+8 )):\"${EPREFIX}/usr/bin\"|g" -i "${D}/etc/pear.conf"
 
 	[[ "${PEAR_TEMPDIR}" != "/tmp" ]] && keepdir "${PEAR_TEMPDIR#${EPREFIX}}"
 	keepdir "${PEAR_CACHEDIR#${EPREFIX}}"

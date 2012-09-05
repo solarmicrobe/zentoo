@@ -56,6 +56,7 @@ php-pear-r1_src_install() {
 	# SNMP support
 	addpredict /usr/share/snmp/mibs/.index
 	addpredict /var/lib/net-snmp/
+	addpredict /var/lib/net-snmp/mib_indexes
 	addpredict /session_mm_cli0.sem
 
 	PHP_BIN="/usr/bin/php"

@@ -2,12 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="4"
 PHP_EXT_NAME="xcache"
 PHP_EXT_INI="yes"
 PHP_EXT_ZENDEXT="yes"
 PHPSAPILIST="apache2 cgi fpm"
 
+USE_PHP="php5-3 php5-4"
 inherit php-ext-source-r2 confutils
 
 DESCRIPTION="A fast and stable PHP opcode cacher"
