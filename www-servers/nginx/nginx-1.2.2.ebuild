@@ -82,14 +82,6 @@ HTTP_LUA_MODULE_SHA1="db0bebe"
 HTTP_LUA_MODULE_URI="https://github.com/chaoslawful/lua-nginx-module/tarball/v${HTTP_LUA_MODULE_PV}"
 HTTP_LUA_MODULE_WD="${WORKDIR}/chaoslawful-lua-nginx-module-${HTTP_LUA_MODULE_SHA1}"
 
-# tcp proxy (https://github.com/yaoweibin/nginx_tcp_proxy_module, BSD license)
-TCP_PROXY_MODULE_PV="0.26"
-TCP_PROXY_MODULE_P="ngx_tcp_proxy-${HTTP_LUA_MODULE_PV}"
-TCP_PROXY_MODULE_SHA1="b83e5a6"
-TCP_PROXY_MODULE_URI="https://github.com/yaoweibin/nginx_tcp_proxy_module/tarball/v${TCP_PROXY_MODULE_PV}"
-TCP_PROXY_MODULE_WD="${WORKDIR}/yaoweibin-nginx_tcp_proxy_module-${TCP_PROXY_MODULE_SHA1}"
-
-
 inherit eutils ssl-cert toolchain-funcs perl-module flag-o-matic user
 
 DESCRIPTION="Robust, small and high performance http and reverse proxy server"
@@ -104,8 +96,7 @@ SRC_URI="http://nginx.org/download/${P}.tar.gz
 	nginx_modules_http_upload? ( ${HTTP_UPLOAD_MODULE_URI} )
 	nginx_modules_http_slowfs_cache? ( ${HTTP_SLOWFS_CACHE_MODULE_URI} )
 	nginx_modules_http_fancyindex? ( ${HTTP_FANCYINDEX_MODULE_URI} -> ${HTTP_FANCYINDEX_MODULE_P}.tar.gz )
-	nginx_modules_http_lua? ( ${HTTP_LUA_MODULE_URI} -> ${HTTP_LUA_MODULE_P}.tar.gz )
-	nginx_modules_http_tcp_proxy? ( ${TCP_PROXY_MODULE_URI} -> ${TCP_PROXY_MODULE_P}.tar.gz )"
+	nginx_modules_http_lua? ( ${HTTP_LUA_MODULE_URI} -> ${HTTP_LUA_MODULE_P}.tar.gz )"
 
 LICENSE="as-is BSD BSD-2 GPL-2 MIT"
 SLOT="0"
@@ -126,8 +117,7 @@ NGINX_MODULES_3RD="
 	http_upload
 	http_slowfs_cache
 	http_fancyindex
-	http_lua
-	http_tcp_proxy"
+	http_lua"
 
 IUSE="aio debug +http +http-cache ipv6 libatomic +pcre pcre-jit selinux ssl
 syslog vim-syntax"
@@ -215,7 +205,6 @@ pkg_setup() {
 
 src_prepare() {
 	use syslog && epatch "${SYSLOG_MODULE_WD}"/syslog_${SYSLOG_MODULE_PV}.patch
-	use nginx_modules_http_tcp_proxy && epatch "${TCP_PROXY_MODULE_WD}"/tcp.patch
 
 	# use proper make
 	find auto/ -type f -print0 | xargs -0 sed -i 's:\&\& make:\&\& \\$(MAKE):' || die
@@ -302,11 +291,6 @@ src_configure() {
 		http_enabled=1
 		myconf+=" --add-module=${DEVEL_KIT_MODULE_WD}"
 		myconf+=" --add-module=${HTTP_LUA_MODULE_WD}"
-	fi
-
-	if use nginx_modules_http_tcp_proxy; then
-		http_enabled=1
-		myconf+=" --add-module=${TCP_PROXY_MODULE_WD}"
 	fi
 
 	if use http || use http-cache; then
@@ -425,11 +409,6 @@ src_install() {
 	if use nginx_modules_http_lua; then
 		docinto ${HTTP_LUA_MODULE_P}
 		dodoc "${HTTP_LUA_MODULE_WD}"/{Changes,README.markdown}
-	fi
-
-	if use nginx_modules_http_tcp_proxy; then
-		docinto ${TCP_PROXY_MODULE_P}
-		dodoc "${TCP_PROXY_MODULE_WD}"/README
 	fi
 }
 
