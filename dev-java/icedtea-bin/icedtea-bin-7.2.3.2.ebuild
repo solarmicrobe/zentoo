@@ -30,7 +30,7 @@ LICENSE="GPL-2-with-linking-exception"
 SLOT="7"
 KEYWORDS="amd64"
 
-IUSE="+X +alsa cjk doc examples nsplugin source"
+IUSE="X alsa cjk doc examples nsplugin source"
 REQUIRED_USE="nsplugin? ( X )"
 RESTRICT="strip"
 
