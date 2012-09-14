@@ -39,6 +39,7 @@ app-editors/emacs X
 app-editors/vim X
 app-misc/mc X
 app-text/ghostscript-gpl X
+dev-java/ant X
 dev-java/sun-jdk X
 dev-lang/R X
 dev-python/imaging X
@@ -80,3 +81,6 @@ sys-fs/lvm2 thin
 
 # no debug tools for btrfs
 sys-fs/btrfs-progs debug-utils
+
+# no JUnit4
+dev-java/ant testutil

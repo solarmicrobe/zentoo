@@ -26,6 +26,7 @@ dev-ruby
 dev-util
 dev-vcs
 gnome-base
+java-virtuals
 mail-client
 mail-filter
 mail-mta

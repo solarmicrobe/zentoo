@@ -21,6 +21,8 @@ audiofile
 audit
 authdaemond
 avahi
+avalon-framework
+avalon-logkit
 birdstep
 blas
 bluetooth
@@ -120,9 +122,13 @@ ipod
 irc
 isag
 jack
+jai
 jbig
 jce
 jingle
+jmf
+jms
+jmx
 joystick
 kde
 kdeenablefinal
