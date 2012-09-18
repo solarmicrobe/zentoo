@@ -262,6 +262,7 @@ source
 sox
 speex
 spell
+sqlite2
 startup-notification
 svga
 sybase

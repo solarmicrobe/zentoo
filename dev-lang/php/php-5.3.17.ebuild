@@ -107,7 +107,7 @@ IUSE="${IUSE} bcmath berkdb bzip2 calendar cdb cjk
 	mssql mysql mysqlnd mysqli nls
 	oci8-instant-client odbc pcntl pdo +phar pic +posix postgres qdbm
 	readline recode selinux +session sharedmem
-	+simplexml snmp soap sockets spell sqlite sqlite3 ssl
+	+simplexml snmp soap sockets spell sqlite2 sqlite3 ssl
 	sybase-ct sysvipc tidy +tokenizer truetype unicode wddx
 	+xml xmlreader xmlwriter xmlrpc xpm xsl zip zlib"
 
@@ -164,7 +164,7 @@ DEPEND="!dev-lang/php:5
 	snmp? ( >=net-analyzer/net-snmp-5.2 )
 	soap? ( >=dev-libs/libxml2-2.6.8 )
 	spell? ( >=app-text/aspell-0.50 )
-	sqlite? ( =dev-db/sqlite-2* pdo? ( >=dev-db/sqlite-3.7.7.1 ) )
+	sqlite2? ( =dev-db/sqlite-2* )
 	sqlite3? ( >=dev-db/sqlite-3.7.7.1 )
 	ssl? ( >=dev-libs/openssl-0.9.7 )
 	sybase-ct? ( dev-db/freetds )
