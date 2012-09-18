@@ -11,7 +11,7 @@ DESCRIPTION="RabbitMQ is a high-performance AMQP-compliant message broker writte
 HOMEPAGE="http://www.rabbitmq.com/"
 SRC_URI="http://www.rabbitmq.com/releases/rabbitmq-server/v${PV}/rabbitmq-server-${PV}.tar.gz"
 
-LICENSE="MPL-1.1"
+LICENSE="GPL-2 MPL-1.1"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
@@ -33,8 +33,15 @@ pkg_setup() {
 	python_pkg_setup
 }
 
+src_prepare() {
+	# do not refetch plugins from their vcs
+	for f in $(find plugins-src/*-wrapper ${plugin} -type d -maxdepth 1); do
+		touch ${f}/.done
+	done
+}
+
 src_compile() {
-	emake all docs_all || die "emake all failed"
+	emake all docs_all
 	gunzip docs/*.gz
 }
 
