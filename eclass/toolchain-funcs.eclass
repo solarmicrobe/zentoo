@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: toolchain-funcs.eclass
@@ -16,8 +16,6 @@ if [[ ${___ECLASS_ONCE_TOOLCHAIN_FUNCS} != "recur -_+^+_- spank" ]] ; then
 ___ECLASS_ONCE_TOOLCHAIN_FUNCS="recur -_+^+_- spank"
 
 inherit multilib
-
-DESCRIPTION="Based on the ${ECLASS} eclass"
 
 # tc-getPROG <VAR [search vars]> <default> [tuple]
 _tc-getPROG() {

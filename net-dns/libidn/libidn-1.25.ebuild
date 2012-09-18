@@ -43,7 +43,7 @@ src_configure() {
 		$(use_enable mono csharp mono) \
 		$(use_enable static-libs static) \
 		--disable-valgrind-tests \
-		--with-lispdir="${SITELISP}/${PN}" \
+		--with-lispdir="${EPREFIX}${SITELISP}/${PN}" \
 		--with-packager="Gentoo" \
 		--with-packager-version="r${PR}" \
 		--with-packager-bug-reports="https://bugs.gentoo.org"
@@ -65,7 +65,7 @@ src_install() {
 		elisp-install ${PN} src/*.elc || die
 		elisp-site-file-install "${FILESDIR}/${SITEFILE}" || die
 	else
-		rm -rf "${D}/usr/share/emacs"
+		rm -rf "${ED}/usr/share/emacs"
 	fi
 
 	if use doc ; then
@@ -74,14 +74,14 @@ src_install() {
 
 	if use java ; then
 		java-pkg_newjar java/${P}.jar ${PN}.jar || die
-		rm -rf "${D}"/usr/share/java || die
+		rm -rf "${ED}"/usr/share/java || die
 
 		if use doc ; then
 			java-pkg_dojavadoc doc/java
 		fi
 	fi
 	if ! use static-libs; then
-		rm -f "${D}"/usr/lib*/lib*.la
+		rm -f "${ED}"/usr/lib*/lib*.la
 	fi
 }
 

@@ -19,8 +19,6 @@ ___ECLASS_ONCE_EUTILS="recur -_+^+_- spank"
 
 inherit multilib toolchain-funcs user
 
-DESCRIPTION="Based on the ${ECLASS} eclass"
-
 if has "${EAPI:-0}" 0 1 2; then
 
 # @FUNCTION: epause

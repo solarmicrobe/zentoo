@@ -18,13 +18,14 @@ SRC_URI="ftp://ftp.isc.org/isc/bind9/${MY_PV}/${MY_P}.tar.gz"
 LICENSE="as-is"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="doc gssapi idn ipv6 ssl urandom xml"
+IUSE="doc gssapi idn ipv6 readline ssl urandom xml"
 # no PKCS11 currently as it requires OpenSSL to be patched, also see bug 409687
 
 DEPEND="ssl? ( dev-libs/openssl )
 	xml? ( dev-libs/libxml2 )
 	idn? ( net-dns/idnkit )
-	gssapi? ( virtual/krb5 )"
+	gssapi? ( virtual/krb5 )
+	readline? ( sys-libs/readline )"
 RDEPEND="${DEPEND}"
 
 S="${WORKDIR}/${MY_P}"
@@ -32,6 +33,9 @@ S="${WORKDIR}/${MY_P}"
 src_prepare() {
 	# bug 231247
 	epatch "${FILESDIR}"/${PN}-9.5.0_p1-lwconfig.patch
+
+	# Disable tests for now, bug 406399
+	sed -i '/^SUBDIRS/s:tests::' bin/Makefile.in lib/Makefile.in || die
 
 	# bug #220361
 	rm {aclocal,libtool}.m4
@@ -59,6 +63,7 @@ src_configure() {
 		$(use_with ssl openssl) \
 		$(use_with xml libxml2) \
 		$(use_with gssapi) \
+		$(use_with readline) \
 		${myconf}
 
 	# bug #151839
@@ -73,23 +78,23 @@ src_compile() {
 }
 
 src_install() {
-	dodoc README CHANGES FAQ || die
+	dodoc README CHANGES FAQ
 
 	cd "${S}"/bin/dig
-	dobin dig host nslookup || die
-	doman {dig,host,nslookup}.1 || die
+	dobin dig host nslookup
+	doman {dig,host,nslookup}.1
 
 	cd "${S}"/bin/nsupdate
-	dobin nsupdate || die
-	doman nsupdate.1 || die
+	dobin nsupdate
+	doman nsupdate.1
 	if use doc; then
-		dohtml nsupdate.html || die
+		dohtml nsupdate.html
 	fi
 
 	cd "${S}"/bin/dnssec
-	dobin dnssec-keygen || die
-	doman dnssec-keygen.8 || die
+	dobin dnssec-keygen
+	doman dnssec-keygen.8
 	if use doc; then
-		dohtml dnssec-keygen.html || die
+		dohtml dnssec-keygen.html
 	fi
 }

@@ -3,7 +3,8 @@
 # $Header: $
 
 EAPI=2
-inherit eutils multilib
+
+inherit eutils multilib autotools user toolchain-funcs
 
 DESCRIPTION="The PowerDNS Daemon"
 SRC_URI="http://downloads.powerdns.com/releases/${P}.tar.gz"
@@ -20,14 +21,16 @@ RDEPEND="mysql? ( virtual/mysql )
 	sqlite? ( =dev-db/sqlite-2.8* )
 	sqlite3? ( =dev-db/sqlite-3* )
 	opendbx? ( dev-db/opendbx )
-	!static? ( >=dev-libs/boost-1.31 )"
+	!static? ( >=dev-libs/boost-1.34 )"
 DEPEND="${RDEPEND}
-	static? ( >=dev-libs/boost-1.31[static-libs] )
+	virtual/pkgconfig
+	static? ( >=dev-libs/boost-1.34[static-libs] )
 	doc? ( app-doc/doxygen )"
 
 src_prepare() {
-	epatch "${FILESDIR}"/2.9.18-default-mysql-options.patch \
-		"${FILESDIR}"/${P}-gcc44.patch
+	epatch "${FILESDIR}"/${PN}-3.0-lua-config.patch \
+		"${FILESDIR}"/${PN}-3.0-verbose-logging.patch
+	eautoreconf
 }
 
 src_configure() {
@@ -51,13 +54,15 @@ src_configure() {
 		--with-pgsql-lib=/usr/$(get_libdir) \
 		--with-mysql-lib=/usr/$(get_libdir) \
 		--with-sqlite-lib=/usr/$(get_libdir) \
-		--with-sqlite3-lib=/usr/$(get_libdir) \
+		--without-lua \
 		$(use_enable static static-binaries) \
 		${myconf} \
 		|| die "econf failed"
 }
 
 src_compile() {
+	emake -C pdns/ext/polarssl CC="$(tc-getCC)" OFLAGS="${CFLAGS}"
+
 	default
 
 	if use doc
