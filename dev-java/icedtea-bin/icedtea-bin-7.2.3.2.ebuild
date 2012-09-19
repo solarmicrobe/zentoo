@@ -39,8 +39,6 @@ ALSA_COMMON_DEP="
 X_COMMON_DEP="
 		>=dev-libs/atk-1.30.0
 		>=dev-libs/glib-2.20.5:2
-		>=media-libs/fontconfig-2.6.0-r2:1.0
-		>=media-libs/freetype-2.3.9:2
 		>=x11-libs/cairo-1.8.8
 		x11-libs/gdk-pixbuf:2
 		>=x11-libs/gtk+-2.20.1:2
@@ -52,6 +50,8 @@ X_COMMON_DEP="
 	>=x11-libs/pango-1.24.5"
 
 COMMON_DEP="
+	>=media-libs/fontconfig-2.6.0-r2:1.0
+	>=media-libs/freetype-2.3.9:2
 	>=media-libs/giflib-4.1.6-r1
 	media-libs/lcms:2
 	>=media-libs/libpng-1.5
