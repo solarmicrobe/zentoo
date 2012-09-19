@@ -5,7 +5,7 @@
 EAPI=4
 USE_RUBY="ruby18 ree18 ruby19 jruby"
 
-RUBY_FAKEGEM_TASK_TEST="spec"
+RUBY_FAKEGEM_RECIPE_TEST="rspec"
 
 RUBY_FAKEGEM_DOCDIR="rdoc"
 RUBY_FAKEGEM_EXTRADOC="README.rdoc"
@@ -26,7 +26,6 @@ KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_bdepend "
-	test? ( dev-ruby/rspec:2 )
 	doc? ( >=dev-ruby/rdoc-2.4.2 )"
 
 all_ruby_prepare() {

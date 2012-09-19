@@ -34,7 +34,7 @@ RDEPEND="${DEPEND}"
 #	ruby_add_bdepend "
 #			test? (
 #				dev-ruby/activerecord
-#				dev-ruby/sqlite3-ruby
+#				dev-ruby/sqlite3
 #				dev-ruby/ruby2ruby
 #			)"
 

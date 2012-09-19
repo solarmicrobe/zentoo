@@ -3,10 +3,10 @@
 # $Header: $
 
 EAPI=4
-USE_RUBY="ruby18 ruby19"
+USE_RUBY="ruby18 ruby19 ree18"
 
 RUBY_FAKEGEM_TASK_DOC=""
-RUBY_FAKEGEM_TASK_TEST="spec"
+RUBY_FAKEGEM_RECIPE_TEST="rspec"
 
 RUBY_FAKEGEM_EXTRA_DOC="README.md"
 
@@ -22,4 +22,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-ruby_add_bdepend "test? ( dev-ruby/rspec:2 )"
+each_ruby_prepare() {
+	# Make sure we actually use the right interpreter for testing
+	sed -i -e "/ruby_eval/ s:ruby :${RUBY} :" spec/mixlib/shellout_spec.rb || die
+}

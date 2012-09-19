@@ -6,7 +6,7 @@ EAPI=4
 USE_RUBY="ruby18 ruby19 ree18 jruby"
 
 RUBY_FAKEGEM_TASK_DOC=""
-RUBY_FAKEGEM_TASK_TEST="spec"
+RUBY_FAKEGEM_RECIPE_TEST="rspec"
 
 RUBY_FAKEGEM_EXTRADOC="README.rdoc"
 
@@ -21,5 +21,3 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
-
-ruby_add_bdepend "test? ( dev-ruby/rspec:2 )"

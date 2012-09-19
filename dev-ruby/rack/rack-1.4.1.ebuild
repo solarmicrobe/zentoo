@@ -25,7 +25,7 @@ ruby_add_rdepend "virtual/ruby-ssl"
 # memcache-client, thin, mongrel and camping; not sure if we should
 # make them dependencies at all. We do add the fcgi dependency because
 # that spec isn't optional.
-ruby_add_bdepend "test? ( dev-ruby/bacon dev-ruby/ruby-fcgi )"
+ruby_add_bdepend "test? ( dev-ruby/bacon dev-ruby/fcgi )"
 
 # Block against versions in older slots that also try to install a binary.
 RDEPEND="${RDEPEND} !<dev-ruby/rack-1.1.3-r1:0 !<dev-ruby/rack-1.2.5:1.2 !<dev-ruby/rack-1.3.6-r1:1.3"

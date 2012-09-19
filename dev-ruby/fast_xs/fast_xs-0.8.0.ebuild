@@ -4,10 +4,12 @@
 
 EAPI=4
 
-USE_RUBY="ruby18 ruby19 ree18"
+USE_RUBY="ruby18 ree18 ruby19"
 
 RUBY_FAKEGEM_TASK_DOC="docs"
 RUBY_FAKEGEM_DOCDIR="doc"
+
+RUBY_FAKEGEM_EXTRADOC="History.rdoc README.rdoc"
 
 inherit ruby-fakegem
 
@@ -20,7 +22,15 @@ KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_bdepend "doc? ( >=dev-ruby/hoe-2.3.2 )"
-ruby_add_bdepend "test? ( >=dev-ruby/hoe-2.3.2 virtual/ruby-test-unit )"
+ruby_add_bdepend "test? (
+	>=dev-ruby/hoe-2.3.2
+	virtual/ruby-test-unit
+	dev-ruby/rack
+)"
+
+USE_RUBY="ruby18" ruby_add_bdepend "test? ( www-servers/mongrel )"
+
+RUBY_PATCHES=( "${P}+ruby-1.9.patch" )
 
 each_ruby_configure() {
 	${RUBY} -Cext/fast_xs extconf.rb || die "extconf.rb failed"
@@ -32,4 +42,13 @@ each_ruby_compile() {
 	cp ext/fast_xs/fast_xs$(get_modname) lib/ || die
 	emake -Cext/fast_xs_extra CFLAGS="${CFLAGS} -fPIC" archflag="${LDFLAGS}" || die "make extension failed"
 	cp ext/fast_xs_extra/fast_xs_extra$(get_modname) lib/ || die
+}
+
+each_ruby_test() {
+	# the Rakefile tries to run all the tests in a single process, but
+	# this breaks the monkey-patchers, we're forced to run them one by
+	# one.
+	for tu in test/test_*.rb; do
+		${RUBY} -Ilib $tu || die "test $tu failed"
+	done
 }

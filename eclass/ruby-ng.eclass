@@ -658,6 +658,42 @@ ruby-ng_rspec() {
 	${RUBY} -S rspec ${rspec_params} "$@" || die "rspec failed"
 }
 
+# @FUNCTION: ruby-ng_cucumber
+# @DESCRIPTION:
+# This is simply a wrapper around the cucumber command (executed by $RUBY})
+# which also respects TEST_VERBOSE and NOCOLOR environment variables.
+ruby-ng_cucumber() {
+	if [[ ${DEPEND} != *"dev-util/cucumber"* ]]; then
+		ewarn "Missing dev-util/cucumber in \${DEPEND}"
+	fi
+
+	local cucumber_params=
+	case ${NOCOLOR} in
+		1|yes|true)
+			cucumber_params+=" --no-color"
+			;;
+		*)
+			cucumber_params+=" --color"
+			;;
+	esac
+
+	case ${TEST_VERBOSE} in
+		1|yes|true)
+			cucumber_params+=" --format pretty"
+			;;
+		*)
+			cucumber_params+=" --format progress"
+			;;
+	esac
+
+	if [[ ${RUBY} == *jruby ]]; then
+		ewarn "Skipping cucumber tests on JRuby (unsupported)."
+		return 0
+	fi
+
+	${RUBY} -S cucumber ${cucumber_params} "$@" || die "cucumber failed"
+}
+
 # @FUNCTION: ruby-ng_testrb-2
 # @DESCRIPTION:
 # This is simply a replacement for the testrb command that load the test

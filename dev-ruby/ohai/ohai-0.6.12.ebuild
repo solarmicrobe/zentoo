@@ -22,7 +22,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-ruby_add_bdepend "test? ( dev-ruby/rspec:2 dev-ruby/sigar )"
+# specs have issues with multiple ruby versions
+RESTRICT="test"
 
 ruby_add_rdepend "
 	dev-ruby/ipaddress

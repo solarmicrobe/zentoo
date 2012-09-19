@@ -20,12 +20,10 @@ HOMEPAGE="http://github.com/brianmario/yajl-ruby"
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="test"
+IUSE=""
 
 RDEPEND="${RDEPEND} dev-libs/yajl"
 DEPEND="${DEPEND} dev-libs/yajl"
-
-ruby_add_bdepend "test? ( dev-ruby/rspec:2 )"
 
 each_ruby_configure() {
 	${RUBY} -Cext/yajl extconf.rb || die "extconf.rb failed"

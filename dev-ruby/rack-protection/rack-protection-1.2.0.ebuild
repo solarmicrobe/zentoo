@@ -5,6 +5,7 @@
 EAPI=4
 USE_RUBY="ruby18 ree18 ruby19"
 
+RUBY_FAKEGEM_RECIPE_TEST="rspec"
 RUBY_FAKEGEM_TASK_DOC=""
 RUBY_FAKEGEM_EXTRADOC="README.md"
 
@@ -18,6 +19,6 @@ HOMEPAGE="https://github.com/rkh/rack-protection"
 LICENSE="MIT"
 SLOT="$(get_version_component_range 1)"
 KEYWORDS="amd64"
-IUSE="test"
+IUSE=""
 
-ruby_add_bdepend "test? ( dev-ruby/rack-test dev-ruby/rspec:2 )"
+ruby_add_bdepend "test? ( dev-ruby/rack-test )"

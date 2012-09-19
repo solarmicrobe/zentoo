@@ -3,10 +3,7 @@
 # $Header: $
 
 EAPI=4
-USE_RUBY="ruby18 ruby19"
-
-RUBY_FAKEGEM_TASK_DOC=""
-RUBY_FAKEGEM_TASK_TEST=""
+USE_RUBY="ruby18 ruby19 ree18 jruby"
 
 inherit ruby-fakegem
 
@@ -17,3 +14,5 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
+
+ruby_add_bdepend "test? ( virtual/ruby-test-unit )"

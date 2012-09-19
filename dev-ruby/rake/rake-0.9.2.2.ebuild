@@ -30,6 +30,11 @@ all_ruby_prepare() {
 	# Comment out unimportant test which failes on ruby18 at least.
 	sed -i -e '/def test_classic_namespace/,/^  end/ s:^:#:' test/test_rake_application_options.rb || die
 
+	# Avoid tests which can't work in bootstrapping because the test runs
+	# in a directory that can't access the file being loaded.
+	rm test/test_rake_clean.rb || die
+	sed -i -e '/test_run_code_rake/,/^  end/ s:^:#:' test/test_rake_test_task.rb || die
+
 	# Decompress the file. The compressed version has errors, ignore them.
 	zcat doc/rake.1.gz > doc/rake.1
 }

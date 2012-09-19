@@ -16,7 +16,7 @@ RUBY_FAKEGEM_TASK_TEST="none"
 inherit ruby-fakegem
 
 DESCRIPTION="Ruby libxml with a user friendly API, akin to REXML, but feature complete and significantly faster."
-HOMEPAGE="http://libxml.rubyforge.org"
+HOMEPAGE="https://github.com/xml4r/libxml-ruby"
 
 LICENSE="as-is"
 SLOT="0"
@@ -26,8 +26,7 @@ IUSE=""
 RDEPEND="${RDEPEND} dev-libs/libxml2"
 DEPEND="${DEPEND} dev-libs/libxml2"
 
-ruby_add_bdepend "doc? ( dev-ruby/rdoc )
-	test? ( virtual/ruby-test-unit )"
+ruby_add_bdepend "doc? ( dev-ruby/rdoc )"
 
 all_ruby_prepare() {
 	# Remove grancher tasks only needed for publishing the website
@@ -41,6 +40,10 @@ all_ruby_prepare() {
 
 	# replace ulimit -n output as it does not work with Ruby 1.9
 	sed -i -e 's:`ulimit -n`:"'`ulimit -n`'":' test/tc_parser.rb || die
+
+	# Avoid test failing due to different semantics in libxml 2.8.
+	# https://github.com/xml4r/libxml-ruby/issues/43
+	sed -i -e '/test_invalid_encoding/,/^  end/ s:^:#:' test/tc_reader.rb || die
 }
 
 each_ruby_configure() {

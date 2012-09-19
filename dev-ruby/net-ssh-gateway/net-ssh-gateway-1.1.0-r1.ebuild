@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI=4
 USE_RUBY="ruby18 ruby19 ree18"
 
-RUBY_FAKEGEM_TASK_DOC="doc"
+RUBY_FAKEGEM_RECIPE_DOC="rdoc"
 
 RUBY_FAKEGEM_EXTRADOC="CHANGELOG.rdoc README.rdoc"
 
@@ -19,11 +19,10 @@ SLOT="2"
 KEYWORDS="amd64"
 IUSE=""
 
+ruby_add_bdepend "dev-ruby/test-unit:2"
+
 ruby_add_rdepend ">=dev-ruby/net-ssh-2.0.0"
 
-ruby_add_bdepend "
-	doc? ( dev-ruby/echoe )
-	test? (
-		dev-ruby/echoe
-		virtual/ruby-test-unit
-	)"
+each_ruby_test() {
+	RUBYLIB=lib ruby-ng_testrb-2 test/*
+}
