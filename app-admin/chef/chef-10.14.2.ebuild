@@ -10,6 +10,8 @@ RUBY_FAKEGEM_TASK_TEST="spec"
 
 RUBY_FAKEGEM_EXTRADOC="README.rdoc"
 
+RUBY_FAKEGEM_GEMSPEC=${RUBY_FAKEGEM_NAME}.gemspec
+
 inherit ruby-fakegem user
 
 DESCRIPTION="Chef is a systems integration framework"
@@ -42,6 +44,16 @@ ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	>=dev-ruby/treetop-1.4.9
 	dev-ruby/uuidtools
 	>=dev-ruby/yajl-ruby-1.1"
+
+each_ruby_prepare() {
+	ruby_fakegem_metadata_gemspec ../metadata ${RUBY_FAKEGEM_GEMSPEC}
+
+	# bunny
+	sed -i -e 's/"< 0.8.0", //' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
+
+	# json
+	sed -i -e 's/"<= 1.6.1", //' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
+}
 
 all_ruby_install() {
 	all_fakegem_install
