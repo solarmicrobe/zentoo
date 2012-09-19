@@ -9,7 +9,7 @@ inherit autotools git-2
 DESCRIPTION="multiwatch forks and watches multiple instances of a program"
 HOMEPAGE="http://redmine.lighttpd.net/projects/multiwatch"
 EGIT_REPO_URI="git://git.lighttpd.net/multiwatch.git"
-EGIT_COMMIT="80d85493"
+EGIT_COMMIT="d23de523"
 
 LICENSE="MIT"
 SLOT="0"
