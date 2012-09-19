@@ -63,6 +63,7 @@ virtual
 www-apache
 www-apps
 www-client
+www-misc
 www-servers
 x11-apps
 x11-base
