@@ -46,6 +46,7 @@ dev-python/imaging X
 media-gfx/imagemagick X
 media-libs/giflib X
 media-libs/t1lib X
+net-print/cups X
 net-analyzer/net-snmp X
 net-misc/openssh X
 sys-apps/groff X
@@ -84,3 +85,6 @@ sys-fs/btrfs-progs debug-utils
 
 # no JUnit4
 dev-java/ant testutil
+
+# minimal cups
+net-print/cups filters

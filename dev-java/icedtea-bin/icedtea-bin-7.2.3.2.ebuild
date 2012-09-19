@@ -30,15 +30,19 @@ LICENSE="GPL-2-with-linking-exception"
 SLOT="7"
 KEYWORDS="amd64"
 
-IUSE="X alsa cjk doc examples nsplugin source"
+IUSE="+X +alsa cjk +cups doc examples nsplugin source"
 REQUIRED_USE="nsplugin? ( X )"
 RESTRICT="strip"
 
 ALSA_COMMON_DEP="
 	>=media-libs/alsa-lib-1.0.20"
+CUPS_COMMON_DEP="
+	>=net-print/cups-1.4"
 X_COMMON_DEP="
 		>=dev-libs/atk-1.30.0
 		>=dev-libs/glib-2.20.5:2
+		>=media-libs/fontconfig-2.6.0-r2:1.0
+		>=media-libs/freetype-2.3.9:2
 		>=x11-libs/cairo-1.8.8
 		x11-libs/gdk-pixbuf:2
 		>=x11-libs/gtk+-2.20.1:2
@@ -50,8 +54,6 @@ X_COMMON_DEP="
 	>=x11-libs/pango-1.24.5"
 
 COMMON_DEP="
-	>=media-libs/fontconfig-2.6.0-r2:1.0
-	>=media-libs/freetype-2.3.9:2
 	>=media-libs/giflib-4.1.6-r1
 	media-libs/lcms:2
 	>=media-libs/libpng-1.5
@@ -63,6 +65,7 @@ COMMON_DEP="
 # cups is needed for X. #390945 #390975
 RDEPEND="${COMMON_DEP}
 	X? (
+		${CUPS_COMMON_DEP}
 		${X_COMMON_DEP}
 		media-fonts/dejavu
 		cjk? (
@@ -73,7 +76,8 @@ RDEPEND="${COMMON_DEP}
 			media-fonts/sazanami
 		)
 	)
-	alsa? ( ${ALSA_COMMON_DEP} )"
+	alsa? ( ${ALSA_COMMON_DEP} )
+	cups? ( ${CUPS_COMMON_DEP} )"
 
 src_install() {
 	local dest="/opt/${P}"

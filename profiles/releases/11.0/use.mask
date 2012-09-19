@@ -40,7 +40,6 @@ cjk
 consolekit
 coreaudio
 cscope
-cups
 custom-cflags
 d3d
 darcs
@@ -130,6 +129,7 @@ jmf
 jms
 jmx
 joystick
+jpeg2k
 kde
 kdeenablefinal
 kdeprefix
