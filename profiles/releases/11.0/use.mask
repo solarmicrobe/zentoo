@@ -152,6 +152,7 @@ libnotify
 libproxy
 libsamplerate
 libssh2
+libzfs
 libwww
 lighttpd
 lirc

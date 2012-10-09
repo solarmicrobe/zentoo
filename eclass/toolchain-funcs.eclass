@@ -357,7 +357,8 @@ ninj() { [[ ${type} == "kern" ]] && echo $1 || echo $2 ; }
 	[[ -z ${host} ]] && host=${CTARGET:-${CHOST}}
 
 	local KV=${KV:-${KV_FULL}}
-	[[ -z ${KV} ]] && die "toolchain-funcs.eclass: Kernel version could not be determined, please inherit kernel-2 or linux-info"
+	[[ ${type} == "kern" ]] && [[ -z ${KV} ]] && \
+	ewarn "QA: Kernel version could not be determined, please inherit kernel-2 or linux-info"
 
 	case ${host} in
 		aarch64*)	ninj aarch64 arm;;

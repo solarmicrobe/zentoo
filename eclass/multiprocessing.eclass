@@ -62,7 +62,7 @@ makeopts_jobs() {
 multijob_init() {
 	# When something goes wrong, try to wait for all the children so we
 	# don't leave any zombies around.
-	has wait ${EBUILD_DEATH_HOOKS} || EBUILD_DEATH_HOOKS+=" wait"
+	has wait ${EBUILD_DEATH_HOOKS} || EBUILD_DEATH_HOOKS+=" wait "
 
 	# Setup a pipe for children to write their pids to when they finish.
 	local pipe="${T}/multijob.pipe"
@@ -188,6 +188,9 @@ multijob_finish() {
 
 	# Do this after reaping all the children.
 	[[ $# -eq 0 ]] || die "${FUNCNAME} takes no arguments"
+
+	# No need to hook anymore.
+	EBUILD_DEATH_HOOKS=${EBUILD_DEATH_HOOKS/ wait / }
 
 	return ${ret}
 }

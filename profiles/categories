@@ -23,6 +23,7 @@ dev-perl
 dev-php
 dev-python
 dev-ruby
+dev-scheme
 dev-util
 dev-vcs
 gnome-base
