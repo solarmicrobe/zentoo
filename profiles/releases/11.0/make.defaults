@@ -17,3 +17,6 @@ EBEEP_IGNORE="yes"
 
 # disable these USE expands
 VIDEO_CARDS=""
+
+# default GRUB2 modules
+GRUB_PLATFORMS="efi-64 pc"

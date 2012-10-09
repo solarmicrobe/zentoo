@@ -30,7 +30,7 @@ HOMEPAGE="http://www.gnu.org/software/grub/"
 
 LICENSE="GPL-3"
 SLOT="2"
-IUSE="custom-cflags debug device-mapper doc efiemu mount nls static sdl truetype libzfs"
+IUSE="custom-cflags debug +device-mapper doc efiemu mount nls static sdl truetype libzfs"
 
 GRUB_PLATFORMS=(
 	# everywhere:
