@@ -19,7 +19,7 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="-* amd64"
 IUSE=""
-DEPEND="!sys-boot/grub"
+DEPEND=""
 RDEPEND="${DEPEND}"
 
 # These are already stripped since we use a binpkg.
