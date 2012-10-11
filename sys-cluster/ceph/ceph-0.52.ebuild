@@ -8,7 +8,7 @@ inherit autotools eutils multilib
 
 DESCRIPTION="Ceph distributed filesystem"
 HOMEPAGE="http://ceph.com/"
-SRC_URI="http://ceph.com/download/${P}.tar.gz"
+SRC_URI="http://ceph.com/download/${P}.tar.bz2"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
@@ -25,15 +25,15 @@ CDEPEND="
 	fuse? ( sys-fs/fuse )
 	libatomic? ( dev-libs/libatomic_ops )
 	gtk? (
-			x11-libs/gtk+:2
-			dev-cpp/gtkmm:2.4
-			gnome-base/librsvg
-		)
+		x11-libs/gtk+:2
+		dev-cpp/gtkmm:2.4
+		gnome-base/librsvg
+	)
 	radosgw? (
-				dev-libs/fcgi
-				dev-libs/expat
-				net-misc/curl
-			)
+		dev-libs/fcgi
+		dev-libs/expat
+		net-misc/curl
+	)
 	tcmalloc? ( dev-util/google-perftools )
 	"
 DEPEND="${CDEPEND}
@@ -58,7 +58,7 @@ src_prepare() {
 src_configure() {
 	econf \
 		--without-hadoop \
-		--docdir=/usr/share/doc/${PF} \
+		--docdir="${EPREFIX}/usr/share/doc/${PF}" \
 		--includedir=/usr/include \
 		$(use_with debug) \
 		$(use_with fuse) \
@@ -70,10 +70,11 @@ src_configure() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install
-	find "${D}" -type f -name "*.la" -exec rm -f {} \;
+	default
 
-	rmdir "${D}/usr/sbin"
+	prune_libtool_files --all
+
+	rmdir "${ED}/usr/sbin"
 
 	exeinto /usr/$(get_libdir)/ceph
 	newexe src/init-ceph ceph_init.sh
@@ -81,7 +82,7 @@ src_install() {
 	insinto /etc/logrotate.d/
 	newins src/logrotate.conf ${PN}
 
-	chmod 644 "${D}"/usr/share/doc/${PF}/sample.*
+	chmod 644 "${ED}"/usr/share/doc/${PF}/sample.*
 
 	keepdir /var/lib/${PN}
 	keepdir /var/lib/${PN}/tmp
