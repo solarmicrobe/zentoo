@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit autotools eutils multilib
+inherit autotools eutils multilib java-pkg-2 flag-o-matic
 
 DESCRIPTION="Ceph distributed filesystem"
 HOMEPAGE="http://ceph.com/"
@@ -13,7 +13,7 @@ SRC_URI="http://ceph.com/download/${P}.tar.bz2"
 LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="debug fuse gtk libatomic radosgw static-libs tcmalloc"
+IUSE="debug fuse gtk hadoop libatomic radosgw static-libs tcmalloc"
 
 CDEPEND="
 	dev-libs/boost
@@ -35,6 +35,7 @@ CDEPEND="
 		net-misc/curl
 	)
 	tcmalloc? ( dev-util/google-perftools )
+	hadoop? ( >=virtual/jdk-1.5 )
 	"
 DEPEND="${CDEPEND}
 	virtual/pkgconfig"
@@ -56,8 +57,9 @@ src_prepare() {
 }
 
 src_configure() {
+	use hadoop && append-cppflags $(java-pkg_get-jni-cflags)
+
 	econf \
-		--without-hadoop \
 		--docdir="${EPREFIX}/usr/share/doc/${PF}" \
 		--includedir=/usr/include \
 		$(use_with debug) \
@@ -66,7 +68,8 @@ src_configure() {
 		$(use_with radosgw) \
 		$(use_with gtk gtk2) \
 		$(use_enable static-libs static) \
-		$(use_with tcmalloc)
+		$(use_with tcmalloc) \
+		$(use_with hadoop)
 }
 
 src_install() {
