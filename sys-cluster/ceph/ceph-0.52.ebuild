@@ -4,7 +4,9 @@
 
 EAPI=4
 
-inherit autotools eutils multilib java-pkg-2 flag-o-matic
+JAVA_PKG_OPT_USE="hadoop"
+
+inherit autotools eutils multilib java-pkg-opt-2 flag-o-matic
 
 DESCRIPTION="Ceph distributed filesystem"
 HOMEPAGE="http://ceph.com/"
