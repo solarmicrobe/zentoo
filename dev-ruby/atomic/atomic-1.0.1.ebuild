@@ -17,3 +17,15 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
+
+each_ruby_configure() {
+	${RUBY} -Cext extconf.rb || die "Configuration of extension failed."
+}
+
+each_ruby_compile() {
+	emake -Cext || die
+
+	mkdir -p lib || die "Unable to make lib directory."
+	cp ext/atomic_reference.so lib/ || die "Unable to install library."
+}
+

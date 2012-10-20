@@ -17,3 +17,15 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
+
+each_ruby_configure() {
+	${RUBY} -Cext/hitimes extconf.rb || die "Configuration of extension failed."
+}
+
+each_ruby_compile() {
+	emake -Cext/hitimes || die
+
+	mkdir -p lib/hitimes/$(${RUBY} -e 'puts RUBY_VERSION[0..2]') || die "Unable to make lib directory."
+	cp ext/hitimes/hitimes_ext.so lib/hitimes/$(${RUBY} -e 'puts RUBY_VERSION[0..2]')/ || die "Unable to install library."
+}
+
