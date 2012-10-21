@@ -71,6 +71,7 @@ epydoc
 esd
 esoob
 evo
+examples
 fbcon
 fdftk
 ffmpeg
