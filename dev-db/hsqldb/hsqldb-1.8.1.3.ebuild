@@ -21,7 +21,7 @@ IUSE=""
 CDEPEND="java-virtuals/servlet-api:2.3"
 RDEPEND=">=virtual/jre-1.6
 	${CDEPEND}"
-DEPEND="virtual/jdk:1.6
+DEPEND=">=virtual/jdk-1.6
 	test? ( dev-java/junit:0 )
 	app-arch/unzip
 	${CDEPEND}"
@@ -50,7 +50,7 @@ src_prepare() {
 
 	eant -q -f "${EANT_BUILD_XML}" cleanall > /dev/null
 
-	#epatch "${FILESDIR}/resolve-config-softlinks.patch"
+	epatch "${FILESDIR}/resolve-config-softlinks.patch"
 	epatch "${FILESDIR}/java7.patch"
 
 	mkdir conf
