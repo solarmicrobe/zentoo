@@ -360,7 +360,7 @@ multilib_env() {
 			: ${MULTILIB_ABIS=s390x s390}
 			: ${DEFAULT_ABI=s390x}
 		;;
-		sparc*)
+		sparc64*)
 			export CFLAGS_sparc32=${CFLAGS_sparc32--m32}
 			export CHOST_sparc32=${CTARGET/sparc64/sparc}
 			export CTARGET_sparc32=${CHOST_sparc32}

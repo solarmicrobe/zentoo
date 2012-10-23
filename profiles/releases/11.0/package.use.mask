@@ -88,3 +88,5 @@ dev-java/ant testutil
 
 # minimal cups
 net-print/cups filters
+
+dev-java/icedtea alsa systemtap pax_kernel webstart

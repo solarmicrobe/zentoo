@@ -42,7 +42,7 @@ inherit autotools autotools-utils eutils libtool multilib toolchain-funcs \
 
 EXPORTED_FUNCTIONS="src_unpack src_compile src_install pkg_postinst pkg_postrm"
 case "${EAPI:-0}" in
-	3|4) EXPORTED_FUNCTIONS="${EXPORTED_FUNCTIONS} src_prepare src_configure" ;;
+	3|4|5) EXPORTED_FUNCTIONS="${EXPORTED_FUNCTIONS} src_prepare src_configure" ;;
 	*) die "EAPI=${EAPI} is not supported" ;;
 esac
 
@@ -423,8 +423,16 @@ xorg-2_src_configure() {
 	fi
 
 	[[ -n "${FONT}" ]] && xorg-2_font_configure
+
+	# Check if package supports disabling of dep tracking
+	# Fixes warnings like:
+	#    WARNING: unrecognized options: --disable-dependency-tracking
+	if grep -q -s "disable-depencency-tracking" ${ECONF_SOURCE:-.}/configure; then
+		local dep_track="--disable-dependency-tracking"
+	fi
+
 	local myeconfargs=(
-		--disable-dependency-tracking
+		${dep_track}
 		${FONT_OPTIONS}
 		"${xorgconfadd[@]}"
 	)

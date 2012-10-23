@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: virtualx.eclass
@@ -80,7 +80,7 @@ virtualmake() {
 	local OLD_SANDBOX_ON="${SANDBOX_ON}"
 	local XVFB=$(type -p Xvfb)
 	local XHOST=$(type -p xhost)
-	local xvfbargs="-screen 0 800x600x24"
+	local xvfbargs="-screen 0 1280x1024x24"
 
 	# backcompat for maketype
 	if [[ -n ${maketype} ]]; then
@@ -143,8 +143,13 @@ virtualmake() {
 		# Do not break on error, but setup $retval, as we need
 		# to kill Xvfb
 		debug-print "${FUNCNAME}: ${VIRTUALX_COMMAND} \"$@\""
-		${VIRTUALX_COMMAND} "$@"
-		retval=$?
+		if has "${EAPI}" 2 3; then
+			${VIRTUALX_COMMAND} "$@"
+			retval=$?
+		else
+			nonfatal ${VIRTUALX_COMMAND} "$@"
+			retval=$?
+		fi
 
 		# Now kill Xvfb
 		kill $(cat /tmp/.X${XDISPLAY}-lock)
