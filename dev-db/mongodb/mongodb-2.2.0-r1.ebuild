@@ -4,8 +4,8 @@
 
 EAPI=4
 SCONS_MIN_VERSION="1.2.0"
-
-inherit eutils multilib pax-utils scons-utils user versionator
+BOOST_MAX_SLOT="1.49"
+inherit eutils boost-utils flag-o-matic multilib pax-utils scons-utils user versionator
 
 MY_P=${PN}-src-r${PV/_rc/-rc}
 
@@ -20,14 +20,14 @@ KEYWORDS="amd64"
 IUSE="mms-agent static-libs v8"
 
 PDEPEND="mms-agent? ( dev-python/pymongo )"
-RDEPEND="!v8? ( <dev-lang/spidermonkey-1.8[unicode] )
+RDEPEND="
 	v8? ( dev-lang/v8 )
-	dev-libs/boost
+	<dev-libs/boost-1.50
 	dev-libs/libpcre[cxx]
+	dev-util/google-perftools
 	net-libs/libpcap
 	app-arch/snappy"
 DEPEND="${RDEPEND}
-	dev-util/google-perftools
 	sys-libs/readline
 	sys-libs/ncurses"
 
@@ -37,24 +37,34 @@ pkg_setup() {
 	enewgroup mongodb
 	enewuser mongodb -1 -1 /var/lib/${PN} mongodb
 
-	scons_opts=" --cxx=$(tc-getCXX) --use-system-all"
+	scons_opts="  --cc=$(tc-getCC) --cxx=$(tc-getCXX)"
+	scons_opts+=" --use-system-tcmalloc"
+	scons_opts+=" --use-system-pcre"
+	scons_opts+=" --use-system-snappy"
+	scons_opts+=" --use-system-boost"
+
 	if use v8; then
 		scons_opts+=" --usev8"
 	else
 		scons_opts+=" --usesm"
 	fi
+
+	local boostver=$(boost-utils_get_best_slot)
+	scons_opts+=" --boost-version=${boostver/./_}"
+	append-cxxflags "-I$(boost-utils_get_includedir)"
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-2.2-fix-scons.patch"
-	epatch "${FILESDIR}/${PN}-2.2-fix-sconscript.patch"
+	epatch "${FILESDIR}/${PN}-2.2-r1-fix-scons.patch"
+	epatch "${FILESDIR}/${PN}-2.2-r1-fix-boost.patch"
+	epatch "${FILESDIR}/${PN}-2.2.0-gle-too-verbose.patch"
 
-	sed -e 's@third_party/js-1.7/@/usr/include/js/@g' \
-		-i src/mongo/scripting/engine_spidermonkey.h  \
-		-i src/mongo/scripting/engine_spidermonkey.cpp || die
-
-	if use v8; then
-		sed -e "s/LIBS=\['js',/LIBS=\[/g" -i SConstruct || die
+	# FIXME: apply only this fix [1] on x86 boxes as it breaks /usr/lib symlink
+	# on amd64 machines [2].
+	# [1] https://jira.mongodb.org/browse/SERVER-5575
+	# [2] https://bugs.gentoo.org/show_bug.cgi?id=434664
+	if use !prefix && [[ "$(get_libdir)" == "lib" ]]; then
+		epatch "${FILESDIR}/${PN}-2.2-fix-x86client.patch"
 	fi
 }
 
@@ -63,11 +73,11 @@ src_compile() {
 }
 
 src_install() {
-	escons ${scons_opts} --full --nostrip install --prefix="${D}"/usr
+	escons ${scons_opts} --full --nostrip install --prefix="${ED}"/usr
 
-	use static-libs || rm "${D}/usr/$(get_libdir)/libmongoclient.a"
+	use static-libs || rm "${ED}/usr/$(get_libdir)/libmongoclient.a"
 
-	use v8 && pax-mark m "${D}"/usr/bin/{mongo,mongod}
+	use v8 && pax-mark m "${ED}"/usr/bin/{mongo,mongod}
 
 	for x in /var/{lib,log,run}/${PN}; do
 		keepdir "${x}"

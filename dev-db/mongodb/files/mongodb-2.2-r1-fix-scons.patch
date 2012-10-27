@@ -13,7 +13,7 @@
      # env.Append( " -Wconversion" ) TODO: this doesn't really work yet
      if linux:
 -        env.Append( CCFLAGS=["-Werror", "-pipe"] )
-+        env.Append( CPPDEFINES=["XP_UNIX=1"] )
++        # env.Append( CPPDEFINES=["XP_UNIX=1"] )
          if not has_option('clang'):
              env.Append( CCFLAGS=["-fno-builtin-memcmp"] ) # glibc's memcmp is faster than gcc's
  
@@ -23,7 +23,7 @@
 +    env.Append( LINKFLAGS=os.environ['LDFLAGS'] )
      env.Append( LINKFLAGS=["-fPIC", "-pthread",  "-rdynamic"] )
 -    env.Append( LIBS=[] )
-+    env.Append( LIBS=['js', 'pcre', 'pcrecpp', 'snappy'] )
++    env.Append( LIBS=['pcre', 'pcrecpp', 'snappy'] )
  
      #make scons colorgcc friendly
      for key in ('HOME', 'TERM'):

@@ -1,0 +1,13 @@
+diff --git a/src/mongo/s/writeback_listener.cpp b/src/mongo/s/writeback_listener.cpp
+index 75b474f..aece7e2 100644
+--- a/src/mongo/s/writeback_listener.cpp
++++ b/src/mongo/s/writeback_listener.cpp
+@@ -332,8 +332,6 @@
+                                 gle = b.obj();
+                             }
+ 
+-                            log() << "GLE is " << gle << endl;
+-
+                             if ( gle["code"].numberInt() == 9517 ) {
+ 
+                                 log() << "new version change detected, "

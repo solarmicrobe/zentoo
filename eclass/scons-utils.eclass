@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: scons-utils.eclass
@@ -72,7 +72,7 @@
 # -- EAPI support check --
 
 case ${EAPI:-0} in
-	0|1|2|3|4) ;;
+	0|1|2|3|4|5) ;;
 	*) die "EAPI ${EAPI} unsupported."
 esac
 
@@ -104,7 +104,7 @@ escons() {
 	"${@}"
 	ret=${?}
 
-	[[ ${ret} -ne 0 && ${EAPI} == 4 ]] && die "escons failed."
+	[[ ${ret} -ne 0 ]] && has "${EAPI:-0}" 4 5 && die "escons failed."
 	return ${ret}
 }
 
