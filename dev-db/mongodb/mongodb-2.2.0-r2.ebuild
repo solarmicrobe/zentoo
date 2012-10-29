@@ -58,6 +58,7 @@ src_prepare() {
 	epatch "${FILESDIR}/${PN}-2.2-r1-fix-scons.patch"
 	epatch "${FILESDIR}/${PN}-2.2-r1-fix-boost.patch"
 	epatch "${FILESDIR}/${PN}-2.2.0-gle-too-verbose.patch"
+	epatch "${FILESDIR}/${PN}-2.2.0-dfm-too-verbose.patch"
 
 	# FIXME: apply only this fix [1] on x86 boxes as it breaks /usr/lib symlink
 	# on amd64 machines [2].

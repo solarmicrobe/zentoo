@@ -1,0 +1,12 @@
+diff --git a/src/mongo/db/pdfile.cpp b/src/mongo/db/pdfile.cpp
+index 34bc179..dedd196 100644
+--- a/src/mongo/db/pdfile.cpp
++++ b/src/mongo/db/pdfile.cpp
+@@ -839,7 +839,6 @@ namespace mongo {
+             /* todo: if extent is empty, free it for reuse elsewhere.
+                that is a bit complicated have to clean up the freelists.
+             */
+-            RARELY out() << "info DFM::findAll(): extent " << loc.toString() << " was empty, skipping ahead. ns:" << ns << endl;
+             // find a nonempty extent
+             // it might be nice to free the whole extent here!  but have to clean up free recs then.
+             e = e->getNextExtent();
