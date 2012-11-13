@@ -15,7 +15,7 @@ SRC_URI="http://nightly.openerp.com/6.1/nightly/src/${FNAME}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="postgres ldap ssl"
+IUSE="+postgres ldap ssl"
 
 CDEPEND="postgres? ( dev-db/postgresql-server )
 	ssl? ( dev-python/pyopenssl )
