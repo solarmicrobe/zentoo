@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="4"
 PYTHON_DEPEND="2"
 
-inherit eutils distutils
+inherit eutils distutils user
 
 DESCRIPTION="Open Source ERP & CRM"
 HOMEPAGE="http://www.openerp.com/"
@@ -67,10 +67,10 @@ src_install() {
 	keepdir /var/log/openerp
 
 	insinto /etc/logrotate.d
-	newins "${FILESDIR}"/openerp.logrotate openerp || die
-	dodir /etc/openerp
+	newins "${FILESDIR}"/openerp.logrotate openerp
+
 	insinto /etc/openerp
-	newins "${FILESDIR}"/openerp.cfg openerp.cfg || die
+	newins "${FILESDIR}"/openerp.cfg openerp.cfg
 }
 
 pkg_preinst() {
@@ -81,28 +81,11 @@ pkg_preinst() {
 	fowners ${OPENERP_USER}:${OPENERP_GROUP} /var/log/openerp
 	fowners -R ${OPENERP_USER}:${OPENERP_GROUP} "$(python_get_sitedir)/${PN}/addons/"
 
-	use postgres || sed -i '6,8d' "${D}/etc/init.d/openerp" || die "sed failed"
+	use postgres || sed -i '8,11d' "${D}/etc/init.d/openerp" || die "sed failed"
 }
 
 pkg_postinst() {
 	chown ${OPENERP_USER}:${OPENERP_GROUP} /var/run/openerp
 	chown ${OPENERP_USER}:${OPENERP_GROUP} /var/log/openerp
 	chown -R ${OPENERP_USER}:${OPENERP_GROUP} "$(python_get_sitedir)/${PN}/addons/"
-
-	elog "In order to setup the initial database, run:"
-	elog " emerge --config =${CATEGORY}/${PF}"
-	elog "Be sure the database is started before"
-}
-
-pquery() {
-	psql -q -At -U postgres -d template1 -c "$@"
-}
-
-pkg_config() {
-	einfo "In the following, the 'postgres' user will be used."
-	if ! pquery "SELECT usename FROM pg_user WHERE usename = '${OPENERP_USER}'" | grep -q ${OPENERP_USER}; then
-		ebegin "Creating database user ${OPENERP_USER}"
-		createuser --username=postgres --createdb --no-adduser ${OPENERP_USER}
-		eend $? || die "Failed to create database user"
-	fi
 }

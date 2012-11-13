@@ -1,0 +1,11 @@
+#!/sbin/runscript
+
+command="/usr/bin/openerp-server"
+command_args="-c ${CONFIGFILE}"
+start_stop_daemon_args="--user ${USER} --group ${USER}"
+background="true"
+pidfile="${PIDFILE}"
+
+depend() {
+	after postgresql
+}
