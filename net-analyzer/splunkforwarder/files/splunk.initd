@@ -8,7 +8,7 @@ depend() {
 
 start() {
 	ebegin "Starting Splunk"
-	/opt/splunk/bin/splunk start
+	/opt/splunk/bin/splunk start --accept-license --answer-yes
 	eend $?
 }
 
