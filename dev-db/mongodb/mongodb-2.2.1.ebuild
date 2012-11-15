@@ -4,8 +4,8 @@
 
 EAPI=4
 SCONS_MIN_VERSION="1.2.0"
-BOOST_MAX_SLOT="1.49"
-inherit eutils boost-utils flag-o-matic multilib pax-utils scons-utils user versionator
+
+inherit eutils flag-o-matic multilib pax-utils scons-utils user versionator
 
 MY_P=${PN}-src-r${PV/_rc/-rc}
 
@@ -22,7 +22,7 @@ IUSE="mms-agent static-libs v8"
 PDEPEND="mms-agent? ( dev-python/pymongo )"
 RDEPEND="
 	v8? ( dev-lang/v8 )
-	<dev-libs/boost-1.50
+	>=dev-libs/boost-1.50[threads(+)]
 	dev-libs/libpcre[cxx]
 	dev-util/google-perftools
 	net-libs/libpcap
@@ -48,17 +48,13 @@ pkg_setup() {
 	else
 		scons_opts+=" --usesm"
 	fi
-
-	local boostver=$(boost-utils_get_best_slot)
-	scons_opts+=" --boost-version=${boostver/./_}"
-	append-cxxflags "-I$(boost-utils_get_includedir)"
 }
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-2.2-r1-fix-scons.patch"
 	epatch "${FILESDIR}/${PN}-2.2-r1-fix-boost.patch"
-	epatch "${FILESDIR}/${PN}-2.2.0-gle-too-verbose.patch"
-	epatch "${FILESDIR}/${PN}-2.2.0-dfm-too-verbose.patch"
+	epatch "${FILESDIR}/${PN}-2.2-r2-boost-1.50.patch"
+	epatch "${FILESDIR}/${PN}-2.2.1-too-verbose.patch"
 
 	# FIXME: apply only this fix [1] on x86 boxes as it breaks /usr/lib symlink
 	# on amd64 machines [2].

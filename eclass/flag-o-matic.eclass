@@ -264,8 +264,9 @@ replace-cpu-flags() {
 }
 
 _is_flagq() {
-	local x
-	for x in ${!1} ; do
+	local x var
+	eval var=\""\${$1[*]}"\"
+	for x in ${var} ; do
 		[[ ${x} == $2 ]] && return 0
 	done
 	return 1
@@ -597,8 +598,14 @@ raw-ldflags() {
 	[[ -z ${input} ]] && input=${LDFLAGS}
 	set --
 	for x in ${input} ; do
-		x=${x#-Wl,}
-		set -- "$@" ${x//,/ }
+		case ${x} in
+		-Wl,*)
+			x=${x#-Wl,}
+			set -- "$@" ${x//,/ }
+			;;
+		*)	# Assume it's a compiler driver flag, so throw it away #441808
+			;;
+		esac
 	done
 	echo "$@"
 }

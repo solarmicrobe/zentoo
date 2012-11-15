@@ -1,0 +1,37 @@
+diff --git a/src/mongo/s/writeback_listener.cpp b/src/mongo/s/writeback_listener.cpp
+index 75b474f..aece7e2 100644
+--- a/src/mongo/s/writeback_listener.cpp
++++ b/src/mongo/s/writeback_listener.cpp
+@@ -332,8 +332,6 @@
+                                 gle = b.obj();
+                             }
+ 
+-                            log() << "GLE is " << gle << endl;
+-
+                             if ( gle["code"].numberInt() == 9517 ) {
+ 
+                                 log() << "new version change detected, "
+diff --git a/src/mongo/db/commands/fsync.cpp b/src/mongo/db/commands/fsync.cpp
+index 03e64c2..e618ad1 100644
+--- a/src/mongo/db/commands/fsync.cpp
++++ b/src/mongo/db/commands/fsync.cpp
+@@ -58,7 +58,6 @@ namespace mongo {
+ 
+             bool sync = !cmdObj["async"].trueValue(); // async means do an fsync, but return immediately
+             bool lock = cmdObj["lock"].trueValue();
+-            log() << "CMD fsync: sync:" << sync << " lock:" << lock << endl;
+             if( lock ) {
+                 if ( ! sync ) {
+                     errmsg = "fsync: sync option must be true when using lock";
+diff --git a/src/mongo/db/pdfile.cpp b/src/mongo/db/pdfile.cpp
+index 6719b73..df55f64 100644
+--- a/src/mongo/db/pdfile.cpp
++++ b/src/mongo/db/pdfile.cpp
+@@ -849,7 +849,6 @@ namespace mongo {
+             /* todo: if extent is empty, free it for reuse elsewhere.
+                that is a bit complicated have to clean up the freelists.
+             */
+-            RARELY out() << "info DFM::findAll(): extent " << loc.toString() << " was empty, skipping ahead. ns:" << ns << endl;
+             // find a nonempty extent
+             // it might be nice to free the whole extent here!  but have to clean up free recs then.
+             e = e->getNextExtent();
