@@ -1,14 +1,14 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 
-MY_BUILD="140868"
+MY_BUILD="143156"
 
 DESCRIPTION="The search engine for IT data"
 HOMEPAGE="http://www.splunk.com"
-REL_URI="http://download.splunk.com/releases/${PV}/universalforwarder/linux"
+REL_URI="http://download.splunk.com/releases/${PV}/splunk/linux"
 SRC_URI="amd64? ( ${REL_URI}/${P}-${MY_BUILD}-Linux-x86_64.tgz )"
 
 LICENSE="splunk-eula"
@@ -16,7 +16,7 @@ SLOT="0"
 KEYWORDS="-* amd64"
 IUSE=""
 
-RDEPEND="!net-analyzer/splunk"
+RDEPEND="!net-analyzer/splunkforwarder"
 
 S="${WORKDIR}"/${PN}
 
