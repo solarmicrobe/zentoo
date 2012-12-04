@@ -4,7 +4,7 @@
 
 EAPI="2"
 
-inherit eutils java-utils-2
+inherit eutils java-utils-2 user
 
 DESCRIPTION="ZooKeeper is a high-performance coordination service for distributed applications."
 HOMEPAGE="http://zookeeper.apache.org/"
@@ -23,12 +23,22 @@ INSTALL_DIR=/opt/${PN}
 DATA_DIR=/var/lib/${PN}
 export CONFIG_PROTECT="${CONFIG_PROTECT} ${INSTALL_DIR}/conf"
 
+pkg_setup() {
+	java-pkg-2_pkg_setup
+	enewgroup zookeeper
+	enewuser zookeeper -1 /bin/sh /var/lib/zookeeper zookeeper
+}
+
 src_install() {
 	dodir "${DATA_DIR}"
 	sed "s:^dataDir=.*:dataDir=${DATA_DIR}:" conf/zoo_sample.cfg > conf/zoo.cfg || die "sed failed"
 
 	dodir "${INSTALL_DIR}"
 	mv "${S}"/* "${D}${INSTALL_DIR}" || die "install failed"
+
+	# init script
+	newinitd "${FILESDIR}"/zookeeper.initd ${PN}
+	newconfd "${FILESDIR}"/zookeeper.confd ${PN}
 
 	# env file
 	cat > 99"${PN}" <<-EOF
