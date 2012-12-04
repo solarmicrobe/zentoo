@@ -36,6 +36,9 @@ src_install() {
 	dodir "${INSTALL_DIR}"
 	mv "${S}"/* "${D}${INSTALL_DIR}" || die "install failed"
 
+	keepdir /var/lib/zookeeper
+	fowners zookeeper:zookeeper /var/lib/zookeeper
+
 	# init script
 	newinitd "${FILESDIR}"/zookeeper.initd ${PN}
 	newconfd "${FILESDIR}"/zookeeper.confd ${PN}

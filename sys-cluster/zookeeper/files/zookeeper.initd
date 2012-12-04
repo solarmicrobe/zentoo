@@ -5,7 +5,7 @@
 
 name="zookeeper"
 command="/usr/bin/java"
-command_args="-cp ${CLASSPATH} ${MAIN} ${CONFIG}"
+command_args="${JVM_OPTS} -cp ${CLASSPATH} ${MAIN} ${CONFIG}"
 command_background="true"
 start_stop_daemon_args="--user zookeeper --group zookeeper"
 pidfile="/var/run/zookeeper.pid"
