@@ -23,8 +23,8 @@ DEPEND=""
 RDEPEND=">=virtual/jre-1.6"
 
 S="${WORKDIR}/${MY_P}"
-INSTALL_DIR=/opt/"${PN}"
-DATA_DIR=/var/db/"${PN}"
+INSTALL_DIR=/opt/${PN}
+DATA_DIR=/var/lib/${PN}
 export CONFIG_PROTECT="${CONFIG_PROTECT} ${INSTALL_DIR}/conf"
 
 src_install() {
