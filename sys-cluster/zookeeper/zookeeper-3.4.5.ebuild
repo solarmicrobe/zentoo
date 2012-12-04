@@ -6,12 +6,9 @@ EAPI="2"
 
 inherit eutils java-utils-2
 
-MY_PN="${PN/apache-/}"
-MY_P="${MY_PN}-${PV}"
-
 DESCRIPTION="ZooKeeper is a high-performance coordination service for distributed applications."
 HOMEPAGE="http://zookeeper.apache.org/"
-SRC_URI="mirror://apache/${MY_PN}/${MY_P}/${MY_P}.tar.gz"
+SRC_URI="mirror://apache/${PN}/${P}/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -22,7 +19,6 @@ IUSE=""
 DEPEND=""
 RDEPEND=">=virtual/jre-1.6"
 
-S="${WORKDIR}/${MY_P}"
 INSTALL_DIR=/opt/${PN}
 DATA_DIR=/var/lib/${PN}
 export CONFIG_PROTECT="${CONFIG_PROTECT} ${INSTALL_DIR}/conf"
