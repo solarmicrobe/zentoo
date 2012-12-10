@@ -1,0 +1,15 @@
+#!/sbin/runscript
+# Copyright 1999-2012 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+name=${RC_SVCNAME}
+command="/usr/bin/java"
+command_args="${JVM_OPTS} -cp ${CLASSPATH} ${MAIN}"
+command_background="true"
+start_stop_daemon_args="--user druid --group druid"
+pidfile="/var/run/${name}.pid"
+
+depend() {
+	need net
+}

@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit java-pkg-2
+inherit java-pkg-2 user
 
 DESCRIPTION="A distributed, column-oriented analytical datastore"
 HOMEPAGE="https://github.com/metamx/druid"
@@ -20,6 +20,12 @@ RDEPEND=">=virtual/jdk-1.6"
 
 S="${WORKDIR}/druid-${P}"
 
+pkg_setup() {
+	java-pkg-2_pkg_setup
+	enewgroup druid
+	enewuser druid -1 /bin/sh /var/lib/druid druid
+}
+
 src_compile() {
 	mvn -Duser.home="${T}/home" package || die "failed to build with maven"
 }
@@ -31,4 +37,12 @@ src_install() {
 	for jar in $(find "${S}" -name '*-selfcontained.jar'); do
 		doins ${jar}
 	done
+
+	# init scripts
+	for i in master broker compute realtime; do
+		newinitd "${FILESDIR}"/druid.initd druid-${i}
+		newconfd "${FILESDIR}"/druid-${i}.confd druid-${i}
+	done
+
+	keepdir /etc/druid
 }

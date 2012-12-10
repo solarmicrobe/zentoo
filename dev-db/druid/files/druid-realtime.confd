@@ -1,0 +1,16 @@
+# host & port for our listen socket
+PORT=8083
+HOST=$(hostname -f):${PORT}
+
+# JVM options
+JVM_OPTS="-Duser.timezone=UTC -Dfile.encoding=UTF-8 -Ddruid.host=$HOST -Ddruid.port=$PORT -Ddruid.server.type=realtime -Ddruid.realtime.specFile=/etc/druid/realtime.spec"
+
+# main class
+MAIN="com.metamx.druid.http.RealtimeMain"
+
+# build the classpath
+CLASSPATH="/etc/druid:${CLASSPATH}"
+
+for i in /usr/share/druid/lib/*.jar; do
+	CLASSPATH="${i}:${CLASSPATH}"
+done
