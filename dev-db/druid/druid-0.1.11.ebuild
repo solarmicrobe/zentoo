@@ -34,7 +34,7 @@ src_install() {
 	rm -rf examples || die "cannot remove examples"
 
 	insinto /usr/share/${PN}/lib
-	for jar in $(find "${S}" -name '*-selfcontained.jar'); do
+	for jar in $(find "${S}" -name '*.jar'); do
 		doins ${jar}
 	done
 
