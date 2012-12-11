@@ -27,7 +27,7 @@ pkg_setup() {
 }
 
 src_compile() {
-	mvn -Duser.home="${T}/home" package || die "failed to build with maven"
+	mvn -Duser.home="${T}/home" -DskipTests package || die "failed to build with maven"
 }
 
 src_install() {
