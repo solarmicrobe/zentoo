@@ -43,7 +43,9 @@ src_prepare() {
 		"${FILESDIR}/${PN}-1.48.0-support_dots_in_python-buildid.patch" \
 		"${FILESDIR}/${PN}-1.48.0-disable_python_rpath.patch" \
 		"${FILESDIR}/${PN}-1.50.0-respect-c_ld-flags.patch" \
-		"${FILESDIR}/${PN}-1.50.0-fix-test.patch"
+		"${FILESDIR}/${PN}-1.50.0-fix-test.patch" \
+		"${FILESDIR}/${PN}-1.49.0-darwin-gentoo-toolchain.patch" \
+		"${FILESDIR}/${PN}-1.52.0-darwin-no-python-framework.patch"
 
 	# Remove stripping option
 	cd "${S}/engine"
@@ -86,7 +88,7 @@ src_compile() {
 		toolset=cc
 	fi
 
-	CC=$(tc-getCC) ./build.sh ${toolset} -d+2 $(use_with python python /usr) || die "building bjam failed"
+	CC=$(tc-getCC) ./build.sh ${toolset} -d+2 $(use_with python python "${EROOT}"/usr) || die "building bjam failed"
 }
 
 src_install() {
@@ -97,9 +99,9 @@ src_install() {
 		boost-build.jam bootstrap.jam build-system.jam user-config.jam *.py \
 		build kernel options tools util
 
-	rm "${D}/usr/share/boost-build/build/project.ann.py" || die "removing faulty python file failed"
+	rm "${ED}/usr/share/boost-build/build/project.ann.py" || die "removing faulty python file failed"
 	if ! use python; then
-		find "${D}/usr/share/boost-build" -iname "*.py" -delete || die "removing experimental python files failed"
+		find "${ED}/usr/share/boost-build" -iname "*.py" -delete || die "removing experimental python files failed"
 	fi
 
 	dodoc changes.txt hacking.txt release_procedure.txt \

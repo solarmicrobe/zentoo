@@ -8,6 +8,10 @@
 # @DESCRIPTION:
 # The python eclass contains miscellaneous, useful functions for Python packages.
 
+if [[ ${_PYTHON_UTILS_R1} ]]; then
+	die 'python.eclass can not be used with python-r1 suite eclasses.'
+fi
+
 # Must call inherit before EXPORT_FUNCTIONS to avoid QA warning.
 if [[ -z "${_PYTHON_ECLASS_INHERITED}" ]]; then
 	inherit multilib
