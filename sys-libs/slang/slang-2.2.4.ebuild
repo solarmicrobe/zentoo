@@ -56,7 +56,7 @@ src_compile() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install-elf $(use static-libs && echo install-static)
+	emake DESTDIR="${D}" install $(use static-libs && echo install-static)
 
 	rm -rf "${ED}"/usr/share/doc/{slang,slsh}
 

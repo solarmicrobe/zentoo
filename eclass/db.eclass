@@ -176,7 +176,7 @@ db_src_test() {
 			[[ -f "${t}" ]] && testbase="${t}" && break
 		done
 		echo "source ${t}" > testrunner.tcl
-		echo "run_parallel $(makeopts_job) run_std" >> testrunner.tcl
+		echo "run_parallel $(makeopts_jobs) run_std" >> testrunner.tcl
 
 		tclsh testrunner.tcl
 		egrep -qs '^FAIL' ALL.OUT* && die "Some tests failed, please see ${S}/ALL.OUT*"

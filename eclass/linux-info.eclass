@@ -624,7 +624,14 @@ check_kernel_built() {
 	require_configured_kernel
 	get_version
 
-	if [ ! -f "${KV_OUT_DIR}/include/linux/version.h" ]
+	local versionh_path
+	if kernel_is -ge 3 7; then
+		versionh_path="include/generated/uapi/linux/version.h"
+	else
+		versionh_path="include/linux/version.h"
+	fi
+
+	if [ ! -f "${KV_OUT_DIR}/${versionh_path}" ]
 	then
 		eerror "These sources have not yet been prepared."
 		eerror "We cannot build against an unprepared tree."

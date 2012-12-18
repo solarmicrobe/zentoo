@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="4"
 
-inherit autotools libtool versionator eutils
+inherit autotools eutils libtool
 
 DESCRIPTION="HTTP and WebDAV client library"
 HOMEPAGE="http://www.webdav.org/neon/"
@@ -47,29 +47,31 @@ src_prepare() {
 	sed -i -e "s/ALL_LINGUAS=.*/ALL_LINGUAS=\"${linguas}\"/g" configure.in
 
 	epatch "${FILESDIR}"/${PN}-0.29.6-no-ssl-check.patch
+	epatch "${FILESDIR}"/${PN}-0.29.6-gnutls-3-functions.patch
+	epatch "${FILESDIR}"/${PN}-0.29.6-gnutls-3-types.patch
 	AT_M4DIR="macros" eautoreconf
 
 	elibtoolize
 }
 
 src_configure() {
-	local myconf
+	local myconf=()
 
 	if has_version sys-libs/glibc; then
 		einfo "Enabling SSL library thread-safety using POSIX threads..."
-		myconf+=" --enable-threadsafe-ssl=posix"
+		myconf+=(--enable-threadsafe-ssl=posix)
 	fi
 
 	if use expat; then
-		myconf+=" --with-expat"
+		myconf+=(--with-expat)
 	else
-		myconf+=" --with-libxml2"
+		myconf+=(--with-libxml2)
 	fi
 
 	if use gnutls; then
-		myconf+=" --with-ssl=gnutls --with-ca-bundle=${EPREFIX}/etc/ssl/certs/ca-certificates.crt"
+		myconf+=(--with-ssl=gnutls --with-ca-bundle="${EPREFIX}/etc/ssl/certs/ca-certificates.crt")
 	elif use ssl; then
-		myconf+=" --with-ssl=openssl"
+		myconf+=(--with-ssl=openssl)
 	fi
 
 	# work around broken check, we really need -lintl on Solaris
@@ -83,7 +85,7 @@ src_configure() {
 		$(use_with pkcs11 pakchois) \
 		$(use_enable static-libs static) \
 		$(use_with zlib) \
-		${myconf}
+		"${myconf[@]}"
 }
 
 src_install() {
@@ -97,16 +99,4 @@ src_install() {
 
 	dodoc AUTHORS BUGS NEWS README THANKS TODO
 	doman doc/man/*.[1-8]
-}
-
-pkg_postinst() {
-	ewarn "Neon has a policy of breaking API across minor versions, this means"
-	ewarn "that any package that links against Neon may be broken after"
-	ewarn "updating. They will remain broken until they are ported to the"
-	ewarn "new API. You can downgrade Neon to the previous version by doing:"
-	ewarn
-	ewarn "  emerge --oneshot '<${CATEGORY}/${PN}-$(get_version_component_range 1-2 ${PV})'"
-	ewarn
-	ewarn "You may also have to downgrade any package that has not been"
-	ewarn "ported to the new API yet."
 }

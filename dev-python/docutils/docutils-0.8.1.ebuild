@@ -3,8 +3,9 @@
 # $Header: $
 
 EAPI="3"
+PYTHON_DEPEND="*::3.2"
 SUPPORT_PYTHON_ABIS="1"
-PYTHON_TESTS_FAILURES_TOLERANT_ABIS="*-jython"
+RESTRICT_PYTHON_ABIS="3.3"
 
 inherit distutils eutils
 

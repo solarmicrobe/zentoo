@@ -86,13 +86,13 @@ else
 		gpm?     ( >=sys-libs/gpm-1.19.3 )
 		perl?    ( dev-lang/perl )
 		acl?     ( kernel_linux? ( sys-apps/acl ) )
-		ruby?    ( =dev-lang/ruby-1.9* )"
+		ruby?    ( || ( dev-lang/ruby:1.9 dev-lang/ruby:1.8 ) )"
 	RDEPEND="${RDEPEND}
 		cscope?  ( dev-util/cscope )
 		gpm?     ( >=sys-libs/gpm-1.19.3 )
 		perl?    ( dev-lang/perl )
 		acl?     ( kernel_linux? ( sys-apps/acl ) )
-		ruby?    ( =dev-lang/ruby-1.9* )
+		ruby?    ( || ( dev-lang/ruby:1.9 dev-lang/ruby:1.8 ) )
 		!<app-vim/align-30-r1
 		!<app-vim/vimbuddy-0.9.1-r1
 		!<app-vim/autoalign-11
@@ -137,7 +137,7 @@ else
 				)
 				!gtk? (
 					motif? (
-						>=x11-libs/openmotif-2.3:0
+						>=x11-libs/motif-2.3:0
 					)
 					!motif? (
 						neXt? (
@@ -244,7 +244,7 @@ vim_pkg_setup() {
 			# python.eclass only defines python_pkg_setup for EAPIs that support
 			# USE dependencies
 			python_pkg_setup
-		elif ! built_with_use =dev-lang/python-2* threads; then
+		elif ! has_version "=dev-lang/python-2*[threads]"; then
 			die "You must build dev-lang/python with USE=threads"
 		fi
 	fi

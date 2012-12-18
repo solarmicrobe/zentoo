@@ -76,7 +76,7 @@ case ${EAPI} in
 	0|1)
 		die "Unsupported EAPI=${EAPI} (too old) for ruby-ng.eclass" ;;
 	2|3) ;;
-	4)
+	4|5)
 		# S is no longer automatically assigned when it doesn't exist.
 		S="${WORKDIR}"
 		;;
@@ -313,13 +313,17 @@ if [[ ${RUBY_OPTIONAL} != yes ]]; then
 	DEPEND="${DEPEND} $(ruby_implementations_depend)"
 	RDEPEND="${RDEPEND} $(ruby_implementations_depend)"
 
-	[[ ${EAPI:-0} -ge 4 ]] && REQUIRED_USE+=" || ( $(ruby_get_use_targets) )"
+	case ${EAPI:-0} in
+		4|5)
+			REQUIRED_USE+=" || ( $(ruby_get_use_targets) )"
+			;;
+	esac
 fi
 
 _ruby_invoke_environment() {
 	old_S=${S}
 	case ${EAPI} in
-		4)
+		4|5)
 			if [ -z ${RUBY_S} ]; then
 				sub_S=${P}
 			else

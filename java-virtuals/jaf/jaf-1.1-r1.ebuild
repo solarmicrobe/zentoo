@@ -10,7 +10,7 @@ DESCRIPTION="Virtual for JavaBeans Activation Framework (JAF)"
 HOMEPAGE="http://www.gentoo.org"
 SRC_URI=""
 
-LICENSE="GPL-2"
+LICENSE="public-domain"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""

@@ -28,11 +28,12 @@
 # http://www.gentoo.org/proj/en/Python/python-r1/dev-guide.xml
 
 case "${EAPI:-0}" in
-	0|1|2|3)
+	0|1|2|3|4)
 		die "Unsupported EAPI=${EAPI:-0} (too old) for ${ECLASS}"
 		;;
-	4|5)
-		# EAPI=4 needed for REQUIRED_USE
+	5)
+		# EAPI=5 is required for meaningful USE default deps
+		# on USE_EXPAND flags
 		;;
 	*)
 		die "Unsupported EAPI=${EAPI} (unknown) for ${ECLASS}"

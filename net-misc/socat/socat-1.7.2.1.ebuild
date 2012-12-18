@@ -25,12 +25,12 @@ DEPEND="
 RDEPEND="${DEPEND}"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-1.7.2.0-cross-compile.patch
+	epatch "${FILESDIR}"/${PN}-1.7.2.1-long-long.patch #436164
 	eautoreconf
 }
 
 src_configure() {
-	filter-flags -Wno-error*
+	filter-flags '-Wno-error*' #293324
 	econf \
 		$(use_enable ssl openssl) \
 		$(use_enable readline) \
@@ -43,7 +43,7 @@ src_test() {
 }
 
 src_install() {
-	emake install DESTDIR="${D}"
+	default
 
 	dodoc BUGREPORTS CHANGES DEVELOPMENT \
 		FAQ FILES PORTING README SECURITY VERSION

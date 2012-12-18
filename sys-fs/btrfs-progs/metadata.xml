@@ -2,7 +2,12 @@
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
   <maintainer>
-    <email>lavajoe@gentoo.org</email>
+    <email>floppym@gentoo.org</email>
+    <name>Mike Gilbert</name>
+  </maintainer>
+  <maintainer>
+    <email>slyfox@gentoo.org</email>
+    <name>Sergei Trofimovich</name>
   </maintainer>
   <use>
     <flag name='debug-utils'>Build additional utils for debugging</flag>

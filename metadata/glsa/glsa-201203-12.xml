@@ -10,7 +10,7 @@
   </synopsis>
   <product type="ebuild">openssl</product>
   <announced>March 06, 2012</announced>
-  <revised>March 14, 2012: 3</revised>
+  <revised>May 18, 2012: 6</revised>
   <bug>397695</bug>
   <bug>399365</bug>
   <access>remote</access>
@@ -19,6 +19,9 @@
       <unaffected range="ge">1.0.0g</unaffected>
       <unaffected range="rge">0.9.8t</unaffected>
       <unaffected range="rge">0.9.8u</unaffected>
+      <unaffected range="rge">0.9.8v</unaffected>
+      <unaffected range="rge">0.9.8w</unaffected>
+      <unaffected range="rge">0.9.8x</unaffected>
       <vulnerable range="lt">1.0.0g</vulnerable>
     </package>
   </affected>
@@ -87,5 +90,5 @@
     </uri>
   </references>
   <metadata timestamp="Mon, 16 Jan 2012 19:58:37 +0000" tag="requester">ago</metadata>
-  <metadata timestamp="Wed, 14 Mar 2012 12:44:13 +0000" tag="submitter">ackle</metadata>
+  <metadata timestamp="Fri, 18 May 2012 19:43:57 +0000" tag="submitter">ackle</metadata>
 </glsa>

@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -46,7 +46,7 @@ pkg_setup() {
 }
 
 src_compile() {
-	emake prefix=${DIETHOME} \
+	emake prefix="${EPREFIX}"${DIETHOME} \
 		CC="$(tc-getCC)" \
 		CFLAGS="${CFLAGS}" \
 		STRIP=":" \
@@ -54,15 +54,15 @@ src_compile() {
 }
 
 src_install() {
-	emake prefix=${DIETHOME} \
+	emake prefix="${EPREFIX}"${DIETHOME} \
 		DESTDIR="${D}" \
 		install-bin \
 		install-headers \
 		|| die "make install failed"
 
-	dobin "${D}"${DIETHOME}/bin/* || die "dobin failed"
-	doman "${D}"${DIETHOME}/man/*/* || die "doman failed"
-	rm -r "${D}"${DIETHOME}/{man,bin}
+	dobin "${ED}"${DIETHOME}/bin/* || die "dobin failed"
+	doman "${ED}"${DIETHOME}/man/*/* || die "doman failed"
+	rm -r "${ED}"${DIETHOME}/{man,bin}
 
 	dodoc AUTHOR BUGS CAVEAT CHANGES README THANKS TODO PORTING
 }

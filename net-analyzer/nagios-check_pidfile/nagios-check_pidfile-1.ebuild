@@ -1,18 +1,14 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="3"
 
-GITHUB_AUTHOR="hollow"
-GITHUB_PROJECT="check_pidfile"
-GITHUB_COMMIT="ebac12d"
-
 inherit autotools
 
 DESCRIPTION="A nagios plugin for checking daemons via pidfiles"
 HOMEPAGE="https://github.com/hollow/check_pidfile"
-SRC_URI="http://nodeload.github.com/${GITHUB_AUTHOR}/${GITHUB_PROJECT}/tarball/v${PV} -> ${P}.tar.gz"
+SRC_URI="https://github.com/hollow/check_pidfile/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
@@ -22,7 +18,7 @@ IUSE=""
 DEPEND=">=net-analyzer/nagios-plugins-1.4.13-r1"
 RDEPEND="${DEPEND}"
 
-S="${WORKDIR}"/${GITHUB_AUTHOR}-${GITHUB_PROJECT}-${GITHUB_COMMIT}
+S="${WORKDIR}"/check_pidfile-${PV}
 
 src_prepare() {
 	eautoreconf

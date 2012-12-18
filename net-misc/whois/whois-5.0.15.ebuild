@@ -28,6 +28,10 @@ src_prepare() {
 		sed -i -e 's:#\(.*pos\):\1:' Makefile || die
 	else
 		sed -i -e '/ENABLE_NLS/s:define:undef:' config.h || die
+
+		# don't generate po files when nls is disabled (bug #419889)
+		sed -i -e '/^all:/s/ pos//' \
+			-e '/^install:/s/ install-pos//' Makefile || die
 	fi
 }
 

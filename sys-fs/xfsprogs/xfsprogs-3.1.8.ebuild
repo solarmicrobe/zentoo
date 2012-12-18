@@ -38,6 +38,7 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-3.1.1-sharedlibs.patch
+	epatch "${FILESDIR}"/${PN}-3.1.8-readline.patch
 
 	sed -i \
 		-e "/^PKG_DOC_DIR/s:@pkg_name@:${PF}:" \

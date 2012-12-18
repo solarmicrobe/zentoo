@@ -10,8 +10,8 @@ DESCRIPTION="An advanced TCP connection forwarder"
 HOMEPAGE="http://jumpgate.sourceforge.net/"
 SRC_URI="http://jumpgate.sourceforge.net/${P}.tar.gz"
 
+LICENSE="BSD-2"
 SLOT="0"
-LICENSE="as-is"
 KEYWORDS="amd64"
 IUSE=""
 

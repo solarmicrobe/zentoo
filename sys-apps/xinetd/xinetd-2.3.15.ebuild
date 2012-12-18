@@ -19,6 +19,8 @@ DEPEND="tcpd? ( >=sys-apps/tcp-wrappers-7.6-r2 )
 	rpc? ( net-libs/libtirpc )"
 RDEPEND="${DEPEND}
 	perl? ( dev-lang/perl )"
+DEPEND="${DEPEND}
+	virtual/pkgconfig"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-2.3.14-DESTDIR.patch

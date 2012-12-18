@@ -1,10 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="3"
 
-inherit eutils libtool
+inherit eutils libtool autotools
 
 DESCRIPTION="Flexible remote checksum-based differencing"
 HOMEPAGE="http://librsync.sourceforge.net/"
@@ -21,8 +21,8 @@ src_prepare() {
 	# Bug #142945
 	epatch "${FILESDIR}"/${P}-huge-files.patch
 
-	# Bug #185600
-	elibtoolize
+	# Bug #185600 (was elibtoolize; extended to eautoreconf for interix)
+	eautoreconf # need new libtool for interix
 	epunt_cxx
 }
 
@@ -34,6 +34,6 @@ src_install () {
 	emake DESTDIR="${D}" install || die
 	dodoc NEWS AUTHORS THANKS README TODO
 	if ! use static-libs; then
-		rm -f "${D}"/usr/lib/librsync.la || die
+		rm -f "${ED}"/usr/lib/librsync.la || die
 	fi
 }

@@ -25,7 +25,7 @@ RDEPEND=""
 
 # Because of USE deps, we require at least EAPI 2
 case ${EAPI} in
-	2|3|4) ;;
+	2|3|4|5) ;;
 	*)
 		die "php-ext-source-r2 is not compatible with EAPI=${EAPI}"
 esac

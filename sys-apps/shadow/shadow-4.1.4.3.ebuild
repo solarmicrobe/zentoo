@@ -50,7 +50,6 @@ src_compile() {
 		$(use_with selinux) \
 		$(use_enable nls) \
 		$(use_with elibc_glibc nscd)
-	has_version 'sys-libs/uclibc[-rpc]' && sed -i '/RLOGIN/d' config.h #425052
 	emake || die "compile problem"
 }
 

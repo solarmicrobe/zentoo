@@ -1,6 +1,5 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/python-utils-r1.eclass,v 1.7 2012/12/15 21:30:03 mgorny Exp $
 
 # @ECLASS: python-utils-r1
 # @MAINTAINER:

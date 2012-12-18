@@ -10,7 +10,7 @@ HOMEPAGE="http://packages.qa.debian.org/d/debootstrap.html"
 SRC_URI="mirror://debian/pool/main/d/${PN}/${PN}_${PV}.tar.gz
 	mirror://gentoo/devices.tar.gz"
 
-LICENSE="as-is"
+LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""

@@ -1,4 +1,4 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: confutils.eclass
@@ -12,8 +12,6 @@
 # Based on the PHP5 eclass by Stuart Herbert <stuart@stuartherbert.com>
 
 inherit eutils
-
-DESCRIPTION="Based on the ${ECLASS} eclass"
 
 # @VARIABLE: EBUILD_SUPPORTS_SHAREDEXT
 # @DESCRIPTION:

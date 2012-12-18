@@ -30,9 +30,6 @@ src_prepare() {
 	epatch "${FILESDIR}"/${P}-man_MANS.patch
 	epatch "${FILESDIR}"/${P}-htmldir.patch
 
-	# auto detection is broken and hence aclocal does not rebuild it correctly
-	# if it exists
-	rm aclocal.m4 || die
 	eautoreconf
 }
 

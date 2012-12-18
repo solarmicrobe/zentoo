@@ -10,7 +10,7 @@ DESCRIPTION="Jade is an implementation of DSSSL - an ISO standard for formatting
 HOMEPAGE="http://openjade.sourceforge.net"
 SRC_URI="mirror://sourceforge/openjade/${P}.tar.gz"
 
-LICENSE="as-is"
+LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="static-libs"

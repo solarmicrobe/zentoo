@@ -1,0 +1,4 @@
+Manifest -diff
+metadata.xml -diff
+*.patch -diff
+licenses/* -diff

@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit eutils
+inherit eutils multilib
 
 DESCRIPTION="Bruce's C compiler - Simple C compiler to generate 8086 code"
 HOMEPAGE="http://www.debath.co.uk/"
@@ -55,7 +55,7 @@ src_compile() {
 }
 
 src_install() {
-	emake -j1 install-all DIST="${D}" || die
+	emake -j1 install-all LIBDIR="/usr/$(get_libdir)/bcc" INCLDIR="/usr/$(get_libdir)/bcc" DIST="${D}" || die
 	dobin bootblocks/makeboot || die
 	# remove all the stuff supplied by bin86
 	cd "${D}"

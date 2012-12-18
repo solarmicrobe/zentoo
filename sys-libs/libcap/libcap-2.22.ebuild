@@ -34,7 +34,8 @@ src_prepare() {
 }
 
 src_configure() {
-	tc-export BUILD_CC CC AR RANLIB
+	tc-export_build_env BUILD_CC
+	tc-export CC AR RANLIB
 }
 
 src_install() {

@@ -13,7 +13,7 @@ guesscompress() {
 	case "$1" in
 		*.gz|*.z)   echo "gunzip -c" ;;
 		*.bz2|*.bz) echo "bunzip2 -c" ;;
-		*.lz)       echo "lzip -c" ;;
+		*.lz)       echo "lzip -dc" ;;
 		*.lzma)     echo "unlzma -c" ;;
 		*.xz)       echo "xzdec" ;;
 		*)          echo "cat" ;;
@@ -125,8 +125,8 @@ lesspipe() {
 	*.zoo)        zoo -list "$1" || unzoo -l "$1" ;;
 	*.7z|*.exe)   7z l -- "$1" || 7za l -- "$1" || 7zr l -- "$1" ;;
 	*.a)          ar tv "$1" ;;
-	*.elf)        readelf -a -- "$1" ;;
-	*.so)         readelf -h -d -s -- "$1" ;;
+	*.elf)        readelf -a -W -- "$1" ;;
+	*.so)         readelf -h -d -s -W -- "$1" ;;
 	*.mo|*.gmo)   msgunfmt -- "$1" ;;
 
 	*.rar|.r[0-9][0-9])  unrar l -- "$1" ;;
@@ -233,7 +233,7 @@ if [[ -z $1 ]] ; then
 elif [[ $1 == "-V" || $1 == "--version" ]] ; then
 	Id="cvsid"
 	cat <<-EOF
-		$Id: lesspipe.sh,v 1.47 2011/12/07 20:29:25 vapier Exp $
+		$Id: lesspipe.sh,v 1.49 2012/11/22 04:20:15 vapier Exp $
 		Copyright 2001-2010 Gentoo Foundation
 		Mike Frysinger <vapier@gentoo.org>
 		     (with plenty of ideas stolen from other projects/distros)
@@ -243,7 +243,7 @@ elif [[ $1 == "-V" || $1 == "--version" ]] ; then
 	less -V
 elif [[ $1 == "-h" || $1 == "--help" ]] ; then
 	cat <<-EOF
-		lesspipe: preproccess files before sending them to less
+		lesspipe: preprocess files before sending them to less
 
 		Usage: lesspipe <file>
 

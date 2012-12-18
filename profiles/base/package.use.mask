@@ -1,9 +1,82 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.381 2012/07/30 05:33:58 yngwin Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.417 2012/12/15 19:08:34 anarchy Exp $
 
 # This file requires >=portage-2.1.1
 # New entries go on top.
+#
+
+# Jory A. Pratt <anarchy@gentoo.org> (15 Dec 2012)
+# PGO is known to be busted with most configurations
+www-client/firefox pgo
+
+# Christoph Jungans <ottxor@gentoo.org> (30 Nov 2012)
+# cuda only works on x86/amd64, openmm still under testing
+sci-chemistry/gromacs cuda openmm
+
+# Sergey Popov <pinkbyte@gentoo.org> (26 Nov 2012)
+# PDF docs building failed with sandbox violation
+media-gfx/opencolorio pdf
+
+# Chris Reffett <creffett@gentoo.org> (23 Nov 2012)
+# CMake's PHP module can't find our install location, so 
+# libkolab(xml) fails with the php flag enabled.
+net-libs/libkolab php
+net-libs/libkolabxml php
+
+# Pawel Hajdan jr <phajdan.jr@gentoo.org> (15 Nov 2012)
+# Experimental, requires masked ffmpeg, no libav support yet.
+www-client/chromium system-ffmpeg
+
+# Diego Elio Pettenò <flameeyes@gentoo.org> (3 Nov 2012)
+# Requires net-dns/unbound which is not keyworded by most arches
+net-libs/gnutls dane
+
+# Alexis Ballier <aballier@gentoo.org> (1 Nov 2012)
+# dev-ml/ocamlduce requires ocaml-3 and there has been no upstream release to
+# support ocaml-4. Mask useflags requiring it so that we can mask ocamlduce and
+# unmask ocaml-4.
+dev-ml/tyxml ocamlduce
+www-servers/ocsigen ocamlduce
+
+# Samuli Suominen <ssuominen@gentoo.org> (22 Oct 2012)
+# This is temporary mask for >=sys-fs/udev-171 because we don't want
+# anyone to use USE=extras. It has the separate USE flags like
+# USE=gudev to handle separate features. This entry can be
+# removed once =sys-fs/udev-171* have been removed from tree.
+# Please do so without asking permission if you see them gone.
+>=sys-fs/udev-171 extras
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (12 Oct 2012)
+# Temporary flag to allow osmesa + win32 on amd64 for overlay users.
+# Remove this mask (and the flag itself) when bug #430268 is resolved.
+app-emulation/wine osmesa-multilib
+
+# GNOME <gnome@gentoo.org> (02 Oct 2012)
+# Mask USE="udisks" and use USE="gdu" as the default for <gnome-base/gvfs-1.12.3-r1
+# This allows stabilization without sys-fs/udisks:2 which requires too new udev for now
+# Temporary mask until sys-fs/udisks:2 is stable
+<gnome-base/gvfs-1.12.3-r1 udisks
+
+# Pawel Hajdan jr <phajdan.jr@gentoo.org> (28 Sep 2012)
+# Causes problems with e.g. NVidia drivers, bug #413637.
+www-client/chromium tcmalloc
+
+# Johannes Huber <johu@gentoo.org> (14 Sep 2012)
+# Masked for stabilization as the use flag pulls a dep tree of hell.
+media-libs/phonon zeitgeist
+
+# Samuli Suominen <ssuominen@gentoo.org> (31 Aug 2012)
+# Pending on GNOME 3.x stabilization (brasero-3 to be precise)
+app-pda/gtkpod cdr
+
+# Diego Elio Pettenò (27 Aug 2012)
+# The libpci access is only used for linux.
+net-analyzer/net-snmp pci
+
+# Diego Elio Pettenò (20 Aug 2012)
+# The prevent-removal USE flag is only implemented for Linux.
+sys-auth/pam_mktemp prevent-removal
 
 # Ben de Groot <yngwin@gentoo.org> (30 Jul 2012)
 # fontconfig-infinality dependency not yet keyworded on most arches
@@ -21,14 +94,16 @@ dev-lang/php kolab
 # Ralph Sennhauser <sera@gentoo.org> (18 Jul 2012)
 # Requires masked eclipse-sdk.
 dev-lang/icc eclipse
+dev-lang/idb eclipse
 
 # Michael Weber<xmw@gentoo.org>  (18 Jun 2012)
 # Not fit for production
 www-client/netsurf pdf-writer javascript gstreamer
 
 # Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (16 Jul 2012)
-# Needs x11-libs/glamor stable first
+# Needs x11-libs/glamor stable/keyworded first #414295 #440872
 <x11-drivers/xf86-video-intel-2.20 glamor
+=x11-drivers/xf86-video-ati-7* glamor
 
 # Diego Elio Pettenò <flameeyes@gentoo.org> (16 Jul 2012)
 # Stop glibc/uclibc from using iconv in blender
@@ -49,6 +124,8 @@ sys-boot/grub libzfs
 # Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (19 Jun 2012)
 # mask wayland flag for stable mesa, #419473
 =media-libs/mesa-8.0.3 wayland
+=media-libs/mesa-8.0.4-r1 wayland
+=media-libs/mesa-9.0 wayland
 
 # Zac Medico <zmedico@gentoo.org> (13 Jun 2012)
 # Mask USE=pypy1_9 for sys-apps/portage, since pypy has limited KEYWORDS.
@@ -66,10 +143,6 @@ dev-db/firebird client
 # Requires icc which does not emerge (distfile unavailable)
 media-libs/opencv ipp
 
-# Alexandre Rostovtsev <tetromino@gentoo.org> (14 May 2012)
-# This is the GNOME 3.4 package.use mask
-=media-gfx/eog-plugins-3.4* map
-
 # Alexandre Rostovtsev <tetromino@gentoo.org> (10 May 2012)
 # This entry can be removed by anyone after gnome-panel-3.* is stabilized
 # Mask to allow stabilization (bug #414983)
@@ -78,11 +151,6 @@ media-libs/opencv ipp
 # Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (02 May 2012)
 # Causes crashes and build failures, not needed by any package, bug #412177
 <x11-libs/cairo-1.12 qt4
-
-# Johannes Huber <johu@gentoo.org> (19 Apr 2012)
-# Required dep >=net-libs/telepathy-farstream is masked by gnome herd. Feel
-# free to remove this entry, if mask is lifted.
-net-libs/telepathy-qt farstream
 
 # Alexandre Rostovtsev <tetromino@gentoo.org> (13 Apr 2012)
 # Packages with optional systemd support. Masked in base and unmasked on arches
@@ -123,7 +191,7 @@ media-sound/pulseaudio webrtc-aec xen
 # Alexandre Rostovtsev <tetromino@gentoo.org> (27 Mar 2012)
 # Requires libxkbcommon from the x11 overlay
 dev-cpp/gtkmm wayland
-x11-libs/gtk+ wayland
+x11-libs/gtk+ egl wayland
 
 # Johannes Huber <johu@gentoo.org> (23 Mar 2012)
 # Broken dep upnp, see bug #389833.
@@ -149,10 +217,6 @@ www-plugins/gnash directfb
 # Justin Lecher <jlec@gentoo.org> (13. Feb 2012)
 # Is broken somehow, upstream informed
 >=sci-chemistry/pymol-1.5.0.1 vmd
-
-# Samuli Suominen <ssuominen@gentoo.org> (10 Feb 2012)
-# Looks like 6.7.6.4 worksagain wrt bug #401327
-<media-gfx/imagemagick-6.7.6.4 q64
 
 # Bernard Cafarelli <voyageur@gentoo.org> (08 Feb 2012)
 # libobjc2/clang experimental support
@@ -198,6 +262,7 @@ net-libs/webkit-gtk jit
 # removed by the systemd maintainers when they think it's
 # ready.
 sys-auth/polkit systemd
+sys-power/upower systemd
 
 # Mike Frysinger <vapier@gentoo.org> (06 Dec 2011)
 # No one should be mucking with libssp unless they really know what they're
@@ -286,10 +351,6 @@ app-emulation/qemu-kvm rbd
 <www-client/epiphany-3 introspection
 <x11-libs/libwnck-2.30.6-r1 introspection
 <x11-libs/pango-1.28.4 introspection
-
-# Anthony G. Basile <blueness@gentoo.org> (22 Jul 2011)
-# nat-pmp and upnp are only stable on amd64/x86 for this package
->=net-misc/tor-0.2.3 nat-pmp upnp
 
 # Robin H. Johnson <robbat2@gentoo.org> (10 Jul 2011)
 # PPS should work on all arches, but only keyworded on amd64/x86
@@ -471,20 +532,6 @@ media-video/mplayer cpudetection custom-cpuopts bindist
 # Steve Dibb <beandog@gentoo.org> (26 Feb 2009)
 # Unmask internal real player codec support on newer mplayer
 >=media-video/mplayer-1.0_rc2_p20090226 -real
-
-# Arun Raghavan <ford_prefect@gentoo.org> (19 Nov 2010)
-# Mart Raudsepp <leio@gentoo.org> (27 Dec 2010)
-# Arun Raghavan <ford_prefect@gentoo.org> (30 Jan 2011)
-# Mart Raudsepp <leio@gentoo.org> (20 Mar 2011)
-# Mart Raudsepp <leio@gentoo.org> (12 Apr 2011)
-# Arun Raghavan <ford_prefect@gentoo.org> (27 Sep 2011)
-# Orc isn't yet ready to be used on anything other than x86/amd64/arm
->=media-libs/gst-plugins-base-0.10.30 orc
->=media-plugins/gst-plugins-a52dec-0.10.16 orc
->=media-plugins/gst-plugins-ffmpeg-0.10.11 orc
->=media-libs/gst-plugins-good-0.10.28 orc
->=media-libs/gst-plugins-bad-0.10.21 orc
->=media-sound/pulseaudio-1.0 orc
 
 # Alexis Ballier <aballier@gentoo.org> <16 Feb 2011>
 # Win32 specific useflags for vlc. Can be used for cross-compiling.

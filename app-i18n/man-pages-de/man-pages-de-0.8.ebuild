@@ -8,7 +8,7 @@ DESCRIPTION="A somewhat comprehensive collection of Linux german man page transl
 HOMEPAGE="http://alioth.debian.org/projects/manpages-de/"
 SRC_URI="http://manpages-de.alioth.debian.org/downloads/${MY_PN}-${PV}.tar.bz2"
 
-LICENSE="as-is GPL-2 GPL-3 BSD"
+LICENSE="GPL-3+ man-pages GPL-2+ GPL-2 BSD"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""

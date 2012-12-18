@@ -13,8 +13,6 @@
 
 inherit eutils multilib
 
-DESCRIPTION="Based on the ${ECLASS} eclass"
-
 PLUGINS_DIR="nsbrowser/plugins"
 
 # This function move the plugin dir in src_install() to

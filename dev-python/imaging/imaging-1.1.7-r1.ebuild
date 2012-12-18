@@ -17,7 +17,7 @@ DESCRIPTION="Python Imaging Library (PIL)"
 HOMEPAGE="http://www.pythonware.com/products/pil/index.htm"
 SRC_URI="http://www.effbot.org/downloads/${MY_P}.tar.gz"
 
-LICENSE="as-is"
+LICENSE="HPND"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc examples lcms scanner tk X"

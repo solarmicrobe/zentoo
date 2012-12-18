@@ -52,13 +52,17 @@ src_install() {
 
 	# needed by news module
 	keepdir /var/lib/gentoo/news
-	fowners root:portage /var/lib/gentoo/news || die
-	fperms g+w /var/lib/gentoo/news || die
+	if ! use prefix; then
+		fowners root:portage /var/lib/gentoo/news || die
+		fperms g+w /var/lib/gentoo/news || die
+	fi
 }
 
 pkg_postinst() {
 	# fowners in src_install doesn't work for the portage group:
 	# merging changes the group back to root
-	chgrp portage "${EROOT}/var/lib/gentoo/news" \
-		&& chmod g+w "${EROOT}/var/lib/gentoo/news"
+	if ! use prefix; then
+		chgrp portage "${EROOT}/var/lib/gentoo/news" \
+			&& chmod g+w "${EROOT}/var/lib/gentoo/news"
+	fi
 }

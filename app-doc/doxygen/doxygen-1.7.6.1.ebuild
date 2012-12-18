@@ -116,6 +116,9 @@ src_prepare() {
 	sed -i.orig -e "s:g_kowal:g kowal:" \
 		doc/maintainers.txt || die
 
+	sed -e "s/\$(DATE)/$(LC_ALL="C" LANG="C" date)/g" \
+		-i Makefile.in || die #428280
+
 	if is-flagq "-O3" ; then
 		echo
 		ewarn "Compiling with -O3 is known to produce incorrectly"

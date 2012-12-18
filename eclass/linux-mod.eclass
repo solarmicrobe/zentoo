@@ -33,7 +33,7 @@
 
 # @ECLASS-VARIABLE: BUILD_TARGETS
 # @DESCRIPTION:
-# It's a string with the build targets to pass to make. The default value is "clean modules"
+# It's a string with the build targets to pass to make. The default value is "clean module"
 
 # @ECLASS-VARIABLE: MODULE_NAMES
 # @DESCRIPTION:
@@ -126,7 +126,6 @@ EXPORT_FUNCTIONS pkg_setup pkg_preinst pkg_postinst src_install src_compile pkg_
 
 IUSE="kernel_linux"
 SLOT="0"
-DESCRIPTION="Based on the $ECLASS eclass"
 RDEPEND="kernel_linux? ( virtual/modutils )"
 DEPEND="${RDEPEND}
 	sys-apps/sed
@@ -222,7 +221,7 @@ update_depmod() {
 	ebegin "Updating module dependencies for ${KV_FULL}"
 	if [ -r "${KV_OUT_DIR}"/System.map ]
 	then
-		depmod -ae -F "${KV_OUT_DIR}"/System.map -b "${ROOT}" -r ${KV_FULL}
+		depmod -ae -F "${KV_OUT_DIR}"/System.map -b "${ROOT}" ${KV_FULL}
 		eend $?
 	else
 		ewarn

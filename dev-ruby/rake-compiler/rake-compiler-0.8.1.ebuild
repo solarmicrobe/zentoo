@@ -16,7 +16,7 @@ inherit ruby-fakegem eutils
 
 DESCRIPTION="Provide a standard and simplified way to build and package Ruby extensions"
 HOMEPAGE="http://github.com/luislavena/rake-compiler"
-LICENSE="as-is" # truly
+LICENSE="MIT"
 
 SRC_URI="http://github.com/luislavena/${PN}/tarball/v${PV} -> ${P}.tar.gz"
 RUBY_S="luislavena-${PN}-*"

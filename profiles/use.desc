@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/use.desc,v 1.490 2012/07/12 22:14:46 dilfridge Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/use.desc,v 1.498 2012/12/15 17:00:34 mgorny Exp $
 
 # Keep them sorted
 
@@ -14,7 +14,7 @@ aalib - Adds support for media-libs/aalib (ASCII-Graphics Library)
 accessibility - Adds support for accessibility (eg 'at-spi' library)
 acl - Adds support for Access Control Lists
 acpi - Adds support for Advanced Configuration and Power Interface
-adns - Adds support for the adns DNS client library
+adns - Adds support for asynchronous DNS resolution
 afs - Adds OpenAFS support (distributed file system)
 aim - Enable AIM IM protocol support
 alsa - Adds support for media-libs/alsa-lib (Advanced Linux Sound Architecture)
@@ -68,7 +68,6 @@ cxx - Builds support for C++ (bindings, extra libraries, code generation, ...)
 dbi - Enable dev-db/libdbi (database-independent abstraction layer) support
 dbm - Adds support for generic DBM databases
 dbus - Enable dbus support for anything that needs it (gpsd, gnomemeeting, etc)
-dbx - Adds database abstraction layer
 debug - Enable extra debug codepaths, like asserts and extra output. If you want to get meaningful backtraces see http://www.gentoo.org/proj/en/qa/backtraces.xml
 dedicated - Adds support for dedicated game servers (some packages do not provide clients and servers at the same time)
 dga - Adds DGA (Direct Graphic Access) support for X
@@ -146,6 +145,7 @@ imap - Adds support for IMAP (Internet Mail Application Protocol)
 imlib - Adds support for imlib, an image loading and rendering library
 infiniband - Enable Infiniband RDMA transport support
 inifile - Adds dbm support for .ini files
+introspection - Adds support for GObject based introspection
 iodbc - Adds support for iODBC library
 ios - Enable support for Apple's iDevice with iOS operating system (iPad, iPhone, iPod, etc)
 ipod - Enable support for iPod device access
@@ -215,7 +215,6 @@ mpeg - Adds libmpeg3 support to various packages
 mpi - Adds MPI (Message Passing Interface) layer to the apps that support it
 mplayer - Enable mplayer support for playback or encoding
 msn - Enable MSN Messenger IM protocol support
-msql - Adds support for the MSQL database server
 mssql - Adds support for Microsoft SQL Server database
 mtp - Enable support for Media Transfer Protocol
 mule - Adds multi-language support to XEmacs
@@ -333,6 +332,7 @@ sybase - Adds support for the Sybase SQL Database Server
 sybase-ct - Adds support for Sybase-CT
 symlink - Force kernel ebuilds to automatically update the /usr/src/linux symlink
 syslog - Enables support for syslog
+systemd - Enable use of systemd-specific libraries and features like socket activation or session tracking
 sysvipc - Support for System V-compatible inter-process communication
 szip - Use the szip compression library
 taglib - Enable tagging support with taglib
@@ -351,15 +351,19 @@ truetype - Adds support for FreeType and/or FreeType2 fonts
 uclibc - Enable uclibc specific patches and build or link uclibc
 udev - Enable sys-fs/udev integration (device discovery, power and storage device support, etc)
 unicode - Adds support for Unicode
+upnp - Enable UPnP port mapping support
+upnp-av - Enable UPnP audio/video streaming support
 usb - Adds USB support to applications that have optional USB support (e.g. cups)
 v4l - Enable support for video4linux (using linux-headers or userspace libv4l libraries)
 vanilla - Do not add extra patches which change default behaviour; DO NOT USE THIS ON A GLOBAL SCALE as the severity of the meaning changes drastically
 vcd - Video CD support
+vdpau - Enable the Video Decode and Presentation API for Unix acceleration interface
 vhosts - Adds support for installing web-based applications into a virtual-hosting environment
 videos - Install optional video files (used in some games)
 vim-syntax - Pulls in related vim syntax scripts
 vnc - Enable VNC (remote desktop viewer) support
 vorbis - Adds support for the OggVorbis audio codec
+wayland - Enable dev-libs/wayland backend
 wavpack - Add support for wavpack audio compression tools
 wddx - Adds support for Web Distributed Data eXchange
 webkit - Add support for the WebKit HTML rendering/layout engine

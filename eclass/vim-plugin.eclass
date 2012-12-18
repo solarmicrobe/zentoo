@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # This eclass simplifies installation of app-vim plugins into
@@ -15,7 +15,8 @@ IUSE=""
 DEPEND="|| ( >=app-editors/vim-${VIM_PLUGIN_VIM_VERSION}
 	>=app-editors/gvim-${VIM_PLUGIN_VIM_VERSION} )"
 RDEPEND="${DEPEND}"
-SRC_URI="mirror://gentoo/${P}.tar.bz2"
+SRC_URI="mirror://gentoo/${P}.tar.bz2
+	http://dev.gentoo.org/~radhermit/vim/${P}.tar.bz2"
 SLOT="0"
 
 vim-plugin_src_install() {

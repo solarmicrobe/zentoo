@@ -3,10 +3,10 @@
 # $Header: $
 
 EAPI="3"
-PYTHON_DEPEND="2"
+PYTHON_DEPEND="2:2.6"
 DISTUTILS_SRC_TEST="setup.py"
 
-inherit distutils
+inherit distutils eutils
 
 DESCRIPTION="Module to validate VAT numbers"
 HOMEPAGE="http://code.google.com/p/vatnumber/"
@@ -23,6 +23,10 @@ DEPEND="${RDEPEND}
 	test? ( dev-python/suds )"
 
 PYTHON_MODNAME="vatnumber"
+
+src_prepare() {
+	epatch "${FILESDIR}"/${P}-skiptest.patch
+}
 
 src_install() {
 	distutils_src_install

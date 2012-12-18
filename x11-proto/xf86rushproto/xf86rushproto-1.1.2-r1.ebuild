@@ -9,6 +9,3 @@ DESCRIPTION="X.Org XF86Rush protocol headers"
 
 KEYWORDS="amd64"
 IUSE=""
-
-RDEPEND=""
-DEPEND="${RDEPEND}"

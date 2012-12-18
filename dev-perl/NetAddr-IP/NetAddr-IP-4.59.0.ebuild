@@ -11,7 +11,7 @@ inherit perl-module
 DESCRIPTION="Manipulation and operations on IP addresses"
 
 SLOT="0"
-LICENSE="Artistic"
+LICENSE="|| ( Artistic Artistic-2 )"
 KEYWORDS="amd64"
 IUSE="ipv6"
 

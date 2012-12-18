@@ -52,7 +52,7 @@ inherit eutils flag-o-matic gnuconfig ${MYSQL_EXTRAS} ${BUILD_INHERIT} mysql_fx 
 #
 
 case "${EAPI:-0}" in
-	3|4) ;;
+	3|4|5) ;;
 	*) die "Unsupported EAPI: ${EAPI}" ;;
 esac
 
@@ -175,6 +175,7 @@ IUSE="${IUSE} berkdb"
 IUSE="${IUSE} +community profiling"
 
 [[ ${PN} == "mariadb" ]] \
+&& mysql_check_version_range "5.1.38 to 5.3.99" \
 && IUSE="${IUSE} libevent"
 
 [[ ${PN} == "mariadb" ]] \
@@ -184,6 +185,11 @@ IUSE="${IUSE} +community profiling"
 [[ ${PN} == "mariadb" ]] \
 && mysql_version_is_at_least "5.2.5" \
 && IUSE="${IUSE} sphinx"
+
+if mysql_version_is_at_least "5.5"; then
+	REQUIRED_USE="tcmalloc? ( !jemalloc ) jemalloc? ( !tcmalloc )"
+	IUSE="${IUSE} jemalloc tcmalloc"
+fi
 
 mysql_version_is_at_least "5.5.7" \
 && IUSE="${IUSE} systemtap"
@@ -204,6 +210,7 @@ DEPEND="
 "
 
 [[ ${PN} == mariadb ]] \
+&& mysql_check_version_range "5.1.38 to 5.3.99" \
 && DEPEND="${DEPEND} libevent? ( >=dev-libs/libevent-1.4 )"
 
 # Having different flavours at the same time is not a good idea
@@ -240,7 +247,14 @@ mysql_version_is_at_least "5.5.8" \
 && DEPEND="${DEPEND} sphinx? ( app-misc/sphinx )"
 
 mysql_version_is_at_least "5.5.7" \
-&& DEPEND="${DEPEND} systemtap? ( >=dev-util/systemtap-1.3 )"
+&& DEPEND="${DEPEND} systemtap? ( >=dev-util/systemtap-1.3 )" \
+&& DEPEND="${DEPEND} kernel_linux? ( dev-libs/libaio )"
+
+mysql_version_is_at_least "5.5" \
+&& DEPEND="${DEPEND} jemalloc? ( dev-libs/jemalloc )"
+
+mysql_version_is_at_least "5.5" \
+&& DEPEND="${DEPEND} tcmalloc? ( dev-util/google-perftools )"
 
 # dev-perl/DBD-mysql is needed by some scripts installed by MySQL
 PDEPEND="perl? ( >=dev-perl/DBD-mysql-2.9004 )"
@@ -494,10 +508,10 @@ mysql-v2_pkg_postinst() {
 	fi
 
 	if pbxt_available && use pbxt ; then
-		# TODO: explain it better
-		elog "    mysql> INSTALL PLUGIN pbxt SONAME 'libpbxt.so';"
-		elog "    mysql> CREATE TABLE t1 (c1 int, c2 text) ENGINE=pbxt;"
-		elog "if, after that, you cannot start the MySQL server,"
+		elog "Note: PBXT is now statically built when enabled."
+		elog ""
+		elog "If, you previously installed as a plugin and "
+		elog "you cannot start the MySQL server,"
 		elog "remove the ${MY_DATADIR}/mysql/plugin.* files, then"
 		elog "use the MySQL upgrade script to restore the table"
 		elog "or execute the following SQL command:"
@@ -513,12 +527,35 @@ mysql-v2_pkg_postinst() {
 	&& elog "Berkeley DB support is deprecated and will be removed in future versions!"
 }
 
+# @FUNCTION: mysql-v2_getopt
+# @DESCRIPTION:
+# Use my_print_defaults to extract specific config options
+mysql-v2_getopt() {
+	local mypd="${EROOT}"/usr/bin/my_print_defaults
+	section="$1"
+	flag="--${2}="
+	"${mypd}" $section | sed -n "/^${flag}/p"
+}
+
+# @FUNCTION: mysql-v2_getoptval
+# @DESCRIPTION:
+# Use my_print_defaults to extract specific config options
+mysql-v2_getoptval() {
+	local mypd="${EROOT}"/usr/bin/my_print_defaults
+	section="$1"
+	flag="--${2}="
+	"${mypd}" $section | sed -n "/^${flag}/s,${flag},,gp"
+}
+
 # @FUNCTION: mysql-v2_pkg_config
 # @DESCRIPTION:
 # Configure mysql environment.
 mysql-v2_pkg_config() {
 
 	local old_MY_DATADIR="${MY_DATADIR}"
+	local old_HOME="${HOME}"
+	# my_print_defaults needs to read stuff in $HOME/.my.cnf
+	export HOME=/root
 
 	# Make sure the vars are correctly initialized
 	mysql_init_vars
@@ -530,10 +567,12 @@ mysql-v2_pkg_config() {
 	fi
 
 	if [[ ( -n "${MY_DATADIR}" ) && ( "${MY_DATADIR}" != "${old_MY_DATADIR}" ) ]]; then
-		local MY_DATADIR_s="$(strip_duplicate_slashes ${ROOT}/${MY_DATADIR})"
-		local old_MY_DATADIR_s="$(strip_duplicate_slashes ${ROOT}/${old_MY_DATADIR})"
+		local MY_DATADIR_s="${ROOT}/${MY_DATADIR}"
+		MY_DATADIR_s="${MY_DATADIR_s%%/}"
+		local old_MY_DATADIR_s="${ROOT}/${old_MY_DATADIR}"
+		old_MY_DATADIR_s="${old_MY_DATADIR_s%%/}"
 
-		if [[ -d "${old_MY_DATADIR_s}" ]]; then
+		if [[ -d "${old_MY_DATADIR_s}" ]] && [[ "${old_MY_DATADIR_s}" != / ]]; then
 			if [[ -d "${MY_DATADIR_s}" ]]; then
 				ewarn "Both ${old_MY_DATADIR_s} and ${MY_DATADIR_s} exist"
 				ewarn "Attempting to use ${MY_DATADIR_s} and preserving ${old_MY_DATADIR_s}"
@@ -557,8 +596,27 @@ mysql-v2_pkg_config() {
 	local pwd2="b"
 	local maxtry=15
 
-	if [ -z "${MYSQL_ROOT_PASSWORD}" -a -f "${EROOT}/root/.my.cnf" ]; then
-		MYSQL_ROOT_PASSWORD="$(sed -n -e '/^password=/s,^password=,,gp' "${EROOT}/root/.my.cnf")"
+	if [ -z "${MYSQL_ROOT_PASSWORD}" ]; then
+		MYSQL_ROOT_PASSWORD="$(mysql-v2_getoptval 'client mysql' password)"
+	fi
+	MYSQL_TMPDIR="$(mysql-v2_getoptval mysqld tmpdir)"
+	# These are dir+prefix
+	MYSQL_RELAY_LOG="$(mysql-v2_getoptval mysqld relay-log)"
+	MYSQL_RELAY_LOG=${MYSQL_RELAY_LOG%/*}
+	MYSQL_LOG_BIN="$(mysql-v2_getoptval mysqld log-bin)"
+	MYSQL_LOG_BIN=${MYSQL_LOG_BIN%/*}
+
+	if [[ ! -d "${EROOT}"/$MYSQL_TMPDIR ]]; then
+		einfo "Creating MySQL tmpdir $MYSQL_TMPDIR"
+		install -d -m 770 -o mysql -g mysql "${EROOT}"/$MYSQL_TMPDIR
+	fi
+	if [[ ! -d "${EROOT}"/$MYSQL_LOG_BIN ]]; then
+		einfo "Creating MySQL log-bin directory $MYSQL_LOG_BIN"
+		install -d -m 770 -o mysql -g mysql "${EROOT}"/$MYSQL_LOG_BIN
+	fi
+	if [[ ! -d "${EROOT}"/$MYSQL_RELAY_LOG ]]; then
+		einfo "Creating MySQL relay-log directory $MYSQL_RELAY_LOG"
+		install -d -m 770 -o mysql -g mysql "${EROOT}"/$MYSQL_RELAY_LOG
 	fi
 
 	if [[ -d "${ROOT}/${MY_DATADIR}/mysql" ]] ; then
@@ -589,7 +647,7 @@ mysql-v2_pkg_config() {
 		unset pwd1 pwd2
 	fi
 
-	local options=""
+	local options="--log-warnings=0"
 	local sqltmp="$(emktemp)"
 
 	local help_tables="${ROOT}${MY_SHAREDSTATEDIR}/fill_help_tables.sql"
@@ -597,9 +655,31 @@ mysql-v2_pkg_config() {
 	&& cp "${help_tables}" "${TMPDIR}/fill_help_tables.sql" \
 	|| touch "${TMPDIR}/fill_help_tables.sql"
 	help_tables="${TMPDIR}/fill_help_tables.sql"
+	
+	# Figure out which options we need to disable to do the setup
+	helpfile="${TMPDIR}/mysqld-help"
+	${EROOT}/usr/sbin/mysqld --verbose --help >"${helpfile}" 2>/dev/null
+	for opt in grant-tables host-cache name-resolve networking slave-start bdb \
+		federated innodb ssl log-bin relay-log slow-query-log external-locking \
+		ndbcluster log-slave-updates \
+		; do
+		optexp="--(skip-)?${opt}" optfull="--loose-skip-${opt}"
+		egrep -sq -- "${optexp}" "${helpfile}" && options="${options} ${optfull}"
+	done
+	# But some options changed names
+	egrep -sq external-locking "${helpfile}" && \
+	options="${options/skip-locking/skip-external-locking}"
+
+	use prefix || options="${options} --user=mysql"
 
 	pushd "${TMPDIR}" &>/dev/null
-	"${EROOT}/usr/bin/mysql_install_db" "--basedir=${EPREFIX}/usr" >"${TMPDIR}"/mysql_install_db.log 2>&1
+	#cmd="'${EROOT}/usr/share/mysql/scripts/mysql_install_db' '--basedir=${EPREFIX}/usr' ${options}"
+	cmd=${EROOT}usr/share/mysql/scripts/mysql_install_db
+	[ -f ${cmd} ] || cmd=${EROOT}usr/bin/mysql_install_db
+	cmd="'$cmd' '--basedir=${EPREFIX}/usr' ${options}"
+	einfo "Command: $cmd"
+	eval $cmd \
+		>"${TMPDIR}"/mysql_install_db.log 2>&1
 	if [ $? -ne 0 ]; then
 		grep -B5 -A999 -i "ERROR" "${TMPDIR}"/mysql_install_db.log 1>&2
 		die "Failed to run mysql_install_db. Please review ${EPREFIX}/var/log/mysql/mysqld.err AND ${TMPDIR}/mysql_install_db.log"
@@ -609,20 +689,6 @@ mysql-v2_pkg_config() {
 	|| die "MySQL databases not installed"
 	chown -R mysql:mysql "${ROOT}/${MY_DATADIR}" 2>/dev/null
 	chmod 0750 "${ROOT}/${MY_DATADIR}" 2>/dev/null
-
-	# Figure out which options we need to disable to do the setup
-	helpfile="${TMPDIR}/mysqld-help"
-	${EROOT}/usr/sbin/mysqld --verbose --help >"${helpfile}" 2>/dev/null
-	for opt in grant-tables host-cache name-resolve networking slave-start bdb \
-		federated innodb ssl log-bin relay-log slow-query-log external-locking \
-		ndbcluster \
-		; do
-		optexp="--(skip-)?${opt}" optfull="--skip-${opt}"
-		egrep -sq -- "${optexp}" "${helpfile}" && options="${options} ${optfull}"
-	done
-	# But some options changed names
-	egrep -sq external-locking "${helpfile}" && \
-	options="${options/skip-locking/skip-external-locking}"
 
 	# Filling timezones, see
 	# http://dev.mysql.com/doc/mysql/en/time-zone-support.html
@@ -640,6 +706,7 @@ mysql-v2_pkg_config() {
 	local mysqld="${EROOT}/usr/sbin/mysqld \
 		${options} \
 		--user=mysql \
+		--log-warnings=0 \
 		--basedir=${EROOT}/usr \
 		--datadir=${ROOT}/${MY_DATADIR} \
 		--max_allowed_packet=8M \
@@ -649,6 +716,7 @@ mysql-v2_pkg_config() {
 		--pid-file=${pidfile}"
 	#einfo "About to start mysqld: ${mysqld}"
 	ebegin "Starting mysqld"
+	einfo "Command ${mysqld}"
 	${mysqld} &
 	rc=$?
 	while ! [[ -S "${socket}" || "${maxtry}" -lt 1 ]] ; do
@@ -676,7 +744,7 @@ mysql-v2_pkg_config() {
 		--socket=${socket} \
 		-hlocalhost \
 		-uroot \
-		-p"${MYSQL_ROOT_PASSWORD}" \
+		--password="${MYSQL_ROOT_PASSWORD}" \
 		mysql < "${sqltmp}"
 	rc=$?
 	eend $?

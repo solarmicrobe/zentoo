@@ -12,7 +12,7 @@ DESCRIPTION="Interface between RELAX NG validators and datatype libraries"
 HOMEPAGE="http://relaxng.org/"
 SRC_URI="mirror://sourceforge/relaxng/${MY_P}.zip"
 
-LICENSE="as-is"
+LICENSE="BSD"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc source"

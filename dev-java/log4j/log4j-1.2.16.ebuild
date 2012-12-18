@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=4
 JAVA_PKG_IUSE="doc javamail jms jmx source"
 
 inherit java-pkg-2 java-ant-2
@@ -63,7 +63,7 @@ src_install() {
 
 	if use doc ; then
 		java-pkg_dohtml -r site/*
-		rm -fr "${D}/usr/share/doc/${PF}/html/apidocs"
+		rm -fr "${ED}/usr/share/doc/${PF}/html/apidocs"
 		java-pkg_dojavadoc --symlink apidocs site/apidocs
 	fi
 	use source && java-pkg_dosrc src/main/java/*

@@ -24,6 +24,7 @@ DEPEND="${RDEPEND}
 	test? (
 		dev-python/nose
 		virtual/ttf-fonts
+		dev-texlive/texlive-latexrecommended
 	)"
 
 S="${WORKDIR}/${MY_P}"

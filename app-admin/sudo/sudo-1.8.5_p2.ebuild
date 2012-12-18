@@ -21,7 +21,7 @@ SRC_URI="http://www.sudo.ws/sudo/dist/${uri_prefix}${MY_P}.tar.gz
 
 # Basic license is ISC-style as-is, some files are released under
 # 3-clause BSD license
-LICENSE="as-is BSD"
+LICENSE="ISC BSD"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="ldap nls pam offensive selinux skey"

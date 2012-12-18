@@ -35,7 +35,7 @@ CDEPEND=">=dev-db/sqlite-3.4
 	ruby? ( >=dev-lang/ruby-1.8.2 )
 	sasl? ( dev-libs/cyrus-sasl )
 	webdav-neon? ( >=net-libs/neon-0.28 )
-	webdav-serf? ( >=net-libs/serf-0.3.0 )"
+	webdav-serf? ( >=net-libs/serf-0.3.0:0 )"
 RDEPEND="${CDEPEND}
 	apache2? ( www-servers/apache[apache2_modules_dav] )
 	java? ( >=virtual/jre-1.5 )

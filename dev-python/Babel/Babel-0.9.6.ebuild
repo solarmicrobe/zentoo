@@ -8,7 +8,7 @@ SUPPORT_PYTHON_ABIS="1"
 RESTRICT_PYTHON_ABIS="3.*"
 DISTUTILS_SRC_TEST="setup.py"
 
-inherit distutils
+inherit eutils distutils
 
 DESCRIPTION="A collection of tools for internationalizing Python applications"
 HOMEPAGE="http://babel.edgewall.org/ http://pypi.python.org/pypi/Babel"
@@ -24,6 +24,11 @@ DEPEND="dev-python/pytz
 RDEPEND="${DEPEND}"
 
 PYTHON_MODNAME="babel"
+
+src_prepare() {
+	epatch "${FILESDIR}"/${P}-setuptools.patch
+	distutils_src_prepare
+}
 
 src_install() {
 	distutils_src_install

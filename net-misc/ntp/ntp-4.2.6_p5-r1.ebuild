@@ -12,7 +12,7 @@ HOMEPAGE="http://www.ntp.org/"
 SRC_URI="http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-${PV:0:3}/${MY_P}.tar.gz
 	mirror://gentoo/${MY_P}-manpages.tar.bz2"
 
-LICENSE="as-is"
+LICENSE="HPND BSD ISC"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="caps debug ipv6 openntpd parse-clocks samba selinux snmp ssl vim-syntax zeroconf"

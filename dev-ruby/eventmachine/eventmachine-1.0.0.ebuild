@@ -1,13 +1,15 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI=4
 # jruby → has shims for Java handling but tests fail badly, remaining
 # stuck; avoid that for now.
 USE_RUBY="ruby18 ree18 ruby19"
 
+RUBY_FAKEGEM_TASK_DOC="yard"
 RUBY_FAKEGEM_DOCDIR="rdoc"
+RUBY_FAKEGEM_EXTRADOC="docs/*.md README.md"
 
 inherit ruby-fakegem
 
@@ -23,6 +25,20 @@ DEPEND="${DEPEND}
 	dev-libs/openssl"
 RDEPEND="${RDEPEND}
 	dev-libs/openssl"
+
+ruby_add_bdepend "doc? ( dev-ruby/yard )"
+
+all_ruby_prepare() {
+	# Remove package tasks to avoid dependency on rake-compiler.
+	rm rakelib/package.rake || die
+
+	# fix test issue - upstream b96b736b39261f7d74f013633cc7cd619afa20c4
+	sed -i -e 's/DEBUG/BROADCAST/g' tests/test_set_sock_opt.rb || die
+
+	# Remove the resolver tests since they require network access and
+	# the localhost test fails with an IPv6 localhost.
+	rm tests/test_resolver.rb || die
+}
 
 each_ruby_configure() {
 	for extdir in ext ext/fastfilereader; do

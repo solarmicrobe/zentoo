@@ -7,7 +7,7 @@ inherit vim-plugin
 DESCRIPTION="vim plugin: PAM configuration syntax highlighting"
 HOMEPAGE="http://www.vim.org/scripts/script.php?script_id=735"
 
-LICENSE="as-is"
+LICENSE="vim"
 KEYWORDS="amd64"
 IUSE=""
 

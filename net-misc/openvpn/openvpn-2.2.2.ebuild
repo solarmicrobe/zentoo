@@ -6,7 +6,7 @@ EAPI=4
 
 inherit eutils multilib toolchain-funcs flag-o-matic user
 
-DESCRIPTION="OpenVPN is a robust and highly flexible tunneling application compatible with many OSes."
+DESCRIPTION="Robust and highly flexible tunneling application compatible with many OSes"
 SRC_URI="http://swupdate.openvpn.net/community/releases/${P}.tar.gz"
 HOMEPAGE="http://openvpn.net/"
 
@@ -72,7 +72,7 @@ src_compile() {
 			[[ ${i} == "README" || ${i} == "examples" || ${i} == "defer" ]] && continue
 			[[ ${i} == "auth-pam" ]] && ! use pam && continue
 			einfo "Building ${i} plugin"
-			emake -C "${i}" CC=$(tc-getCC)
+			emake -C "${i}" CC=$(tc-getCC) TARGET_DIR="${EPREFIX}"/usr/$(get_libdir)/${PN} || die "make failed"
 		done
 		cd ..
 	fi
@@ -124,7 +124,7 @@ pkg_postinst() {
 	enewgroup openvpn
 	enewuser openvpn "" "" "" openvpn
 
-	if [ path_exists -o "${ROOT}/etc/openvpn/*/local.conf" ] ; then
+	if [ path_exists -o "${EROOT}/etc/openvpn/*/local.conf" ] ; then
 		ewarn "WARNING: The openvpn init script has changed"
 		ewarn ""
 	fi
@@ -143,7 +143,7 @@ pkg_postinst() {
 	elog "You can then treat openvpn.foo as any other service, so you can"
 	elog "stop one vpn and start another if you need to."
 
-	if grep -Eq "^[ \t]*(up|down)[ \t].*" "${ROOT}/etc/openvpn"/*.conf 2>/dev/null ; then
+	if grep -Eq "^[ \t]*(up|down)[ \t].*" "${EROOT}/etc/openvpn"/*.conf 2>/dev/null ; then
 		ewarn ""
 		ewarn "WARNING: If you use the remote keyword then you are deemed to be"
 		ewarn "a client by our init script and as such we force up,down scripts."

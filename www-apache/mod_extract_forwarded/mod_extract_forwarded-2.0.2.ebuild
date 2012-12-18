@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -23,7 +23,7 @@ S="${WORKDIR}/extract_forwarded"
 APACHE2_MOD_CONF="98_${PN}"
 APACHE2_MOD_DEFINE="EXTRACT_FORWARDED"
 
-need_apache2
+need_apache2_2
 
 src_prepare() {
 	if ! use mod_proxy; then

@@ -90,3 +90,7 @@ dev-java/ant testutil
 net-print/cups filters
 
 dev-java/icedtea alsa systemtap pax_kernel webstart
+dev-libs/libnatspec python
+net-libs/libpcap canusb
+net-analyzer/tcpdump smi
+net-analyzer/rrdtool dbi

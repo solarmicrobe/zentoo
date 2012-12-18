@@ -12,7 +12,7 @@ DESCRIPTION="Sun XML Datatypes Library"
 HOMEPAGE="http://msv.java.net/"
 SRC_URI="http://java.net/downloads/msv/releases/${PN}.${PV}.zip"
 
-LICENSE="BSD-2 Apache-1.1"
+LICENSE="BSD Apache-1.1"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""

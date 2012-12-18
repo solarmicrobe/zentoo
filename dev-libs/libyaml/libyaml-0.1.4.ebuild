@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit eutils autotools-utils
+inherit autotools-utils eutils
 
 MY_P="${P/lib}"
 
@@ -23,8 +23,8 @@ DOCS="README"
 
 src_prepare() {
 	# conditionally remove tests
-	if use test; then
-		sed -i -e 's: tests::g' Makefile*
+	if ! use test; then
+		sed -i -e 's: tests::g' Makefile* || die
 	fi
 }
 

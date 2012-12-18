@@ -1,4 +1,4 @@
-# Copyright 1999-2006 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # THIS ECLASS IS DEAD: It has been integrated into portage
@@ -21,8 +21,6 @@
 
 
 DEPEND="sys-devel/gnuconfig"
-
-DESCRIPTION="Based on the ${ECLASS} eclass"
 
 # Wrapper function for gnuconfig_do_update. If no arguments are given, update
 # config.sub and config.guess (old default behavior), otherwise update the

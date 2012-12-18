@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @DEPRECATED
@@ -25,7 +25,7 @@ DEPEND=">=dev-vcs/git-1.6"
 
 EXPORTED_FUNCTIONS="src_unpack"
 case "${EAPI:-0}" in
-	4|3|2) EXPORTED_FUNCTIONS="${EXPORTED_FUNCTIONS} src_prepare" ;;
+	2|3|4|5) EXPORTED_FUNCTIONS="${EXPORTED_FUNCTIONS} src_prepare" ;;
 	1|0) ;;
 	*) die "EAPI=${EAPI} is not supported" ;;
 esac
