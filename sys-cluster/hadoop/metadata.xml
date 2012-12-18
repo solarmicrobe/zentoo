@@ -5,7 +5,4 @@
 		<email>hollow@gentoo.org</email>
 		<name>Benedikt Böhm</name>
 	</maintainer>
-	<use>
-		<flag name="ceph">Add support for CephFS</flag>
-	</use>
 </pkgmetadata>

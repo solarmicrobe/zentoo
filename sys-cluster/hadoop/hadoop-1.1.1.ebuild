@@ -10,14 +10,13 @@ inherit eutils java-pkg-2 java-ant-2 autotools user
 
 DESCRIPTION="Software framework for data intensive distributed applications"
 HOMEPAGE="http://hadoop.apache.org/"
-SRC_URI="https://archive.apache.org/dist/hadoop/core/${P}/${P}.tar.gz
-	ceph? ( https://raw.github.com/ceph/ceph/e48859474c4944d4ff201ddc9f5fd400e8898173/src/client/hadoop/HADOOP-ceph.patch -> ${P}-ceph.patch )"
+SRC_URI="https://archive.apache.org/dist/hadoop/core/${P}/${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="amd64"
 RESTRICT="binchecks"
-IUSE="ceph"
+IUSE=""
 
 DEPEND=">=virtual/jdk-1.6"
 RDEPEND="${DEPEND}
@@ -51,10 +50,8 @@ src_prepare() {
 	eant clean
 	mkdir -p "${S}"/build/docs
 
-	use ceph && epatch "${DISTDIR}"/${P}-ceph.patch
-
-	epatch "${FILESDIR}"/hadoop-java7.patch
-	epatch "${FILESDIR}"/hadoop-jni-ldflags.patch
+	#epatch "${FILESDIR}"/hadoop-java7.patch
+	#epatch "${FILESDIR}"/hadoop-jni-ldflags.patch
 	epatch "${FILESDIR}"/hadoop-noasneeded.patch
 	cd "${S}"/src/native && eautoreconf
 }
