@@ -11,7 +11,7 @@ inherit autotools eutils haskell-cabal
 
 DESCRIPTION="Alex is a tool for generating lexical analysers in Haskell"
 HOMEPAGE="http://www.haskell.org/alex/"
-SRC_URI="http://hackage.haskell.org/packages/archive/${PN}/${PV}/${P}.tar.gz"
+SRC_URI="mirror://hackage/packages/archive/${PN}/${PV}/${P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
@@ -20,16 +20,14 @@ IUSE="doc"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
-		>=dev-haskell/cabal-1.2
+		>=dev-haskell/cabal-1.6
+		>=dev-haskell/quickcheck-2
 		>=dev-lang/ghc-6.8.2
 	doc? (	~app-text/docbook-xml-dtd-4.2
 		app-text/docbook-xsl-stylesheets
 		>=dev-libs/libxslt-1.1.2 )"
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-2.3.5-missing-test.patch"
-	epatch "${FILESDIR}/${PN}-2.3.5-ghc-7.2.patch"
-
 	for f in Scan Parser; do
 		rm "${S}/src/$f."*
 		mv "${S}/dist/build/alex/alex-tmp/$f.hs" "${S}"/src/

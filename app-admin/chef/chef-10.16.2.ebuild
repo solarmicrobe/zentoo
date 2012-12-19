@@ -30,20 +30,25 @@ ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	dev-ruby/erubis
 	>=dev-ruby/highline-1.6.9
 	>=dev-ruby/json-1.4.4
-	>=dev-ruby/mixlib-authentication-1.1.0
+	>=dev-ruby/mixlib-authentication-1.3.0
 	>=dev-ruby/mixlib-cli-1.1.0
 	>=dev-ruby/mixlib-config-1.1.2
 	>=dev-ruby/mixlib-log-1.3.0
 	dev-ruby/mixlib-shellout
 	dev-ruby/moneta
 	>=dev-ruby/net-ssh-2.2.2
+	<dev-ruby/net-ssh-2.3
 	>=dev-ruby/net-ssh-multi-1.1
+	<dev-ruby/net-ssh-multi-1.2
 	>=dev-ruby/ohai-0.6.0
 	>=dev-ruby/rest-client-1.0.4
+	<dev-ruby/rest-client-1.7
 	dev-ruby/ruby-shadow
 	>=dev-ruby/treetop-1.4.9
+	<dev-ruby/treetop-1.5
 	dev-ruby/uuidtools
-	>=dev-ruby/yajl-ruby-1.1"
+	>=dev-ruby/yajl-ruby-1.1
+	<dev-ruby/yajl-ruby-2"
 
 each_ruby_prepare() {
 	ruby_fakegem_metadata_gemspec ../metadata ${RUBY_FAKEGEM_GEMSPEC}

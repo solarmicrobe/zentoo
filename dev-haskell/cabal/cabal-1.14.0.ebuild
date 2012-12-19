@@ -15,7 +15,7 @@ MY_P="${MY_PN}-${PV}"
 
 DESCRIPTION="A framework for packaging Haskell software"
 HOMEPAGE="http://www.haskell.org/cabal/"
-SRC_URI="http://hackage.haskell.org/packages/archive/${MY_PN}/${PV}/${MY_P}.tar.gz"
+SRC_URI="mirror://hackage/packages/archive/${MY_PN}/${PV}/${MY_P}.tar.gz"
 
 LICENSE="BSD"
 SLOT="0"
@@ -32,7 +32,7 @@ RDEPEND="${DEPEND}
 
 S="${WORKDIR}/${MY_PN}-${MY_PV}"
 
-CABAL_CORE_LIB_GHC_PV="7.4.0.20111219 7.4.0.20120126 7.4.1"
+CABAL_CORE_LIB_GHC_PV="7.4.0.20111219 7.4.0.20120126 7.4.1 7.4.2"
 
 src_configure() {
 	if ! cabal-is-dummy-lib; then
