@@ -23,7 +23,7 @@ LIB_DEPEND="dev-libs/libgpg-error[static-libs(+)]
 	>=sys-apps/util-linux-2.17.2[static-libs(+)]
 	>=dev-libs/libgcrypt-1.1.42[static-libs(+)]
 	>=sys-fs/lvm2-2.02.64[static-libs(+)]
-	sys-fs/udev[static-libs(+)]
+	virtual/udev[static-libs(+)]
 	>=sys-libs/e2fsprogs-libs-1.41[static-libs(+)]"
 # We have to always depend on ${LIB_DEPEND} rather than put behind
 # static? () because we provide a shared library which links against

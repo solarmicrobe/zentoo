@@ -4,13 +4,12 @@
 
 EAPI=4
 
-EGIT_REPO_URI="git://git.kernel.org/pub/scm/utils/kernel/${PN}/${PN}.git"
+inherit autotools eutils libtool multilib
 
-[[ ${PV} == 9999 ]] && vcs=git-2
-inherit ${vcs} autotools eutils toolchain-funcs libtool
-unset vcs
-
-if [[ ${PV} != 9999 ]] ; then
+if [[ ${PV} == 9999 ]]; then
+	EGIT_REPO_URI="git://git.kernel.org/pub/scm/utils/kernel/${PN}/${PN}.git"
+	inherit git-2
+else
 	SRC_URI="mirror://kernel/linux/utils/kernel/kmod/${P}.tar.xz"
 	KEYWORDS="amd64"
 fi
@@ -22,20 +21,21 @@ LICENSE="LGPL-2"
 SLOT="0"
 IUSE="debug doc lzma static-libs +tools zlib"
 
-RDEPEND="!sys-apps/module-init-tools
-	!sys-apps/modutils
-	lzma? ( app-arch/xz-utils )
-	zlib? ( >=sys-libs/zlib-1.2.6 )" #427130
-DEPEND="${RDEPEND}
-	doc? ( dev-util/gtk-doc )
-	lzma? ( virtual/pkgconfig )
-	zlib? ( virtual/pkgconfig )"
-
 # Upstream does not support running the test suite with custom configure flags.
 # I was also told that the test suite is intended for kmod developers.
 # So we have to restrict it.
 # See bug #408915.
 RESTRICT="test"
+
+RDEPEND="!sys-apps/module-init-tools
+	!sys-apps/modutils
+	lzma? ( >=app-arch/xz-utils-5.0.4-r1 )
+	zlib? ( >=sys-libs/zlib-1.2.6 )" #427130
+DEPEND="${RDEPEND}
+	dev-libs/libxslt
+	doc? ( dev-util/gtk-doc )
+	lzma? ( virtual/pkgconfig )
+	zlib? ( virtual/pkgconfig )"
 
 src_prepare()
 {
@@ -54,6 +54,8 @@ src_prepare()
 src_configure()
 {
 	econf \
+		--bindir=/bin \
+		--with-rootlibdir=/$(get_libdir) \
 		$(use_enable static-libs static) \
 		$(use_enable tools) \
 		$(use_enable debug) \
@@ -65,18 +67,21 @@ src_configure()
 src_install()
 {
 	default
-
-	find "${D}" -name libkmod.la -exec rm -f {} +
+	prune_libtool_files
 
 	if use tools; then
 		local cmd
-		for cmd in insmod lsmod modinfo rmmod; do
-			dosym kmod /usr/bin/${cmd}
+		for cmd in depmod insmod lsmod modinfo modprobe rmmod; do
+			dosym /bin/kmod /sbin/${cmd}
 		done
-		# according to upstream, modprobe can be called directly by the kernel,
-		# so it cannot be moved to /usr/bin at this time.
-		dosym /usr/bin/kmod /sbin/modprobe
-		# another hardcoded path in the Linux source tree, bug #426698
-		dosym /usr/bin/kmod /sbin/depmod
+		dosym kmod /bin/lsmod
 	fi
+
+	cat <<-EOF > "${T}"/usb-load-ehci-first.conf
+	softdep uhci_hcd pre: ehci_hcd
+	softdep ohci_hcd pre: ehci_hcd
+	EOF
+
+	insinto /lib/modprobe.d
+	doins "${T}"/usb-load-ehci-first.conf #260139
 }

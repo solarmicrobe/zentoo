@@ -24,7 +24,7 @@ fi
 RESTRICT="test"
 
 DEPEND=""
-RDEPEND=">=sys-fs/udev-180
+RDEPEND=">=virtual/udev-180
 	sys-apps/openrc
 	!<sys-fs/udev-186"
 

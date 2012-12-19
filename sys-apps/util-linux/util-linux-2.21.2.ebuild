@@ -40,7 +40,7 @@ RDEPEND="!sys-process/schedutils
 	perl? ( dev-lang/perl )
 	selinux? ( sys-libs/libselinux )
 	slang? ( sys-libs/slang )
-	udev? ( sys-fs/udev )"
+	udev? ( virtual/udev )"
 DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )
 	virtual/os-headers

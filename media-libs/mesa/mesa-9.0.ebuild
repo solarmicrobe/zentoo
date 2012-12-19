@@ -11,7 +11,7 @@ if [[ ${PV} = 9999* ]]; then
 	EXPERIMENTAL="true"
 fi
 
-inherit base autotools multilib flag-o-matic python toolchain-funcs ${GIT_ECLASS}
+inherit base autotools multilib flag-o-matic toolchain-funcs ${GIT_ECLASS}
 
 OPENGL_DIR="xorg-x11"
 
@@ -24,7 +24,7 @@ FOLDER="${PV/_rc*/}"
 DESCRIPTION="OpenGL-like graphic library for Linux"
 HOMEPAGE="http://mesa3d.sourceforge.net/"
 
-SRC_PATCHES="mirror://gentoo/${P}-gentoo-patches-02.tar.bz2"
+#SRC_PATCHES="mirror://gentoo/${P}-gentoo-patches-01.tar.bz2"
 if [[ $PV = 9999* ]]; then
 	SRC_URI="${SRC_PATCHES}"
 else
@@ -32,32 +32,34 @@ else
 		${SRC_PATCHES}"
 fi
 
-# Most of the code is MIT/X11.
-# ralloc is LGPL-3
+# The code is MIT/X11.
 # GLES[2]/gl[2]{,ext,platform}.h are SGI-B-2.0
-LICENSE="MIT LGPL-3 SGI-B-2.0"
+LICENSE="MIT SGI-B-2.0"
 SLOT="0"
 KEYWORDS="amd64"
 
 INTEL_CARDS="i915 i965 intel"
-RADEON_CARDS="r100 r200 r300 r600 radeon"
+RADEON_CARDS="r100 r200 r300 r600 radeon radeonsi"
 VIDEO_CARDS="${INTEL_CARDS} ${RADEON_CARDS} nouveau vmware"
 for card in ${VIDEO_CARDS}; do
 	IUSE_VIDEO_CARDS+=" video_cards_${card}"
 done
 
 IUSE="${IUSE_VIDEO_CARDS}
-	bindist +classic d3d debug +egl g3dvl +gallium gbm gles1 gles2 +llvm +nptl openvg osmesa pax_kernel pic selinux shared-dricore +shared-glapi vdpau wayland xa xvmc kernel_FreeBSD"
+	bindist +classic debug +egl g3dvl +gallium gbm gles1 gles2 +llvm +nptl
+	openvg osmesa pax_kernel pic r600-llvm-compiler selinux +shared-glapi vdpau
+	wayland xvmc xa xorg kernel_FreeBSD"
 
 REQUIRED_USE="
-	d3d?    ( gallium )
 	g3dvl?  ( gallium )
 	llvm?   ( gallium )
 	openvg? ( egl gallium )
 	gbm?    ( shared-glapi )
 	g3dvl? ( || ( vdpau xvmc ) )
 	vdpau? ( g3dvl )
-	xa?    ( gallium )
+	r600-llvm-compiler? ( gallium llvm || ( video_cards_r600 video_cards_radeon ) )
+	xa?  ( gallium )
+	xorg?  ( gallium )
 	xvmc?  ( g3dvl )
 	video_cards_intel?  ( || ( classic gallium ) )
 	video_cards_i915?   ( || ( classic gallium ) )
@@ -68,37 +70,37 @@ REQUIRED_USE="
 	video_cards_r200?   ( classic )
 	video_cards_r300?   ( gallium )
 	video_cards_r600?   ( gallium )
+	video_cards_radeonsi?   ( gallium llvm )
 	video_cards_vmware? ( gallium )
 "
 
-LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.32"
-# not a runtime dependency of this package, but dependency of packages which
-# depend on this package, bug #342393
-EXTERNAL_DEPEND="
-	>=x11-proto/dri2proto-2.6
-	>=x11-proto/glproto-1.4.15
-"
+LIBDRM_DEPSTRING=">=x11-libs/libdrm-2.4.39"
 # keep correct libdrm and dri2proto dep
 # keep blocks in rdepend for binpkg
-RDEPEND="${EXTERNAL_DEPEND}
-	!<x11-base/xorg-server-1.7
+# gtest file collision bug #411825
+RDEPEND="!<x11-base/xorg-server-1.7
 	!<=x11-proto/xf86driproto-2.0.3
 	classic? ( app-admin/eselect-mesa )
 	gallium? ( app-admin/eselect-mesa )
-	>=app-admin/eselect-opengl-1.2.5
+	>=app-admin/eselect-opengl-1.2.6
 	dev-libs/expat
-	gbm? ( sys-fs/udev )
+	gbm? (
+		virtual/udev
+		x11-libs/libdrm[libkms]
+	)
 	>=x11-libs/libX11-1.3.99.901
 	x11-libs/libXdamage
 	x11-libs/libXext
 	x11-libs/libXxf86vm
-	>=x11-libs/libxcb-1.8
-	d3d? ( app-emulation/wine )
+	>=x11-libs/libxcb-1.8.1
 	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
 	wayland? ( dev-libs/wayland )
+	xorg? (
+		x11-base/xorg-server
+		x11-libs/libdrm[libkms]
+	)
 	xvmc? ( >=x11-libs/libXvMC-1.0.6 )
 	${LIBDRM_DEPSTRING}[video_cards_nouveau?,video_cards_vmware?]
-	video_cards_nouveau? ( <x11-libs/libdrm-2.4.34 )
 "
 for card in ${INTEL_CARDS}; do
 	RDEPEND="${RDEPEND}
@@ -113,13 +115,19 @@ for card in ${RADEON_CARDS}; do
 done
 
 DEPEND="${RDEPEND}
-	llvm? ( >=sys-devel/llvm-2.9 )
+	llvm? (
+		>=sys-devel/llvm-2.9
+		r600-llvm-compiler? ( >=sys-devel/llvm-3.1 )
+		video_cards_radeonsi? ( >=sys-devel/llvm-3.1 )
+	)
 	=dev-lang/python-2*
 	dev-libs/libxml2[python]
-	virtual/pkgconfig
 	sys-devel/bison
 	sys-devel/flex
+	virtual/pkgconfig
 	x11-misc/makedepend
+	>=x11-proto/dri2proto-2.6
+	>=x11-proto/glproto-1.4.15-r1
 	>=x11-proto/xextproto-7.0.99.1
 	x11-proto/xf86driproto
 	x11-proto/xf86vidmodeproto
@@ -141,7 +149,9 @@ pkg_setup() {
 
 src_unpack() {
 	default
-	[[ $PV = 9999* ]] && git-2_src_unpack
+	if [[ ${PV} = 9999* ]]; then
+		git-2_src_unpack
+	fi
 }
 
 src_prepare() {
@@ -154,7 +164,7 @@ src_prepare() {
 	fi
 
 	# relax the requirement that r300 must have llvm, bug 380303
-	epatch "${FILESDIR}"/${PN}-8.0-dont-require-llvm-for-r300.patch
+	epatch "${FILESDIR}"/${PN}-8.1-dont-require-llvm-for-r300.patch
 
 	# fix for hardened pax_kernel, bug 240956
 	[[ ${PV} != 9999* ]] && epatch "${FILESDIR}"/glx_ro_text_segm.patch
@@ -208,12 +218,11 @@ src_configure() {
 
 	if use gallium; then
 		myconf+="
-			$(use_enable d3d d3d1x)
 			$(use_enable g3dvl gallium-g3dvl)
 			$(use_enable llvm gallium-llvm)
 			$(use_enable openvg)
+			$(use_enable r600-llvm-compiler)
 			$(use_enable vdpau)
-			$(use_enable xa)
 			$(use_enable xvmc)
 		"
 		gallium_enable swrast
@@ -226,6 +235,7 @@ src_configure() {
 
 		gallium_enable video_cards_r300 r300
 		gallium_enable video_cards_r600 r600
+		gallium_enable video_cards_radeonsi radeonsi
 		if ! use video_cards_r300 && \
 				! use video_cards_r600; then
 			gallium_enable video_cards_radeon r300 r600
@@ -239,6 +249,8 @@ src_configure() {
 		"
 	fi
 
+	use userland_GNU || export INDENT=cat
+
 	econf \
 		--enable-dri \
 		--enable-glx \
@@ -251,8 +263,9 @@ src_configure() {
 		$(use_enable nptl glx-tls) \
 		$(use_enable osmesa) \
 		$(use_enable !pic asm) \
-		$(use_enable shared-dricore) \
 		$(use_enable shared-glapi) \
+		$(use_enable xa) \
+		$(use_enable xorg) \
 		--with-dri-drivers=${DRI_DRIVERS} \
 		--with-gallium-drivers=${GALLIUM_DRIVERS} \
 		${myconf}
@@ -260,6 +273,8 @@ src_configure() {
 
 src_install() {
 	base_src_install
+
+	find "${ED}" -name '*.la' -exec rm -f {} + || die
 
 	if use !bindist; then
 		dodoc docs/patents.txt
@@ -272,22 +287,29 @@ src_install() {
 
 	# Install config file for eselect mesa
 	insinto /usr/share/mesa
-	newins "${FILESDIR}/eselect-mesa.conf.8.0.1" eselect-mesa.conf
+	newins "${FILESDIR}/eselect-mesa.conf.8.1" eselect-mesa.conf
 
 	# Move libGL and others from /usr/lib to /usr/lib/opengl/blah/lib
 	# because user can eselect desired GL provider.
 	ebegin "Moving libGL and friends for dynamic switching"
-		dodir /usr/$(get_libdir)/opengl/${OPENGL_DIR}/{lib,extensions,include}
 		local x
+		local gl_dir="/usr/$(get_libdir)/opengl/${OPENGL_DIR}/"
+		dodir ${gl_dir}/{lib,extensions,include/GL}
 		for x in "${ED}"/usr/$(get_libdir)/lib{EGL,GL*,OpenVG}.{la,a,so*}; do
 			if [ -f ${x} -o -L ${x} ]; then
-				mv -f "${x}" "${ED}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/lib \
+				mv -f "${x}" "${ED}${gl_dir}"/lib \
 					|| die "Failed to move ${x}"
 			fi
 		done
 		for x in "${ED}"/usr/include/GL/{gl.h,glx.h,glext.h,glxext.h}; do
 			if [ -f ${x} -o -L ${x} ]; then
-				mv -f "${x}" "${ED}"/usr/$(get_libdir)/opengl/${OPENGL_DIR}/include \
+				mv -f "${x}" "${ED}${gl_dir}"/include/GL \
+					|| die "Failed to move ${x}"
+			fi
+		done
+		for x in "${ED}"/usr/include/{EGL,GLES*,VG,KHR}; do
+			if [ -d ${x} ]; then
+				mv -f "${x}" "${ED}${gl_dir}"/include \
 					|| die "Failed to move ${x}"
 			fi
 		done

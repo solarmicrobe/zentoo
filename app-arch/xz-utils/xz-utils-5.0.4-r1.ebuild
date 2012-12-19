@@ -7,21 +7,20 @@
 
 EAPI="4"
 
+inherit eutils multilib toolchain-funcs libtool
+
 if [[ ${PV} == "9999" ]] ; then
 	EGIT_REPO_URI="http://git.tukaani.org/xz.git"
 	inherit git-2 autotools
 	SRC_URI=""
 	EXTRA_DEPEND="sys-devel/gettext dev-vcs/cvs >=sys-devel/libtool-2" #272880 286068
 else
-	inherit libtool
 	MY_P="${PN/-utils}-${PV/_}"
 	SRC_URI="http://tukaani.org/xz/${MY_P}.tar.gz"
 	KEYWORDS="amd64"
 	S=${WORKDIR}/${MY_P}
 	EXTRA_DEPEND=
 fi
-
-inherit eutils multilib
 
 DESCRIPTION="utils for managing LZMA compressed files"
 HOMEPAGE="http://tukaani.org/xz/"
@@ -36,16 +35,14 @@ RDEPEND="!<app-arch/lzma-4.63
 DEPEND="${RDEPEND}
 	${EXTRA_DEPEND}"
 
-if [[ ${PV} == "9999" ]] ; then
 src_prepare() {
-	eautopoint
-	eautoreconf
+	if [[ ${PV} == "9999" ]] ; then
+		eautopoint
+		eautoreconf
+	else
+		elibtoolize  # to allow building shared libs on Solaris/x64
+	fi
 }
-else
-src_prepare() {
-	elibtoolize  # to allow building shared libs on Solaris/x64
-}
-fi
 
 src_configure() {
 	econf \
@@ -56,7 +53,8 @@ src_configure() {
 
 src_install() {
 	default
-	find "${ED}"/usr/ -name liblzma.la -delete || die # dependency_libs=''
+	gen_usr_ldscript -a lzma
+	prune_libtool_files --all
 	rm "${ED}"/usr/share/doc/xz/COPYING* || die
 	mv "${ED}"/usr/share/doc/{xz,${PF}} || die
 }
