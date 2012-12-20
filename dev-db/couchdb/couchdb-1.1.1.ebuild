@@ -8,7 +8,7 @@ inherit eutils multilib user
 
 DESCRIPTION="Apache CouchDB is a distributed, fault-tolerant and schema-free document-oriented database."
 HOMEPAGE="http://couchdb.apache.org/"
-SRC_URI="mirror://apache/couchdb/releases/${PV}/apache-${P}.tar.gz"
+SRC_URI="mirror://apache/couchdb/${PV}/apache-${P}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -17,9 +17,9 @@ IUSE="test"
 
 RDEPEND=">=dev-libs/icu-4.3.1
 		dev-lang/erlang[ssl]
-		>=dev-libs/openssl-0.9.8j:0
+		>=dev-libs/openssl-0.9.8j
 		>=net-misc/curl-7.18.2
-		>=dev-lang/spidermonkey-1.8.5"
+		dev-lang/spidermonkey"
 
 DEPEND="${RDEPEND}"
 
