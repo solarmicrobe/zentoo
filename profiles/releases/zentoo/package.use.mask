@@ -20,6 +20,7 @@ net-analyzer/tcpdump smi
 net-dns/pdns opendbx sqlite
 net-fs/samba cluster
 net-libs/libpcap canusb
+net-mail/dovecot lucene
 net-misc/curl ssh
 net-print/cups filters
 sys-fs/btrfs-progs debug-utils

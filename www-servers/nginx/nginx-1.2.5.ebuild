@@ -17,13 +17,6 @@ EAPI="4"
 # prevent perl-module from adding automagic perl DEPENDs
 GENTOO_DEPEND_ON_PERL="no"
 
-# syslog
-SYSLOG_MODULE_PV="1.2.0"
-SYSLOG_MODULE_P="ngx_syslog-${SYSLOG_MODULE_PV}"
-SYSLOG_MODULE_SHA1="2686c1c"
-SYSLOG_MODULE_URI="https://github.com/yaoweibin/nginx_syslog_patch/tarball/${SYSLOG_MODULE_SHA1}"
-SYSLOG_MODULE_WD="${WORKDIR}/yaoweibin-nginx_syslog_patch-${SYSLOG_MODULE_SHA1}"
-
 # devel_kit (https://github.com/simpl/ngx_devel_kit, BSD license)
 DEVEL_KIT_MODULE_PV="0.2.17"
 DEVEL_KIT_MODULE_P="ngx_devel_kit-${DEVEL_KIT_MODULE_PV}"
@@ -70,9 +63,9 @@ HTTP_SLOWFS_CACHE_MODULE_URI="http://labs.frickle.com/files/ngx_slowfs_cache-${H
 HTTP_SLOWFS_CACHE_MODULE_WD="${WORKDIR}/ngx_slowfs_cache-${HTTP_SLOWFS_CACHE_MODULE_PV}"
 
 # http_fancyindex (http://wiki.nginx.org/NgxFancyIndex, BSD license)
-HTTP_FANCYINDEX_MODULE_PV="0.3.1"
+HTTP_FANCYINDEX_MODULE_PV="0.3.1.1"
 HTTP_FANCYINDEX_MODULE_P="ngx_http_fancyindex-${HTTP_FANCYINDEX_MODULE_PV}"
-HTTP_FANCYINDEX_MODULE_URI="http://gitorious.org/ngx-fancyindex/ngx-fancyindex/archive-tarball/v${HTTP_FANCYINDEX_MODULE_PV}"
+HTTP_FANCYINDEX_MODULE_URI="http://gitorious.org/ngx-fancyindex/ngx-fancyindex/archive-tarball/2034d0ad"
 HTTP_FANCYINDEX_MODULE_WD="${WORKDIR}/ngx-fancyindex-ngx-fancyindex"
 
 # http_lua (https://github.com/chaoslawful/lua-nginx-module, BSD license)
@@ -87,7 +80,6 @@ inherit eutils ssl-cert toolchain-funcs perl-module flag-o-matic user
 DESCRIPTION="Robust, small and high performance http and reverse proxy server"
 HOMEPAGE="http://nginx.org"
 SRC_URI="http://nginx.org/download/${P}.tar.gz
-	syslog? ( ${SYSLOG_MODULE_URI} -> ${SYSLOG_MODULE_P}.tar.gz )
 	${DEVEL_KIT_MODULE_URI} -> ${DEVEL_KIT_MODULE_P}.tar.gz
 	nginx_modules_http_upload_progress? ( ${HTTP_UPLOAD_PROGRESS_MODULE_URI} -> ${HTTP_UPLOAD_PROGRESS_MODULE_P}.tar.gz )
 	nginx_modules_http_headers_more? ( ${HTTP_HEADERS_MORE_MODULE_URI} -> ${HTTP_HEADERS_MORE_MODULE_P}.tar.gz )
@@ -98,9 +90,9 @@ SRC_URI="http://nginx.org/download/${P}.tar.gz
 	nginx_modules_http_fancyindex? ( ${HTTP_FANCYINDEX_MODULE_URI} -> ${HTTP_FANCYINDEX_MODULE_P}.tar.gz )
 	nginx_modules_http_lua? ( ${HTTP_LUA_MODULE_URI} -> ${HTTP_LUA_MODULE_P}.tar.gz )"
 
-LICENSE="as-is BSD BSD-2 GPL-2 MIT"
+LICENSE="BSD-2 BSD MIT GPL-2"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 
 NGINX_MODULES_STD="access auth_basic autoindex browser charset empty_gif fastcgi
 geo gzip limit_req limit_conn map memcached proxy referer rewrite scgi ssi
@@ -119,8 +111,7 @@ NGINX_MODULES_3RD="
 	http_fancyindex
 	http_lua"
 
-IUSE="aio debug +http +http-cache ipv6 libatomic +pcre pcre-jit selinux ssl
-syslog vim-syntax"
+IUSE="aio debug +http +http-cache ipv6 libatomic +pcre pcre-jit selinux ssl vim-syntax"
 
 for mod in $NGINX_MODULES_STD; do
 	IUSE="${IUSE} +nginx_modules_http_${mod}"
@@ -204,14 +195,9 @@ pkg_setup() {
 }
 
 src_prepare() {
-	use syslog && epatch "${SYSLOG_MODULE_WD}"/syslog_${SYSLOG_MODULE_PV}.patch
-
-	# use proper make
 	find auto/ -type f -print0 | xargs -0 sed -i 's:\&\& make:\&\& \\$(MAKE):' || die
-
 	# We have config protection, don't rename etc files
 	sed -i 's:.default::' auto/install || die
-
 	# remove useless files
 	sed -i -e '/koi-/d' -e '/win-/d' auto/install || die
 }
@@ -225,11 +211,6 @@ src_configure() {
 	use libatomic && myconf+=" --with-libatomic"
 	use pcre      && myconf+=" --with-pcre"
 	use pcre-jit  && myconf+=" --with-pcre-jit"
-
-	# syslog support
-	if use syslog; then
-		myconf+=" --add-module=${SYSLOG_MODULE_WD}"
-	fi
 
 	# HTTP modules
 	for mod in $NGINX_MODULES_STD; do
@@ -360,10 +341,6 @@ src_install() {
 	newinitd "${FILESDIR}"/nginx.initd nginx
 	doman man/nginx.8
 	dodoc CHANGES* README
-
-	# Keepdir because these are hardcoded above
-	keepdir /var/log/${PN} /var/tmp/${PN}/{client,proxy,fastcgi,scgi,uwsgi}
-	keepdir /var/www/localhost/htdocs
 	mv "${ED}"/usr/html "${ED}"/var/www/localhost/htdocs || die
 
 	# logrotate
@@ -374,11 +351,6 @@ src_install() {
 		cd "${S}"/objs/src/http/modules/perl/
 		einstall DESTDIR="${D}" INSTALLDIRS=vendor
 		fixlocalpod
-	fi
-
-	if use syslog; then
-		docinto ${SYSLOG_MODULE_P}
-		dodoc "${SYSLOG_MODULE_WD}"/README
 	fi
 
 	if use nginx_modules_http_push; then

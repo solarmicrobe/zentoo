@@ -10,10 +10,10 @@ DESCRIPTION="Gimp ToolKit +"
 HOMEPAGE="http://www.gtk.org/"
 SRC_URI="${SRC_URI} mirror://gentoo/introspection.m4.bz2"
 
-LICENSE="LGPL-2"
+LICENSE="LGPL-2+"
 SLOT="2"
 KEYWORDS="amd64"
-IUSE="aqua cups debug doc examples +introspection test vim-syntax xinerama"
+IUSE="aqua cups debug examples +introspection test vim-syntax xinerama"
 
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
 COMMON_DEPEND="!aqua? (
@@ -35,7 +35,7 @@ COMMON_DEPEND="!aqua? (
 		x11-libs/gdk-pixbuf:2[introspection?]
 	)
 	xinerama? ( x11-libs/libXinerama )
-	>=dev-libs/glib-2.27.3:2
+	>=dev-libs/glib-2.30:2
 	>=x11-libs/pango-1.20[introspection?]
 	>=dev-libs/atk-1.29.2[introspection?]
 	media-libs/fontconfig
@@ -53,9 +53,6 @@ DEPEND="${COMMON_DEPEND}
 	)
 	xinerama? ( x11-proto/xineramaproto )
 	>=dev-util/gtk-doc-am-1.11
-	doc? (
-		>=dev-util/gtk-doc-1.11
-		~app-text/docbook-xml-dtd-4.1.2 )
 	test? (
 		media-fonts/font-misc-misc
 		media-fonts/font-cursor-misc )"
@@ -82,7 +79,7 @@ set_gtk2_confdir() {
 src_prepare() {
 	# gold detected underlinking
 	# Add missing libs, patch sent upstream
-	epatch "${FILESDIR}/${P}-gold.patch"
+	epatch "${FILESDIR}/${PN}-2.24.10-gold.patch"
 
 	# use an arch-specific config directory so that 32bit and 64bit versions
 	# dont clash on multilib systems
@@ -135,12 +132,23 @@ src_prepare() {
 		# https://bugzilla.gnome.org/show_bug.cgi?id=617473
 		sed -i -e 's:pltcheck.sh:$(NULL):g' \
 			gtk/Makefile.am || die
+
+		# UI tests require immodules already installed; bug #413185
+		if ! has_version 'x11-libs/gtk+:2'; then
+			ewarn "Disabling UI tests because this is the first install of"
+			ewarn "gtk+:2 on this machine. Please re-run the tests after $P"
+			ewarn "has been installed."
+			sed '/g_test_add_func.*ui-tests/ d' \
+				-i gtk/tests/testing.c || die "sed 2 failed"
+		fi
 	fi
 
 	if ! use examples; then
 		# don't waste time building demos
 		strip_builddir SRC_SUBDIRS demos Makefile.am Makefile.in
 	fi
+
+	epatch_user
 
 	# http://bugs.gentoo.org/show_bug.cgi?id=371907
 	mkdir -p "${S}/m4" || die
@@ -151,8 +159,7 @@ src_prepare() {
 }
 
 src_configure() {
-	local myconf="$(use_enable doc gtk-doc)
-		$(use_enable xinerama)
+	local myconf="$(use_enable xinerama)
 		$(use_enable cups cups auto)
 		$(use_enable introspection)
 		--disable-papi"

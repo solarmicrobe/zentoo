@@ -3,13 +3,12 @@
 # $Header: $
 
 EAPI=4
-
-inherit eutils versionator ssl-cert
+inherit eutils versionator ssl-cert systemd user multilib
 
 MY_P="${P/_/.}"
-major_minor="$( get_version_component_range 1-2 )"
-sieve_version="0.2.6"
-SRC_URI="http://dovecot.org/releases/${major_minor}/${MY_P}.tar.gz
+major_minor="$(get_version_component_range 1-2)"
+sieve_version="0.3.3"
+SRC_URI="http://www.dovecot.org/releases/${major_minor}/${MY_P}.tar.gz
 	sieve? (
 	http://www.rename-it.nl/dovecot/${major_minor}/dovecot-${major_minor}-pigeonhole-${sieve_version}.tar.gz
 	)
@@ -23,15 +22,20 @@ SLOT="0"
 LICENSE="LGPL-2.1 MIT"
 KEYWORDS="amd64"
 
-IUSE="bzip2 caps cydir sdbox doc ipv6 kerberos ldap +maildir managesieve mbox
-mdbox mysql pam postgres sieve sqlite +ssl static-libs suid vpopmail zlib"
+IUSE_DOVECOT_AUTH="kerberos ldap mysql pam postgres sqlite vpopmail"
+IUSE_DOVECOT_STORAGE="cydir imapc +maildir mbox mdbox pop3c sdbox"
+IUSE_DOVECOT_OTHER="bzip2 caps doc ipv6 lucene managesieve selinux sieve +ssl static-libs suid zlib"
+
+IUSE="${IUSE_DOVECOT_AUTH} ${IUSE_DOVECOT_STORAGE} ${IUSE_DOVECOT_OTHER}"
 
 DEPEND="caps? ( sys-libs/libcap )
 	kerberos? ( virtual/krb5 )
 	ldap? ( net-nds/openldap )
+	lucene? ( >=dev-cpp/clucene-2.3 )
 	mysql? ( virtual/mysql )
 	pam? ( virtual/pam )
 	postgres? ( dev-db/postgresql-base !dev-db/postgresql-base[ldap,threads] )
+	selinux? ( sec-policy/selinux-dovecot )
 	sqlite? ( dev-db/sqlite )
 	ssl? ( dev-libs/openssl )
 	vpopmail? ( net-mail/vpopmail )
@@ -47,17 +51,15 @@ pkg_setup() {
 		ewarn "managesieve USE flag selected but sieve USE flag unselected"
 		ewarn "sieve USE flag will be turned on"
 	fi
-
-	# Add user and group for login process (same as for fedora/redhat)
 	# default internal user
 	enewgroup dovecot 97
 	enewuser dovecot 97 -1 /dev/null dovecot
+	# default login user
+	enewuser dovenull -1 -1 /dev/null
 	# add "mail" group for suid'ing. Better security isolation.
 	if use suid; then
 		enewgroup mail
 	fi
-	# default login user
-	enewuser dovenull -1 -1 /dev/null
 }
 
 src_configure() {
@@ -68,7 +70,7 @@ src_configure() {
 	fi
 
 	local storages=""
-	for storage in cydir sdbox mdbox maildir mbox; do
+	for storage in ${IUSE_DOVECOT_STORAGE//+/}; do
 		use ${storage} && storages="${storage} ${storages}"
 	done
 	[ "${storages}" ] || storages="maildir"
@@ -77,10 +79,15 @@ src_configure() {
 	VALGRIND=no econf \
 		--localstatedir="${EPREFIX}/var" \
 		--with-moduledir="${EPREFIX}/usr/$(get_libdir)/dovecot" \
+		--without-stemmer \
+		--with-storages="${storages}" \
+		--disable-rpath \
+		$( systemd_with_unitdir ) \
 		$( use_with bzip2 bzlib ) \
 		$( use_with caps libcap ) \
 		$( use_with kerberos gssapi ) \
 		$( use_with ldap ) \
+		$( use_with lucene ) \
 		$( use_with mysql ) \
 		$( use_with pam ) \
 		$( use_with postgres pgsql ) \
@@ -89,15 +96,12 @@ src_configure() {
 		$( use_with vpopmail ) \
 		$( use_with zlib ) \
 		$( use_enable static-libs static ) \
-		--with-storages="${storages}" \
-		--disable-rpath \
-		--without-systemdsystemunitdir \
 		${conf}
 
 	if use sieve || use managesieve ; then
 		# The sieve plugin needs this file to be build to determine the plugin
 		# directory and the list of libraries to link to.
-		emake dovecot-config || die "emake dovecot-config failed"
+		emake dovecot-config
 		cd "../dovecot-${major_minor}-pigeonhole-${sieve_version}" || die "cd failed"
 		econf \
 			$( use_enable static-libs static ) \
@@ -109,8 +113,7 @@ src_configure() {
 }
 
 src_compile() {
-	emake CC="$(tc-getCC)" CFLAGS="${CFLAGS}"
-
+	default
 	if use sieve || use managesieve ; then
 		cd "../dovecot-${major_minor}-pigeonhole-${sieve_version}" || die "cd failed"
 		emake CC="$(tc-getCC)" CFLAGS="${CFLAGS}"
@@ -118,15 +121,15 @@ src_compile() {
 }
 
 src_test() {
-	default_src_test
+	default
 	if use sieve || use managesieve ; then
 		cd "../dovecot-${major_minor}-pigeonhole-${sieve_version}" || die "cd failed"
-		default_src_test
+		default
 	fi
 }
 
 src_install () {
-	emake DESTDIR="${ED}" install
+	default
 
 	# insecure:
 	# use suid && fperms u+s /usr/libexec/dovecot/deliver
@@ -137,7 +140,7 @@ src_install () {
 		fperms 4750 "${EPREFIX}/usr/libexec/dovecot/dovecot-lda"
 	fi
 
-	newinitd "${FILESDIR}"/dovecot.init-r3 dovecot
+	newinitd "${FILESDIR}"/dovecot.init-r4 dovecot
 
 	rm -rf "${ED}"/usr/share/doc/dovecot
 
@@ -171,10 +174,10 @@ src_install () {
 			keepdir /var/dovecot
 			sed -i -e 's|#mail_privileged_group =|mail_privileged_group = mail|' \
 			"${confd}/10-mail.conf" || die "sed failed"
-		elif use sdbox ; then
-			mail_location="sdbox:~/.sdbox"
 		elif use mdbox ; then
 			mail_location="mdbox:~/.mdbox"
+		elif use sdbox ; then
+			mail_location="sdbox:~/.sdbox"
 		fi
 	fi
 	sed -i -e \
@@ -256,18 +259,6 @@ src_install () {
 	use static-libs || find "${ED}"/usr/lib* -name '*.la' -delete
 }
 
-pkg_preinst() {
-	if has_version "<${CATEGORY}/${PN}-2" ; then
-		elog "There are a lot of changes in configuration files in dovecot-2.0."
-		elog "Please read http://wiki.dovecot.org/Upgrading and"
-		elog "check the conf files in ${ROOT}etc/dovecot."
-		elog "You can also run doveconf -n before running etc-update or"
-		elog "dispatch-conf to get an idea about what needs to be changed."
-		ewarn "\nDo NOT {re}start dovecot without checking your conf files"
-		ewarn "and making the necessary changes.\n"
-	fi
-}
-
 pkg_postinst() {
 	if use ssl; then
 	# Let's not make a new certificate if we already have one
@@ -278,4 +269,6 @@ pkg_postinst() {
 			install_cert /etc/ssl/dovecot/server
 		fi
 	fi
+
+	elog "Please read http://wiki2.dovecot.org/Upgrading/ for upgrade notes."
 }

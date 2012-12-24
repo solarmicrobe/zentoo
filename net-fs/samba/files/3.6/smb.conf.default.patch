@@ -1,8 +1,6 @@
---- samba-3.5.9/examples/smb.conf.default	2011-06-14 05:17:28.000000000 -0600
-+++ /etc/samba/smb.conf.default	2011-06-29 10:12:13.000000000 -0600
-@@ -61,11 +61,11 @@
- # otherwise the user "nobody" is used
- ;  guest account = pcguest
+--- samba-3.6.0rc2/examples/smb.conf.default~	2011-06-07 19:13:47.000000000 +0100
++++ samba-3.6.0rc2/examples/smb.conf.default	2011-06-30 16:12:42.388102480 +0100
+@@ -63,7 +63,7 @@
  
  # this tells Samba to use a separate log file for each machine
  # that connects
@@ -11,11 +9,7 @@
  
  # Put a capping on the size of the log files (in Kb).
     max log size = 50
- 
- # Use password server option only with security = server
-@@ -79,19 +79,22 @@
- # Specifies the Active Directory realm the host is part of
- ;   realm = MY_REALM
+@@ -81,7 +81,10 @@
  
  # Backend to store user information in. New installations should 
  # use either tdbsam or ldapsam. smbpasswd is available for backwards 
@@ -27,7 +21,7 @@
  ;   passdb backend = tdbsam
  
  # Using the following line enables you to customise your configuration
- # on a per machine basis. The %m gets replaced with the netbios name
+@@ -89,7 +92,7 @@
  # of the machine that is connecting.
  # Note: Consider carefully the location in the configuration file of
  #       this line.  The included file is read at that point.
@@ -36,11 +30,7 @@
  
  # Configure Samba to use multiple interfaces
  # If you have multiple network interfaces then you must list them
- # here. See the man page for details.
- ;   interfaces = 192.168.12.2/24 192.168.13.2/24 
-@@ -164,29 +167,29 @@
-    writable = yes
- 
+@@ -166,7 +169,7 @@
  # Un-comment the following and create the netlogon directory for Domain Logons
  ; [netlogon]
  ;   comment = Network Logon Service
@@ -49,8 +39,7 @@
  ;   guest ok = yes
  ;   writable = no
  ;   share modes = no
- 
- 
+@@ -175,7 +178,7 @@
  # Un-comment the following to provide a specific roving profile share
  # the default is to use the user's home directory
  ;[Profiles]
@@ -59,8 +48,7 @@
  ;    browseable = no
  ;    guest ok = yes
  
- 
- # NOTE: If you have a BSD-style print system there is no need to 
+@@ -184,7 +187,7 @@
  # specifically define each individual printer
  [printers]
     comment = All Printers
@@ -69,11 +57,7 @@
     browseable = no
  # Set public = yes to allow user 'guest account' to print
     guest ok = no
-    writable = no
-    printable = yes
-@@ -202,11 +205,11 @@
- # the "staff" group
- ;[public]
+@@ -204,7 +207,7 @@
  ;   comment = Public Stuff
  ;   path = /home/samba
  ;   public = yes
@@ -82,5 +66,3 @@
  ;   printable = no
  ;   write list = @staff
  
- # Other examples. 
- #
