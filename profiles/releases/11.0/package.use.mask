@@ -94,3 +94,6 @@ dev-libs/libnatspec python
 net-libs/libpcap canusb
 net-analyzer/tcpdump smi
 net-analyzer/rrdtool dbi
+
+# skip ruby18
+dev-vcs/subversion ruby

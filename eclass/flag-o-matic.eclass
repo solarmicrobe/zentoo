@@ -391,8 +391,13 @@ test-flag-PROG() {
 
 	# use -c so we can test the assembler as well
 	local PROG=$(tc-get${comp})
-	${PROG} "${flag}" -c -o /dev/null -x${lang} - < /dev/null \
-		> /dev/null 2>&1
+	if $( ${PROG} "${flag}" -c -o /dev/null -x${lang} - < /dev/null > /dev/null 2>&1 ); then
+		${PROG} "${flag}" -c -o /dev/null -x${lang} - < /dev/null \
+			> /dev/null 2>&1
+	else
+		${PROG} "${flag}" -c -o /dev/null /dev/null \
+			> /dev/null 2>&1
+	fi
 }
 
 # @FUNCTION: test-flag-CC
