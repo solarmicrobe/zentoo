@@ -1,0 +1,55 @@
+# skip unnecessary dependencies
+app-admin/syslog-ng json sql
+app-backup/duplicity s3
+app-emulation/virtualbox vboxwebsrv
+dev-java/ant testutil
+dev-java/icedtea alsa systemtap pax_kernel webstart
+dev-lang/php sqlite
+dev-libs/gecode gist
+dev-libs/glib utils systemtap
+dev-libs/libnatspec python
+dev-libs/ppl lpsol
+dev-python/ipython smp
+dev-python/psycopg mxdatetime
+dev-vcs/subversion webdav-serf
+media-gfx/graphviz cairo
+media-gfx/imagemagick autotrace raw opencl
+net-analyzer/nagios-plugins ups nagios-game nagios-ping
+net-analyzer/rrdtool dbi
+net-analyzer/tcpdump smi
+net-dns/pdns opendbx sqlite
+net-fs/samba cluster
+net-libs/libpcap canusb
+net-misc/curl ssh
+net-print/cups filters
+sys-fs/btrfs-progs debug-utils
+sys-fs/lvm2 thin
+sys-fs/udev extras
+sys-kernel/genkernel crypt
+
+# do not support X11 with these applications
+app-editors/emacs X
+app-editors/vim X
+app-misc/mc X
+app-text/ghostscript-gpl X
+dev-java/ant X
+dev-java/sun-jdk X
+dev-lang/R X
+dev-python/imaging X
+media-gfx/imagemagick X
+media-libs/giflib X
+media-libs/t1lib X
+net-print/cups X
+net-analyzer/net-snmp X
+net-misc/openssh X
+sys-apps/groff X
+sys-fs/mtools X
+
+# only support headless X11
+x11-base/xorg-server xorg
+
+# do not depend on python-3.3
+sys-apps/portage xattr
+
+# skip ruby18
+dev-vcs/subversion ruby
