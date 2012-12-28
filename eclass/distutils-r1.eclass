@@ -187,6 +187,8 @@ esetup.py() {
 			--build-base "${BUILD_DIR}"
 			# using a single directory for them helps us export ${PYTHONPATH}
 			--build-lib "${BUILD_DIR}/lib"
+			# make the ebuild writer lives easier
+			--build-scripts "${BUILD_DIR}/scripts"
 		)
 	fi
 

@@ -252,6 +252,13 @@ toolchain-binutils_src_compile() {
 		myconf+=( $(use_with zlib) )
 	fi
 
+	# For bi-arch systems, enable a 64bit bfd.  This matches
+	# the bi-arch logic in toolchain.eclass. #446946
+	# We used to do it for everyone, but it's slow on 32bit arches. #438522
+	case $(tc-arch) in
+	ppc|sparc|x86) myconf+=( --enable-64-bit-bfd ) ;;
+	esac
+
 	use multitarget && myconf+=( --enable-targets=all --enable-64-bit-bfd )
 	[[ -n ${CBUILD} ]] && myconf+=( --build=${CBUILD} )
 	is_cross && myconf+=( --with-sysroot=/usr/${CTARGET} )

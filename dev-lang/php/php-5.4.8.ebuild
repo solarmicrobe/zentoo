@@ -10,7 +10,7 @@ SUHOSIN_VERSION=""
 FPM_VERSION="builtin"
 EXPECTED_TEST_FAILURES=""
 
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 
 function php_get_uri ()
 {

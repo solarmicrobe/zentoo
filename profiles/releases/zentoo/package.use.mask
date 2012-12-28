@@ -4,6 +4,7 @@ app-backup/duplicity s3
 app-emulation/virtualbox vboxwebsrv
 dev-java/ant testutil
 dev-java/icedtea alsa systemtap pax_kernel webstart
+dev-lang/ghc ghcbootstrap
 dev-lang/php sqlite
 dev-libs/gecode gist
 dev-libs/glib utils systemtap
@@ -18,7 +19,8 @@ net-analyzer/nagios-plugins ups nagios-game nagios-ping
 net-analyzer/rrdtool dbi
 net-analyzer/tcpdump smi
 net-dns/pdns opendbx sqlite
-net-fs/samba cluster
+net-fs/cifs-utils ads upcall
+net-fs/samba ads cluster debug ldb
 net-libs/libpcap canusb
 net-mail/dovecot lucene
 net-misc/curl ssh

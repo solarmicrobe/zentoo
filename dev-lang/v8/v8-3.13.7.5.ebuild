@@ -24,6 +24,7 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-3.10.8.10-freebsd9.patch
+	epatch "${FILESDIR}"/${PN}-vfp2-r0.patch
 }
 
 src_compile() {

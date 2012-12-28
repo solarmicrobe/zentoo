@@ -13,7 +13,6 @@ IUSE=""
 
 RDEPEND="|| (
 		sci-libs/blas-reference
-		>=sci-libs/blas-atlas-3.7.39
 		>=sci-libs/mkl-9.1.023
 		sci-libs/acml
 		sci-libs/blas-goto

@@ -23,4 +23,5 @@ S="${WORKDIR}/${GITHUB_USER}-${PN}-${PV_COMMIT:0:7}"
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-build.patch
 	epatch "${FILESDIR}"/${P}-install.patch
+	tc-export CC
 }

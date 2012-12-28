@@ -42,7 +42,7 @@ inherit multilib
 # All supported Python implementations, most preferred last.
 _PYTHON_ALL_IMPLS=(
 	jython2_5
-	pypy1_8 pypy1_9
+	pypy1_8 pypy1_9 pypy2_0
 	python3_1 python3_2 python3_3
 	python2_5 python2_6 python2_7
 )
@@ -80,6 +80,28 @@ _PYTHON_ALL_IMPLS=(
 # Example value:
 # @CODE
 # /usr/lib64/python2.6/site-packages
+# @CODE
+
+# @ECLASS-VARIABLE: PYTHON_INCLUDEDIR
+# @DESCRIPTION:
+# The path to Python include directory.
+#
+# Set and exported on request using python_export().
+#
+# Example value:
+# @CODE
+# /usr/include/python2.6
+# @CODE
+
+# @ECLASS-VARIABLE: PYTHON_PKG_DEP
+# @DESCRIPTION:
+# The complete dependency on a particular Python package as a string.
+#
+# Set and exported on request using python_export().
+#
+# Example value:
+# @CODE
+# dev-lang/python:2.7[xml]
 # @CODE
 
 # @FUNCTION: python_export
@@ -149,6 +171,47 @@ python_export() {
 				export PYTHON_SITEDIR=${EPREFIX}${dir}/site-packages
 				debug-print "${FUNCNAME}: PYTHON_SITEDIR = ${PYTHON_SITEDIR}"
 				;;
+			PYTHON_INCLUDEDIR)
+				local dir
+				case "${impl}" in
+					python*)
+						dir=/usr/include/${impl}
+						;;
+					jython*)
+						dir=/usr/share/${impl}/Include
+						;;
+					pypy*)
+						dir=/usr/$(get_libdir)/${impl/-c/}/include
+						;;
+				esac
+
+				export PYTHON_INCLUDEDIR=${EPREFIX}${dir}
+				debug-print "${FUNCNAME}: PYTHON_INCLUDEDIR = ${PYTHON_INCLUDEDIR}"
+				;;
+			PYTHON_PKG_DEP)
+				local d
+				case ${impl} in
+					python*)
+						PYTHON_PKG_DEP='dev-lang/python';;
+					jython*)
+						PYTHON_PKG_DEP='dev-java/jython';;
+					pypy*)
+						PYTHON_PKG_DEP='dev-python/pypy';;
+					*)
+						die "Invalid implementation: ${impl}"
+				esac
+
+				# slot
+				PYTHON_PKG_DEP+=:${impl##*[a-z-]}
+
+				# use-dep
+				if [[ ${PYTHON_REQ_USE} ]]; then
+					PYTHON_PKG_DEP+=[${PYTHON_REQ_USE}]
+				fi
+
+				export PYTHON_PKG_DEP
+				debug-print "${FUNCNAME}: PYTHON_PKG_DEP = ${PYTHON_PKG_DEP}"
+				;;
 			*)
 				die "python_export: unknown variable ${var}"
 		esac
@@ -199,6 +262,21 @@ python_get_sitedir() {
 
 	python_export "${@}" PYTHON_SITEDIR
 	echo "${PYTHON_SITEDIR}"
+}
+
+# @FUNCTION: python_get_includedir
+# @USAGE: [<impl>]
+# @DESCRIPTION:
+# Obtain and print the include path for the given implementation. If no
+# implementation is provided, ${EPYTHON} will be used.
+#
+# If you just need to have PYTHON_INCLUDEDIR set (and exported), then it
+# is better to use python_export() directly instead.
+python_get_includedir() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	python_export "${@}" PYTHON_INCLUDEDIR
+	echo "${PYTHON_INCLUDEDIR}"
 }
 
 # @FUNCTION: _python_rewrite_shebang

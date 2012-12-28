@@ -11,7 +11,7 @@ DESCRIPTION="The Cyrus SASL (Simple Authentication and Security Layer)."
 HOMEPAGE="http://cyrusimap.web.cmu.edu/"
 SRC_URI="ftp://ftp.cyrusimap.org/cyrus-sasl/${P}.tar.gz"
 
-LICENSE="BSD-4"
+LICENSE="BSD-with-attribution"
 SLOT="2"
 KEYWORDS="amd64"
 IUSE="authdaemond berkdb gdbm kerberos ldapdb openldap mysql pam postgres sample sqlite

@@ -16,7 +16,7 @@ HOMEPAGE="http://www.washington.edu/imap/"
 SRC_URI="ftp://ftp.cac.washington.edu/imap/${MY_P}.tar.Z
 	chappa? ( mirror://gentoo/${P}-chappa-${CHAPPA_PL}-all.patch.gz )"
 
-LICENSE="as-is"
+LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc +ipv6 kerberos kernel_linux kernel_FreeBSD pam ssl static-libs topal chappa"

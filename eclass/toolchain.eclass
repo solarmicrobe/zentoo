@@ -922,6 +922,13 @@ gcc-compiler-configure() {
 		confgcc+=" --enable-java-awt=gtk"
 	fi
 
+	# allow gcc to search for clock funcs in the main C lib.
+	# if it can't find them, then tough cookies -- we aren't
+	# going to link in -lrt to all C++ apps.  #411681
+	if tc_version_is_at_least 4.4 && is_cxx ; then
+		confgcc+=" --enable-libstdcxx-time"
+	fi
+
 	# newer gcc versions like to bootstrap themselves with C++,
 	# so we need to manually disable it ourselves
 	if tc_version_is_at_least 4.7 && ! is_cxx ; then
@@ -1842,15 +1849,18 @@ should_we_gcc_config() {
 		# We don't want to switch from say gcc-3.3 to gcc-3.4 right in
 		# the middle of an emerge operation (like an 'emerge -e world'
 		# which could install multiple gcc versions).
-		einfo "The current gcc config appears valid, so it will not be"
-		einfo "automatically switched for you.	If you would like to"
-		einfo "switch to the newly installed gcc version, do the"
-		einfo "following:"
-		echo
-		einfo "gcc-config ${CTARGET}-${GCC_CONFIG_VER}"
-		einfo "source /etc/profile"
-		echo
-		ebeep
+		# Only warn if we're installing a pkg as we might be called from
+		# the pkg_{pre,post}rm steps.  #446830
+		if [[ ${EBUILD_PHASE} == *"inst" ]] ; then
+			einfo "The current gcc config appears valid, so it will not be"
+			einfo "automatically switched for you.  If you would like to"
+			einfo "switch to the newly installed gcc version, do the"
+			einfo "following:"
+			echo
+			einfo "gcc-config ${CTARGET}-${GCC_CONFIG_VER}"
+			einfo "source /etc/profile"
+			echo
+		fi
 		return 1
 	fi
 }

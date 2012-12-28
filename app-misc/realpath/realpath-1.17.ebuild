@@ -20,6 +20,7 @@ RDEPEND="!sys-freebsd/freebsd-bin
 	nls? ( virtual/libintl )"
 DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )
+	x86-interix? ( dev-libs/gnulib )
 	elibc_mintlib? ( virtual/libiconv )"
 
 src_unpack() {
@@ -36,7 +37,7 @@ src_unpack() {
 }
 
 src_prepare() {
-	use nls || epatch "${FILESDIR}"/${P}-nonls.patch
+	use nls || epatch "${FILESDIR}"/${PN}-1.16-nonls.patch
 	epatch "${FILESDIR}"/${PN}-1.17-build.patch
 	epatch "${FILESDIR}"/${PN}-1.14-no-po4a.patch
 	epatch "${FILESDIR}"/${PN}-1.15-prefix.patch
