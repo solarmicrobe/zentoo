@@ -4,7 +4,7 @@
 
 EAPI=2
 
-inherit libtool sgml-catalog eutils flag-o-matic multilib
+inherit autotools sgml-catalog eutils flag-o-matic multilib
 
 DESCRIPTION="Jade is an implementation of DSSSL - an ISO standard for formatting SGML and XML documents"
 HOMEPAGE="http://openjade.sourceforge.net"
@@ -21,12 +21,12 @@ DEPEND="dev-lang/perl
 	${RDEPEND}"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-deplibs.patch \
-		"${FILESDIR}"/${P}-ldflags.patch \
-		"${FILESDIR}"/${P}-msggen.pl.patch \
-		"${FILESDIR}"/${P}-respect-ldflags.patch \
-		"${FILESDIR}"/${P}-libosp-la.patch \
-		"${FILESDIR}"/${P}-gcc46.patch
+	epatch "${FILESDIR}"/${P}-deplibs.patch
+	epatch "${FILESDIR}"/${P}-ldflags.patch
+	epatch "${FILESDIR}"/${P}-msggen.pl.patch
+	epatch "${FILESDIR}"/${P}-respect-ldflags.patch
+	epatch "${FILESDIR}"/${P}-libosp-la.patch
+	epatch "${FILESDIR}"/${P}-gcc46.patch
 
 	# Please note!  Opts are disabled.  If you know what you're doing
 	# feel free to remove this line.  It may cause problems with
@@ -38,9 +38,12 @@ src_prepare() {
 	# on hppa. Using -O1 works fine. So I force it here.
 	use hppa && replace-flags -O2 -O1
 
-	ln -s config/configure.in configure.in
-	#eautoreconf
-	elibtoolize
+	ln -s config/configure.in configure.in || die
+	cp "${FILESDIR}"/${P}-acinclude.m4 acinclude.m4 || die
+	rm config/missing || die
+
+	AT_NOEAUTOMAKE=yes
+	eautoreconf
 
 	SGML_PREFIX=/usr/share/sgml
 }
@@ -50,12 +53,16 @@ src_configure() {
 		--enable-http \
 		--enable-default-catalog=/etc/sgml/catalog \
 		--enable-default-search-path=/usr/share/sgml \
+		--enable-splibdir=/usr/$(get_libdir) \
 		--libdir=/usr/$(get_libdir) \
 		--datadir=/usr/share/sgml/${P} \
 		$(use_enable static-libs static)
 }
 
 src_compile() {
+	# Bug 412725.
+	unset INCLUDE
+
 	emake -j1 SHELL=/bin/bash || die "make failed"
 }
 
@@ -66,6 +73,8 @@ src_install() {
 		libdir=/usr/$(get_libdir) \
 		SHELL=/bin/bash \
 		install install-man || die "make install failed"
+
+	prune_libtool_files
 
 	dosym openjade  /usr/bin/jade
 	dosym onsgmls   /usr/bin/nsgmls

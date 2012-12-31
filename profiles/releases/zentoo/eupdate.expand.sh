@@ -7,6 +7,7 @@ app-text/docbook-xml-dtd)      echo "=$1-4.1.2-r6"
                                echo "=$1-4.3-r1"
                                echo "=$1-4.4-r2"
                                echo "=$1-4.5-r1";;
+app-text/openjade)             echo "=$1-1.3.2-r5";;
 dev-db/hsqldb)                 echo "=$1-1.8.1.3-r1";;
 dev-db/postgresql-*)           echo "=$1-9.1.6";;
 dev-java/antlr)                echo "=$1-2.7.7-r2";;

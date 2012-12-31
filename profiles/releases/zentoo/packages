@@ -12,3 +12,5 @@
 >=sys-apps/portage-2.2
 >=sys-devel/binutils-2.18-r1
 >=sys-libs/glibc-2.4-r4
+
+sys-apps/gptfdisk
