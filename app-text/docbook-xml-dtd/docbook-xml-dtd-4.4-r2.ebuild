@@ -9,16 +9,14 @@ DESCRIPTION="Docbook DTD for XML"
 HOMEPAGE="http://www.docbook.org/"
 SRC_URI="http://www.docbook.org/xml/${PV}/${MY_P}.zip"
 
-LICENSE="as-is"
+LICENSE="docbook"
 SLOT="${PV}"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND=""
-DEPEND=">=app-arch/unzip-5.41
-	>=dev-libs/libxml2-2.4
-	>=app-text/docbook-xsl-stylesheets-1.65
+RDEPEND=">=app-text/docbook-xsl-stylesheets-1.65
 	>=app-text/build-docbook-catalog-1.2"
+DEPEND=">=app-arch/unzip-5.41"
 
 sgml-catalog_cat_include "/etc/sgml/xml-docbook-${PV}.cat" \
 	"/etc/sgml/sgml-docbook.cat"

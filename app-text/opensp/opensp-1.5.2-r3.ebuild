@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=4
 inherit eutils flag-o-matic
 
 MY_P=${P/opensp/OpenSP}
@@ -10,7 +10,7 @@ DESCRIPTION="A free, object-oriented toolkit for SGML parsing and entity managem
 HOMEPAGE="http://openjade.sourceforge.net/"
 SRC_URI="mirror://sourceforge/openjade/${MY_P}.tar.gz"
 
-LICENSE="JamesClark"
+LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc nls static-libs test"
@@ -47,16 +47,16 @@ src_configure() {
 	econf \
 		--disable-dependency-tracking \
 		--enable-http \
-		--enable-default-catalog=/etc/sgml/catalog   \
-		--enable-default-search-path=/usr/share/sgml \
-		--datadir=/usr/share/sgml/${P}               \
+		--enable-default-catalog="${EPREFIX}"/etc/sgml/catalog   \
+		--enable-default-search-path="${EPREFIX}"/usr/share/sgml \
+		--datadir="${EPREFIX}"/usr/share/sgml/${P}               \
 		$(use_enable nls) \
 		$(use_enable doc doc-build) \
 		$(use_enable static-libs static)
 }
 
 src_compile() {
-	emake pkgdocdir=/usr/share/doc/${PF} || die "Compilation failed"
+	emake pkgdocdir="${EPREFIX}"/usr/share/doc/${PF}
 }
 
 src_test() {
@@ -68,7 +68,7 @@ src_test() {
 
 src_install() {
 	emake DESTDIR="${D}" \
-		pkgdocdir=/usr/share/doc/${PF} install || die "Installation failed"
+		pkgdocdir="${EPREFIX}"/usr/share/doc/${PF} install
 
 	dodoc AUTHORS BUGS ChangeLog NEWS README
 }

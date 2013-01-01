@@ -95,6 +95,12 @@ mysql-autotools_configure_minimal() {
 		myconf="${myconf} --with-charset=latin1"
 		myconf="${myconf} --with-collation=latin1_swedish_ci"
 	fi
+
+	# MariaDB requires this flag in order to link to GPLv3 readline v6 or greater
+	# A note is added to the configure output
+	if [[ "${PN}" == "mariadb" ]]  && mysql_version_is_at_least "5.1.61" ; then
+		myconf="${myconf} --disable-distribution"
+	fi
 }
 
 # @FUNCTION: mysql-autotools_configure_common
@@ -396,7 +402,7 @@ mysql-autotools_src_prepare() {
 		popd >/dev/null
 	fi
 
-	if pbxt_available && [[ "${PBXT_NEWSTYLE}" == "1" ]] && use pbxt ; then
+	if pbxt_patch_available && [[ "${PBXT_NEWSTYLE}" == "1" ]] && use pbxt ; then
 		einfo "Adding storage engine: PBXT"
 		pushd "${S}"/storage >/dev/null
 		i='pbxt'

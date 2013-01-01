@@ -24,7 +24,7 @@ for (( i=1 ; i<=${PATCHNO} ; i++ )) ; do
 	export SRC_URI="${SRC_URI} http://www.oracle.com/technology/products/berkeley-db/db/update/${MY_PV}/patch.${MY_PV}.${i}"
 done
 
-LICENSE="OracleDB"
+LICENSE="Sleepycat"
 SLOT="4.8"
 KEYWORDS="amd64"
 IUSE="doc java cxx tcl test"

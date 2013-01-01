@@ -32,9 +32,6 @@ src_unpack() {
 	epatch "${FILESDIR}"/${PN}-5.7-nongnu.patch
 	epatch "${FILESDIR}"/${PN}-5.9-rxvt-unicode-9.15.patch #192083 #383871
 	epatch "${FILESDIR}"/${PN}-5.9-fix-clang-build.patch #417763
-	sed -i \
-		-e '/^PKG_CONFIG_LIBDIR/s:=.*:=$(libdir)/pkgconfig:' \
-		misc/Makefile.in || die
 }
 
 src_compile() {
@@ -65,6 +62,12 @@ do_compile() {
 	mkdir "${WORKDIR}"/$1
 	cd "${WORKDIR}"/$1
 	shift
+
+	# ncurses is dumb and doesn't install .pc files unless pkg-config
+	# is also installed.  Force the tests to go our way.  Note that it
+	# doesn't actually use pkg-config ... it just looks for set vars.
+	tc-export PKG_CONFIG
+	export PKG_CONFIG_LIBDIR="/usr/$(get_libdir)/pkgconfig"
 
 	# The chtype/mmask-t settings below are to retain ABI compat
 	# with ncurses-5.4 so dont change em !

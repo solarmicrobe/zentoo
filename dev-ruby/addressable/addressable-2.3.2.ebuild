@@ -18,7 +18,7 @@ inherit ruby-fakegem
 DESCRIPTION="A replacement for the URI implementation that is part of Ruby's standard library."
 HOMEPAGE="http://addressable.rubyforge.org/"
 
-LICENSE="as-is"
+LICENSE="Apache-2.0"
 
 SLOT="0"
 KEYWORDS="amd64"

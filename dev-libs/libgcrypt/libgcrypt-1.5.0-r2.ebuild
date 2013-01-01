@@ -24,6 +24,7 @@ DOCS=( AUTHORS ChangeLog NEWS README THANKS TODO )
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-uscore.patch
+	epatch "${FILESDIR}"/${PN}-1.5.0-x32.patch
 	epatch "${FILESDIR}"/${PN}-multilib-syspath.patch
 	epatch "${WORKDIR}"/${P}-idea.patch
 	eautoreconf

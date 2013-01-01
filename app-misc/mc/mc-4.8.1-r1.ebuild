@@ -54,6 +54,7 @@ src_configure() {
 	use xdg && homedir="XDG"
 
 	econf \
+		--disable-silent-rules \
 		--disable-dependency-tracking \
 		$(use_enable nls) \
 		--enable-vfs \

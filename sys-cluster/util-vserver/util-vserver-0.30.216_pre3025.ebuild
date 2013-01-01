@@ -57,7 +57,7 @@ src_configure() {
 }
 
 src_compile() {
-	emake || die "emake failed!"
+	emake -j1 || die "emake failed!"
 }
 
 src_install() {

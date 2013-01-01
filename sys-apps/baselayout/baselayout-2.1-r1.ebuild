@@ -85,6 +85,7 @@ multilib_layout() {
 				mkdir -p "${prefix}" || die
 				rm -f "${prefix}lib" || die
 				ln -s ${def_libdir} "${prefix}lib" || die
+				mkdir -p "${prefix}${def_libdir}" #423571
 			fi
 		else
 			# we need to make sure "lib" is a dir

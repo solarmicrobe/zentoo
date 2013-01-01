@@ -28,11 +28,12 @@
 # http://www.gentoo.org/proj/en/Python/python-r1/dev-guide.xml
 
 case "${EAPI:-0}" in
-	0|1|2|3)
+	0|1|2|3|4)
 		die "Unsupported EAPI=${EAPI:-0} (too old) for ${ECLASS}"
 		;;
-	4|5)
-		# EAPI=4 needed for REQUIRED_USE
+	5)
+		# EAPI=5 is required for meaningful USE default deps
+		# on USE_EXPAND flags
 		;;
 	*)
 		die "Unsupported EAPI=${EAPI} (unknown) for ${ECLASS}"
@@ -132,44 +133,111 @@ fi
 
 _python_set_globals() {
 	local flags=( "${PYTHON_COMPAT[@]/#/python_targets_}" )
-	#local flags_st=( "${PYTHON_COMPAT[@]/#/-python_single_target_}" )
 	local optflags=${flags[@]/%/?}
-	#optflags+=,${flags_st[@]/%/(-)}
 
-	# PYTHON_SINGLE_TARGET safety check temporarily disabled
-	# because of issues with paludis, bug #447524.
+	# A nice QA trick here. Since a python-single-r1 package has to have
+	# at least one PYTHON_SINGLE_TARGET enabled (REQUIRED_USE),
+	# the following check will always fail on those packages. Therefore,
+	# it should prevent developers from mistakenly depending on packages
+	# not supporting multiple Python implementations.
+
+	local flags_st=( "${PYTHON_COMPAT[@]/#/-python_single_target_}" )
+	optflags+=,${flags_st[@]/%/(-)}
 
 	IUSE=${flags[*]}
 	REQUIRED_USE="|| ( ${flags[*]} )"
 	PYTHON_USEDEP=${optflags// /,}
-
-	local usestr
-	[[ ${PYTHON_REQ_USE} ]] && usestr="[${PYTHON_REQ_USE}]"
 
 	# 1) well, python-exec would suffice as an RDEP
 	# but no point in making this overcomplex, BDEP doesn't hurt anyone
 	# 2) python-exec should be built with all targets forced anyway
 	# but if new targets were added, we may need to force a rebuild
 	PYTHON_DEPS="dev-python/python-exec[${PYTHON_USEDEP}]"
-	local i
+	local i PYTHON_PKG_DEP
 	for i in "${PYTHON_COMPAT[@]}"; do
-		local d
-		case ${i} in
-			python*)
-				d='dev-lang/python';;
-			jython*)
-				d='dev-java/jython';;
-			pypy*)
-				d='dev-python/pypy';;
-			*)
-				die "Invalid implementation: ${i}"
-		esac
-
-		local v=${i##*[a-z]}
-		PYTHON_DEPS+=" python_targets_${i}? ( ${d}:${v/_/.}${usestr} )"
+		python_export "${i}" PYTHON_PKG_DEP
+		PYTHON_DEPS+=" python_targets_${i}? ( ${PYTHON_PKG_DEP} )"
 	done
 }
 _python_set_globals
+
+# @FUNCTION: python_gen_usedep
+# @USAGE: pattern [...]
+# @DESCRIPTION:
+# Output a USE dependency string for Python implementations which
+# are both in PYTHON_COMPAT and match any of the patterns passed
+# as parameters to the function.
+#
+# When all implementations are requested, please use ${PYTHON_USEDEP}
+# instead. Please also remember to set an appropriate REQUIRED_USE
+# to avoid ineffective USE flags.
+#
+# Example:
+# @CODE
+# PYTHON_COMPAT=( python{2_7,3_2} )
+# DEPEND="doc? ( dev-python/epydoc[$(python_gen_usedep python2*)] )"
+# @CODE
+#
+# It will cause the dependency to look like:
+# @CODE
+# DEPEND="doc? ( dev-python/epydoc[python_targets_python2_7?] )"
+# @CODE
+python_gen_usedep() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	local impl pattern
+	local matches=()
+
+	for impl in "${PYTHON_COMPAT[@]}"; do
+		for pattern; do
+			if [[ ${impl} == ${pattern} ]]; then
+				matches+=(
+					"python_targets_${impl}?"
+					"-python_single_target_${impl}(-)"
+				)
+				break
+			fi
+		done
+	done
+
+	local out=${matches[@]}
+	echo ${out// /,}
+}
+
+# @FUNCTION: python_gen_useflags
+# @USAGE: pattern [...]
+# @DESCRIPTION:
+# Output a list of USE flags for Python implementations which
+# are both in PYTHON_COMPAT and match any of the patterns passed
+# as parameters to the function.
+#
+# Example:
+# @CODE
+# PYTHON_COMPAT=( python{2_7,3_2} )
+# REQUIRED_USE="doc? ( || ( $(python_gen_useflags python2*) ) )"
+# @CODE
+#
+# It will cause the variable to look like:
+# @CODE
+# REQUIRED_USE="doc? ( || ( python_targets_python2_7 ) )"
+# @CODE
+python_gen_useflags() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	local impl pattern
+	local matches=()
+
+	for impl in "${PYTHON_COMPAT[@]}"; do
+		for pattern; do
+			if [[ ${impl} == ${pattern} ]]; then
+				matches+=( "python_targets_${impl}" )
+				break
+			fi
+		done
+	done
+
+	echo ${matches[@]}
+}
 
 # @ECLASS-VARIABLE: BUILD_DIR
 # @DESCRIPTION:

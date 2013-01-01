@@ -2,30 +2,27 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
+EAPI=4
+# jruby → there is code for this in ext but that requires compiling java.
 USE_RUBY="ruby18 ruby19"
 
 RUBY_FAKEGEM_TASK_DOC=""
-RUBY_FAKEGEM_TASK_TEST=""
 
-inherit ruby-fakegem
+inherit multilib ruby-fakegem
 
 DESCRIPTION="An atomic reference implementation for JRuby, Rubinius, and MRI"
-HOMEPAGE="http://github.com/headius/ruby-atomic"
+HOMEPAGE="https://github.com/headius/ruby-atomic"
 
-LICENSE="MIT"
+LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
 each_ruby_configure() {
-	${RUBY} -Cext extconf.rb || die "Configuration of extension failed."
+	${RUBY} -Cext extconf.rb || die
 }
 
 each_ruby_compile() {
-	emake -Cext || die
-
-	mkdir -p lib || die "Unable to make lib directory."
-	cp ext/atomic_reference.so lib/ || die "Unable to install library."
+	emake -Cext
+	cp ext/atomic_reference$(get_modname) lib/ || die
 }
-

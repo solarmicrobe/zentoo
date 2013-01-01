@@ -8,9 +8,10 @@ inherit java-pkg-2
 
 MY_PN=apache-${PN%%-bin}
 MY_P="${MY_PN}-${PV}"
+MY_MV="${PV%%.*}"
 
 DESCRIPTION="Project Management and Comprehension Tool for Java"
-SRC_URI="mirror://apache/maven/binaries/${MY_P}-bin.tar.gz"
+SRC_URI="mirror://apache/maven/maven-${MY_MV}/${PV}/binaries/${MY_P}-bin.tar.gz"
 HOMEPAGE="http://maven.apache.org/"
 
 LICENSE="Apache-2.0"

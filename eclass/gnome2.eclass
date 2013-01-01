@@ -9,7 +9,7 @@
 # Exports portage base functions used by ebuilds written for packages using the
 # GNOME framework. For additional functions, see gnome2-utils.eclass.
 
-inherit fdo-mime libtool gnome.org gnome2-utils
+inherit eutils fdo-mime libtool gnome.org gnome2-utils
 
 case "${EAPI:-0}" in
 	0|1)
@@ -29,9 +29,13 @@ G2CONF=${G2CONF:-""}
 
 # @ECLASS-VARIABLE: GNOME2_LA_PUNT
 # @DESCRIPTION:
-# Should we delete all the .la files?
+# Should we delete ALL the .la files?
 # NOT to be used without due consideration.
-GNOME2_LA_PUNT=${GNOME2_LA_PUNT:-"no"}
+if has ${EAPI:-0} 0 1 2 3 4; then
+	GNOME2_LA_PUNT=${GNOME2_LA_PUNT:-"no"}
+else
+	GNOME2_LA_PUNT=${GNOME2_LA_PUNT:-""}
+fi
 
 # @ECLASS-VARIABLE: ELTCONF
 # @DEFAULT-UNSET
@@ -117,31 +121,47 @@ gnome2_src_configure() {
 		fi
 	fi
 
-	# Prevent a QA warning
-	if has doc ${IUSE} ; then
-		grep -q "enable-gtk-doc" configure && G2CONF="${G2CONF} $(use_enable doc gtk-doc)"
+	# Starting with EAPI=5, we consider packages installing gtk-doc to be
+	# handled by adding DEPEND="dev-util/gtk-doc-am" which provides tools to
+	# relink URLs in documentation to already installed documentation.
+	# This decision also greatly helps with constantly broken doc generation.
+	# Remember to drop 'doc' USE flag from your package if it was only used to
+	# rebuild docs.
+	# Preserve old behavior for older EAPI.
+	if grep -q "enable-gtk-doc" ${ECONF_SOURCE:-.}/configure ; then
+		if has ${EAPI-0} 0 1 2 3 4 && has doc ${IUSE} ; then
+			G2CONF="${G2CONF} $(use_enable doc gtk-doc)"
+		else
+			G2CONF="${G2CONF} --disable-gtk-doc"
+		fi
 	fi
 
 	# Pass --disable-maintainer-mode when needed
-	if grep -q "^[[:space:]]*AM_MAINTAINER_MODE(\[enable\])" configure.*; then
+	if grep -q "^[[:space:]]*AM_MAINTAINER_MODE(\[enable\])" \
+		${ECONF_SOURCE:-.}/configure.*; then
 		G2CONF="${G2CONF} --disable-maintainer-mode"
 	fi
 
 	# Pass --disable-scrollkeeper when possible
-	if grep -q "disable-scrollkeeper" configure; then
+	if grep -q "disable-scrollkeeper" ${ECONF_SOURCE:-.}/configure; then
 		G2CONF="${G2CONF} --disable-scrollkeeper"
 	fi
 
 	# Pass --disable-silent-rules when possible (not needed for eapi5), bug #429308
 	if has ${EAPI:-0} 0 1 2 3 4; then
-		if grep -q "disable-silent-rules" configure; then
+		if grep -q "disable-silent-rules" ${ECONF_SOURCE:-.}/configure; then
 			G2CONF="${G2CONF} --disable-silent-rules"
 		fi
 	fi
 
 	# Pass --disable-schemas-install when possible
-	if grep -q "disable-schemas-install" configure; then
+	if grep -q "disable-schemas-install" ${ECONF_SOURCE:-.}/configure; then
 		G2CONF="${G2CONF} --disable-schemas-install"
+	fi
+
+	# Pass --disable-schemas-compile when possible
+	if grep -q "disable-schemas-compile" ${ECONF_SOURCE:-.}/configure; then
+		G2CONF="${G2CONF} --disable-schemas-compile"
 	fi
 
 	# Avoid sandbox violations caused by gnome-vfs (bug #128289 and #345659)
@@ -182,9 +202,24 @@ gnome2_src_install() {
 
 	unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
 
-	# Manual document installation
-	if [[ -n "${DOCS}" ]]; then
-		dodoc ${DOCS} || die "dodoc failed"
+	# Handle documentation as 'default' for eapi5 and newer, bug #373131
+	if has ${EAPI:-0} 0 1 2 3 4; then
+		# Manual document installation
+		if [[ -n "${DOCS}" ]]; then
+			dodoc ${DOCS} || die "dodoc failed"
+		fi
+	else
+		if ! declare -p DOCS >/dev/null 2>&1 ; then
+			local d
+			for d in README* ChangeLog AUTHORS NEWS TODO CHANGES THANKS BUGS \
+					FAQ CREDITS CHANGELOG ; do
+				[[ -s "${d}" ]] && dodoc "${d}"
+			done
+		elif declare -p DOCS | grep -q '^declare -a' ; then
+			dodoc "${DOCS[@]}"
+		else
+			dodoc ${DOCS}
+		fi
 	fi
 
 	# Do not keep /var/lib/scrollkeeper because:
@@ -199,12 +234,20 @@ gnome2_src_install() {
 	rm -fr "${ED}/usr/share/applications/mimeinfo.cache"
 
 	# Delete all .la files
-	if [[ "${GNOME2_LA_PUNT}" != "no" ]]; then
-		ebegin "Removing .la files"
-		if ! { has static-libs ${IUSE//+} && use static-libs; }; then
-			find "${D}" -name '*.la' -exec rm -f {} + || die "la file removal failed"
+	if has ${EAPI:-0} 0 1 2 3 4; then
+		if [[ "${GNOME2_LA_PUNT}" != "no" ]]; then
+			ebegin "Removing .la files"
+			if ! { has static-libs ${IUSE//+} && use static-libs; }; then
+				find "${D}" -name '*.la' -exec rm -f {} + || die "la file removal failed"
+			fi
+			eend
 		fi
-		eend
+	else
+		case "${GNOME2_LA_PUNT}" in
+			yes)    prune_libtool_files --modules;;
+			no)     ;;
+			*)      prune_libtool_files;;
+		esac
 	fi
 }
 

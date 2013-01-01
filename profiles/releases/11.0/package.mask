@@ -1,2 +1,0 @@
-# don't even try to merge this little fucker
->=dev-lang/python-3

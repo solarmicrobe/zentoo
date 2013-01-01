@@ -18,7 +18,7 @@ SLOT="0"
 IUSE="doc"
 
 RDEPEND="dev-python/setuptools"
-DEPEND="${DEPEND}
+DEPEND="${RDEPEND}
 		doc? ( dev-python/sphinx )
 		test? ( dev-python/mock )"
 

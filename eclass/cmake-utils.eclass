@@ -41,6 +41,12 @@ CMAKE_REMOVE_MODULES_LIST="${CMAKE_REMOVE_MODULES_LIST:-FindBLAS FindLAPACK}"
 # Do we want to remove anything? yes or whatever else for no
 CMAKE_REMOVE_MODULES="${CMAKE_REMOVE_MODULES:-yes}"
 
+# @ECLASS-VARIABLE: CMAKE_MAKEFILE_GENERATOR
+# @DESCRIPTION:
+# Specify a makefile generator to be used by cmake. At this point only "make"
+# and "ninja" is supported.
+CMAKE_MAKEFILE_GENERATOR="${CMAKE_MAKEFILE_GENERATOR:-make}"
+
 CMAKEDEPEND=""
 case ${WANT_CMAKE} in
 	always)
@@ -54,7 +60,7 @@ inherit toolchain-funcs multilib flag-o-matic base
 
 CMAKE_EXPF="src_compile src_test src_install"
 case ${EAPI:-0} in
-	4|3|2) CMAKE_EXPF+=" src_configure" ;;
+	2|3|4|5) CMAKE_EXPF+=" src_configure" ;;
 	1|0) ;;
 	*) die "Unknown EAPI, Bug eclass maintainers." ;;
 esac
@@ -107,12 +113,15 @@ _use_me_now_inverted() {
 	fi
 }
 
-# @ECLASS-VARIABLE: CMAKE_BUILD_DIR
+# @ECLASS-VARIABLE: BUILD_DIR
 # @DESCRIPTION:
 # Build directory where all cmake processed files should be generated.
 # For in-source build it's fixed to ${CMAKE_USE_DIR}.
 # For out-of-source build it can be overriden, by default it uses
 # ${WORKDIR}/${P}_build.
+#
+# This variable has been called CMAKE_BUILD_DIR formerly.
+# It is set under that name for compatibility.
 
 # @ECLASS-VARIABLE: CMAKE_BUILD_TYPE
 # @DESCRIPTION:
@@ -156,13 +165,41 @@ _check_build_dir() {
 	: ${CMAKE_USE_DIR:=${S}}
 	if [[ -n ${CMAKE_IN_SOURCE_BUILD} ]]; then
 		# we build in source dir
-		CMAKE_BUILD_DIR="${CMAKE_USE_DIR}"
+		BUILD_DIR="${CMAKE_USE_DIR}"
 	else
-		: ${CMAKE_BUILD_DIR:=${WORKDIR}/${P}_build}
+		# Respect both the old variable and the new one, depending
+		# on which one was set by the ebuild.
+		if [[ ! ${BUILD_DIR} && ${CMAKE_BUILD_DIR} ]]; then
+			eqawarn "The CMAKE_BUILD_DIR variable has been renamed to BUILD_DIR."
+			eqawarn "Please migrate the ebuild to use the new one."
+
+			# In the next call, both variables will be set already
+			# and we'd have to know which one takes precedence.
+			_RESPECT_CMAKE_BUILD_DIR=1
+		fi
+
+		if [[ ${_RESPECT_CMAKE_BUILD_DIR} ]]; then
+			BUILD_DIR=${CMAKE_BUILD_DIR:-${WORKDIR}/${P}_build}
+		else
+			: ${BUILD_DIR:=${WORKDIR}/${P}_build}
+		fi
 	fi
-	mkdir -p "${CMAKE_BUILD_DIR}"
-	echo ">>> Working in BUILD_DIR: \"$CMAKE_BUILD_DIR\""
+
+	# Backwards compatibility for getting the value.
+	CMAKE_BUILD_DIR=${BUILD_DIR}
+
+	mkdir -p "${BUILD_DIR}"
+	echo ">>> Working in BUILD_DIR: \"$BUILD_DIR\""
 }
+
+# Determine which generator to use
+_generator_to_use() {
+	if [[ ${CMAKE_MAKEFILE_GENERATOR} = "ninja" ]]; then
+		has_version dev-util/ninja && echo "Ninja" && return
+	fi
+	echo "Unix Makefiles"
+}
+
 # @FUNCTION: cmake-utils_use_with
 # @USAGE: <USE flag> [flag name]
 # @DESCRIPTION:
@@ -250,7 +287,7 @@ _modify-cmakelists() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	# Only edit the files once
-	grep -qs "<<< Gentoo configuration >>>" CMakeLists.txt && return 0
+	grep -qs "<<< Gentoo configuration >>>" "${CMAKE_USE_DIR}"/CMakeLists.txt && return 0
 
 	# Comment out all set (<some_should_be_user_defined_variable> value)
 	# TODO Add QA checker - inform when variable being checked for below is set in CMakeLists.txt
@@ -311,13 +348,16 @@ enable_cmake-utils_src_configure() {
 		fi
 	fi
 
-	# Prepare Gentoo override rules (set valid compiler, append CPPFLAGS)
-	local build_rules=${CMAKE_BUILD_DIR}/gentoo_rules.cmake
+	# Prepare Gentoo override rules (set valid compiler, append CPPFLAGS etc.)
+	local build_rules=${BUILD_DIR}/gentoo_rules.cmake
 	cat > "${build_rules}" <<- _EOF_
+		SET (CMAKE_AR $(type -P $(tc-getAR)) CACHE FILEPATH "Archive manager" FORCE)
+		SET (CMAKE_ASM_COMPILE_OBJECT "<CMAKE_C_COMPILER> <DEFINES> ${CFLAGS} <FLAGS> -o <OBJECT> -c <SOURCE>" CACHE STRING "ASM compile command" FORCE)
 		SET (CMAKE_C_COMPILER $(type -P $(tc-getCC)) CACHE FILEPATH "C compiler" FORCE)
 		SET (CMAKE_C_COMPILE_OBJECT "<CMAKE_C_COMPILER> <DEFINES> ${CPPFLAGS} <FLAGS> -o <OBJECT> -c <SOURCE>" CACHE STRING "C compile command" FORCE)
 		SET (CMAKE_CXX_COMPILER $(type -P $(tc-getCXX)) CACHE FILEPATH "C++ compiler" FORCE)
 		SET (CMAKE_CXX_COMPILE_OBJECT "<CMAKE_CXX_COMPILER> <DEFINES> ${CPPFLAGS} <FLAGS> -o <OBJECT> -c <SOURCE>" CACHE STRING "C++ compile command" FORCE)
+		SET (CMAKE_RANLIB $(type -P $(tc-getRANLIB)) CACHE FILEPATH "Archive index generator" FORCE)
 	_EOF_
 
 	has "${EAPI:-0}" 0 1 2 && ! use prefix && EPREFIX=
@@ -346,11 +386,11 @@ enable_cmake-utils_src_configure() {
 	fi
 
 	# Common configure parameters (invariants)
-	local common_config=${CMAKE_BUILD_DIR}/gentoo_common_config.cmake
+	local common_config=${BUILD_DIR}/gentoo_common_config.cmake
 	local libdir=$(get_libdir)
 	cat > "${common_config}" <<- _EOF_
 		SET (LIB_SUFFIX ${libdir/lib} CACHE STRING "library path suffix" FORCE)
-		SET (CMAKE_INSTALL_LIBDIR ${PREFIX}/${libdir} CACHE PATH "Output directory for libraries")
+		SET (CMAKE_INSTALL_LIBDIR ${libdir} CACHE PATH "Output directory for libraries")
 	_EOF_
 	[[ "${NOCOLOR}" = true || "${NOCOLOR}" = yes ]] && echo 'SET (CMAKE_COLOR_MAKEFILE OFF CACHE BOOL "pretty colors during make" FORCE)' >> "${common_config}"
 
@@ -369,6 +409,7 @@ enable_cmake-utils_src_configure() {
 	local cmakeargs=(
 		--no-warn-unused-cli
 		-C "${common_config}"
+		-G "$(_generator_to_use)"
 		-DCMAKE_INSTALL_PREFIX="${EPREFIX}${PREFIX}"
 		"${mycmakeargs_local[@]}"
 		-DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}"
@@ -377,7 +418,7 @@ enable_cmake-utils_src_configure() {
 		"${MYCMAKEARGS}"
 	)
 
-	pushd "${CMAKE_BUILD_DIR}" > /dev/null
+	pushd "${BUILD_DIR}" > /dev/null
 	debug-print "${LINENO} ${ECLASS} ${FUNCNAME}: mycmakeargs is ${mycmakeargs_local[*]}"
 	echo "${CMAKE_BINARY}" "${cmakeargs[@]}" "${CMAKE_USE_DIR}"
 	"${CMAKE_BINARY}" "${cmakeargs[@]}" "${CMAKE_USE_DIR}" || die "cmake failed"
@@ -399,13 +440,24 @@ cmake-utils_src_make() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	_check_build_dir
-	pushd "${CMAKE_BUILD_DIR}" > /dev/null
-	# first check if Makefile exist otherwise die
-	[[ -e Makefile ]] || die "Makefile not found. Error during configure stage."
-	if [[ "${CMAKE_VERBOSE}" != "OFF" ]]; then
-		emake VERBOSE=1 "$@" || die "Make failed!"
+	pushd "${BUILD_DIR}" > /dev/null
+	if [[ $(_generator_to_use) = Ninja ]]; then
+		# first check if Makefile exist otherwise die
+		[[ -e build.ninja ]] || die "Makefile not found. Error during configure stage."
+		if [[ "${CMAKE_VERBOSE}" != "OFF" ]]; then
+			#TODO get load average from portage (-l option)
+			ninja ${MAKEOPTS} -v "$@"
+		else
+			ninja "$@"
+		fi || die "ninja failed!"
 	else
-		emake "$@" || die "Make failed!"
+		# first check if Makefile exist otherwise die
+		[[ -e Makefile ]] || die "Makefile not found. Error during configure stage."
+		if [[ "${CMAKE_VERBOSE}" != "OFF" ]]; then
+			emake VERBOSE=1 "$@" || die "Make failed!"
+		else
+			emake "$@" || die "Make failed!"
+		fi
 	fi
 	popd > /dev/null
 }
@@ -414,8 +466,13 @@ enable_cmake-utils_src_install() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	_check_build_dir
-	pushd "${CMAKE_BUILD_DIR}" > /dev/null
-	base_src_install "$@"
+	pushd "${BUILD_DIR}" > /dev/null
+	if [[ $(_generator_to_use) = Ninja ]]; then
+		DESTDIR=${D} ninja install "$@" || die "died running ninja install"
+		base_src_install_docs
+	else
+		base_src_install "$@"
+	fi
 	popd > /dev/null
 
 	# Backward compatibility, for non-array variables
@@ -429,29 +486,33 @@ enable_cmake-utils_src_install() {
 
 enable_cmake-utils_src_test() {
 	debug-print-function ${FUNCNAME} "$@"
-	local ctestargs
 
 	_check_build_dir
-	pushd "${CMAKE_BUILD_DIR}" > /dev/null
+	pushd "${BUILD_DIR}" > /dev/null
 	[[ -e CTestTestfile.cmake ]] || { echo "No tests found. Skipping."; return 0 ; }
 
-	[[ -n ${TEST_VERBOSE} ]] && ctestargs="--extra-verbose --output-on-failure"
+	[[ -n ${TEST_VERBOSE} ]] && myctestargs+=( --extra-verbose --output-on-failure )
 
-	if ctest ${ctestargs} "$@" ; then
+	if ctest "${myctestargs[@]}" "$@" ; then
 		einfo "Tests succeeded."
+		popd > /dev/null
+		return 0
 	else
 		if [[ -n "${CMAKE_YES_I_WANT_TO_SEE_THE_TEST_LOG}" ]] ; then
 			# on request from Diego
-			eerror "Tests failed. Test log ${CMAKE_BUILD_DIR}/Testing/Temporary/LastTest.log follows:"
+			eerror "Tests failed. Test log ${BUILD_DIR}/Testing/Temporary/LastTest.log follows:"
 			eerror "--START TEST LOG--------------------------------------------------------------"
-			cat "${CMAKE_BUILD_DIR}/Testing/Temporary/LastTest.log"
+			cat "${BUILD_DIR}/Testing/Temporary/LastTest.log"
 			eerror "--END TEST LOG----------------------------------------------------------------"
 			die "Tests failed."
 		else
-			die "Tests failed. When you file a bug, please attach the following file: \n\t${CMAKE_BUILD_DIR}/Testing/Temporary/LastTest.log"
+			die "Tests failed. When you file a bug, please attach the following file: \n\t${BUILD_DIR}/Testing/Temporary/LastTest.log"
 		fi
+
+		# die might not die due to nonfatal
+		popd > /dev/null
+		return 1
 	fi
-	popd > /dev/null
 }
 
 # @FUNCTION: cmake-utils_src_configure

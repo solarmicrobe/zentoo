@@ -23,7 +23,7 @@ src_prepare() {
 	epatch \
 		"${FILESDIR}/${PN}-strip-optimization.patch" \
 		"${FILESDIR}/${PN}-2.2.1-no-pprof.patch" \
-		"${FILESDIR}/${PN}-2.2.5_fix_html_install.patch" \
+		"${FILESDIR}/${PN}-2.2.5_fix_html_install.patch"
 
 	eautoreconf
 }

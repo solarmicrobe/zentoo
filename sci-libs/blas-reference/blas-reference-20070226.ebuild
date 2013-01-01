@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -16,9 +16,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc"
 
-DEPEND="
-	virtual/fortran
-	app-admin/eselect-blas"
+DEPEND="app-admin/eselect-blas"
 RDEPEND="${DEPEND}
 	doc? ( app-doc/blas-docs )"
 

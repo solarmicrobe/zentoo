@@ -18,5 +18,6 @@ RDEPEND="|| ( app-admin/metalog
 	app-admin/sysklogd
 	app-admin/syslog-ng
 	app-admin/syslogread
+	app-admin/busybox-sysklogd
 	sys-freebsd/freebsd-usbin
 )"

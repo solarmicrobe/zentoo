@@ -10,7 +10,7 @@ DESCRIPTION="NewRelic System Monitor"
 HOMEPAGE="http://www.newrelic.com/"
 SRC_URI="http://download.newrelic.com/server_monitor/release/${P}-linux.tar.gz"
 
-LICENSE="as-is"
+LICENSE="newrelic Apache-2.0 MIT ISC openssl GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
@@ -52,7 +52,6 @@ src_install() {
 }
 
 pkg_postinst() {
-	elog "remember to set your license key via:"
-	elog
-	elog "    newrelic-config --set license_key=\$YOUR_KEY"
+	elog "Remember to set your license key via:"
+	elog "$ nrsysmond-config --set license_key=\$YOUR_KEY"
 }

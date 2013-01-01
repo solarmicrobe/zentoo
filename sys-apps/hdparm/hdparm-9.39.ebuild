@@ -10,7 +10,7 @@ DESCRIPTION="Utility to change hard drive performance parameters"
 HOMEPAGE="http://sourceforge.net/projects/hdparm/"
 SRC_URI="mirror://sourceforge/hdparm/${P}.tar.gz"
 
-LICENSE="as-is"
+LICENSE="BSD GPL-2" # GPL-2 only
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
@@ -35,4 +35,6 @@ src_install() {
 
 	doman hdparm.8
 	dodoc hdparm.lsm Changelog README.acoustic hdparm-sysconfig
+	docinto wiper
+	dodoc wiper/{README.txt,wiper.sh}
 }

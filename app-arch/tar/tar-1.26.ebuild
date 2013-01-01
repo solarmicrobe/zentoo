@@ -21,6 +21,7 @@ DEPEND="${RDEPEND}
 	nls? ( >=sys-devel/gettext-0.10.35 )"
 
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-no-gets.patch
 	if ! use userland_GNU ; then
 		sed -i \
 			-e 's:/backup\.sh:/gbackup.sh:' \

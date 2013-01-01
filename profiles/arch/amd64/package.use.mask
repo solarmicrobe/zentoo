@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/package.use.mask,v 1.138 2012/07/30 05:33:58 yngwin Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/package.use.mask,v 1.149 2012/12/27 08:16:31 tetromino Exp $
 
 # When you add an entry to the top of this file, add your name, the date, and
 # an explanation of why something is getting masked. Please be extremely
@@ -18,13 +18,25 @@
 
 #--- END OF EXAMPLES ---
 
+# Christoph Jungans <ottxor@gentoo.org> (26 Dec 2012)
+# cuda/openmm works on x86/amd64 (masked in base)
+sci-chemistry/gromacs -cuda -mkl -openmm
+
+# Diego Elio Pettenò <flameeyes@gentoo.org> (3 Nov 2012)
+# Unmask here, as it's masked in base.
+net-libs/gnutls -dane
+
+# Johannes Huber <johu@gentoo.org> (15 Sep 2012)
+# Masked for stabilization as the use flag pulls a dep tree of hell.
+media-libs/phonon zeitgeist
+
+# Michael Sterrett <mr_bones_@gentoo.org> (02 Sep 2012)
+# Missing stable keyword on dev-php/igbinary
+dev-php/pecl-memcached igbinary
+
 # Ben de Groot <yngwin@gentoo.org> (30 Jul 2012)
 # dependency keyworded here, masked in base
 media-libs/freetype -infinality
-
-# Rick Farina <zerochaos@gentoo.org> (09 July 2012)
-# limited testing of net-libs/libbtbb is all this mask is needed for
-net-analyzer/wireshark -btbb
 
 # Rick Farina <zerochaos@gentoo.org> (05 July 2012)
 # masked in base, unmask x86/amd64 only
@@ -37,7 +49,9 @@ sys-boot/grub -libzfs
 # Robert Piasek <dagger@gentoo.org> (26 Apr 2012)
 # Packages with optional systemd support. Masked in base and unmasked on arches
 # where sys-apps/systemd is available.
->sys-auth/polkit-0.104-r1 -systemd
+# Samuli Suominen <ssuominen@gentoo.org> (07 Sep 2012)
+# Masked again because this was never allowed before systemd is marked stable.
+#sys-auth/polkit -systemd
 
 # Alexandre Rostovtsev <tetromino@gentoo.org> (13 Apr 2012)
 # Packages with optional systemd support. Masked in base and unmasked on arches
@@ -70,6 +84,7 @@ gnustep-base/gnustep-make -libobjc2
 # jsc JIT compilation is supported only on amd64/arm/x86 and their prefixes, so
 # it's masked in base profile and unmasked here (bug #396313).
 net-libs/webkit-gtk -jit
+www-client/epiphany -jit
 
 # Davide Pesavento <pesa@gentoo.org> (30 Nov 2011)
 # JavaScriptCore JIT is supported only on amd64/arm/x86,
@@ -90,10 +105,6 @@ dev-libs/glib -systemtap
 # Kacper Kowalik <xarthisius@gentoo.org> (29 Jul 2011)
 # mask assembler as it currently doesn't work
 dev-lang/path64 assembler
-
-# Anthony G. Basile <blueness@gentoo.org> (22 Jul 2011)
-# nat-pmp and upnp are only stable on amd64/x86 for this package
->=net-misc/tor-0.2.3 -nat-pmp -upnp
 
 # Robin H. Johnson <robbat2@gentoo.org> (10 Jul 2011)
 # PPS should work on all arches, but only keyworded on amd64/x86
@@ -136,20 +147,6 @@ mail-mta/ssmtp md5sum
 # sys-devel/llvm is keyworded on amd64
 media-libs/mesa -llvm
 
-# Arun Raghavan <ford_prefect@gentoo.org> (19 Nov 2010)
-# Mart Raudsepp <leio@gentoo.org> (27 Dec 2010)
-# Arun Raghavan <ford_prefect@gentoo.org> (30 Jan 2011)
-# Mart Raudsepp <leio@gentoo.org> (20 Mar 2011)
-# Mart Raudsepp <leio@gentoo.org> (12 Apr 2011)
-# Arun Raghavan <ford_prefect@gentoo.org> (27 Sep 2011)
-# Orc optimisations in gst-plugins-{base,a52dec,ffmpeg,good,bad} work fine on amd64
->=media-libs/gst-plugins-base-0.10.30 -orc
->=media-plugins/gst-plugins-a52dec-0.10.16 -orc
->=media-plugins/gst-plugins-ffmpeg-0.10.11 -orc
->=media-libs/gst-plugins-good-0.10.28 -orc
->=media-libs/gst-plugins-bad-0.10.21 -orc
->=media-sound/pulseaudio-1.0 -orc
-
 # Nirbheek Chauhna <nirbheek@gentoo.org> (26 Jun 2010)
 # Inter-process communication doesn't work on anything except x86/amd64/arm
 # due to lack of atomic ops, bug 325185
@@ -165,7 +162,7 @@ app-emulation/wine gstreamer
 
 # Andrey Grozin <grozin@gentoo.org> (24 Dec 2009)
 # openmcl (aka clozurecl) is only available on x86 and amd64
-sci-mathematics/maxima -openmcl -clozurecl
+sci-mathematics/maxima -clozurecl
 
 # Mounir Lamouri <volkmar@gentoo.org> (07 Nov 2009)
 # Masked in base, unmak for amd64/x86. Bug 267264

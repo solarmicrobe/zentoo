@@ -8,6 +8,6 @@ inherit vim-plugin
 
 DESCRIPTION="vim plugin: Syntax highlighting for GLib, Gtk+, Xlib, Gimp, Gnome, and more"
 HOMEPAGE="http://www.vim.org/scripts/script.php?script_id=1000"
-LICENSE="as-is"
+LICENSE="vim.org"
 KEYWORDS="amd64"
 IUSE=""

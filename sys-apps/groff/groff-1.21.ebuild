@@ -56,6 +56,8 @@ src_unpack() {
 		eautoconf
 		eautoheader
 	fi
+
+	epatch "${FILESDIR}"/${PN}-1.21-gnulib-cross.patch #363647
 }
 
 src_compile() {

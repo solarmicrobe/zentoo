@@ -1,6 +1,6 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/use.mask,v 1.141 2012/06/08 13:08:52 chithanh Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/use.mask,v 1.152 2012/12/20 05:58:56 floppym Exp $
 
 # not ready for primetime
 packagekit
@@ -91,6 +91,7 @@ nvidia
 
 # dev-db/oracle-instantclient-basic is only available on x86
 oci8-instant-client
+oracle
 
 # net-libs/osptoolkit is only available on x86 (used by asterisk, bug 115798)
 osp
@@ -278,3 +279,42 @@ kqueue
 # Still using obsolete V4L1 wrt bug 350211
 # If fixed, should be unmasked in amd64/x86/ppc32 use.mask
 dxr3
+
+# Ralph Sennhauser <sera@gentoo.org> (31 Jul 2012)
+# Unmask in arch specific profiles when jython implementaton is available.
+python_targets_jython2_5
+python_targets_jython2_7
+python_targets_jython3_1
+python_single_target_jython2_5
+python_single_target_jython2_7
+python_single_target_jython3_1
+
+# Diego Elio Pettenò <flameeyes@gentoo.org> (18 Aug 2012)
+# Prelude is being masked for removal
+prelude
+
+# Diego Elio Pettenò <flameeyes@gentoo.org> (21 Aug 2012)
+# IPMI is only implemented for x86, amd64 and ia64
+ipmi
+
+# Diego Elio Pettenò <flameeyes@gentoo.org> (27 Aug 2012)
+# netlink is a Linux-specific interface
+netlink
+
+# Mike Gilbert <floppym@gentoo.org> (08 Oct 2012)
+# Python 3.3 is masked for testing.
+python_targets_python3_3
+python_single_target_python3_3
+
+# Luca barbato <lu_zero@gentoo.org> (14 Oct 2012)
+# Pending keywording on arches
+fdk
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (09 Dec 2012)
+# dev-lang/orc is useful only for some specific arches (amd64/x86/arm/...)
+orc
+
+# Mike Gilbert <floppym@gentoo.org> (20 Dec 2012)
+# Mask for testing.
+python_targets_pypy2_0
+python_single_target_pypy2_0

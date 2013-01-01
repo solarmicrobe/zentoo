@@ -13,13 +13,15 @@ SRC_URI="http://primates.ximian.com/~flucifredi/man/${P}.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="+lzma nls"
+IUSE="+lzma nls selinux"
 
-DEPEND="nls? ( sys-devel/gettext )"
+DEPEND="nls? ( sys-devel/gettext )
+		selinux? ( sec-policy/selinux-makewhatis )"
 RDEPEND="|| ( >=sys-apps/groff-1.19.2-r1 app-doc/heirloom-doctools )
 	!sys-apps/man-db
 	!<app-arch/lzma-4.63
-	lzma? ( app-arch/xz-utils )"
+	lzma? ( app-arch/xz-utils )
+	selinux? ( sec-policy/selinux-makewhatis )"
 
 pkg_setup() {
 	enewgroup man 15

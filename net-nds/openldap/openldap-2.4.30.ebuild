@@ -33,7 +33,7 @@ RDEPEND="sys-libs/ncurses
 	icu? ( dev-libs/icu )
 	tcpd? ( sys-apps/tcp-wrappers )
 	ssl? ( !gnutls? ( dev-libs/openssl )
-		gnutls? ( net-libs/gnutls ) )
+		gnutls? ( net-libs/gnutls dev-libs/libgcrypt ) )
 	sasl? ( dev-libs/cyrus-sasl )
 	!minimal? (
 		odbc? ( !iodbc? ( dev-db/unixODBC )

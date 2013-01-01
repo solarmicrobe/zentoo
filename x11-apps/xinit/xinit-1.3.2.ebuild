@@ -35,7 +35,7 @@ pkg_setup() {
 	xorg-2_pkg_setup
 
 	XORG_CONFIGURE_OPTIONS=(
-		--with-xinitdir=/etc/X11/xinit
+		--with-xinitdir="${EPREFIX}"/etc/X11/xinit
 	)
 }
 

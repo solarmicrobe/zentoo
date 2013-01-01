@@ -15,10 +15,9 @@ IUSE=""
 
 DEPEND=""
 RDEPEND="|| (
-		sys-fs/udev
+		virtual/udev
 		sys-apps/busybox[mdev]
 		sys-fs/devfsd
 		sys-fs/static-dev
 		sys-freebsd/freebsd-sbin
-		>=sys-apps/systemd-186
 	)"

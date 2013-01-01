@@ -4,6 +4,8 @@
 
 EAPI=4
 
+inherit toolchain-funcs
+
 DESCRIPTION="A tool to query or alter a process' scheduling policy."
 HOMEPAGE="http://freequaos.host.sk/schedtool"
 SRC_URI="http://freequaos.host.sk/${PN}/${P}.tar.bz2"
@@ -14,10 +16,14 @@ KEYWORDS="amd64"
 IUSE=""
 
 src_prepare() {
-	sed -i '/^CFLAGS=/d;/^install:/s/install-doc//' Makefile
+	sed -i '/^CFLAGS=/d;/^install:/s/install-doc//' Makefile || die
+}
+
+src_compile() {
+	emake CC="$(tc-getCC)"
 }
 
 src_install() {
-	make DESTPREFIX="${D}"/usr install || die
+	emake DESTPREFIX="${D}"/usr install
 	dodoc CHANGES INSTALL PACKAGERS README SCHED_DESIGN TODO TUNING
 }

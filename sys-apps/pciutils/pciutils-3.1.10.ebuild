@@ -75,8 +75,10 @@ src_install() {
 }
 
 pkg_postinst() {
-	elog "The 'pcimodules' program has been replaced by 'lspci -k'"
-	elog ""
-	elog "The 'network-cron' USE flag is gone; if you want a more up-to-date"
-	elog "pci.ids file, you should use sys-apps/hwids-99999999 (live ebuild)."
+	if [[ ${REPLACING_VERSIONS} ]] && [[ ${REPLACING_VERSIONS} < 3.1.10 ]]; then
+		elog "The 'pcimodules' program has been replaced by 'lspci -k'"
+		elog ""
+		elog "The 'network-cron' USE flag is gone; if you want a more up-to-date"
+		elog "pci.ids file, you should use sys-apps/hwids-99999999 (live ebuild)."
+	fi
 }

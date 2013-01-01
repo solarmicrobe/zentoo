@@ -21,10 +21,10 @@ SRC_URI="mirror://openbsd/OpenSSH/portable/${PARCH}.tar.gz
 	${X509_PATCH:+X509? ( http://roumenpetrov.info/openssh/x509-${X509_VER}/${X509_PATCH} )}
 	"
 
-LICENSE="as-is"
+LICENSE="BSD"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="${HPN_PATCH:++}hpn kerberos ldap libedit pam selinux skey static tcpd X X509"
+IUSE="bindist ${HPN_PATCH:++}hpn kerberos ldap libedit pam selinux skey static tcpd X X509"
 
 RDEPEND="pam? ( virtual/pam )
 	kerberos? ( virtual/krb5 )
@@ -32,7 +32,7 @@ RDEPEND="pam? ( virtual/pam )
 	skey? ( >=sys-auth/skey-1.1.5-r1 )
 	ldap? ( net-nds/openldap )
 	libedit? ( dev-libs/libedit )
-	>=dev-libs/openssl-0.9.6d
+	>=dev-libs/openssl-0.9.6d:0[bindist=]
 	>=sys-libs/zlib-1.2.3
 	tcpd? ( >=sys-apps/tcp-wrappers-7.6 )
 	X? ( x11-apps/xauth )

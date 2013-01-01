@@ -11,5 +11,5 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-DEPEND="|| ( sys-devel/bison dev-util/yacc )"
+DEPEND="|| ( sys-devel/bison dev-util/byacc dev-util/yacc )"
 RDEPEND="${DEPEND}"

@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=4
 
 inherit eutils multilib autotools user toolchain-funcs
 
@@ -93,6 +93,12 @@ src_install () {
 	doins pdns/*.hh
 	insinto /usr/include/pdns/backends/gsql
 	doins pdns/backends/gsql/*.hh
+
+	if use ldap
+	then
+		insinto /etc/openldap/schema
+		doins "${FILESDIR}"/dnsdomain2.schema
+	fi
 
 	rm -f "${D}"/usr/$(get_libdir)/powerdns/*.{a,la}
 }

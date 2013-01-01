@@ -10,7 +10,7 @@ DESCRIPTION="Virtual for servlet api"
 HOMEPAGE="http://java.sun.com/products/servlet/"
 SRC_URI=""
 
-LICENSE="as-is"
+LICENSE="public-domain"
 SLOT="${PV}"
 KEYWORDS="amd64"
 IUSE=""

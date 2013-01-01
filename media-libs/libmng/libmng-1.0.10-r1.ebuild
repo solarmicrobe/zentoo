@@ -9,7 +9,7 @@ DESCRIPTION="Multiple Image Networkgraphics lib (animated png's)"
 HOMEPAGE="http://www.libmng.com/"
 SRC_URI="mirror://sourceforge/libmng/${P}.tar.gz"
 
-LICENSE="as-is"
+LICENSE="libmng"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="lcms static-libs"

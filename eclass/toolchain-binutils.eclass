@@ -143,7 +143,6 @@ tc-binutils_apply_patches() {
 	cd "${S}"
 
 	if ! use vanilla ; then
-		[[ ${SYMLINK_LIB} != "yes" ]] && EPATCH_EXCLUDE+=" 65_all_binutils-*-amd64-32bit-path.patch"
 		if [[ -n ${PATCHVER} ]] ; then
 			EPATCH_SOURCE=${WORKDIR}/patch
 			if [[ ${CTARGET} == mips* ]] ; then
@@ -253,7 +252,14 @@ toolchain-binutils_src_compile() {
 		myconf+=( $(use_with zlib) )
 	fi
 
-	use multitarget && myconf+=( --enable-targets=all )
+	# For bi-arch systems, enable a 64bit bfd.  This matches
+	# the bi-arch logic in toolchain.eclass. #446946
+	# We used to do it for everyone, but it's slow on 32bit arches. #438522
+	case $(tc-arch) in
+	ppc|sparc|x86) myconf+=( --enable-64-bit-bfd ) ;;
+	esac
+
+	use multitarget && myconf+=( --enable-targets=all --enable-64-bit-bfd )
 	[[ -n ${CBUILD} ]] && myconf+=( --build=${CBUILD} )
 	is_cross && myconf+=( --with-sysroot=/usr/${CTARGET} )
 
@@ -273,7 +279,6 @@ toolchain-binutils_src_compile() {
 		--libdir=${LIBPATH}
 		--libexecdir=${LIBPATH}
 		--includedir=${INCPATH}
-		--enable-64-bit-bfd
 		--enable-obsolete
 		--enable-shared
 		--enable-threads
@@ -357,7 +362,17 @@ toolchain-binutils_src_install() {
 		fi
 	fi
 	insinto ${INCPATH}
-	doins "${S}/include/libiberty.h"
+	local libiberty_headers=(
+		# Not all the libiberty headers.  See libiberty/Makefile.in:install_to_libdir.
+		demangle.h
+		dyn-string.h
+		fibheap.h
+		hashtab.h
+		libiberty.h
+		objalloc.h
+		splay-tree.h
+	)
+	doins "${libiberty_headers[@]/#/${S}/include/}" || die
 	if [[ -d ${D}/${LIBPATH}/lib ]] ; then
 		mv "${D}"/${LIBPATH}/lib/* "${D}"/${LIBPATH}/
 		rm -r "${D}"/${LIBPATH}/lib

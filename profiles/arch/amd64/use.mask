@@ -1,11 +1,24 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/use.mask,v 1.32 2012/03/05 14:28:47 hd_brummy Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/arch/amd64/use.mask,v 1.38 2012/12/09 08:02:53 tetromino Exp $
 
 # Unmask the flag which corresponds to ARCH.
 -amd64
 
 # SECTION: Unmask
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (09 Dec 2012)
+# Orc optimisations work fine on amd64 and x86
+-orc
+
+# Diego Elio Pettenò <flameeyes@gentoo.org> (21 Aug 2012)
+# IPMI is only implemented for x86, amd64 and ia64
+-ipmi
+
+# Ralph Sennhauser <sera@gentoo.org> (31 Jul 2012)
+# Keywored on amd64
+-python_targets_jython2_5
+-python_single_target_jython2_5
 
 # Joerg Bornkessel <hd_brummy@gentoo.org> (05. Mar 2012)
 # Unmask, works with v4l2, #350211
@@ -56,6 +69,7 @@
 # 2007/08/19 - Christoph Mende <angelos@gentoo.org>
 # Unmask support for dev-db/oracle-instantclient-basic
 -oci8-instant-client
+-oracle
 
 # 2007/03/10 - Mike Frysinger <vapier@gentoo.org>
 # NVRAM works on x86/amd64 hosts
@@ -159,5 +173,8 @@ gcc64
 # 2007/02/04 - Simon Stelling <blubb@gentoo.org>
 # games-emulation/caps is 32bit only, while app-emulation/e-uae is 64bit; bug 158416
 capslib
+
+# fdk-aac is already keyworded here
+-fdk
 
 # NOT NECESSARY - SECTION

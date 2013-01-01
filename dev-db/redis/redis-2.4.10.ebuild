@@ -15,10 +15,9 @@ KEYWORDS="amd64"
 IUSE="+jemalloc tcmalloc test"
 SLOT="0"
 
-RDEPEND=""
+RDEPEND="tcmalloc? ( dev-util/google-perftools )
+	jemalloc? ( dev-libs/jemalloc )"
 DEPEND=">=sys-devel/autoconf-2.63
-	tcmalloc? ( dev-util/google-perftools )
-	jemalloc? ( dev-libs/jemalloc )
 	test? ( dev-lang/tcl )
 	${RDEPEND}"
 REQUIRED_USE="tcmalloc? ( !jemalloc )

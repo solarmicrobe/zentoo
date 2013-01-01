@@ -95,8 +95,7 @@ src_install() {
 	dodoc HISTORY README
 	dohtml doc/*.html doc/*.png doc/*.css doc/*.gif
 
-	insinto /usr/share/pixmaps
-	doins etc/lua.ico
+	doicon etc/lua.ico
 	insinto /usr/$(get_libdir)/pkgconfig
 	doins etc/lua.pc
 

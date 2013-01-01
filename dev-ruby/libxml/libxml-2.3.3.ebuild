@@ -18,7 +18,7 @@ inherit ruby-fakegem
 DESCRIPTION="Ruby libxml with a user friendly API, akin to REXML, but feature complete and significantly faster."
 HOMEPAGE="https://github.com/xml4r/libxml-ruby"
 
-LICENSE="as-is"
+LICENSE="MIT"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""

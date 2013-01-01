@@ -70,7 +70,6 @@ src_install() {
 
 pkg_postinst() {
 	distutils_pkg_postinst
-
 	einfo "You are now ready to add overlays into your system."
 	einfo
 	einfo "  layman -L"
@@ -83,7 +82,12 @@ pkg_postinst() {
 	elog
 	elog  "If this is the very first overlay you add with layman,"
 	elog  "you need to append the following statement to your"
-	elog  "/etc/make.conf file:"
+	# This relates to #441902 bug.
+	if [[ -e "${ROOT}"/etc/portage/make.conf ]] ; then
+		elog  "/etc/portage/make.conf file:"
+	else
+		elog "/etc/make.conf file:"
+	fi
 	elog
 	elog  "  source /var/lib/layman/make.conf"
 	elog

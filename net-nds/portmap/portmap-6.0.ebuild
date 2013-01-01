@@ -8,7 +8,7 @@ DESCRIPTION="daemon for implementing remote procedure calls between computer pro
 HOMEPAGE="http://neil.brown.name/portmap/"
 SRC_URI="http://neil.brown.name/portmap/${P}.tgz"
 
-LICENSE="as-is"
+LICENSE="BSD GPL-2" # GPL-2 only for init script
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="selinux tcpd"

@@ -77,7 +77,7 @@ src_prepare() {
 src_configure() {
 	# - Set SYSCONFDIR explicitly so we can't get bitten by bug 48205 again
 	#	(just to be sure, nobody knows how it could happen in the first place).
-	myconf="SYSCONFDIR=/etc DATADIR=/usr/share/spamassassin"
+	myconf="SYSCONFDIR=${EPREFIX}/etc DATADIR=${EPREFIX}/usr/share/spamassassin"
 
 	# If ssl is enabled, spamc can be built with ssl support
 	if use ssl; then
@@ -90,7 +90,7 @@ src_configure() {
 	# create the initial sharpbang line in the scripts and might cause
 	# a versioned app name end in there, see
 	# <http://bugs.gentoo.org/show_bug.cgi?id=62276>
-	myconf+=" PERL_BIN=/usr/bin/perl"
+	myconf+=" PERL_BIN=${EPREFIX}/usr/bin/perl"
 
 	# Add Gentoo tag to make it easy for the upstream devs to spot
 	# possible modifications or patches.
@@ -127,35 +127,35 @@ src_install () {
 
 	# Move spamd to sbin where it belongs.
 	dodir /usr/sbin
-	mv "${D}"/usr/bin/spamd "${D}"/usr/sbin/spamd  || die "move spamd failed"
+	mv "${ED}"/usr/bin/spamd "${ED}"/usr/sbin/spamd  || die "move spamd failed"
 
 	if use qmail; then
 		dobin spamc/qmail-spamc
 	fi
 
-	ln -s mail/spamassassin "${D}"/etc/spamassassin || die
+	ln -s mail/spamassassin "${ED}"/etc/spamassassin || die
 
 	# Disable plugin by default
-	sed -i -e 's/^loadplugin/\#loadplugin/g' "${D}"/etc/mail/spamassassin/init.pre || die
+	sed -i -e 's/^loadplugin/\#loadplugin/g' "${ED}"/etc/mail/spamassassin/init.pre || die
 
 	# Add the init and config scripts.
 	newinitd "${FILESDIR}"/3.3.1-spamd.init spamd
 	newconfd "${FILESDIR}"/3.0.0-spamd.conf spamd
 
 	if use postgres; then
-		sed -i -e 's:@USEPOSTGRES@::' "${D}/etc/init.d/spamd"
+		sed -i -e 's:@USEPOSTGRES@::' "${ED}/etc/init.d/spamd"
 
 		dodoc sql/*_pg.sql
 	else
-		sed -i -e '/@USEPOSTGRES@/d' "${D}/etc/init.d/spamd"
+		sed -i -e '/@USEPOSTGRES@/d' "${ED}/etc/init.d/spamd"
 	fi
 
 	if use mysql; then
-		sed -i -e 's:@USEMYSQL@::' "${D}/etc/init.d/spamd"
+		sed -i -e 's:@USEMYSQL@::' "${ED}/etc/init.d/spamd"
 
 		dodoc sql/*_mysql.sql
 	else
-		sed -i -e '/@USEMYSQL@/d' "${D}/etc/init.d/spamd"
+		sed -i -e '/@USEMYSQL@/d' "${ED}/etc/init.d/spamd"
 	fi
 
 	dodoc NOTICE TRADEMARK CREDITS INSTALL.VMS UPGRADE USAGE \
@@ -172,7 +172,7 @@ src_install () {
 		dodoc spamc/README.qmail
 	fi
 
-	cp "${FILESDIR}"/secrets.cf "${D}"/etc/mail/spamassassin/secrets.cf.example || die
+	cp "${FILESDIR}"/secrets.cf "${ED}"/etc/mail/spamassassin/secrets.cf.example || die
 	fperms 0400 /etc/mail/spamassassin/secrets.cf.example
 
 	cat <<-EOF > "${T}/local.cf.example"

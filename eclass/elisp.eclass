@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # @ECLASS: elisp.eclass
@@ -75,7 +75,6 @@ esac
 
 DEPEND=">=virtual/emacs-${NEED_EMACS:-21}"
 RDEPEND="${DEPEND}"
-IUSE=""
 
 # @FUNCTION: elisp_pkg_setup
 # @DESCRIPTION:

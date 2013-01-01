@@ -52,5 +52,5 @@ src_install() {
 
 	# fuser is needed by init.d scripts
 	dodir /bin
-	mv -vf "${ED}"/usr/bin/fuser "${ED}"/bin || die
+	mv "${ED}"/usr/bin/fuser "${ED}"/bin || die
 }
