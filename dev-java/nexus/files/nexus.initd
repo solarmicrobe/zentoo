@@ -1,0 +1,19 @@
+#!/sbin/runscript
+# Copyright 1999-2013 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+pidfile="/var/run/nexus/nexus.pid"
+command="/opt/nexus/bin/jsw/linux-x86-64/wrapper"
+command_args="/opt/nexus/bin/jsw/conf/wrapper.conf wrapper.syslog.ident=nexus wrapper.pidfile=${pidfile} wrapper.daemonize=TRUE"
+command_user="nexus"
+command_group="nexus"
+
+depend() {
+	need net
+	use dns logger
+}
+
+start_pre() {
+	checkpath -q -d -m 0755 -o ${command_user}:${command_group} /var/run/nexus
+}
