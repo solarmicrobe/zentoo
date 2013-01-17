@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -61,9 +61,8 @@ src_prepare() {
 src_install() {
 	distutils_src_install
 
-	doinitd "${FILESDIR}/${PN}"
-	newconfd "${FILESDIR}/openerp-confd" "${PN}"
-	keepdir /var/run/openerp
+	newinitd "${FILESDIR}/${PN}.initd" ${PN}
+	newconfd "${FILESDIR}/${PN}.confd" ${PN}
 	keepdir /var/log/openerp
 
 	insinto /etc/logrotate.d
@@ -80,8 +79,6 @@ pkg_preinst() {
 	fowners ${OPENERP_USER}:${OPENERP_GROUP} /var/run/openerp
 	fowners ${OPENERP_USER}:${OPENERP_GROUP} /var/log/openerp
 	fowners -R ${OPENERP_USER}:${OPENERP_GROUP} "$(python_get_sitedir)/${PN}/addons/"
-
-	use postgres || sed -i '8,11d' "${D}/etc/init.d/openerp" || die "sed failed"
 }
 
 pkg_postinst() {
