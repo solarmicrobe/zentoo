@@ -1,11 +1,16 @@
 #!/sbin/runscript
 
+pidfile="${PIDFILE}"
 command="/usr/bin/openerp-server"
 command_args="-c ${CONFIGFILE}"
-start_stop_daemon_args="--user ${USER} --group ${USER}"
-background="true"
-pidfile="${PIDFILE}"
+command_background="true"
+command_user="${USER}"
+command_group="${USER}"
 
 depend() {
 	after postgresql
+}
+
+start_pre() {
+	checkpath -q -d -m 0755 -o ${USER}:${GROUP} /var/run/openerp
 }
