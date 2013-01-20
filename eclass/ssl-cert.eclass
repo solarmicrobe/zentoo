@@ -12,10 +12,24 @@
 # @EXAMPLE:
 # "install_cert /foo/bar" installs ${ROOT}/foo/bar.{key,csr,crt,pem}
 
-# Conditionally depend on OpenSSL: allows inheretence
-# without pulling extra packages if not needed
-DEPEND="ssl? ( dev-libs/openssl )"
-IUSE="ssl"
+# @ECLASS-VARIABLE: SSL_CERT_MANDATORY
+# @DESCRIPTION:
+# Set to non zero if ssl-cert is mandatory for ebuild.
+#
+SSL_CERT_MANDATORY="${SSL_CERT_MANDATORY:-0}"
+
+# @ECLASS-VARIABLE: SSL_CERT_USE
+# @DESCRIPTION:
+# Use flag to append dependency to.
+#
+SSL_CERT_USE="${SSL_CERT_USE:-ssl}"
+
+if [[ "${SSL_CERT_MANDATORY}" = 0 ]]; then
+	DEPEND="${SSL_CERT_USE}? ( dev-libs/openssl )"
+	IUSE="${SSL_CERT_USE}"
+else
+	DEPEND="dev-libs/openssl"
+fi
 
 # @FUNCTION: gen_cnf
 # @USAGE:

@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -10,7 +10,7 @@ DESCRIPTION="Shared Memory Abstraction Library"
 HOMEPAGE="http://www.ossp.org/pkg/lib/mm/"
 SRC_URI="ftp://ftp.ossp.org/pkg/lib/mm/${P}.tar.gz"
 
-LICENSE="as-is"
+LICENSE="mm"
 SLOT="1.2"
 KEYWORDS="amd64"
 IUSE=""

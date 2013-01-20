@@ -48,6 +48,18 @@ systemd_get_unitdir() {
 	echo "${EPREFIX}$(_systemd_get_unitdir)"
 }
 
+# @FUNCTION: systemd_get_userunitdir
+# @DESCRIPTION:
+# Output the path for the systemd user unit directory (not including
+# ${D}). This function always succeeds, even if systemd is not
+# installed.
+systemd_get_userunitdir() {
+	has "${EAPI:-0}" 0 1 2 && ! use prefix && EPREFIX=
+	debug-print-function ${FUNCNAME} "${@}"
+
+	echo "${EPREFIX}/usr/lib/systemd/user"
+}
+
 # @FUNCTION: systemd_get_utildir
 # @DESCRIPTION:
 # Output the path for the systemd utility directory (not including
@@ -182,4 +194,27 @@ systemd_to_myeconfargs() {
 		"${myeconfargs[@]}"
 		--with-systemdsystemunitdir="$(systemd_get_unitdir)"
 	)
+}
+
+# @FUNCTION: systemd_update_catalog
+# @DESCRIPTION:
+# Update the journald catalog. This needs to be called after installing
+# or removing catalog files.
+#
+# If systemd is not installed, no operation will be done. The catalog
+# will be (re)built once systemd is installed.
+#
+# See: http://www.freedesktop.org/wiki/Software/systemd/catalog
+systemd_update_catalog() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	# Make sure to work on the correct system.
+	local journalctl=${EPREFIX}/usr/bin/journalctl
+	if [[ -x ${journalctl} ]]; then
+		ebegin "Updating systemd journal catalogs"
+		journalctl --update-catalog
+		eend $?
+	else
+		debug-print "${FUNCNAME}: journalctl not found."
+	fi
 }

@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: haskell-cabal.eclass
@@ -131,11 +131,6 @@ if [[ -z ${CABAL_MIN_VERSION} ]]; then
 fi
 if [[ -z "${CABAL_BOOTSTRAP}" && -z "${CABAL_FROM_GHC}" ]]; then
 	DEPEND="${DEPEND} >=dev-haskell/cabal-${CABAL_MIN_VERSION}"
-fi
-
-# Libraries require GHC to be installed.
-if [[ -n "${CABAL_HAS_LIBRARIES}" ]]; then
-	RDEPEND="${RDEPEND} dev-lang/ghc"
 fi
 
 # returns the version of cabal currently in use
@@ -383,6 +378,9 @@ cabal-is-dummy-lib() {
 # exported function: check if cabal is correctly installed for
 # the currently active ghc (we cannot guarantee this with portage)
 haskell-cabal_pkg_setup() {
+	if [[ -n ${CABAL_HAS_LIBRARIES} ]]; then
+		[[ ${RDEPEND} == *dev-lang/ghc* ]] || eqawarn "QA Notice: A library does not have runtime dependency on dev-lang/ghc."
+	fi
 	if [[ -z "${CABAL_HAS_BINARIES}" ]] && [[ -z "${CABAL_HAS_LIBRARIES}" ]]; then
 		eqawarn "QA Notice: Neither bin nor lib are in CABAL_FEATURES."
 	fi
@@ -513,6 +511,8 @@ haskell-cabal_src_install() {
 	popd > /dev/null
 }
 
+# @FUNCTION: cabal_flag
+# @DESCRIPTION:
 # ebuild.sh:use_enable() taken as base
 #
 # Usage examples:

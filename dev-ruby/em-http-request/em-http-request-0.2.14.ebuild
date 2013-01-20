@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -26,7 +26,7 @@ RESTRICT="test"
 
 ruby_add_rdepend ">=dev-ruby/addressable-2.0.0 >=dev-ruby/eventmachine-0.12.9"
 
-ruby_add_bdepend "test? ( dev-ruby/rspec:0 )"
+#ruby_add_bdepend "test? ( dev-ruby/rspec:0 )"
 
 each_ruby_configure() {
 	for dir in http11_client buffer ; do

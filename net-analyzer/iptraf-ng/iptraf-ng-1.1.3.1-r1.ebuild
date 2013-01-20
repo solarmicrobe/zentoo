@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -36,6 +36,7 @@ src_configure() { :; }
 
 src_compile() {
 	tc-export CC
+	CFLAGS+=' -DLOCKDIR=\"/run/lock/iptraf-ng\"'
 	emake
 }
 
@@ -46,5 +47,5 @@ src_install() {
 	dodoc AUTHORS CHANGES FAQ README* RELEASE-NOTES
 	use doc && dohtml -a gif,html,png -r Documentation/*
 
-	keepdir /var/{lib,log,lock}/iptraf-ng #376157
+	keepdir /var/{lib,log}/iptraf-ng #376157
 }

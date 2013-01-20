@@ -5,6 +5,10 @@
 		<email>djc@gentoo.org</email>
 		<name>Dirkjan Ochtman</name>
 	</maintainer>
+	<maintainer>
+		<email>qnikst@gentoo.org</email>
+		<name>Alexander Vershilov</name>
+	</maintainer>
 	<upstream>
 		<maintainer>
 			<email>sustrik@fastmq.com</email>
@@ -24,4 +28,11 @@
 		(subscriptions), seamless access to multiple transport protocols
 		and more.
 	</longdescription>
+	<use>
+		<flag name="pgm">
+			0MQ is build with 'Pragmatic General Multicast' (RFC 3208) support
+			using the excellent OpenPGM implementation.
+		</flag>
+	</use>
 </pkgmetadata>
+

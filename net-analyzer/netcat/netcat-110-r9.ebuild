@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,7 +14,7 @@ SRC_URI="mirror://sourceforge/nc110/${MY_P}.tgz
 	ftp://sith.mimuw.edu.pl/pub/users/baggins/IPv6/nc-v6-20000918.patch.gz
 	mirror://gentoo/${P}-patches-${PATCH_VER}.tar.bz2"
 
-LICENSE="as-is"
+LICENSE="netcat"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="crypt ipv6 static"

@@ -1,10 +1,9 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: python-r1
 # @MAINTAINER:
-# Michał Górny <mgorny@gentoo.org>
-# Python herd <python@gentoo.org>
+# Python team <python@gentoo.org>
 # @AUTHOR:
 # Author: Michał Górny <mgorny@gentoo.org>
 # Based on work of: Krzysztof Pawlik <nelchael@gentoo.org>
@@ -145,7 +144,7 @@ _python_set_globals() {
 	optflags+=,${flags_st[@]/%/(-)}
 
 	IUSE=${flags[*]}
-	REQUIRED_USE="|| ( ${flags[*]} )"
+	#REQUIRED_USE="|| ( ${flags[*]} )"
 	PYTHON_USEDEP=${optflags// /,}
 
 	# 1) well, python-exec would suffice as an RDEP
@@ -161,8 +160,29 @@ _python_set_globals() {
 }
 _python_set_globals
 
+# @FUNCTION: _python_validate_useflags
+# @INTERNAL
+# @DESCRIPTION:
+# Enforce the proper setting of PYTHON_TARGETS.
+_python_validate_useflags() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	local i
+
+	for i in "${PYTHON_COMPAT[@]}"; do
+		use "python_targets_${i}" && return 0
+	done
+
+	eerror "No Python implementation selected for the build. Please add one"
+	eerror "of the following values to your PYTHON_TARGETS (in make.conf):"
+	eerror
+	eerror "${PYTHON_COMPAT[@]}"
+	echo
+	die "No supported Python implementation in PYTHON_TARGETS."
+}
+
 # @FUNCTION: python_gen_usedep
-# @USAGE: pattern [...]
+# @USAGE: <pattern> [...]
 # @DESCRIPTION:
 # Output a USE dependency string for Python implementations which
 # are both in PYTHON_COMPAT and match any of the patterns passed
@@ -205,7 +225,7 @@ python_gen_usedep() {
 }
 
 # @FUNCTION: python_gen_useflags
-# @USAGE: pattern [...]
+# @USAGE: <pattern> [...]
 # @DESCRIPTION:
 # Output a list of USE flags for Python implementations which
 # are both in PYTHON_COMPAT and match any of the patterns passed
@@ -239,6 +259,49 @@ python_gen_useflags() {
 	echo ${matches[@]}
 }
 
+# @FUNCTION: python_gen_cond_dep
+# @USAGE: <dependency> <pattern> [...]
+# @DESCRIPTION:
+# Output a list of <dependency>-ies made conditional to USE flags
+# of Python implementations which are both in PYTHON_COMPAT and match
+# any of the patterns passed as the remaining parameters.
+#
+# Please note that USE constraints on the package need to be enforced
+# separately. Therefore, the dependency usually needs to use
+# python_gen_usedep as well.
+#
+# Example:
+# @CODE
+# PYTHON_COMPAT=( python{2_5,2_6,2_7} )
+# RDEPEND="$(python_gen_cond_dep dev-python/unittest2 python{2_5,2_6})"
+# @CODE
+#
+# It will cause the variable to look like:
+# @CODE
+# RDEPEND="python_targets_python2_5? ( dev-python/unittest2 )
+#	python_targets_python2_6? ( dev-python/unittest2 )"
+# @CODE
+python_gen_cond_dep() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	local impl pattern
+	local matches=()
+
+	local dep=${1}
+	shift
+
+	for impl in "${PYTHON_COMPAT[@]}"; do
+		for pattern; do
+			if [[ ${impl} == ${pattern} ]]; then
+				matches+=( "python_targets_${impl}? ( ${dep} )" )
+				break
+			fi
+		done
+	done
+
+	echo ${matches[@]}
+}
+
 # @ECLASS-VARIABLE: BUILD_DIR
 # @DESCRIPTION:
 # The current build directory. In global scope, it is supposed to
@@ -263,6 +326,8 @@ python_gen_useflags() {
 # directories respecting BUILD_DIR.
 python_copy_sources() {
 	debug-print-function ${FUNCNAME} "${@}"
+
+	_python_validate_useflags
 
 	local impl
 	local bdir=${BUILD_DIR:-${S}}
@@ -339,6 +404,10 @@ _python_check_USE_PYTHON() {
 			# is installed.
 			if [[ ! ${py2+1} && ${dis_py2} ]]; then
 				debug-print "${FUNCNAME}: -> all py2 versions disabled"
+				if ! has python2_7 "${PYTHON_COMPAT[@]}"; then
+					debug-print "${FUNCNAME}: ---> package does not support 2.7"
+					return 0
+				fi
 				if has_version '=dev-lang/python-2*'; then
 					debug-print "${FUNCNAME}: ---> but =python-2* installed!"
 					return 1
@@ -346,6 +415,10 @@ _python_check_USE_PYTHON() {
 			fi
 			if [[ ! ${py3+1} && ${dis_py3} ]]; then
 				debug-print "${FUNCNAME}: -> all py3 versions disabled"
+				if ! has python3_2 "${PYTHON_COMPAT[@]}"; then
+					debug-print "${FUNCNAME}: ---> package does not support 3.2"
+					return 0
+				fi
 				if has_version '=dev-lang/python-3*'; then
 					debug-print "${FUNCNAME}: ---> but =python-3* installed!"
 					return 1
@@ -491,6 +564,7 @@ _python_check_USE_PYTHON() {
 python_foreach_impl() {
 	debug-print-function ${FUNCNAME} "${@}"
 
+	_python_validate_useflags
 	_python_check_USE_PYTHON
 
 	local impl
@@ -520,6 +594,8 @@ python_foreach_impl() {
 python_export_best() {
 	debug-print-function ${FUNCNAME} "${@}"
 
+	_python_validate_useflags
+
 	[[ ${#} -gt 0 ]] || set -- EPYTHON PYTHON
 
 	local impl best
@@ -546,6 +622,8 @@ python_export_best() {
 # having a matching shebang will be refused.
 python_replicate_script() {
 	debug-print-function ${FUNCNAME} "${@}"
+
+	_python_validate_useflags
 
 	local suffixes=()
 

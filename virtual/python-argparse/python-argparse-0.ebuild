@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,7 +21,7 @@ setup_globals() {
 	RDEPEND=
 	for i in "${PYTHON_COMPAT[@]}"; do
 		case "${i}" in
-			python2_5|python2_6|jython2_5)
+			python2_5|python2_6|python3_1|jython2_5)
 				# Note: add USE-deps when dev-python/argparse starts
 				# supporting PYTHON_TARGETS
 				RDEPEND+=" python_targets_${i}? ( dev-python/argparse )"

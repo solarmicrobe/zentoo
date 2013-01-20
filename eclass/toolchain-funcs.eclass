@@ -361,7 +361,7 @@ ninj() { [[ ${type} == "kern" ]] && echo $1 || echo $2 ; }
 	ewarn "QA: Kernel version could not be determined, please inherit kernel-2 or linux-info"
 
 	case ${host} in
-		aarch64*)	ninj aarch64 arm;;
+		aarch64*)	ninj arm64 arm;;
 		alpha*)		echo alpha;;
 		arm*)		echo arm;;
 		avr*)		ninj avr32 avr;;

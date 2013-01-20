@@ -17,7 +17,8 @@ inherit eutils multilib php-ext-source-r2
 DESCRIPTION="An ISO-C:1999 API and corresponding CLI for the generation of DCE 1.1, ISO/IEC 11578:1996 and RFC 4122 compliant UUID."
 HOMEPAGE="http://www.ossp.org/pkg/lib/uuid/"
 SRC_URI="ftp://ftp.ossp.org/pkg/lib/uuid/${MY_P}.tar.gz"
-LICENSE="as-is"
+
+LICENSE="ISC"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="+cxx php"
@@ -34,7 +35,7 @@ src_prepare() {
 	if use php; then
 		local slot
 		for slot in $(php_get_slots); do
-	        php_init_slot_env ${slot}
+			php_init_slot_env ${slot}
 			epatch "${FILESDIR}/${P}-gentoo-php.patch"
 		done
 

@@ -20,7 +20,7 @@ HOMEPAGE="http://libjpeg-turbo.virtualgl.org/ http://sourceforge.net/projects/li
 SRC_URI="${SRC_URI}
 	mirror://debian/pool/main/libj/libjpeg${JPEG_ABI}/libjpeg${JPEG_ABI}_${JPEG_ABI}d-1.debian.tar.gz"
 
-LICENSE="BSD"
+LICENSE="BSD IJG"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="java static-libs"

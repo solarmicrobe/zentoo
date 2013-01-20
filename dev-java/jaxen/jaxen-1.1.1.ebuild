@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -11,7 +11,7 @@ DESCRIPTION="A Java XPath Engine"
 HOMEPAGE="http://jaxen.org/"
 SRC_URI="http://dist.codehaus.org/${PN}/distributions/${MY_P}-src.tar.gz"
 
-LICENSE="jaxen"
+LICENSE="JDOM"
 SLOT="1.1"
 KEYWORDS="amd64"
 IUSE="doc source test"

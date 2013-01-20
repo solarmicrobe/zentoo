@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -13,7 +13,7 @@ DESCRIPTION="An implementation of XMLPULL V1 API."
 HOMEPAGE="http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/index.html"
 SRC_URI="http://www.extreme.indiana.edu/dist/java-repository/${PN}/distributions/${MY_P}_src.zip"
 
-LICENSE="as-is"
+LICENSE="Apache-1.1 IBM JDOM LGPL-2.1+"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="test"

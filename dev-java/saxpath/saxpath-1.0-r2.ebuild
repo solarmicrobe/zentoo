@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -9,7 +9,8 @@ inherit java-pkg-2 java-ant-2
 DESCRIPTION="A Simple API for XPath."
 HOMEPAGE="http://saxpath.sourceforge.net/"
 SRC_URI="mirror://sourceforge/saxpath/${P}.tar.gz"
-LICENSE="saxpath"
+
+LICENSE="JDOM"
 SLOT="0"
 KEYWORDS="amd64"
 

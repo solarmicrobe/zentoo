@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -10,7 +10,7 @@ DESCRIPTION="library to provide an API for commonly used low-level network funct
 HOMEPAGE="http://libnet-dev.sourceforge.net/"
 SRC_URI="mirror://sourceforge/project/${PN}-dev/${P}.tar.gz"
 
-LICENSE="LGPL-2"
+LICENSE="BSD BSD-2 HPND"
 SLOT="1.1"
 KEYWORDS="amd64"
 IUSE="doc static-libs"

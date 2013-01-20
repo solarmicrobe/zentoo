@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -54,6 +54,7 @@ src_prepare()
 src_configure()
 {
 	econf \
+		--disable-silent-rules \
 		--bindir=/bin \
 		--with-rootlibdir=/$(get_libdir) \
 		$(use_enable static-libs static) \
@@ -70,11 +71,15 @@ src_install()
 	prune_libtool_files
 
 	if use tools; then
-		local cmd
-		for cmd in depmod insmod lsmod modinfo modprobe rmmod; do
-			dosym /bin/kmod /sbin/${cmd}
+		local bincmd sbincmd
+		for sbincmd in depmod insmod lsmod modinfo modprobe rmmod; do
+			dosym /bin/kmod /sbin/${sbincmd}
 		done
-		dosym kmod /bin/lsmod
+
+		# These are also usable as normal user
+		for bincmd in lsmod modinfo; do
+			dosym kmod /bin/${bincmd}
+		done
 	fi
 
 	cat <<-EOF > "${T}"/usb-load-ehci-first.conf

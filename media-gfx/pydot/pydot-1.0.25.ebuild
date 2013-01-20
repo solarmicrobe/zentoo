@@ -18,7 +18,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="dev-python/pyparsing
+RDEPEND="virtual/pyparsing
 	media-gfx/graphviz"
 DEPEND="${RDEPEND}
 	dev-python/setuptools"

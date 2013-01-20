@@ -3,12 +3,11 @@ app-admin/syslog-ng
 app-arch/libarchive
 app-office/openerp
 dev-db/couchdb
-dev-db/innotop
 dev-db/mongodb
 dev-db/mysql-init-scripts
+dev-ruby/rubygems
 media-gfx/imagemagick
 net-analyzer/mk-livestatus
-net-libs/zeromq
 sys-apps/openrc
 sys-block/megacli
 sys-boot/grub

@@ -22,6 +22,7 @@ net-dns/pdns opendbx sqlite
 net-fs/cifs-utils ads upcall
 net-fs/samba ads cluster debug ldb
 net-libs/libpcap canusb
+net-libs/zeromq pgm
 net-mail/dovecot lucene
 net-misc/curl ssh
 net-print/cups filters

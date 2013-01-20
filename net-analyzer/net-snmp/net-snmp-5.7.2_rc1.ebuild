@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -19,7 +19,7 @@ SRC_URI="mirror://sourceforge/${PN}/${MY_P}.tar.gz
 	http://dev.gentoo.org/~flameeyes/${PN}/${MY_P}-patches-${PATCHSET}.tar.xz"
 
 # GPL-2 for the init scripts
-LICENSE="as-is BSD GPL-2"
+LICENSE="HPND BSD GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="bzip2 doc elf ipv6 mfd-rewrites minimal perl python rpm selinux ssl tcpd X zlib lm_sensors ucd-compat"
@@ -43,7 +43,7 @@ RDEPEND="${COMMON}
 		!minimal? ( dev-perl/TermReadKey )
 	)
 	selinux? ( sec-policy/selinux-snmp )
-	sys-apps/openrc"
+"
 
 # Dependency on autoconf due to bug #225893
 DEPEND="${COMMON}

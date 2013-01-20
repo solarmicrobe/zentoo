@@ -1,8 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
+
+inherit bash-completion-r1
 
 DESCRIPTION="Terminal multiplexer"
 HOMEPAGE="http://tmux.sourceforge.net"
@@ -57,6 +59,8 @@ src_prepare() {
 
 src_install() {
 	default
+
+	newbashcomp examples/bash_completion_tmux.sh ${PN}
 
 	docinto examples
 	dodoc examples/*.conf

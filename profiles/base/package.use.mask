@@ -1,10 +1,24 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.425 2012/12/27 11:13:39 pinkbyte Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.433 2013/01/19 15:53:13 ssuominen Exp $
 
 # This file requires >=portage-2.1.1
 # New entries go on top.
 #
+
+# Samuli Suominen <ssuominen@gentoo.org> (20 Mar 2011)
+# The dependencies for these flags are still in ~arch so
+# we unmask them only for >=sys-fs/lvm2-2.02.98.
+<sys-fs/lvm2-2.02.98 clvm cman
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (30 Dec 2012)
+# sys-apps/biosdevname is keyworded only for amd64/x86
+# systemd keyworded only for amd64/arm/x86
+sys-kernel/dracut dracut_modules_biosdevname dracut_modules_systemd
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (30 Dec 2012)
+# chromium and mono are keyworded only on a few arches
+gnome-extra/zeitgeist-datasources chromium tomboy
 
 # Alexandre Rostovtsev <tetromino@gentoo.org> (27 Dec 2012)
 # Incompatible with evolution-data-server-3.6, blocks upgrade to gnome-3.6
@@ -51,6 +65,7 @@ net-libs/gnutls dane
 # unmask ocaml-4.
 dev-ml/tyxml ocamlduce
 www-servers/ocsigen ocamlduce
+dev-ml/eliom ocamlduce
 
 # Samuli Suominen <ssuominen@gentoo.org> (22 Oct 2012)
 # This is temporary mask for >=sys-fs/udev-171 because we don't want
@@ -219,27 +234,6 @@ www-plugins/gnash directfb
 # mips only use flags
 >=sci-libs/fftw-3 paired-single zbus
 
-# Alex Alexander <wired@gentoo.org> (29 Jan 2012)
-# Experimental USE flags.
-<x11-libs/qt-assistant-4.8.3 c++0x qpa
-<x11-libs/qt-bearer-4.8.3 c++0x qpa
-<x11-libs/qt-core-4.8.3 c++0x qpa
-<x11-libs/qt-declarative-4.8.3 c++0x qpa
-<x11-libs/qt-dbus-4.8.3 c++0x qpa
-<x11-libs/qt-demo-4.8.3 c++0x qpa
-<x11-libs/qt-gui-4.8.3 c++0x qpa
-<x11-libs/qt-multimedia-4.8.3 c++0x qpa
-<x11-libs/qt-opengl-4.8.3 c++0x qpa
-<x11-libs/qt-openvg-4.8.3 c++0x qpa
-<x11-libs/qt-phonon-4.8.3 c++0x qpa
-<x11-libs/qt-qt3support-4.8.3 c++0x qpa
-<x11-libs/qt-script-4.8.3 c++0x qpa
-<x11-libs/qt-sql-4.8.3 c++0x qpa
-<x11-libs/qt-svg-4.8.3 c++0x qpa
-<x11-libs/qt-test-4.8.3 c++0x qpa
-<x11-libs/qt-webkit-4.8.3 qpa
-<x11-libs/qt-xmlpatterns-4.8.3 c++0x qpa
-
 # Samuli Suominen <ssuominen@gentoo.org> (10 Jan 2012)
 # This is required only for Linux, so mask it here and unmask in
 # default/linux/package.use.mask. Bug 354923.
@@ -252,11 +246,10 @@ net-libs/webkit-gtk jit
 www-client/epiphany jit
 
 # Samuli Suominen <ssuominen@gentoo.org> (05 Jan 2012)
-# Masked for keywording AND testing. This mask entry can be
-# removed by the systemd maintainers when they think it's
-# ready.
+# Waiting for >=sys-apps/systemd-197 to stabilize. Then this can be removed.
 sys-auth/polkit systemd
 sys-power/upower systemd
+sys-fs/udisks systemd
 
 # Mike Frysinger <vapier@gentoo.org> (06 Dec 2011)
 # No one should be mucking with libssp unless they really know what they're
@@ -344,10 +337,6 @@ net-dns/pdnsd isdn urandom
 # Mask due to unsatisfied dependencies
 # applet is required for the search panel applet
 >=app-misc/tracker-0.10 applet
-
-# Ultrabug <ultrabug@gentoo.org> (20 Mar 2011)
-# Mask clustering support until new sys-cluster/cman is pushed.
-sys-fs/lvm2 clvm cman
 
 # Raúl Porcel <armin76@gentoo.org> (13 Feb 2011)
 # Masked until devs know how to use repoman
@@ -503,7 +492,3 @@ media-video/vlc media-library
 # Leave it unmasked for live ebuild, people should know what they do if they use
 # it anyway
 <media-video/ffmpeg-9999 celt
-
-# Alexis Ballier <aballier@gentoo.org> <5 Oct 2011>
-# harfbuzz support does not build for now, leave the useflag be and unmask it later
-media-libs/libass harfbuzz

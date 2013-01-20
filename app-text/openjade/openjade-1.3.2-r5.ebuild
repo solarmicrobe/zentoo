@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -38,7 +38,7 @@ src_prepare() {
 	# on hppa. Using -O1 works fine. So I force it here.
 	use hppa && replace-flags -O2 -O1
 
-	ln -s config/configure.in configure.in || die
+	ln -s config/configure.in configure.ac || die
 	cp "${FILESDIR}"/${P}-acinclude.m4 acinclude.m4 || die
 	rm config/missing || die
 

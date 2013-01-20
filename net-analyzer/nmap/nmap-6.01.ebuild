@@ -1,11 +1,11 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="4"
 PYTHON_DEPEND="2"
 
-inherit eutils flag-o-matic python
+inherit eutils flag-o-matic python toolchain-funcs
 
 MY_P=${P/_beta/BETA}
 
@@ -19,7 +19,7 @@ SRC_URI="
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="gtk ipv6 lua ncat ndiff nmap-update nping ssl"
+IUSE="gtk lua ncat ndiff nmap-update nping ssl"
 
 NMAP_PYTHON_DEPEND="
 || (
@@ -32,7 +32,7 @@ NMAP_PYTHON_DEPEND="
 DEPEND="
 	dev-libs/apr
 	dev-libs/libpcre
-	net-libs/libpcap[ipv6?]
+	net-libs/libpcap
 	gtk? (
 		>=x11-libs/gtk+-2.6:2
 		>=dev-python/pygtk-2.6
@@ -86,6 +86,12 @@ src_configure() {
 		$(use_with nping) \
 		$(use_with ssl openssl) \
 		--with-libdnet=included
+}
+
+src_compile() {
+	emake \
+		AR=$(tc-getAR) \
+		RANLIB=$(tc-getRANLIB)
 }
 
 src_install() {

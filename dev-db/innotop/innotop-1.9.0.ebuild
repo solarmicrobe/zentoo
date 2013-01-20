@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -17,7 +17,6 @@ DEPEND="dev-perl/DBD-mysql
 	dev-perl/TermReadKey
 	virtual/perl-Term-ANSIColor
 	virtual/perl-Time-HiRes"
-RDEPEND="${DEPEND}"
 
 src_install() {
 	perl-module_src_install

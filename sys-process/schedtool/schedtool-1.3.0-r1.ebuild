@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -24,6 +24,6 @@ src_compile() {
 }
 
 src_install() {
-	emake DESTPREFIX="${D}"/usr install
+	emake DESTPREFIX="${ED}"/usr install
 	dodoc CHANGES INSTALL PACKAGERS README SCHED_DESIGN TODO TUNING
 }

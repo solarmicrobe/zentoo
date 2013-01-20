@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -47,7 +47,7 @@ RDEPEND="!app-emulation/virtualbox-bin
 		x11-libs/libXext
 		x11-libs/libXmu
 		x11-libs/libXt
-		media-libs/libsdl[X,video]
+		media-libs/libsdl:0[X,video]
 	)
 	vnc? ( >=net-libs/libvncserver-0.9.9 )
 	java? ( || ( virtual/jre:1.7 virtual/jre:1.6 ) )"

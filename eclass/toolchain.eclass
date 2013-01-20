@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # Maintainer: Toolchain Ninjas <toolchain@gentoo.org>
@@ -114,7 +114,7 @@ if [[ ${PN} != "kgcc64" && ${PN} != gcc-* ]] ; then
 		tc_version_is_at_least "4.3" && IUSE+=" fixed-point"
 		tc_version_is_at_least "4.4" && IUSE+=" graphite"
 		[[ ${GCC_BRANCH_VER} == 4.5 ]] && IUSE+=" lto"
-		tc_version_is_at_least "4.6" && IUSE+=" go"
+		tc_version_is_at_least "4.7" && IUSE+=" go"
 	fi
 fi
 
@@ -483,17 +483,22 @@ create_gcc_env_entry() {
 	# searches that directory first.  This is a temporary
 	# workaround for libtool being stupid and using .la's from
 	# conflicting ABIs by using the first one in the search path
-	local mdir mosdir mosdirs abi
-	local ldpath ldpaths
-	for abi in $(get_all_abis TARGET) ; do
-		mdir=$($(XGCC) $(get_abi_CFLAGS ${abi}) --print-multi-directory)
-		ldpath=${LIBPATH}
-		[[ ${mdir} != "." ]] && ldpath+="/${mdir}"
-		ldpaths="${ldpath}${ldpaths:+:${ldpaths}}"
+	local ldpaths mosdirs
+	if tc_version_is_at_least 3.2 ; then
+		local mdir mosdir abi ldpath
+		for abi in $(get_all_abis TARGET) ; do
+			mdir=$($(XGCC) $(get_abi_CFLAGS ${abi}) --print-multi-directory)
+			ldpath=${LIBPATH}
+			[[ ${mdir} != "." ]] && ldpath+="/${mdir}"
+			ldpaths="${ldpath}${ldpaths:+:${ldpaths}}"
 
-		mosdir=$($(XGCC) $(get_abi_CFLAGS ${abi}) -print-multi-os-directory)
-		mosdirs="${mosdir}${mosdirs:+:${mosdirs}}"
-	done
+			mosdir=$($(XGCC) $(get_abi_CFLAGS ${abi}) -print-multi-os-directory)
+			mosdirs="${mosdir}${mosdirs:+:${mosdirs}}"
+		done
+	else
+		# Older gcc's didn't do multilib, so logic is simple.
+		ldpaths=${LIBPATH}
+	fi
 
 	cat <<-EOF > ${gcc_envd_file}
 	PATH="${BINPATH}"
@@ -773,8 +778,10 @@ toolchain_src_unpack() {
 	fi
 
 	# Prevent libffi from being installed
-	sed -i -e 's/\(install.*:\) install-.*recursive/\1/' "${S}"/libffi/Makefile.in
-	sed -i -e 's/\(install-data-am:\).*/\1/' "${S}"/libffi/include/Makefile.in
+	if tc_version_is_at_least 3.0 ; then
+		sed -i -e 's/\(install.*:\) install-.*recursive/\1/' "${S}"/libffi/Makefile.in || die
+		sed -i -e 's/\(install-data-am:\).*/\1/' "${S}"/libffi/include/Makefile.in || die
+	fi
 
 	# Fixup libtool to correctly generate .la files with portage
 	cd "${S}"
@@ -1324,7 +1331,7 @@ gcc_do_make() {
 		${GCC_MAKE_TARGET} \
 		|| die "emake failed with ${GCC_MAKE_TARGET}"
 
-	if ! is_crosscompile && use cxx && use doc ; then
+	if ! is_crosscompile && use cxx && use_if_iuse doc ; then
 		if type -p doxygen > /dev/null ; then
 			if tc_version_is_at_least 4.3 ; then
 				cd "${CTARGET}"/libstdc++-v3/doc
@@ -1546,11 +1553,13 @@ toolchain_src_install() {
 		rm -rf "${D}"/usr/share/{man,info}
 		rm -rf "${D}"${DATAPATH}/{man,info}
 	else
-		local cxx_mandir=$(find "${WORKDIR}/build/${CTARGET}/libstdc++-v3" -name man)
-		if [[ -d ${cxx_mandir} ]] ; then
-			# clean bogus manpages #113902
-			find "${cxx_mandir}" -name '*_build_*' -exec rm {} \;
-			cp -r "${cxx_mandir}"/man? "${D}/${DATAPATH}"/man/
+		if tc_version_is_at_least 3.0 ; then
+			local cxx_mandir=$(find "${WORKDIR}/build/${CTARGET}/libstdc++-v3" -name man)
+			if [[ -d ${cxx_mandir} ]] ; then
+				# clean bogus manpages #113902
+				find "${cxx_mandir}" -name '*_build_*' -exec rm {} \;
+				cp -r "${cxx_mandir}"/man? "${D}/${DATAPATH}"/man/
+			fi
 		fi
 		has noinfo ${FEATURES} \
 			&& rm -r "${D}/${DATAPATH}"/info \
@@ -1651,7 +1660,7 @@ gcc_slot_java() {
 # instead of the private gcc lib path
 gcc_movelibs() {
 	# older versions of gcc did not support --print-multi-os-directory
-	tc_version_is_at_least 3.0 || return 0
+	tc_version_is_at_least 3.2 || return 0
 
 	local x multiarg removedirs=""
 	for multiarg in $($(XGCC) -print-multi-lib) ; do
