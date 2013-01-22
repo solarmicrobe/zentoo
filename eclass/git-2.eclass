@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: git-2.eclass
@@ -67,6 +67,9 @@ DEPEND="dev-vcs/git"
 # @DESCRIPTION:
 # URI for the repository
 # e.g. http://foo, git://bar
+#
+# It can be overriden via env using packagename_LIVE_REPO
+# variable.
 #
 # Support multiple values:
 # EGIT_REPO_URI="git://a/b.git http://c/d.git"

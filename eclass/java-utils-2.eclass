@@ -2605,15 +2605,12 @@ java-pkg_build-vm-from-handle() {
 	debug-print-function ${FUNCNAME} "$*"
 
 	local vm
-	vm=$(java-pkg_get-current-vm)
-	if [[ $? != 0 ]]; then
-		eerror "${FUNCNAME}: Failed to get active vm"
-		return 1
-	fi
-
-	if has ${vm} ${JAVA_PKG_WANT_BUILD_VM}; then
-		echo ${vm}
-		return 0
+	vm=$(java-pkg_get-current-vm 2>/dev/null)
+	if [[ $? -eq 0 ]]; then
+		if has ${vm} ${JAVA_PKG_WANT_BUILD_VM}; then
+			echo ${vm}
+			return 0
+		fi
 	fi
 
 	for vm in ${JAVA_PKG_WANT_BUILD_VM}; do

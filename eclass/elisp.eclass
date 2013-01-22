@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # @ECLASS: elisp.eclass
@@ -82,7 +82,12 @@ RDEPEND="${DEPEND}"
 # version requirement of the NEED_EMACS variable.
 
 elisp_pkg_setup() {
-	elisp-need-emacs "${NEED_EMACS:-21}" || die "Emacs version too low"
+	elisp-need-emacs "${NEED_EMACS:-21}"
+	case $? in
+		0) ;;
+		1) die "Emacs version too low" ;;
+		*) die "Could not determine Emacs version" ;;
+	esac
 }
 
 # @FUNCTION: elisp_src_unpack

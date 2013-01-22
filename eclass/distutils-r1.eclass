@@ -414,7 +414,7 @@ distutils-r1_run_phase() {
 	debug-print-function ${FUNCNAME} "${@}"
 
 	if [[ ${DISTUTILS_IN_SOURCE_BUILD} ]]; then
-		pushd "${BUILD_DIR}" &>/dev/null || die
+		pushd "${BUILD_DIR}" >/dev/null || die
 	else
 		local PYTHONPATH="${BUILD_DIR}/lib:${PYTHONPATH}"
 		export PYTHONPATH
@@ -435,7 +435,7 @@ distutils-r1_run_phase() {
 	fi
 
 	if [[ ${DISTUTILS_IN_SOURCE_BUILD} ]]; then
-		popd &>/dev/null || die
+		popd >/dev/null || die
 	fi
 
 	# Store them for reuse.

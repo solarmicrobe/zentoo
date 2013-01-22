@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: multilib.eclass
@@ -394,7 +394,7 @@ multilib_toolchain_setup() {
 
 	# First restore any saved state we have laying around.
 	if [[ ${__DEFAULT_ABI_SAVED} == "true" ]] ; then
-		for v in CHOST CBUILD AS CC CXX LD ; do
+		for v in CHOST CBUILD AS CC CXX LD PKG_CONFIG_{LIBDIR,PATH} ; do
 			vv="__abi_saved_${v}"
 			export ${v}="${!vv}"
 			unset ${vv}
@@ -406,7 +406,7 @@ multilib_toolchain_setup() {
 	# screws up ccache and distcc.  See #196243 for more info.
 	if [[ ${ABI} != ${DEFAULT_ABI} ]] ; then
 		# Back that multilib-ass up so we can restore it later
-		for v in CHOST CBUILD AS CC CXX LD ; do
+		for v in CHOST CBUILD AS CC CXX LD PKG_CONFIG_{LIBDIR,PATH} ; do
 			export __abi_saved_${v}="${!v}"
 		done
 		export __DEFAULT_ABI_SAVED="true"
@@ -419,6 +419,8 @@ multilib_toolchain_setup() {
 		export LD="$(tc-getLD) $(get_abi_LDFLAGS)"
 		export CHOST=$(get_abi_CHOST $1)
 		export CBUILD=$(get_abi_CHOST $1)
+		export PKG_CONFIG_LIBDIR=${EPREFIX}/usr/$(get_libdir)/pkgconfig
+		export PKG_CONFIG_PATH=${EPREFIX}/usr/share/pkgconfig
 	fi
 }
 
