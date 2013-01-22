@@ -4,3 +4,6 @@ app-emulation/virtualbox headless
 # only support headless X11
 x11-base/xorg-server minimal
 x11-apps/xinit minimal
+
+# force-enable default dracut modules
+sys-kernel/dracut device-mapper net dracut_modules_lvm dracut_modules_mdraid dracut_modules_syslog

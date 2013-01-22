@@ -45,6 +45,7 @@ dev-vcs/cvs)                   echo "=$1-1.12.13.1";;
 java-virtuals/servlet-api)     echo "=$1-2.3"
                                echo "=$1-2.5-r1";;
 net-libs/zeromq)               echo "=$1-3.2.2";;
+net-misc/dhcp)                 echo "=$1-4.2.4_p2-r1";;
 sys-apps/texinfo)              echo "=$1-4.13-r2";;
 sys-boot/grub)                 echo "=$1-2.00-r1";;
 sys-cluster/ceph)              echo "=$1-0.55.1";;

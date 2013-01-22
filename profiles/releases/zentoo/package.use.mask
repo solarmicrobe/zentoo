@@ -30,6 +30,7 @@ sys-fs/btrfs-progs debug-utils
 sys-fs/lvm2 thin
 sys-fs/udev extras
 sys-kernel/genkernel crypt
+sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_systemd dracut_modules_bootchart
 
 # do not support X11 with these applications
 app-editors/emacs X

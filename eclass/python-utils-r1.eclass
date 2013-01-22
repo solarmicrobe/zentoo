@@ -1,10 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/eclass/python-utils-r1.eclass,v 1.14 2013/01/21 19:28:16 mgorny Exp $
 
 # @ECLASS: python-utils-r1
 # @MAINTAINER:
-# Michał Górny <mgorny@gentoo.org>
-# Python herd <python@gentoo.org>
+# Python team <python@gentoo.org>
 # @AUTHOR:
 # Author: Michał Górny <mgorny@gentoo.org>
 # Based on work of: Krzysztof Pawlik <nelchael@gentoo.org>
@@ -46,6 +46,37 @@ _PYTHON_ALL_IMPLS=(
 	python3_1 python3_2 python3_3
 	python2_5 python2_6 python2_7
 )
+
+# @FUNCTION: _python_impl_supported
+# @USAGE: <impl>
+# @INTERNAL
+# @DESCRIPTION:
+# Check whether the implementation <impl> (PYTHON_COMPAT-form)
+# is still supported.
+#
+# Returns 0 if the implementation is valid and supported. If it is
+# unsupported, returns 1 -- and the caller should ignore the entry.
+# If it is invalid, dies with an appopriate error messages.
+_python_impl_supported() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	[[ ${#} -eq 1 ]] || die "${FUNCNAME}: takes exactly 1 argument (impl)."
+
+	local impl=${1}
+
+	# keep in sync with _PYTHON_ALL_IMPLS!
+	# (not using that list because inline patterns shall be faster)
+	case "${impl}" in
+		python2_[567]|python3_[123]|pypy1_[89]|pypy2_0|jython2_5)
+			return 0
+			;;
+#		pypy1_8)
+#			return 1
+#			;;
+		*)
+			die "Invalid implementation in PYTHON_COMPAT: ${impl}"
+	esac
+}
 
 # @ECLASS-VARIABLE: PYTHON
 # @DESCRIPTION:
@@ -318,17 +349,33 @@ _python_rewrite_shebang() {
 	local f
 	for f; do
 		local shebang=$(head -n 1 "${f}")
+		local from
 		debug-print "${FUNCNAME}: path = ${f}"
 		debug-print "${FUNCNAME}: shebang = ${shebang}"
 
-		if [[ "${shebang} " != *'python '* ]]; then
+		if [[ "${shebang} " == *'python '* ]]; then
+			from=python
+		elif [[ "${shebang} " == *'python2 '* ]]; then
+			from=python2
+		elif [[ "${shebang} " == *'python3 '* ]]; then
+			from=python3
+		else
 			eerror "A file does not seem to have a supported shebang:"
 			eerror "  file: ${f}"
 			eerror "  shebang: ${shebang}"
 			die "${FUNCNAME}: ${f} does not seem to have a valid shebang"
 		fi
 
-		sed -i -e "1s:python:${impl}:" "${f}" || die
+		if [[ ${from} == python2 && ${impl} == python3*
+				|| ${from} == python3 && ${impl} != python3* ]]; then
+			eerror "A file does have shebang not supporting requested impl:"
+			eerror "  file: ${f}"
+			eerror "  shebang: ${shebang}"
+			eerror "  impl: ${impl}"
+			die "${FUNCNAME}: ${f} does have shebang not supporting ${EPYTHON}"
+		fi
+
+		sed -i -e "1s:${from}:${impl}:" "${f}" || die
 	done
 }
 
@@ -489,10 +536,10 @@ python_doscript() {
 
 		debug-print "${FUNCNAME}: ${oldfn} -> ${newfn}"
 		newins "${f}" "${newfn}" || die
-		_python_rewrite_shebang "${D}/${d}/${newfn}"
+		_python_rewrite_shebang "${ED}/${d}/${newfn}"
 
 		# install the wrapper
-		_python_ln_rel "${ED}"/usr/bin/python-exec "${D}/${d}/${oldfn}" || die
+		_python_ln_rel "${ED}"/usr/bin/python-exec "${ED}/${d}/${oldfn}" || die
 	done
 }
 
@@ -500,7 +547,7 @@ python_doscript() {
 # @DEFAULT_UNSET
 # @DESCRIPTION:
 # The current module root for python_domodule(). The path can be either
-# an absolute system path (it must start with a slash, and ${D} will be
+# an absolute system path (it must start with a slash, and ${ED} will be
 # prepended to it) or relative to the implementation's site-packages directory
 # (then it must start with a non-slash character).
 #
@@ -560,7 +607,7 @@ python_domodule() {
 		local PYTHON_SITEDIR=${PYTHON_SITEDIR}
 		[[ ${PYTHON_SITEDIR} ]] || python_export PYTHON_SITEDIR
 
-		d=${PYTHON_SITEDIR}/${python_moduleroot}
+		d=${PYTHON_SITEDIR#${EPREFIX}}/${python_moduleroot}
 	fi
 
 	local INSDESTTREE
@@ -568,7 +615,7 @@ python_domodule() {
 	insinto "${d}"
 	doins -r "${@}" || die
 
-	python_optimize "${D}/${d}"
+	python_optimize "${ED}/${d}"
 }
 
 _PYTHON_UTILS_R1=1
