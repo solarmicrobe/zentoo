@@ -35,6 +35,9 @@ src_prepare() {
 	# fix compilation on Darwin
 	# http://code.google.com/p/gyp/issues/detail?id=260
 	sed -i -e "/append('-arch/d" tools/gyp/pylib/gyp/xcode_emulation.py || die
+	# Hardcoded braindamage extraction helper
+	#sed -i -e 's:wafdir = join(prefix, "lib", "node"):wafdir = "/lib/node/":' tools/node-waf || die
+	python_convert_shebangs 2 tools/node-waf || die
 }
 
 src_configure() {
@@ -47,7 +50,6 @@ src_compile() {
 }
 
 src_install() {
-	docompress -x /lib/node_modules/npm/man
 	local MYLIB=$(get_libdir)
 	mkdir -p "${ED}"/usr/include/node
 	mkdir -p "${ED}"/usr/bin
@@ -57,6 +59,8 @@ src_install() {
 	cp -R deps/uv/include/* "${ED}"/usr/include/node || die "Failed to copy stuff"
 	cp 'out/Release/node' "${ED}"/usr/bin/node || die "Failed to copy stuff"
 	cp -R deps/npm/* "${ED}"/usr/"${MYLIB}"/node_modules/npm || die "Failed to copy stuff"
+	cp -R tools/wafadmin "${ED}"/usr/"${MYLIB}"/node/ || die "Failed to copy stuff"
+	cp 'tools/node-waf' "${ED}"/usr/bin/ || die "Failed to copy stuff"
 
 	# now add some extra stupid just because we can
 	# needs to be a symlink because of hardcoded paths ... no es bueno!
