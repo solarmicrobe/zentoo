@@ -536,15 +536,20 @@ autotools_check_macro_val() {
 }
 
 _autotools_m4dir_include() {
-	local x include_opts
+	local x include_opts flag
+
+	# Use the right flag to autoconf based on the version #448986
+	[[ ${WANT_AUTOCONF} == "2.1" ]] \
+		&& flag="l" \
+		|| flag="I"
 
 	for x in "$@" ; do
 		case ${x} in
 			# We handle it below
-			-I) ;;
+			-${flag}) ;;
 			*)
 				[[ ! -d ${x} ]] && ewarn "autotools.eclass: '${x}' does not exist"
-				include_opts+=" -I ${x}"
+				include_opts+=" -${flag} ${x}"
 				;;
 		esac
 	done
