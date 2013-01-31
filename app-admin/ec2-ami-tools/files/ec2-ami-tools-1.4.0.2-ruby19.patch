@@ -1,0 +1,39 @@
+From aa7fdde65dead6b6df9f44636f48447aa9efdf31 Mon Sep 17 00:00:00 2001
+From: Fredrick Galoso <fred@wayoutmind.com>
+Date: Sat, 23 Apr 2011 19:09:16 -0500
+Subject: [PATCH] fixed ruby 1.9.2 related bugs for ec2-bundle-vol
+
+---
+ lib/ec2/amitools/util.rb       |    2 +-
+ lib/ec2/amitools/xmlbuilder.rb |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/ec2/amitools/util.rb b/lib/ec2/amitools/util.rb
+index fb66cd1..9581e40 100644
+--- a/lib/ec2/amitools/util.rb
++++ b/lib/ec2/amitools/util.rb
+@@ -16,7 +16,7 @@
+ # generate a unique identifier used for filenames
+ #
+ def gen_ident()
+-  (0..19).inject("") {|ident, n| ident+(?A + Kernel.rand(26)).chr}
++  (0..19).inject("") {|ident, n| ident+(?A.ord + Kernel.rand(26)).chr}
+ end
+ 
+ #------------------------------------------------------------------------------#
+diff --git a/lib/ec2/amitools/xmlbuilder.rb b/lib/ec2/amitools/xmlbuilder.rb
+index 0642f65..85f15da 100644
+--- a/lib/ec2/amitools/xmlbuilder.rb
++++ b/lib/ec2/amitools/xmlbuilder.rb
+@@ -179,7 +179,7 @@ def walk_visit(rexml_node)
+ 
+       def assign_visit(rexml_node, value)
+         if value.is_a?(String)
+-          rexml_node.text = value
++          rexml_node.text = value.dup
+         elsif value.is_a?(REXML::Element)
+           value.name = rexml_node.name
+           raise "Node #{rexml_node.name} does not have a parent node" if rexml_node.parent.nil?
+-- 
+1.7.10
+

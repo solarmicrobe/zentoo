@@ -44,6 +44,7 @@ dev-util/google-perftools)     echo "=$1-2.0";;
 dev-vcs/cvs)                   echo "=$1-1.12.13.1";;
 java-virtuals/servlet-api)     echo "=$1-2.3"
                                echo "=$1-2.5-r1";;
+net-libs/nodejs)               echo "=$1-0.8.18";;
 net-libs/zeromq)               echo "=$1-3.2.2";;
 net-misc/dhcp)                 echo "=$1-4.2.4_p2-r1";;
 sys-apps/texinfo)              echo "=$1-4.13-r2";;
