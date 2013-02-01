@@ -18,3 +18,4 @@ virtual/linux-sources
 virtual/mta
 www-servers/spawn-fcgi
 www-servers/uwsgi
+x11-libs/cairo
