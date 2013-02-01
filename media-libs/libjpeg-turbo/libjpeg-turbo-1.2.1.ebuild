@@ -32,11 +32,6 @@ RDEPEND="${COMMON_DEPEND}
 DEPEND="${COMMON_DEPEND}
 	amd64? ( ${ASM_DEPEND} )
 	x86? ( ${ASM_DEPEND} )
-	amd64-fbsd? ( ${ASM_DEPEND} )
-	x86-fbsd? ( ${ASM_DEPEND} )
-	amd64-linux? ( ${ASM_DEPEND} )
-	x86-linux? ( ${ASM_DEPEND} )
-	x64-macos? ( ${ASM_DEPEND} )
 	java? ( >=virtual/jdk-1.5 )"
 
 src_prepare() {
