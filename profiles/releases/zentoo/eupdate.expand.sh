@@ -12,6 +12,7 @@ dev-db/hsqldb)                 echo "=$1-1.8.1.3-r1";;
 dev-db/postgresql-*)           echo "=$1-9.1.6";;
 dev-java/antlr)                echo "=$1-2.7.7-r2";;
 dev-java/asm)                  echo "=$1-2.0-r1";;
+dev-java/icedtea-bin)          echo "=$1-7.2.3.4";;
 dev-java/junit)                echo "=$1-3.8.2-r1";;
 dev-java/jzlib)                echo "=$1-1.0.7-r1";;
 dev-java/tomcat-servlet-api)   echo "=$1-4.1.36"
