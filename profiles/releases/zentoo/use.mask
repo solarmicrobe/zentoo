@@ -39,7 +39,6 @@ chasen
 cjk
 consolekit
 coreaudio
-cscope
 custom-cflags
 d3d
 darcs
