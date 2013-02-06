@@ -66,6 +66,5 @@ virtual/jdk)                   echo "=$1-1.7.0";;
 virtual/jre)                   echo "=$1-1.7.0";;
 virtual/ruby-*)                echo "=$1-1";;
 virtual/udev)                  echo "=$1-196";;
-www-client/firefox)            echo "=$1-10.0.11";;
 *)                             echo $1;;
 esac
