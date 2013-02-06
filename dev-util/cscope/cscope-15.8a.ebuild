@@ -1,0 +1,62 @@
+# Copyright 1999-2012 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+EAPI=4
+
+inherit autotools elisp-common eutils
+
+DESCRIPTION="Interactively examine a C program"
+HOMEPAGE="http://cscope.sourceforge.net/"
+SRC_URI="mirror://sourceforge/cscope/${P}.tar.gz"
+
+LICENSE="BSD GPL-2"
+SLOT="0"
+KEYWORDS="amd64"
+IUSE="emacs"
+
+RDEPEND=">=sys-libs/ncurses-5.2
+	emacs? ( virtual/emacs )"
+DEPEND="${RDEPEND}
+	sys-devel/flex
+	virtual/yacc"
+
+SITEFILE="50${PN}-gentoo.el"
+
+src_prepare() {
+	epatch "${FILESDIR}/${PN}-15.7a-ocs-sysdir.patch" #269305
+	eautoreconf		  # prevent maintainer mode later on
+}
+
+src_compile() {
+	emake
+	if use emacs; then
+		cd "${S}"/contrib/xcscope || die
+		elisp-compile *.el || die
+	fi
+}
+
+src_install() {
+	default
+
+	if use emacs; then
+		cd "${S}"/contrib/xcscope || die
+		elisp-install ${PN} *.el *.elc || die
+		elisp-site-file-install "${FILESDIR}/${SITEFILE}" || die
+		dobin cscope-indexer
+	fi
+
+	cd "${S}"/contrib/webcscope || die
+	docinto webcscope
+	dodoc INSTALL TODO cgi-lib.pl cscope hilite.c
+	docinto webcscope/icons
+	dodoc icons/*.gif
+}
+
+pkg_postinst() {
+	use emacs && elisp-site-regen
+}
+
+pkg_postrm() {
+	use emacs && elisp-site-regen
+}
