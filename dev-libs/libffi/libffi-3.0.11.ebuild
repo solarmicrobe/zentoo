@@ -26,7 +26,7 @@ DOCS="ChangeLog* README"
 
 pkg_setup() {
 	# Check for orphaned libffi, see http://bugs.gentoo.org/354903 for example
-	if [[ ${ROOT} == "/" ]] && ! has_version ${CATEGORY}/${PN}; then
+	if [[ ${ROOT} == "/" && ${EPREFIX} == "" ]] && ! has_version ${CATEGORY}/${PN}; then
 		local base="${T}"/conftest
 		echo 'int main() { }' > "${base}".c
 		$(tc-getCC) -o "${base}" "${base}".c -lffi >&/dev/null

@@ -18,13 +18,13 @@
 # DEPEND="${RDEPEND}"
 #
 # src_configure() {
-#	econf \
-#		--with-rulesdir="$(udev_get_udevdir)"/rules.d \
+#	econf --with-rulesdir="$(get_udevdir)"/rules.d
 # }
 #
 # src_install() {
+#	default
 #	# udev_dorules contrib/99-foomatic
-#	udev_newrules contrib/98-foomatic 99-foomatic
+#	# udev_newrules contrib/98-foomatic 99-foomatic
 # }
 # @CODE
 
@@ -52,10 +52,19 @@ _udev_get_udevdir() {
 
 # @FUNCTION: udev_get_udevdir
 # @DESCRIPTION:
+# Use the short version $(get_udevdir) instead!
+udev_get_udevdir() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	echo "$(_udev_get_udevdir)"
+}
+
+# @FUNCTION: get_udevdir
+# @DESCRIPTION:
 # Output the path for the udev directory (not including ${D}).
 # This function always succeeds, even if udev is not installed.
 # The fallback value is set to /lib/udev
-udev_get_udevdir() {
+get_udevdir() {
 	debug-print-function ${FUNCNAME} "${@}"
 
 	echo "$(_udev_get_udevdir)"

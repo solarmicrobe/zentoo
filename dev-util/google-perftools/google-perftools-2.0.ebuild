@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,6 +14,11 @@ SRC_URI="http://gperftools.googlecode.com/files/${MY_P}.tar.gz"
 
 LICENSE="MIT"
 SLOT="0"
+# contains ASM code, with support for
+# freebsd x86/amd64
+# linux x86/amd64/ppc/ppc64/arm
+# OSX ppc/amd64
+# AIX ppc/ppc64
 KEYWORDS="amd64"
 IUSE="largepages +debug minimal test"
 

@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit autotools eutils libtool multilib
+inherit autotools eutils libtool multilib linux-info
 
 if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="git://git.kernel.org/pub/scm/utils/kernel/${PN}/${PN}.git"
@@ -36,6 +36,12 @@ DEPEND="${RDEPEND}
 	doc? ( dev-util/gtk-doc )
 	lzma? ( virtual/pkgconfig )
 	zlib? ( virtual/pkgconfig )"
+
+pkg_setup() {
+	CONFIG_CHECK="~MODULES"
+
+	linux-info_pkg_setup
+}
 
 src_prepare()
 {

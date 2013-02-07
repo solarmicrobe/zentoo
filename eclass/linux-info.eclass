@@ -585,11 +585,14 @@ get_running_version() {
 		get_version
 		return $?
 	else
-		KV_MAJOR=$(get_version_component_range 1 ${KV_FULL})
-		KV_MINOR=$(get_version_component_range 2 ${KV_FULL})
-		KV_PATCH=$(get_version_component_range 3 ${KV_FULL})
-		KV_PATCH=${KV_PATCH//-*}
-		KV_EXTRA="${KV_FULL#${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}}"
+		# This handles a variety of weird kernel versions.  Make sure to update
+		# tests/linux-info:get_running_version.sh if you want to change this.
+		local kv_full=${KV_FULL//[-+_]*}
+		KV_MAJOR=$(get_version_component_range 1 ${kv_full})
+		KV_MINOR=$(get_version_component_range 2 ${kv_full})
+		KV_PATCH=$(get_version_component_range 3 ${kv_full})
+		KV_EXTRA="${KV_FULL#${KV_MAJOR}.${KV_MINOR}${KV_PATCH:+.${KV_PATCH}}}"
+		: ${KV_PATCH:=0}
 	fi
 	return 0
 }

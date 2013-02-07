@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -11,7 +11,7 @@ SRC_URI="mirror://gnu/${PN}/${P}.tar.gz"
 LICENSE="GPL-2"
 SLOT="${PV:0:3}"
 KEYWORDS="amd64"
-IUSE=""
+IUSE="userland_BSD"
 
 DEPEND=">=sys-apps/texinfo-4.3
 	sys-devel/autoconf-wrapper
@@ -45,8 +45,10 @@ src_compile() {
 	# force to `awk` so that we don't encode another awk that
 	# happens to currently be installed, but might later be
 	# uninstalled (like mawk).  same for m4.
-	ac_cv_path_M4=m4 \
-	ac_cv_prog_AWK=awk \
+	local prepend=""
+	use userland_BSD && prepend="g"
+	ac_cv_path_M4="${prepend}m4" \
+	ac_cv_prog_AWK="${prepend}awk" \
 	LC_ALL=C \
 	econf \
 		--exec-prefix=/usr \

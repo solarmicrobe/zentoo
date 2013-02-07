@@ -9,7 +9,7 @@
 
 EAPI="4"
 
-inherit java-pkg-2 java-vm-2 pax-utils prefix versionator virtualx
+inherit autotools eutils java-pkg-2 java-vm-2 pax-utils prefix versionator virtualx flag-o-matic
 
 ICEDTEA_VER=$(get_version_component_range 2-)
 ICEDTEA_BRANCH=$(get_version_component_range 2-3)
@@ -156,6 +156,9 @@ java_prepare() {
 
 	# icedtea doesn't like some locales. #330433 #389717
 	export LANG="C" LC_ALL="C"
+
+	epatch "${FILESDIR}"/${P}-parallel-unpack.patch
+	eautoreconf
 }
 
 bootstrap_impossible() {
@@ -188,10 +191,17 @@ src_configure() {
 	config="${config} --${bootstrap}-bootstrap"
 
 	# Always use HotSpot as the primary VM if available. #389521 #368669 #357633 ...
-	# Otherwise use JamVM as it's the only possibility right now
-	if ! has "${ARCH}" amd64 sparc x86; then
-		config="${config} --enable-jamvm"
-	fi
+	case "${ARCH}" in
+		amd64|sparc|x86)
+			;;
+		arm)
+			config+=" --enable-jamvm" #IT1266
+			replace-flags -Os -O2 #BGO453612 #IT1267
+			;;
+		*)
+			config+=" --enable-jamvm"
+			;;
+	esac
 
 	# OpenJDK-specific parallelism support. Bug #389791, #337827
 	# Implementation modified from waf-utils.eclass

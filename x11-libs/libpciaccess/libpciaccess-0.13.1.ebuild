@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -11,7 +11,8 @@ IUSE="minimal zlib"
 
 DEPEND="!<x11-base/xorg-server-1.5
 	zlib? ( sys-libs/zlib )"
-RDEPEND="${DEPEND}"
+RDEPEND="${DEPEND}
+	sys-apps/hwids"
 
 pkg_setup() {
 	xorg-2_pkg_setup

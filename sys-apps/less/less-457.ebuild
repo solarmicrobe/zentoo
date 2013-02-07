@@ -6,10 +6,12 @@ EAPI="4"
 
 inherit eutils
 
+CODE2COLOR_PV="0.2"
+CODE2COLOR_P="code2color-${CODE2COLOR_PV}"
 DESCRIPTION="Excellent text file viewer"
 HOMEPAGE="http://www.greenwoodsoftware.com/less/"
 SRC_URI="http://www.greenwoodsoftware.com/less/${P}.tar.gz
-	http://www-zeuthen.desy.de/~friebel/unix/less/code2color"
+	http://www-zeuthen.desy.de/~friebel/unix/less/code2color -> ${CODE2COLOR_P}"
 
 LICENSE="|| ( GPL-3 BSD-2 )"
 SLOT="0"
@@ -23,11 +25,11 @@ RDEPEND="${DEPEND}"
 
 src_unpack() {
 	unpack ${P}.tar.gz
-	cp "${DISTDIR}"/code2color "${S}"/
+	cp "${DISTDIR}"/${CODE2COLOR_P} "${S}"/code2color || die
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/code2color.patch
+	epatch "${FILESDIR}"/${CODE2COLOR_P}.patch
 }
 
 src_configure() {

@@ -163,6 +163,9 @@ src_configure() {
 			# this breaks installation, on x64 echo replacement is 32-bits
 			myconf+=" --disable-local-library-preloading"
 		;;
+		*-mint*)
+			myconf+=" --enable-all-static --disable-local-library-preloading"
+		;;
 		*)
 			# inject LD_PRELOAD entries for easy in-tree development
 			myconf+=" --enable-local-library-preloading"

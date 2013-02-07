@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-PATCH_VER="1.10"
+PATCH_VER="1.11"
 UCLIBC_VER="1.0"
 
 # Hardened gcc 4 stuff

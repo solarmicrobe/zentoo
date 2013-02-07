@@ -66,5 +66,6 @@ virtual/jdk)                   echo "=$1-1.7.0";;
 virtual/jre)                   echo "=$1-1.7.0";;
 virtual/ruby-*)                echo "=$1-1";;
 virtual/udev)                  echo "=$1-196";;
+x11-libs/gtk+)                 echo "=$1-2.24.12";;
 *)                             echo $1;;
 esac
