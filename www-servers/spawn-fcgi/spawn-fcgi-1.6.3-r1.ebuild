@@ -30,9 +30,6 @@ src_install() {
 	newconfd "${FILESDIR}"/spawn-fcgi.confd spawn-fcgi
 	newinitd "${FILESDIR}"/spawn-fcgi.initd spawn-fcgi
 
-	keepdir /var/run/spawn-fcgi
-	fperms 0755 /var/run/spawn-fcgi
-
 	docinto examples
 	dodoc doc/run-generic doc/run-php doc/run-rails
 }
