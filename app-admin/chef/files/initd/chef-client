@@ -6,9 +6,9 @@ CONFIGFILE=${CONFIGFILE:-/etc/chef/client.rb}
 INTERVAL=${INTERVAL:-1800}
 SPLAY=${SPLAY:-20}
 
-command=${CHEF_CLIENT_BINARY:-/usr/bin/chef-client}
-command_args="-d -c ${CONFIGFILE} -i ${INTERVAL} -s ${SPLAY} ${CHEF_CLIENT_OPTS}"
 pidfile=${CHEF_CLIENT_PIDFILE:-/var/run/chef/client.pid}
+command=${CHEF_CLIENT_BINARY:-/usr/bin/chef-client}
+command_args="-d -c ${CONFIGFILE} -i ${INTERVAL} -s ${SPLAY} -P ${pidfile} ${CHEF_CLIENT_OPTS}"
 
 depend() {
 	need net

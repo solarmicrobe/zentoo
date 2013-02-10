@@ -36,8 +36,8 @@ ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	>=dev-ruby/mixlib-log-1.3.0
 	dev-ruby/mixlib-shellout
 	<dev-ruby/moneta-0.7.0
-	>=dev-ruby/net-ssh-2.2.2
-	<dev-ruby/net-ssh-2.3
+	>=dev-ruby/net-ssh-2.6
+	<dev-ruby/net-ssh-2.7
 	>=dev-ruby/net-ssh-multi-1.1
 	<dev-ruby/net-ssh-multi-1.2
 	>=dev-ruby/ohai-0.6.0

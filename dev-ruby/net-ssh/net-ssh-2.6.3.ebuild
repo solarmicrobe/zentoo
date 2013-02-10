@@ -1,9 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
-USE_RUBY="ruby18 ruby19 ree18"
+EAPI=5
+# no longer compatible with ruby 1.8.
+USE_RUBY="ruby19"
 
 RUBY_FAKEGEM_TASK_TEST=""
 
@@ -15,9 +16,10 @@ inherit ruby-fakegem
 
 DESCRIPTION="Non-interactive SSH processing in pure Ruby"
 HOMEPAGE="http://net-ssh.rubyforge.org/"
+SRC_URI="https://github.com/${PN}/${PN}/archive/v${PV}.tar.gz -> net-ssh-git-${PV}.tgz"
 
 LICENSE="GPL-2"
-SLOT="2"
+SLOT="2.6"
 KEYWORDS="amd64"
 IUSE="test"
 
