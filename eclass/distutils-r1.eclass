@@ -215,11 +215,12 @@ esetup.py() {
 		fi
 
 		# if setuptools is used, adjust egg_info path as well
-		if "${PYTHON:-python}" setup.py --help egg_info &>/dev/null; then
-			add_args+=(
-				egg_info --egg-base "${BUILD_DIR}"
-			)
-		fi
+		# (disabled since it causes build not to install scripts)
+#		if "${PYTHON:-python}" setup.py --help egg_info &>/dev/null; then
+#			add_args+=(
+#				egg_info --egg-base "${BUILD_DIR}"
+#			)
+#		fi
 
 		add_args+=(
 			build

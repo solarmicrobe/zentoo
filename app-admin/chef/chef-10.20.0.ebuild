@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=4
-USE_RUBY="ruby18 ruby19"
+USE_RUBY="ruby19"
 
 RUBY_FAKEGEM_TASK_DOC=""
 RUBY_FAKEGEM_TASK_TEST="spec"
@@ -51,8 +51,6 @@ ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	<dev-ruby/yajl-ruby-2"
 
 each_ruby_prepare() {
-	epatch "${FILESDIR}"/chef-10.18.2-remove-clone-warnings.patch
-
 	ruby_fakegem_metadata_gemspec ../metadata ${RUBY_FAKEGEM_GEMSPEC}
 
 	# bunny

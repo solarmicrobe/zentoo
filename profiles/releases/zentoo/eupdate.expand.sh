@@ -49,9 +49,11 @@ java-virtuals/servlet-api)     echo "=$1-2.3"
 net-libs/nodejs)               echo "=$1-0.8.18";;
 net-libs/zeromq)               echo "=$1-3.2.2";;
 net-misc/dhcp)                 echo "=$1-4.2.4_p2-r1";;
+net-nds/openldap)              echo "=$1-2.4.33-r1";;
 sys-apps/texinfo)              echo "=$1-4.13-r2";;
 sys-boot/grub)                 echo "=$1-2.00-r1";;
 sys-cluster/ceph)              echo "=$1-0.55.1";;
+sys-cluster/util-vserver)      echo "=$1-0.30.216_pre3038";;
 sys-devel/autoconf)            echo "=$1-2.13"
                                echo "$1";;
 sys-devel/automake)            echo "=$1-1.9.6-r3"
