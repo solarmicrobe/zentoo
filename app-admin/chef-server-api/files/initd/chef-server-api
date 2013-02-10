@@ -16,8 +16,13 @@ CHEF_USER=${CHEF_USER:-chef}
 CHEF_GROUP=${CHEF_GROUP:-chef}
 
 start_pre() {
-	checkpath -q -d -m 0750 -o ${user}:${group} /etc/chef /var/{lib,log,run}/chef
-	checkpath -q -f -m 0600 ${CONFIGFILE}
+	checkpath -q -d -m 0750 -o ${CHEF_USER}:${CHEF_GROUP} \
+		/etc/chef \
+		/etc/chef/certificates \
+		/var/{lib,log,run}/chef
+
+	checkpath -q -f -m 0600 -o ${CHEF_USER}:${CHEF_GROUP} \
+		${CONFIGFILE}
 }
 
 start() {

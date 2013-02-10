@@ -16,5 +16,5 @@ depend() {
 }
 
 start_pre() {
-	checkpath -q -d -m 0755 -o chef:chef /var/run/chef
+	checkpath -q -d /var/run/chef
 }

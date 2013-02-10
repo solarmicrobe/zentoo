@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -36,16 +36,19 @@ pkg_pretend() {
 	fi
 }
 
+src_configure() {
+	:;
+}
+
 src_compile() {
-	# The default make command does not work as expected
-	:
+	:;
 }
 
 src_install() {
 	keepdir /var/lib/${PN}
 
 	cd "${WORKDIR}/${P}"
-	PREFIX="${D}" ./install.sh || die "install.sh failed"
+	DESTDIR="${D}" ./install.sh "${FILESDIR}"/shorewallrc_new || die "install.sh failed"
 	newinitd "${FILESDIR}"/${PN}.initd ${PN}
 
 	dodoc changelog.txt releasenotes.txt

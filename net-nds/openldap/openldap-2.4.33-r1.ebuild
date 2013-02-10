@@ -2,18 +2,18 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="4"
 
 inherit db-use eutils flag-o-matic multilib ssl-cert versionator toolchain-funcs autotools
 
 BIS_PN=rfc2307bis.schema
-BIS_PV=20100722
+BIS_PV=20120525
 BIS_P="${BIS_PN}-${BIS_PV}"
 
 DESCRIPTION="LDAP suite of application and development tools"
 HOMEPAGE="http://www.OpenLDAP.org/"
 SRC_URI="mirror://openldap/openldap-release/${P}.tgz
-		 http://simon.kisikew.org/src/ldap/${BIS_PN} -> ${BIS_P}"
+		 mirror://gentoo/${BIS_P}"
 
 LICENSE="OPENLDAP"
 SLOT="0"
@@ -27,15 +27,16 @@ IUSE_CONTRIB="smbkrb5passwd kerberos"
 IUSE_CONTRIB="${IUSE_CONTRIB} -cxx"
 IUSE="${IUSE_DAEMON} ${IUSE_BACKEND} ${IUSE_OVERLAY} ${IUSE_OPTIONAL} ${IUSE_CONTRIB}"
 
+REQUIRED_USE="cxx? ( sasl )"
+
 # openssl is needed to generate lanman-passwords required by samba
-RDEPEND="sys-libs/ncurses
-	sys-devel/libtool
-	icu? ( dev-libs/icu )
-	tcpd? ( sys-apps/tcp-wrappers )
+RDEPEND="icu? ( dev-libs/icu )
 	ssl? ( !gnutls? ( dev-libs/openssl )
 		gnutls? ( <net-libs/gnutls-3 dev-libs/libgcrypt ) )
 	sasl? ( dev-libs/cyrus-sasl )
 	!minimal? (
+		sys-devel/libtool
+		tcpd? ( sys-apps/tcp-wrappers )
 		odbc? ( !iodbc? ( dev-db/unixODBC )
 			iodbc? ( dev-db/libiodbc ) )
 		slp? ( net-libs/openslp )
@@ -240,6 +241,8 @@ src_prepare() {
 
 	# bug #116045 - still present in 2.4.28
 	epatch "${FILESDIR}"/${PN}-2.4.28-contrib-smbk5pwd.patch
+	# bug #408077 - samba4
+	epatch "${FILESDIR}"/${PN}-2.4.30-contrib-samba4.patch
 
 	# bug #189817
 	epatch "${FILESDIR}"/${PN}-2.4.11-libldap_r.patch
@@ -255,6 +258,9 @@ src_prepare() {
 
 	# unbreak /bin/sh -> dash
 	epatch "${FILESDIR}"/${PN}-2.4.28-fix-dash.patch
+
+	# bug #420959
+	epatch "${FILESDIR}"/${PN}-2.4.31-gcc47.patch
 
 	cd "${S}"/build
 	einfo "Making sure upstream build strip does not do stripping too early"
@@ -297,6 +303,9 @@ src_configure() {
 
 	#Fix for glibc-2.8 and ucred. Bug 228457.
 	append-flags -D_GNU_SOURCE
+
+	# Bug 408001
+	use elibc_FreeBSD && append-flags -DMDB_DSYNC=O_SYNC -DMDB_FDATASYNC=fsync
 
 	use debug && myconf="${myconf} $(use_enable debug)"
 
@@ -392,19 +401,19 @@ src_configure_cxx() {
 	# configure.
 	if ! use minimal ; then
 		 if use cxx ; then
-		 	local myconf_ldapcpp
-		 	myconf_ldapcpp="${myconf_ldapcpp} --with-ldap-includes=../../include"
-		 	cd "${S}/contrib/ldapc++"
-		 	OLD_LDFLAGS="$LDFLAGS"
-		 	OLD_CPPFLAGS="$CPPFLAGS"
-		 	append-ldflags -L../../libraries/liblber/.libs -L../../libraries/libldap/.libs
-		 	append-ldflags -L../../../libraries/liblber/.libs -L../../../libraries/libldap/.libs
-		 	append-cppflags -I../../../include
-		 	econf ${myconf_ldapcpp} \
-		 		CC="${CC}" \
-		 		CXX="${CXX}" \
-		 		|| die "econf ldapc++ failed"
-		 	CPPFLAGS="$OLD_CPPFLAGS"
+			local myconf_ldapcpp
+			myconf_ldapcpp="${myconf_ldapcpp} --with-ldap-includes=../../include"
+			cd "${S}/contrib/ldapc++"
+			OLD_LDFLAGS="$LDFLAGS"
+			OLD_CPPFLAGS="$CPPFLAGS"
+			append-ldflags -L../../libraries/liblber/.libs -L../../libraries/libldap/.libs
+			append-ldflags -L../../../libraries/liblber/.libs -L../../../libraries/libldap/.libs
+			append-cppflags -I../../../include
+			econf ${myconf_ldapcpp} \
+				CC="${CC}" \
+				CXX="${CXX}" \
+				|| die "econf ldapc++ failed"
+			CPPFLAGS="$OLD_CPPFLAGS"
 			LDFLAGS="${OLD_LDFLAGS}"
 		 fi
 	fi
@@ -412,18 +421,18 @@ src_configure_cxx() {
 
 src_compile() {
 	emake depend || die "emake depend failed"
-	emake CC="${CC}" AR="${AR}" || die "emake failed"
+	emake CC="${CC}" AR="${AR}" SHELL="${EPREFIX}"/bin/bash || die "emake failed"
 	lt="${S}/libtool"
 	export echo="echo"
 
 	if ! use minimal ; then
 		 if use cxx ; then
-		 	einfo "Building contrib library: ldapc++"
+			einfo "Building contrib library: ldapc++"
 			src_configure_cxx
-		 	cd "${S}/contrib/ldapc++"
-		 	emake \
-		 		CC="${CC}" CXX="${CXX}" \
-		 		|| die "emake ldapc++ failed"
+			cd "${S}/contrib/ldapc++"
+			emake \
+				CC="${CC}" CXX="${CXX}" \
+				|| die "emake ldapc++ failed"
 		 fi
 
 		if use smbkrb5passwd ; then
@@ -431,7 +440,7 @@ src_compile() {
 			cd "${S}/contrib/slapd-modules/smbk5pwd"
 
 			emake \
-				DEFS="-DDO_SAMBA -DDO_KRB5" \
+				DEFS="-DDO_SAMBA -DDO_KRB5 -DDO_SHADOW" \
 				KRB5_INC="$(krb5-config --cflags)" \
 				CC="${CC}" libexecdir="${EPREFIX}/usr/$(get_libdir)/openldap" \
 				|| die "emake smbk5pwd failed"
@@ -493,7 +502,7 @@ src_compile() {
 		# lastmod may not play well with other overlays
 		build_contrib_module "lastmod" "lastmod.c" "lastmod"
 		build_contrib_module "nops" "nops.c" "nops-overlay"
-	    build_contrib_module "trace" "trace.c" "trace"
+		build_contrib_module "trace" "trace.c" "trace"
 		# build slapi-plugins
 		cd "${S}/contrib/slapi-plugins/addrdnvalues"
 		einfo "Building contrib-module: addrdnvalues plugin"
@@ -514,30 +523,25 @@ src_test() {
 
 src_install() {
 	lt="${S}/libtool"
-	emake DESTDIR="${D}" install || die "make install failed"
+	emake DESTDIR="${D}" SHELL="${EPREFIX}"/bin/bash install || die "make install failed"
 
 	dodoc ANNOUNCEMENT CHANGES COPYRIGHT README "${FILESDIR}"/DB_CONFIG.fast.example
 	docinto rfc ; dodoc doc/rfc/*.txt
 
-	# openldap modules go here
-	# TODO: write some code to populate slapd.conf with moduleload statements
-	keepdir /usr/$(get_libdir)/openldap/openldap/
-
-	# initial data storage dir
-	keepdir /var/lib/openldap-data
-	use prefix || fowners ldap:ldap /var/lib/openldap-data
-	fperms 0700 /var/lib/openldap-data
-
-	echo "OLDPF='${PF}'" > "${ED}${OPENLDAP_DEFAULTDIR_VERSIONTAG}/${OPENLDAP_VERSIONTAG}"
-	echo "# do NOT delete this. it is used"	>> "${ED}${OPENLDAP_DEFAULTDIR_VERSIONTAG}/${OPENLDAP_VERSIONTAG}"
-	echo "# to track versions for upgrading." >> "${ED}${OPENLDAP_DEFAULTDIR_VERSIONTAG}/${OPENLDAP_VERSIONTAG}"
-
-	# change slapd.pid location in configuration file
-	keepdir /var/run/openldap
-	use prefix || fowners ldap:ldap /var/run/openldap
-	fperms 0755 /var/run/openldap
-
 	if ! use minimal; then
+		# openldap modules go here
+		# TODO: write some code to populate slapd.conf with moduleload statements
+		keepdir /usr/$(get_libdir)/openldap/openldap/
+
+		# initial data storage dir
+		keepdir /var/lib/openldap-data
+		use prefix || fowners ldap:ldap /var/lib/openldap-data
+		fperms 0700 /var/lib/openldap-data
+
+		echo "OLDPF='${PF}'" > "${ED}${OPENLDAP_DEFAULTDIR_VERSIONTAG}/${OPENLDAP_VERSIONTAG}"
+		echo "# do NOT delete this. it is used"	>> "${ED}${OPENLDAP_DEFAULTDIR_VERSIONTAG}/${OPENLDAP_VERSIONTAG}"
+		echo "# to track versions for upgrading." >> "${ED}${OPENLDAP_DEFAULTDIR_VERSIONTAG}/${OPENLDAP_VERSIONTAG}"
+
 		# use our config
 		rm "${ED}"etc/openldap/slapd.conf
 		insinto /etc/openldap
@@ -569,10 +573,10 @@ src_install() {
 				"${ED}"etc/init.d/slapd
 
 		 if use cxx ; then
-		 	einfo "Install the ldapc++ library"
-		 	cd "${S}/contrib/ldapc++"
-		 	emake DESTDIR="${D}" libexecdir="${EPREFIX}/usr/$(get_libdir)/openldap" install || die "emake install ldapc++ failed"
-		 	newdoc README ldapc++-README
+			einfo "Install the ldapc++ library"
+			cd "${S}/contrib/ldapc++"
+			emake DESTDIR="${D}" libexecdir="${EPREFIX}/usr/$(get_libdir)/openldap" install || die "emake install ldapc++ failed"
+			newdoc README ldapc++-README
 		 fi
 
 		if use smbkrb5passwd ; then

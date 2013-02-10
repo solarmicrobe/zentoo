@@ -9,14 +9,19 @@ pidfile=${CHEF_EXPANDER_PIDFILE:-/var/run/chef/expander.pid}
 command=${CHEF_EXPANDER_BINARY:-/usr/bin/chef-expander}
 command_args="-d -P ${pidfile} -L ${CHEF_EXPANDER_LOGFILE} -c ${CONFIGFILE} ${CHEF_EXPANDER_OPTS}"
 
-user=${CHEF_USER:-chef}
-group=${CHEF_GROUP:-chef}
+command_user=${CHEF_USER:-chef}
+command_group=${CHEF_GROUP:-chef}
 
 depend() {
 	need net chef-solr
 }
 
 start_pre() {
-	checkpath -q -d -m 0750 -o ${user}:${group} /etc/chef /var/{lib,log,run}/chef
-	checkpath -q -f -m 0600 ${CONFIGFILE}
+	checkpath -q -d -m 0750 -o ${command_user}:${command_group} \
+		/etc/chef \
+		/etc/chef/certificates \
+		/var/{lib,log,run}/chef
+
+	checkpath -q -f -m 0600 -o ${command_user}:${command_group} \
+		${CONFIGFILE}
 }

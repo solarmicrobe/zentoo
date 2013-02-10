@@ -38,13 +38,8 @@ all_ruby_install() {
 	doinitd "${FILESDIR}/initd/chef-solr"
 	doconfd "${FILESDIR}/confd/chef-solr"
 
-	keepdir /etc/chef /var/lib/chef /var/log/chef /var/run/chef
-
 	insinto /etc/chef
 	doins "${FILESDIR}/solr.rb"
-
-	fowners chef:chef /etc/chef/{,solr.rb}
-	fowners chef:chef /var/{lib,log,run}/chef
 }
 
 pkg_postinst() {

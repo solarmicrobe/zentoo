@@ -54,15 +54,8 @@ all_ruby_install() {
 	doinitd "${FILESDIR}/initd/chef-server-api"
 	doconfd "${FILESDIR}/confd/chef-server-api"
 
-	keepdir /etc/chef /var/lib/chef /var/log/chef /var/run/chef \
-		/etc/chef/certificates
-
 	insinto /etc/chef
 	doins "${FILESDIR}/server.rb"
-
-	fperms 0700 /etc/chef/certificates
-	fowners chef:chef /etc/chef/{,server.rb,certificates}
-	fowners chef:chef /var/{lib,log,run}/chef
 }
 
 pkg_postinst() {

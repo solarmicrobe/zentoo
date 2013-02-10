@@ -65,7 +65,7 @@ each_ruby_prepare() {
 all_ruby_install() {
 	all_fakegem_install
 
-	keepdir /etc/chef /var/lib/chef /var/log/chef /var/run/chef
+	keepdir /etc/chef /var/lib/chef /var/log/chef
 
 	doinitd "${FILESDIR}/initd/chef-client"
 	doconfd "${FILESDIR}/confd/chef-client"

@@ -32,14 +32,9 @@ pkg_setup() {
 }
 
 src_install() {
-	keepdir /var/run/jenkins /var/log/jenkins
-	keepdir /var/lib/jenkins/home
-
 	insinto /usr/lib/jenkins
 	doins usr/lib/jenkins/jenkins.war
 
 	newinitd "${FILESDIR}/jenkins.initd" jenkins
 	newconfd "${FILESDIR}/jenkins.confd" jenkins
-
-	fowners jenkins:jenkins /var/run/jenkins /var/log/jenkins /var/lib/jenkins /var/lib/jenkins/home
 }

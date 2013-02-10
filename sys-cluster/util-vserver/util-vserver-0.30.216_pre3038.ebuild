@@ -65,10 +65,6 @@ src_install() {
 		|| die "make install failed!"
 
 	# keep dirs
-	keepdir /var/run/vservers
-	keepdir /var/run/vservers.rev
-	keepdir /var/run/vshelper
-	keepdir /var/lock/vservers
 	keepdir /var/cache/vservers
 	keepdir "${VDIRBASE}"
 	keepdir "${VDIRBASE}"/.pkg
