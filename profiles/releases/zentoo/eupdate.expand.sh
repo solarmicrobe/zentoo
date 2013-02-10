@@ -36,6 +36,7 @@ dev-ruby/amqp)                 echo "=$1-0.6.7-r1";;
 dev-ruby/builder)              echo "=$1-3.0.4";;
 dev-ruby/i18n)                 echo "=$1-0.6.1";;
 dev-ruby/eventmachine)         echo "=$1-1.0.0";;
+dev-ruby/json)                 echo "=$1-1.7.6";;
 dev-ruby/libxml)               echo "=$1-2.3.3";;
 dev-ruby/mysql-ruby)           echo "=$1-2.9.0-r1";;
 dev-ruby/net-ssh)              echo "=$1-2.6.3";;

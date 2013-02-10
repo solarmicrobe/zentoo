@@ -29,7 +29,7 @@ RESTRICT="test"
 ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	dev-ruby/erubis
 	>=dev-ruby/highline-1.6.9
-	>=dev-ruby/json-1.4.4
+	>=dev-ruby/json-1.7.6
 	>=dev-ruby/mixlib-authentication-1.3.0
 	>=dev-ruby/mixlib-cli-1.1.0
 	>=dev-ruby/mixlib-config-1.1.2
@@ -55,9 +55,6 @@ each_ruby_prepare() {
 
 	# bunny
 	sed -i -e 's/"< 0.8.0", //' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
-
-	# json
-	sed -i -e 's/"<= 1.6.1", //' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
 }
 
 all_ruby_install() {
