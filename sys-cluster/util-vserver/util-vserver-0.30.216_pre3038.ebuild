@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -48,6 +48,10 @@ src_test() {
 	# do not use $D from portage by accident (#297982)
 	sed -i -e 's/^\$D //' "${S}"/src/testsuite/vunify-test.sh
 	default
+}
+
+src_prepare() {
+	epatch "${FILESDIR}"/util-vserver-0.30.216-varlock.patch
 }
 
 src_configure() {
