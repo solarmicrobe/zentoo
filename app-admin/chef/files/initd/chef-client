@@ -5,10 +5,11 @@
 CONFIGFILE=${CONFIGFILE:-/etc/chef/client.rb}
 INTERVAL=${INTERVAL:-1800}
 SPLAY=${SPLAY:-20}
+ENCODING=${ENCODING:-UTF-8}
 
 pidfile=${CHEF_CLIENT_PIDFILE:-/var/run/chef/client.pid}
-command=${CHEF_CLIENT_BINARY:-/usr/bin/chef-client}
-command_args="-d -c ${CONFIGFILE} -i ${INTERVAL} -s ${SPLAY} -P ${pidfile} ${CHEF_CLIENT_OPTS}"
+command=${CHEF_CLIENT_BINARY:-/usr/bin/ruby19}
+command_args="-E ${ENCODING} /usr/bin/chef-client -d -c ${CONFIGFILE} -i ${INTERVAL} -s ${SPLAY} -P ${pidfile} ${CHEF_CLIENT_OPTS}"
 
 depend() {
 	need net
