@@ -60,6 +60,7 @@ PDEPEND="qt3support? ( ~x11-libs/qt-qt3support-${PV}[aqua=,debug=] )"
 
 PATCHES=(
 	"${FILESDIR}/${PN}-4.7.3-cups.patch"
+	"${FILESDIR}/CVE-2013-0254.patch"
 )
 
 pkg_setup() {
@@ -179,7 +180,7 @@ src_install() {
 			$(use egl && echo QT_EGL)
 			QT_FONTCONFIG
 			$(use gtkstyle && echo QT_STYLE_GTK)
-			QT_IMAGEFORMAT_JPEG QT_IMAGEFORMAT_PNG QT_MITSHM
+			QT_IMAGEFORMAT_JPEG QT_IMAGEFORMAT_PNG
 			$(use mng && echo QT_IMAGEFORMAT_MNG)
 			$(use nas && echo QT_NAS)
 			$(use nis && echo QT_NIS)

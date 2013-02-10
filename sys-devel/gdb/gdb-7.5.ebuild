@@ -27,7 +27,7 @@ case ${PV} in
 	;;
 *.*.50.*)
 	# weekly snapshots
-	SRC_URI="ftp://sources.redhat.com/pub/gdb/snapshots/current/gdb-weekly-${PV}.tar.bz2"
+	SRC_URI="ftp://sourceware.org/pub/gdb/snapshots/current/gdb-weekly-${PV}.tar.bz2"
 	;;
 9999*)
 	# live git tree
@@ -38,7 +38,7 @@ case ${PV} in
 *)
 	# Normal upstream release
 	SRC_URI="mirror://gnu/gdb/${P}.tar.bz2
-		ftp://sources.redhat.com/pub/gdb/releases/${P}.tar.bz2"
+		ftp://sourceware.org/pub/gdb/releases/${P}.tar.bz2"
 	;;
 esac
 

@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -13,10 +13,11 @@ SRC_URI="mirror://gentoo/${P}.tar.xz
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
+IUSE="userland_BSD"
 
 RDEPEND="|| ( sys-apps/util-linux app-misc/getopt )
 	!<app-text/docbook-xsl-stylesheets-1.73.1
+	userland_BSD? ( sys-apps/flock )
 	dev-libs/libxml2"
 DEPEND=""
 

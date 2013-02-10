@@ -208,11 +208,10 @@ S=$(
 # can be altered by setting the following:
 #
 #	SNAPSHOT
-#			If set, this variable signals that we should be using a snapshot
-#			of gcc from ftp://sources.redhat.com/pub/gcc/snapshots/. It is
-#			expected to be in the format "YYYY-MM-DD". Note that if the ebuild
-#			has a _pre suffix, this variable is ignored and the prerelease
-#			tarball is used instead.
+#			If set, this variable signals that we should be using a snapshot of
+#			gcc. It is expected to be in the format "YYYY-MM-DD". Note that if
+#			the ebuild has a _pre suffix, this variable is ignored and the
+#			prerelease tarball is used instead.
 #
 #	BRANCH_UPDATE
 #			If set, this variable signals that we should be using the main
@@ -278,7 +277,7 @@ get_gcc_src_uri() {
 	if [[ -n ${PRERELEASE} ]] ; then
 		GCC_SRC_URI="ftp://gcc.gnu.org/pub/gcc/prerelease-${PRERELEASE}/gcc-${PRERELEASE}.tar.bz2"
 	elif [[ -n ${SNAPSHOT} ]] ; then
-		GCC_SRC_URI="ftp://sources.redhat.com/pub/gcc/snapshots/${SNAPSHOT}/gcc-${SNAPSHOT}.tar.bz2"
+		GCC_SRC_URI="ftp://gcc.gnu.org/pub/gcc/snapshots/${SNAPSHOT}/gcc-${SNAPSHOT}.tar.bz2"
 	elif [[ ${PV} != *9999* ]] ; then
 		GCC_SRC_URI="mirror://gnu/gcc/gcc-${GCC_PV}/gcc-${GCC_RELEASE_VER}.tar.bz2"
 		# we want all branch updates to be against the main release

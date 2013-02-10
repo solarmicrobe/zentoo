@@ -38,6 +38,7 @@ ruby_add_bdepend "test? (
 	>=dev-ruby/memcache-client-1.5.8
 	dev-ruby/nokogiri
 	>=dev-ruby/builder-3.0.3:3
+	>=dev-ruby/tzinfo-0.3.29
 	)"
 
 # libxml is not strictly needed, there are tests using this code. jruby

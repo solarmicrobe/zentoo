@@ -16,12 +16,13 @@ IUSE="build doc epydoc +ipc linguas_pl linguas_ru pypy2_0 python2 python3 selinu
 
 # Import of the io module in python-2.6 raises ImportError for the
 # thread module if threading is disabled.
+# >=python-2.6.5 for bug #456236
 python_dep_ssl="python3? ( =dev-lang/python-3*[ssl] )
 	!pypy2_0? ( !python2? ( !python3? (
-		|| ( >=dev-lang/python-2.7[ssl] dev-lang/python:2.6[threads,ssl] )
+		|| ( >=dev-lang/python-2.7[ssl] >=dev-lang/python-2.6.5:2.6[threads,ssl] )
 	) ) )
 	pypy2_0? ( !python2? ( !python3? ( dev-python/pypy:2.0[bzip2,ssl] ) ) )
-	python2? ( !python3? ( || ( dev-lang/python:2.7[ssl] dev-lang/python:2.6[ssl,threads] ) ) )"
+	python2? ( !python3? ( || ( dev-lang/python:2.7[ssl] >=dev-lang/python-2.6.5:2.6[ssl,threads] ) ) )"
 python_dep="${python_dep_ssl//\[ssl\]}"
 python_dep="${python_dep//,ssl}"
 python_dep="${python_dep//ssl,}"

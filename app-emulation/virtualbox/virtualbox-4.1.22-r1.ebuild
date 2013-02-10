@@ -169,6 +169,14 @@ src_prepare() {
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
 	epatch "${WORKDIR}"/patches
+
+	# fix location of ifconfig binary (bug #455902)
+	local ifcfg="$(type -p ifconfig)"
+	if [ "${ifcfg}" != "/sbin/ifconfig" ] ; then
+		sed "/VBOXADPCTL_IFCONFIG_PATH/s@/sbin/ifconfig@${ifcfg}@" \
+			-i "${S}"/src/apps/adpctl/VBoxNetAdpCtl.cpp \
+			|| die
+	fi
 }
 
 src_configure() {

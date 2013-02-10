@@ -1,8 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
+EAPI="5"
 PYTHON_DEPEND="2"
 
 inherit eutils python systemd
@@ -30,14 +30,6 @@ pkg_setup() {
 	enewgroup rabbitmq
 	enewuser rabbitmq -1 -1 /var/lib/rabbitmq rabbitmq
 	python_set_active_version 2
-	python_pkg_setup
-}
-
-src_prepare() {
-	# do not refetch plugins from their vcs
-	for f in $(find plugins-src/*-wrapper ${plugin} -type d -maxdepth 1); do
-		touch ${f}/.done
-	done
 }
 
 src_compile() {
@@ -47,7 +39,7 @@ src_compile() {
 
 src_install() {
 	# erlang module
-	local targetdir="/usr/$(get_libdir)/rabbitmq"
+	local targetdir="/usr/$(get_libdir)/erlang/lib/rabbitmq_server-${PV}"
 
 	einfo "Setting correct RABBITMQ_HOME in scripts"
 	sed -e "s:^RABBITMQ_HOME=.*:RABBITMQ_HOME=\"${targetdir}\":g" \
@@ -92,5 +84,11 @@ pkg_preinst() {
 		elog "  usermod -d /var/lib/rabbitmq rabbitmq"
 		elog "  chown rabbitmq:rabbitmq -R /var/lib/rabbitmq"
 		elog
+	elif has_version "<net-misc/rabbitmq-server-2.1.1"; then
+		elog "IMPORTANT UPGRADE NOTICE:"
+		elog
+		elog "Please read release notes before upgrading:"
+		elog
+		elog "http://www.rabbitmq.com/release-notes/README-3.0.0.txt"
 	fi
 }

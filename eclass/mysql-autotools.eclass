@@ -420,6 +420,8 @@ mysql-autotools_src_prepare() {
 		i='pbxt'
 		[ -d "${i}" ] && rm -rf "${i}"
 		cp -ral "${WORKDIR}/${PBXT_P}" "${i}"
+		f="${WORKDIR}/mysql-extras/pbxt/fix-low-priority.patch"
+		[[ -f $f ]] && epatch "$f" 
 		popd >/dev/null
 	fi
 
