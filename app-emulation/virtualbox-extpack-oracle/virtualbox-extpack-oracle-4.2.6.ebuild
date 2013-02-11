@@ -6,13 +6,15 @@ EAPI=2
 
 inherit eutils multilib
 
-MY_BUILD="80657"
+MY_BUILD="82870"
 MY_PN="Oracle_VM_VirtualBox_Extension_Pack"
-MY_P="${MY_PN}-${PV}-${MY_BUILD}"
+MY_PV="${PV/beta/BETA}"
+MY_PV="${MY_PV/rc/RC}"
+MY_P="${MY_PN}-${MY_PV}-${MY_BUILD}"
 
 DESCRIPTION="PUEL extensions for VirtualBox"
 HOMEPAGE="http://www.virtualbox.org/"
-SRC_URI="http://download.virtualbox.org/virtualbox/${PV}/${MY_P}.vbox-extpack -> ${MY_P}.tar.gz"
+SRC_URI="http://download.virtualbox.org/virtualbox/${MY_PV}/${MY_P}.vbox-extpack -> ${MY_P}.tar.gz"
 
 LICENSE="PUEL"
 SLOT="0"

@@ -7,11 +7,13 @@ EAPI=2
 inherit eutils
 
 MY_PN=VBoxGuestAdditions
-MY_P=${MY_PN}_${PV}
+MY_PV="${PV/beta/BETA}"
+MY_PV="${MY_PV/rc/RC}"
+MY_P=${MY_PN}_${MY_PV}
 
 DESCRIPTION="CD image containing guest additions for VirtualBox"
 HOMEPAGE="http://www.virtualbox.org/"
-SRC_URI="http://download.virtualbox.org/virtualbox/${PV}/${MY_P}.iso"
+SRC_URI="http://download.virtualbox.org/virtualbox/${MY_PV}/${MY_P}.iso"
 
 LICENSE="PUEL"
 SLOT="0"

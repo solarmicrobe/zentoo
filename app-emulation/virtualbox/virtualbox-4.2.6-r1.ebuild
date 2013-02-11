@@ -11,15 +11,17 @@ if [[ ${PV} == "9999" ]] ; then
 	ESVN_REPO_URI="http://www.virtualbox.org/svn/vbox/trunk"
 	inherit linux-mod subversion
 else
-	MY_P=VirtualBox-${PV}
-	SRC_URI="http://download.virtualbox.org/virtualbox/${PV}/${MY_P}.tar.bz2"
+	MY_PV="${PV/beta/BETA}"
+	MY_PV="${MY_PV/rc/RC}"
+	MY_P=VirtualBox-${MY_PV}
+	SRC_URI="http://download.virtualbox.org/virtualbox/${MY_PV}/${MY_P}.tar.bz2"
 	S="${WORKDIR}/${MY_P}"
 fi
 
 DESCRIPTION="Family of powerful x86 virtualization products for enterprise as well as home use"
 HOMEPAGE="http://www.virtualbox.org/"
 SRC_URI="${SRC_URI}
-	http://dev.gentoo.org/~polynomial-c/${PN}/patchsets/${PN}-4.1.22-patches-01.tar.xz"
+	http://dev.gentoo.org/~polynomial-c/virtualbox/patchsets/virtualbox-4.2.6-patches-01.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -34,6 +36,7 @@ RDEPEND="!app-emulation/virtualbox-bin
 	dev-libs/openssl
 	dev-libs/libxml2
 	sys-libs/zlib
+	>=virtual/udev-171
 	!headless? (
 		qt4? (
 			x11-libs/qt-gui:4
@@ -52,10 +55,9 @@ RDEPEND="!app-emulation/virtualbox-bin
 	vnc? ( >=net-libs/libvncserver-0.9.9 )
 	java? ( || ( virtual/jre:1.7 virtual/jre:1.6 ) )"
 DEPEND="${RDEPEND}
-	>=dev-util/kbuild-0.1.999
+	>=dev-util/kbuild-0.1.9998_pre20120806
 	>=dev-lang/yasm-0.6.2
 	sys-devel/bin86
-	sys-devel/dev86
 	sys-power/iasl
 	media-libs/libpng
 	pam? ( sys-libs/pam )
@@ -163,12 +165,12 @@ src_prepare() {
 	fi
 
 	if ! gcc-specs-pie ; then
-		EPATCH_EXCLUDE="050_${PN}-4.1.20-nopie.patch"
+		EPATCH_EXCLUDE="050_${PN}-4.2.0-nopie.patch"
 	fi
 
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
-	epatch "${WORKDIR}"/patches
+	epatch "${WORKDIR}/patches"
 
 	# fix location of ifconfig binary (bug #455902)
 	local ifcfg="$(type -p ifconfig)"
@@ -200,6 +202,7 @@ src_configure() {
 		--with-g++="$(tc-getCXX)" \
 		--disable-kmods \
 		--disable-dbus \
+		--disable-devmapper \
 		${myconf} \
 		|| die "configure failed"
 }
