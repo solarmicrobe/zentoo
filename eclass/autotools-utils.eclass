@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: autotools-utils.eclass
@@ -485,12 +485,15 @@ autotools-utils_src_install() {
 	fi
 
 	# XXX: support installing them from builddir as well?
-	if [[ ${DOCS} ]]; then
-		if [[ ${EAPI} == [23] ]]; then
-			dodoc "${DOCS[@]}" || die
-		else
-			# dies by itself
-			dodoc -r "${DOCS[@]}"
+	if declare -p DOCS &>/dev/null; then
+		# an empty list == don't install anything
+		if [[ ${DOCS[@]} ]]; then
+			if [[ ${EAPI} == [23] ]]; then
+				dodoc "${DOCS[@]}" || die
+			else
+				# dies by itself
+				dodoc -r "${DOCS[@]}"
+			fi
 		fi
 	else
 		local f

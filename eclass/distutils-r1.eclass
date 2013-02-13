@@ -484,7 +484,10 @@ distutils-r1_python_install_all() {
 	debug-print-function ${FUNCNAME} "${@}"
 
 	if declare -p DOCS &>/dev/null; then
-		dodoc -r "${DOCS[@]}" || die "dodoc failed"
+		# an empty list == don't install anything
+		if [[ ${DOCS[@]} ]]; then
+			dodoc -r "${DOCS[@]}" || die "dodoc failed"
+		fi
 	else
 		local f
 		# same list as in PMS

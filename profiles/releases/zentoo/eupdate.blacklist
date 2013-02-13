@@ -5,6 +5,8 @@ app-arch/libarchive
 app-office/openerp
 dev-db/couchdb
 dev-db/mongodb
+dev-db/mysql-init-scripts
+media-libs/libjpeg-turbo
 dev-ruby/rubygems
 media-gfx/imagemagick
 net-analyzer/mk-livestatus
