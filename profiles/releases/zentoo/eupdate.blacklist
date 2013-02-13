@@ -5,7 +5,6 @@ app-arch/libarchive
 app-office/openerp
 dev-db/couchdb
 dev-db/mongodb
-dev-db/mysql-init-scripts
 dev-ruby/rubygems
 media-gfx/imagemagick
 net-analyzer/mk-livestatus
