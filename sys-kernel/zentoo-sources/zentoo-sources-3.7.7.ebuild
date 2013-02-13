@@ -3,7 +3,7 @@
 # $Header: $
 
 ETYPE="sources"
-VSPV="2.3.5.5"
+VSPV="2.3.5.6"
 
 inherit kernel-2
 detect_version
