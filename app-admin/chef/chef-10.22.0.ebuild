@@ -29,7 +29,8 @@ RESTRICT="test"
 ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 	dev-ruby/erubis
 	>=dev-ruby/highline-1.6.9
-	>=dev-ruby/json-1.7.6
+	>=dev-ruby/json-1.4.4
+	<=dev-ruby/json-1.7.7
 	>=dev-ruby/mixlib-authentication-1.3.0
 	>=dev-ruby/mixlib-cli-1.1.0
 	>=dev-ruby/mixlib-config-1.1.2
