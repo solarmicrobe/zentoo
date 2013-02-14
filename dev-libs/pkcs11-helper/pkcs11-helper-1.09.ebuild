@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ EAPI="4"
 
 DESCRIPTION="PKCS#11 helper library"
 HOMEPAGE="http://www.opensc-project.org/opensc/wiki/pkcs11-helper"
-SRC_URI="http://www.opensc-project.org/files/${PN}/${P}.tar.bz2"
+SRC_URI="mirror://sourceforge/opensc/${PN}/${P}.tar.bz2"
 
 LICENSE="|| ( BSD GPL-2 )"
 SLOT="0"

@@ -96,7 +96,7 @@ STDCXX_INCDIR=${TOOLCHAIN_STDCXX_INCDIR:-${LIBPATH}/include/g++-v${GCC_BRANCH_VE
 
 
 #---->> SLOT+IUSE logic <<----
-IUSE="build multislot nls nptl test vanilla"
+IUSE="multislot nls nptl test vanilla"
 
 if [[ ${PN} != "kgcc64" && ${PN} != gcc-* ]] ; then
 	IUSE+=" altivec cxx fortran"
@@ -106,7 +106,7 @@ if [[ ${PN} != "kgcc64" && ${PN} != gcc-* ]] ; then
 	[[ -n ${SPECS_VER} ]] && IUSE+=" nossp"
 
 	if tc_version_is_at_least 3 ; then
-		IUSE+=" bootstrap doc gcj gtk hardened multilib objc"
+		IUSE+=" doc gcj gtk hardened multilib objc"
 
 		tc_version_is_at_least "4.0" && IUSE+=" objc-gc mudflap"
 		tc_version_is_at_least "4.1" && IUSE+=" libssp objc++"
@@ -129,9 +129,7 @@ fi
 #---->> DEPEND <<----
 
 RDEPEND="sys-libs/zlib
-	!build? (
-		nls? ( sys-devel/gettext )
-	)"
+	nls? ( sys-devel/gettext )"
 if tc_version_is_at_least 3 ; then
 	RDEPEND+=" virtual/libiconv"
 fi
@@ -210,11 +208,10 @@ S=$(
 # can be altered by setting the following:
 #
 #	SNAPSHOT
-#			If set, this variable signals that we should be using a snapshot
-#			of gcc from ftp://sources.redhat.com/pub/gcc/snapshots/. It is
-#			expected to be in the format "YYYY-MM-DD". Note that if the ebuild
-#			has a _pre suffix, this variable is ignored and the prerelease
-#			tarball is used instead.
+#			If set, this variable signals that we should be using a snapshot of
+#			gcc. It is expected to be in the format "YYYY-MM-DD". Note that if
+#			the ebuild has a _pre suffix, this variable is ignored and the
+#			prerelease tarball is used instead.
 #
 #	BRANCH_UPDATE
 #			If set, this variable signals that we should be using the main
@@ -280,7 +277,7 @@ get_gcc_src_uri() {
 	if [[ -n ${PRERELEASE} ]] ; then
 		GCC_SRC_URI="ftp://gcc.gnu.org/pub/gcc/prerelease-${PRERELEASE}/gcc-${PRERELEASE}.tar.bz2"
 	elif [[ -n ${SNAPSHOT} ]] ; then
-		GCC_SRC_URI="ftp://sources.redhat.com/pub/gcc/snapshots/${SNAPSHOT}/gcc-${SNAPSHOT}.tar.bz2"
+		GCC_SRC_URI="ftp://gcc.gnu.org/pub/gcc/snapshots/${SNAPSHOT}/gcc-${SNAPSHOT}.tar.bz2"
 	elif [[ ${PV} != *9999* ]] ; then
 		GCC_SRC_URI="mirror://gnu/gcc/gcc-${GCC_PV}/gcc-${GCC_RELEASE_VER}.tar.bz2"
 		# we want all branch updates to be against the main release
@@ -1811,7 +1808,7 @@ do_gcc_PIE_patches() {
 		EPATCH_MULTI_MSG="Applying default pie patches ..." \
 		epatch "${WORKDIR}"/piepatch/def
 	fi
-	
+
 	# we want to be able to control the pie patch logic via something other
 	# than ALL_CFLAGS...
 	sed -e '/^ALL_CFLAGS/iHARD_CFLAGS = ' \
@@ -1828,11 +1825,6 @@ do_gcc_PIE_patches() {
 }
 
 should_we_gcc_config() {
-	# we always want to run gcc-config if we're bootstrapping, otherwise
-	# we might get stuck with the c-only stage1 compiler
-	use_if_iuse bootstrap && return 0
-	use build && return 0
-
 	# if the current config is invalid, we definitely want a new one
 	# Note: due to bash quirkiness, the following must not be 1 line
 	local curr_config

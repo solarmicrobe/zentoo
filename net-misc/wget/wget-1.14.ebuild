@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -19,7 +19,7 @@ LIB_DEPEND="idn? ( net-dns/libidn[static-libs(+)] )
 	pcre? ( dev-libs/libpcre[static-libs(+)] )
 	ssl? (
 		gnutls? ( net-libs/gnutls[static-libs(+)] )
-		!gnutls? ( >=dev-libs/openssl-0.9.6b[static-libs(+)] )
+		!gnutls? ( dev-libs/openssl:0[static-libs(+)] )
 	)
 	uuid? ( sys-apps/util-linux[static-libs(+)] )
 	zlib? ( sys-libs/zlib[static-libs(+)] )"

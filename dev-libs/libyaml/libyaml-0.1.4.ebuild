@@ -1,10 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 
-inherit autotools-utils eutils
+inherit autotools-utils eutils libtool
 
 MY_P="${P/lib}"
 
@@ -26,6 +26,7 @@ src_prepare() {
 	if ! use test; then
 		sed -i -e 's: tests::g' Makefile* || die
 	fi
+	elibtoolize  # for FreeMiNT
 }
 
 src_install() {

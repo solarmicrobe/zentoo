@@ -127,7 +127,7 @@ fi
 #
 # Example value:
 # @CODE
-# python_targets_python2_6?,python_targets_python2_7?
+# python_targets_python2_6(-)?,python_targets_python2_7(-)?
 # @CODE
 
 _python_set_globals() {
@@ -149,7 +149,7 @@ _python_set_globals() {
 	fi
 
 	local flags=( "${impls[@]/#/python_targets_}" )
-	local optflags=${flags[@]/%/?}
+	local optflags=${flags[@]/%/(-)?}
 
 	# A nice QA trick here. Since a python-single-r1 package has to have
 	# at least one PYTHON_SINGLE_TARGET enabled (REQUIRED_USE),
@@ -228,7 +228,7 @@ python_gen_usedep() {
 		for pattern; do
 			if [[ ${impl} == ${pattern} ]]; then
 				matches+=(
-					"python_targets_${impl}?"
+					"python_targets_${impl}(-)?"
 					"-python_single_target_${impl}(-)"
 				)
 				break
@@ -678,6 +678,25 @@ python_replicate_script() {
 	for f; do
 		_python_ln_rel "${ED}"/usr/bin/python-exec "${f}" || die
 	done
+}
+
+# @FUNCTION: run_in_build_dir
+# @USAGE: <argv>...
+# @DESCRIPTION:
+# Run the given command in the directory pointed by BUILD_DIR.
+run_in_build_dir() {
+	debug-print-function ${FUNCNAME} "${@}"
+	local ret
+
+	[[ ${#} -ne 0 ]] || die "${FUNCNAME}: no command specified."
+	[[ ${BUILD_DIR} ]] || die "${FUNCNAME}: BUILD_DIR not set."
+
+	pushd "${BUILD_DIR}" >/dev/null || die
+	"${@}"
+	ret=${?}
+	popd >/dev/null || die
+
+	return ${ret}
 }
 
 _PYTHON_R1=1

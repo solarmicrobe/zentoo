@@ -1,9 +1,11 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="4"
-inherit flag-o-matic user
+
+AUTOTOOLS_AUTO_DEPEND="no" # Only cross-compiling
+inherit flag-o-matic user autotools eutils toolchain-funcs
 
 DESCRIPTION="A Tool for network monitoring and data acquisition"
 HOMEPAGE="http://www.tcpdump.org/"
@@ -42,6 +44,13 @@ pkg_setup() {
 	fi
 	enewgroup tcpdump
 	enewuser tcpdump -1 -1 -1 tcpdump
+}
+
+src_prepare() {
+	if tc-is-cross-compiler ; then
+		epatch "${FILESDIR}"/${P}-ssl-detect.patch
+		eautoreconf
+	fi
 }
 
 src_configure() {

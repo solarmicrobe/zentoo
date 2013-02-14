@@ -6,9 +6,15 @@
 # either of these as needed. If you do use it, you must make sure that none of
 # your socket, pidfile, datadir, logfiles, binary logs, relay logs or InnoDB
 # files collide with each other.
+MY_CNF="/etc/mysql/my.cnf"
 #MY_CNF="${MY_CNF:-/etc/${SVCNAME}/my.cnf}"
+#MY_CNF="${MY_CNF:-/etc/mysql/my-${SVCNAME/mysql.}.cnf}"
 
 # Place any additional arguments here that you might need
+# Common/useful options:
+# --skip-slave-start=1 - For bringing up replication initially
+# --server-id=NNN - Server ID for replication
+# --skip-networking - lock it down to UNIX sockets only
 MY_ARGS=""
 
 # This setting (in seconds) should be high enough to allow InnoDB to do a full
@@ -49,8 +55,8 @@ STOP_TIMEOUT=120
 
 # Does your MySQL bind to an IP on an interface other than net.lo?
 # Alternatively you might wish to specify the exact interface here.
-rc_use="net"
-rc_after="net"
+#rc_use="net"
+#rc_after="net"
 
 # Do you store your MySQL files on a SAN or other network filesystem, that is
 # provided by the netmount init script?

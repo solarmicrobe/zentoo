@@ -110,9 +110,6 @@ inherit toolchain-funcs versionator
 
 EXPORT_FUNCTIONS pkg_setup
 
-DEPEND=""
-RDEPEND=""
-
 # Overwritable environment Var's
 # ---------------------------------------
 KERNEL_DIR="${KERNEL_DIR:-${ROOT}usr/src/linux}"
@@ -182,8 +179,10 @@ getfilevar() {
 		basedname="$(dirname ${2})"
 		unset ARCH
 
+		# We use nonfatal because we want the caller to take care of things #373151
+		[[ ${EAPI:-0} == [0123] ]] && nonfatal() { "$@"; }
 		echo -e "e:\\n\\t@echo \$(${1})\\ninclude ${basefname}" | \
-			make -C "${basedname}" M="${S}" ${BUILD_FIXES} -s -f - 2>/dev/null
+			nonfatal emake -C "${basedname}" M="${S}" ${BUILD_FIXES} -s -f - 2>/dev/null
 
 		ARCH=${myARCH}
 	fi
@@ -244,7 +243,7 @@ linux_config_qa_check() {
 # It returns true if .config exists in a build directory otherwise false
 linux_config_src_exists() {
 	export _LINUX_CONFIG_EXISTS_DONE=1
-	[ -s "${KV_OUT_DIR}/.config" ]
+	[[ -n ${KV_OUT_DIR} && -s ${KV_OUT_DIR}/.config ]]
 }
 
 # @FUNCTION: linux_config_bin_exists
@@ -253,7 +252,7 @@ linux_config_src_exists() {
 # It returns true if .config exists in /proc, otherwise false
 linux_config_bin_exists() {
 	export _LINUX_CONFIG_EXISTS_DONE=1
-	[ -s "/proc/config.gz" ]
+	[[ -s /proc/config.gz ]]
 }
 
 # @FUNCTION: linux_config_exists
@@ -265,6 +264,20 @@ linux_config_bin_exists() {
 # functions.
 linux_config_exists() {
 	linux_config_src_exists || linux_config_bin_exists
+}
+
+# @FUNCTION: linux_config_path
+# @DESCRIPTION:
+# Echo the name of the config file to use.  If none are found,
+# then return false.
+linux_config_path() {
+	if linux_config_src_exists; then
+		echo "${KV_OUT_DIR}/.config"
+	elif linux_config_bin_exists; then
+		echo "/proc/config.gz"
+	else
+		return 1
+	fi
 }
 
 # @FUNCTION: require_configured_kernel
@@ -290,11 +303,7 @@ require_configured_kernel() {
 # MUST call linux_config_exists first.
 linux_chkconfig_present() {
 	linux_config_qa_check linux_chkconfig_present
-	local RESULT config
-	config="${KV_OUT_DIR}/.config"
-	[ ! -f "${config}" ] && config="/proc/config.gz"
-	RESULT="$(getfilevar_noexec CONFIG_${1} "${config}")"
-	[ "${RESULT}" = "m" -o "${RESULT}" = "y" ] && return 0 || return 1
+	[[ $(getfilevar_noexec "CONFIG_$1" "$(linux_config_path)") == [my] ]]
 }
 
 # @FUNCTION: linux_chkconfig_module
@@ -306,11 +315,7 @@ linux_chkconfig_present() {
 # MUST call linux_config_exists first.
 linux_chkconfig_module() {
 	linux_config_qa_check linux_chkconfig_module
-	local RESULT config
-	config="${KV_OUT_DIR}/.config"
-	[ ! -f "${config}" ] && config="/proc/config.gz"
-	RESULT="$(getfilevar_noexec CONFIG_${1} "${config}")"
-	[ "${RESULT}" = "m" ] && return 0 || return 1
+	[[ $(getfilevar_noexec "CONFIG_$1" "$(linux_config_path)") == m ]]
 }
 
 # @FUNCTION: linux_chkconfig_builtin
@@ -322,11 +327,7 @@ linux_chkconfig_module() {
 # MUST call linux_config_exists first.
 linux_chkconfig_builtin() {
 	linux_config_qa_check linux_chkconfig_builtin
-	local RESULT config
-	config="${KV_OUT_DIR}/.config"
-	[ ! -f "${config}" ] && config="/proc/config.gz"
-	RESULT="$(getfilevar_noexec CONFIG_${1} "${config}")"
-	[ "${RESULT}" = "y" ] && return 0 || return 1
+	[[ $(getfilevar_noexec "CONFIG_$1" "$(linux_config_path)") == y ]]
 }
 
 # @FUNCTION: linux_chkconfig_string
@@ -338,10 +339,7 @@ linux_chkconfig_builtin() {
 # MUST call linux_config_exists first.
 linux_chkconfig_string() {
 	linux_config_qa_check linux_chkconfig_string
-	local config
-	config="${KV_OUT_DIR}/.config"
-	[ ! -f "${config}" ] && config="/proc/config.gz"
-	getfilevar_noexec "CONFIG_${1}" "${config}"
+	getfilevar_noexec "CONFIG_$1" "$(linux_config_path)"
 }
 
 # Versioning Functions
@@ -463,6 +461,13 @@ get_version() {
 		return 1
 	fi
 
+	# See if the kernel dir is actually an output dir. #454294
+	if [ -z "${KBUILD_OUTPUT}" -a -L "${KERNEL_DIR}/source" ]; then
+		KBUILD_OUTPUT=${KERNEL_DIR}
+		KERNEL_DIR=$(readlink -f "${KERNEL_DIR}/source")
+		KV_DIR=${KERNEL_DIR}
+	fi
+
 	if [ -z "${get_version_warning_done}" ]; then
 		qeinfo "Found kernel source directory:"
 		qeinfo "    ${KV_DIR}"
@@ -482,7 +487,7 @@ get_version() {
 	# KBUILD_OUTPUT, and we need this for .config and localversions-*
 	# so we better find it eh?
 	# do we pass KBUILD_OUTPUT on the CLI?
-	OUTPUT_DIR="${OUTPUT_DIR:-${KBUILD_OUTPUT}}"
+	local OUTPUT_DIR=${KBUILD_OUTPUT}
 
 	# keep track of it
 	KERNEL_MAKEFILE="${KV_DIR}/Makefile"
@@ -585,11 +590,14 @@ get_running_version() {
 		get_version
 		return $?
 	else
-		KV_MAJOR=$(get_version_component_range 1 ${KV_FULL})
-		KV_MINOR=$(get_version_component_range 2 ${KV_FULL})
-		KV_PATCH=$(get_version_component_range 3 ${KV_FULL})
-		KV_PATCH=${KV_PATCH//-*}
-		KV_EXTRA="${KV_FULL#${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}}"
+		# This handles a variety of weird kernel versions.  Make sure to update
+		# tests/linux-info:get_running_version.sh if you want to change this.
+		local kv_full=${KV_FULL//[-+_]*}
+		KV_MAJOR=$(get_version_component_range 1 ${kv_full})
+		KV_MINOR=$(get_version_component_range 2 ${kv_full})
+		KV_PATCH=$(get_version_component_range 3 ${kv_full})
+		KV_EXTRA="${KV_FULL#${KV_MAJOR}.${KV_MINOR}${KV_PATCH:+.${KV_PATCH}}}"
+		: ${KV_PATCH:=0}
 	fi
 	return 0
 }

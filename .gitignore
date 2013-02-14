@@ -5,7 +5,7 @@ eix.cache.*
 etc/
 etc/make.conf
 local/
-metadata/cache/
+metadata/md5-cache/
 metadata/timestamp.chk
 packages/
 profiles/use.local.desc

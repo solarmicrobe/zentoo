@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -33,7 +33,7 @@ src_unpack() {
 	epatch "${FILESDIR}/xml-xmlbeans-gentoo.patch"
 	java-ant_rewrite-classpath build.xml
 
-	cd ${S}/external/lib
+	cd "${S}"/external/lib
 	#TODO: includes and old copy named oldxbean.jar
 	#that probably should not be used
 	#rm -v *.jar

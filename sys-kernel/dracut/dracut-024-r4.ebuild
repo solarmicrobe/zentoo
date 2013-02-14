@@ -270,4 +270,14 @@ pkg_postinst() {
 		ewarn "  CONFIG_MODULES"
 		ewarn ""
 	fi
+
+	if use dracut_modules_crypt || use dracut_modules_dmraid || use \
+		dracut_modules_mdraid || use dracut_modules_lvm; then
+
+		if ! [[ $(</proc/cmdline) =~ rd.auto[\ =] ]]; then
+			ewarn "Autoassembly of special devices like cryptoLUKS, dmraid, "
+			ewarn "mdraid or lvm is off for default as of  >=dracut-024."
+			ewarn "Use rd.auto option to turn it on."
+		fi
+	fi
 }

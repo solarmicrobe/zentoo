@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -90,7 +90,8 @@ src_prepare() {
 		-e "s:^\(TMAKE_CXX\s*\)=.*$:\1= $(tc-getCXX):" \
 		-e "s:^\(TMAKE_LINK\s*\)=.*$:\1= $(tc-getCXX):" \
 		-e "s:^\(TMAKE_LINK_SHLIB\s*\)=.*$:\1= $(tc-getCXX):" \
-		-e "s:^\(TMAKE_CXX\s*\)=.*$:\1= $(tc-getCC):" \
+		-e "s:^\(TMAKE_CC\s*\)=.*$:\1= $(tc-getCC):" \
+		-e "s:^\(TMAKE_AR\s*\)=.*$:\1= $(tc-getAR) cqs:" \
 		tmake/lib/{{linux,gnu,freebsd,netbsd,openbsd,solaris}-g++,macosx-c++,linux-64}/tmake.conf \
 		|| die
 
@@ -199,7 +200,7 @@ src_install() {
 		doicon "${DISTDIR}/doxywizard.png"
 		make_desktop_entry doxywizard "DoxyWizard ${PV}" \
 			"/usr/share/pixmaps/doxywizard.png" \
-			"Application;Development"
+			"Development"
 	fi
 
 	dodoc INSTALL LANGUAGE.HOWTO README

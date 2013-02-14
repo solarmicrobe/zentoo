@@ -3,7 +3,6 @@
 # $Header: $
 
 EAPI="4"
-PYTHON_DEPEND="2"
 
 inherit eutils flag-o-matic python toolchain-funcs
 
@@ -48,7 +47,9 @@ RDEPEND="${DEPEND}"
 S="${WORKDIR}/${MY_P}"
 
 pkg_setup() {
-	python_set_active_version 2
+	if use gtk || use ndiff; then
+		python_set_active_version 2
+	fi
 }
 
 src_unpack() {
@@ -56,7 +57,6 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-4.75-include.patch
 	epatch "${FILESDIR}"/${PN}-4.75-nolua.patch
 	epatch "${FILESDIR}"/${PN}-5.10_beta1-string.patch
 	epatch "${FILESDIR}"/${PN}-5.21-python.patch

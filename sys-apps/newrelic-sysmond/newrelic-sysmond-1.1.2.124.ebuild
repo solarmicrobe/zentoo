@@ -40,14 +40,6 @@ src_install() {
 	insinto "/etc/newrelic"
 	doins nrsysmond.cfg
 
-	keepdir "/var/run/newrelic"
-	fowners newrelic.newrelic "/var/run/newrelic"
-	fperms 0775 "/var/run/newrelic"
-
-	keepdir "/var/log/newrelic"
-	fowners newrelic.newrelic "/var/log/newrelic"
-	fperms 0775 "/var/log/newrelic"
-
 	dodoc INSTALL.txt LICENSE.txt
 }
 

@@ -2,6 +2,10 @@
 
 case $1 in
 app-admin/syslog-ng)           echo "=$1-3.3.5-r1";;
+app-emulation/virtualbox)                echo "=$1-4.2.6-r1";;
+app-emulation/virtualbox-additions)      echo "=$1-4.2.6";;
+app-emulation/virtualbox-extpack-oracle) echo "=$1-4.2.6";;
+app-emulation/virtualbox-modules)        echo "=$1-4.2.6";;
 app-text/docbook-xml-dtd)      echo "=$1-4.1.2-r6"
                                echo "=$1-4.2-r2"
                                echo "=$1-4.3-r1"
@@ -36,8 +40,10 @@ dev-ruby/amqp)                 echo "=$1-0.6.7-r1";;
 dev-ruby/builder)              echo "=$1-3.0.4";;
 dev-ruby/i18n)                 echo "=$1-0.6.1";;
 dev-ruby/eventmachine)         echo "=$1-1.0.0";;
+dev-ruby/json)                 echo "=$1-1.7.6";;
 dev-ruby/libxml)               echo "=$1-2.3.3";;
 dev-ruby/mysql-ruby)           echo "=$1-2.9.0-r1";;
+dev-ruby/net-ssh)              echo "=$1-2.6.3";;
 dev-ruby/ohai)                 echo "=$1-0.6.12";;
 dev-ruby/tilt)                 echo "=$1-1.3.3";;
 dev-util/boost-build)          echo "=$1-1.52.0-r1";;
@@ -48,9 +54,11 @@ java-virtuals/servlet-api)     echo "=$1-2.3"
 net-libs/nodejs)               echo "=$1-0.8.18";;
 net-libs/zeromq)               echo "=$1-3.2.2";;
 net-misc/dhcp)                 echo "=$1-4.2.4_p2-r1";;
+net-nds/openldap)              echo "=$1-2.4.33-r1";;
 sys-apps/texinfo)              echo "=$1-4.13-r2";;
 sys-boot/grub)                 echo "=$1-2.00-r1";;
 sys-cluster/ceph)              echo "=$1-0.55.1";;
+sys-cluster/util-vserver)      echo "=$1-0.30.216_pre3038";;
 sys-devel/autoconf)            echo "=$1-2.13"
                                echo "$1";;
 sys-devel/automake)            echo "=$1-1.9.6-r3"
@@ -66,5 +74,6 @@ virtual/jdk)                   echo "=$1-1.7.0";;
 virtual/jre)                   echo "=$1-1.7.0";;
 virtual/ruby-*)                echo "=$1-1";;
 virtual/udev)                  echo "=$1-196";;
+x11-libs/gtk+)                 echo "=$1-2.24.12";;
 *)                             echo $1;;
 esac

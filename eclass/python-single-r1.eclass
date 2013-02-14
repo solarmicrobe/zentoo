@@ -129,7 +129,7 @@ fi
 #
 # Example value:
 # @CODE
-# python_targets_python2_7?,python_single_target_python2_7(+)?
+# python_targets_python2_7(-)?,python_single_target_python2_7(+)?
 # @CODE
 
 _python_single_set_globals() {
@@ -158,7 +158,7 @@ _python_single_set_globals() {
 	local flags_mt=( "${impls[@]/#/python_targets_}" )
 	local flags=( "${impls[@]/#/python_single_target_}" )
 
-	local optflags=${flags_mt[@]/%/?}
+	local optflags=${flags_mt[@]/%/(-)?}
 	optflags+=,${flags[@]/%/(+)?}
 
 	IUSE="${flags_mt[*]} ${flags[*]}"

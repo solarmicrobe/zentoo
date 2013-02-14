@@ -151,7 +151,7 @@ DESCRIPTION="A fast, multi-threaded, multi-user SQL database server."
 HOMEPAGE="http://www.mysql.com/"
 if [[ "${PN}" == "mariadb" ]]; then
 	HOMEPAGE="http://mariadb.org/"
-	DESCRIPTION="MariaDB is a MySQL fork with 3rd-party patches and additional storage engines merged."
+	DESCRIPTION="An enhanced, drop-in replacement for MySQL"
 fi
 LICENSE="GPL-2"
 SLOT="0"
@@ -186,10 +186,16 @@ IUSE="${IUSE} +community profiling"
 && mysql_version_is_at_least "5.2.5" \
 && IUSE="${IUSE} sphinx"
 
+[[ ${PN} == "mariadb" ]] \
+&& mysql_version_is_at_least "5.2.10" \
+&& IUSE="${IUSE} pam"
+
 if mysql_version_is_at_least "5.5"; then
 	REQUIRED_USE="tcmalloc? ( !jemalloc ) jemalloc? ( !tcmalloc )"
 	IUSE="${IUSE} jemalloc tcmalloc"
 fi
+
+REQUIRED_USE="${REQUIRED_USE} minimal? ( !cluster !extraengine !embedded ) static? ( !ssl )"
 
 mysql_version_is_at_least "5.5.7" \
 && IUSE="${IUSE} systemtap"
@@ -227,6 +233,15 @@ done
 && mysql_version_is_at_least "5.2.5" \
 && DEPEND="${DEPEND} sphinx? ( app-misc/sphinx )"
 
+[[ "${PN}" == "mariadb" ]] \
+&& mysql_version_is_at_least "5.2.10" \
+&& DEPEND="${DEPEND} !minimal? ( pam? ( virtual/pam ) )"
+
+# Bug 441700 MariaDB >=5.3 include custom mytop
+[[ "${PN}" == "mariadb" ]] \
+&& mysql_version_is_at_least "5.3" \
+&& DEPEND="${DEPEND} perl? ( !dev-db/mytop )"
+
 mysql_version_is_at_least "5.5.7" \
 && DEPEND="${DEPEND} systemtap? ( >=dev-util/systemtap-1.3 )" \
 && DEPEND="${DEPEND} kernel_linux? ( dev-libs/libaio )"
@@ -242,6 +257,15 @@ RDEPEND="${DEPEND}
 	!minimal? ( !prefix? ( dev-db/mysql-init-scripts ) )
 	selinux? ( sec-policy/selinux-mysql )
 "
+
+# Bug 455016 Add dependancies of mytop
+[[ "${PN}" == "mariadb" ]] \
+&& mysql_version_is_at_least "5.3" \
+&& RDEPEND="${RDEPEND} perl? (
+	virtual/perl-Getopt-Long
+	dev-perl/TermReadKey
+	virtual/perl-Term-ANSIColor
+	virtual/perl-Time-HiRes ) "
 
 DEPEND="${DEPEND}
 	virtual/yacc
@@ -305,6 +329,7 @@ if pbxt_available; then
 
 	IUSE="${IUSE} pbxt"
 	PBXT_NEWSTYLE=1
+	REQUIRED_USE="${REQUIRED_USE} pbxt? ( !embedded ) "
 fi
 
 if xtradb_patch_available; then
@@ -317,6 +342,7 @@ if xtradb_patch_available; then
 	XTRADB_SRC_URI3="${XTRADB_SRC_B1}/${PN}/xtradb/${XTRADB_SRC_URI_COMMON}"
 	SRC_URI="${SRC_URI} xtradb? ( ${XTRADB_SRC_URI1} ${XTRADB_SRC_URI2} ${XTRADB_SRC_URI3} )"
 	IUSE="${IUSE} xtradb"
+	REQUIRED_USE="${REQUIRED_USE} xtradb? ( !embedded ) "
 fi
 
 #
@@ -366,31 +392,10 @@ mysql-v2_pkg_setup() {
 	fi
 
 	# Check for USE flag problems in pkg_setup
-	if use static && use ssl ; then
-		M="MySQL does not support being built statically with SSL support enabled!"
-		eerror "${M}"
-		die "${M}"
-	fi
-
 	if ! mysql_version_is_at_least "5.2" \
 		&& use debug ; then
 		# Also in package.use.mask
 		die "Bug #344885: Upstream has broken USE=debug for 5.1 series >=5.1.51"
-	fi
-
-	if ( use cluster || use extraengine || use embedded ) \
-	&& use minimal ; then
-		M="USE flags 'cluster', 'extraengine', 'embedded' conflict with 'minimal' USE flag!"
-		eerror "${M}"
-		die "${M}"
-	fi
-
-	if xtradb_patch_available \
-	&& use xtradb \
-	&& use embedded ; then
-		M="USE flags 'xtradb' and 'embedded' conflict and cause build failures"
-		eerror "${M}"
-		die "${M}"
 	fi
 
 	# This should come after all of the die statements
@@ -494,6 +499,15 @@ mysql-v2_pkg_postinst() {
 			&& [[ "${script%.sh}" == "${script}" ]] \
 			&& dodoc "${script}"
 		done
+
+		if [ ${PN} == "mariadb" ] \
+		&& mysql_version_is_at_least "5.2.10" && use pam ; then
+			einfo
+			elog "This install includes the PAM authentication plugin."
+			elog "To activate and configure the PAM plugin, please read:"
+			elog "https://kb.askmonty.org/en/pam-authentication-plugin/"
+			einfo
+		fi
 
 		einfo
 		elog "You might want to run:"

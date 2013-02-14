@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI=5
 inherit flag-o-matic
 
 MY_P=${P/_beta/beta}
@@ -17,8 +18,11 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-DEPEND="net-libs/libpcap
-	net-libs/libnet"
+DEPEND="
+	net-libs/libnet
+	net-libs/libpcap
+"
+RDEPEND="${DEPEND}"
 
 src_install() {
 	dosbin tcptraceroute

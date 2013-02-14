@@ -123,7 +123,7 @@ src_configure() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die
+	default
 
 	if use ldap ; then
 		dodoc README.LDAP doc/schema.OpenLDAP

@@ -12,6 +12,8 @@ depend() {
 }
 
 start() {
+	checkpath -q -d -o root:root -m 0755 /var/run/spawn-fcgi
+
 	local E OPTIONS i FCGI_PROGRAM_EXEC
 	FCGI_PROGRAM_EXEC=(${FCGI_PROGRAM})
 
