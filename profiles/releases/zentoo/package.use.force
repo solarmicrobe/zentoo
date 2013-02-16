@@ -7,3 +7,7 @@ x11-apps/xinit minimal
 
 # force-enable default dracut modules
 sys-kernel/dracut device-mapper net dracut_modules_lvm dracut_modules_mdraid dracut_modules_syslog
+
+# these are so common that we force them
+x11-libs/cairo X
+x11-libs/gdk-pixbuf X
