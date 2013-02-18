@@ -66,14 +66,12 @@ sys-devel/automake)            echo "=$1-1.9.6-r3"
 sys-devel/bc)                  echo "=$1-1.06.95-r1";;
 sys-fs/lvm2)                   echo "=$1-2.02.97-r1";;
 sys-fs/mdadm)                  echo "=$1-3.2.6";;
-sys-fs/udev)                   echo "=$1-196-r1";;
 sys-kernel/linux-headers)      echo "=$1-3.7";;
 virtual/httpd-php)             echo "=$1-5.3"
                                echo "$1";;
 virtual/jdk)                   echo "=$1-1.7.0";;
 virtual/jre)                   echo "=$1-1.7.0";;
 virtual/ruby-*)                echo "=$1-1";;
-virtual/udev)                  echo "=$1-196";;
 x11-libs/gtk+)                 echo "=$1-2.24.12";;
 *)                             echo $1;;
 esac
