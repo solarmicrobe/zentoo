@@ -57,6 +57,7 @@ net-misc/dhcp)                 echo "=$1-4.2.4_p2-r1";;
 net-nds/openldap)              echo "=$1-2.4.33-r1";;
 sys-apps/texinfo)              echo "=$1-4.13-r2";;
 sys-apps/dbus)                 echo "=$1-1.6.8-r1";;
+sys-apps/shadow)               echo "=$1-4.1.5.1-r1";;
 sys-auth/pambase)              echo "=$1-20120417-r1";;
 sys-boot/grub)                 echo "=$1-2.00-r1";;
 sys-cluster/ceph)              echo "=$1-0.55.1";;
