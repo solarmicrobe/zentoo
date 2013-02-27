@@ -44,7 +44,4 @@ all_ruby_install() {
 
 	doinitd "${FILESDIR}/initd/chef-expander"
 	doconfd "${FILESDIR}/confd/chef-expander"
-
-	keepdir /etc/chef /var/{lib,log,run}/chef
-	fowners chef:chef /var/{lib,log,run}/chef
 }
