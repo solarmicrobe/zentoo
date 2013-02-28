@@ -27,6 +27,7 @@ birdstep
 blas
 bluetooth
 branding
+brltty
 bsf
 canna
 cdb
@@ -73,6 +74,7 @@ evo
 examples
 fbcon
 fdftk
+fdt
 ffmpeg
 firebird
 firefox
@@ -264,6 +266,7 @@ source
 sox
 speex
 spell
+spice
 sqlite2
 startup-notification
 svga
