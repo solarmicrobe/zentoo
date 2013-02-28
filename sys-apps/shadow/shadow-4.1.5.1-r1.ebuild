@@ -1,6 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
+
+EAPI="2"
 
 inherit eutils libtool toolchain-funcs pam multilib
 
@@ -11,46 +13,47 @@ SRC_URI="http://pkg-shadow.alioth.debian.org/releases/${P}.tar.bz2"
 LICENSE="BSD GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="audit cracklib nls pam selinux skey"
+IUSE="acl audit cracklib nls pam selinux skey xattr"
 
-RDEPEND="audit? ( sys-process/audit )
+RDEPEND="acl? ( sys-apps/acl )
+	audit? ( sys-process/audit )
 	cracklib? ( >=sys-libs/cracklib-2.7-r3 )
 	pam? ( virtual/pam )
 	skey? ( sys-auth/skey )
-	selinux? ( >=sys-libs/libselinux-1.28 )
-	nls? ( virtual/libintl )"
+	selinux? (
+		>=sys-libs/libselinux-1.28
+		sys-libs/libsemanage
+	)
+	nls? ( virtual/libintl )
+	xattr? ( sys-apps/attr )"
 DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 RDEPEND="${RDEPEND}
-	pam? ( >=sys-auth/pambase-20080219.1 )"
+	pam? ( >=sys-auth/pambase-20120417 )"
 
-src_unpack() {
-	unpack ${A}
-	cd "${S}"
-	epatch "${FILESDIR}"/${PN}-4.1.4.3-dup-install-targets.patch
-	epatch "${FILESDIR}"/${PN}-4.1.4.2-env-reset-keep-locale.patch #283725
+src_prepare() {
 	epatch "${FILESDIR}"/${PN}-4.1.3-dots-in-usernames.patch #22920
-	epatch "${FILESDIR}"/${PN}-4.1.4.2-groupmod-pam-check.patch #300790
-	epatch "${FILESDIR}"/${PN}-4.1.4.2-su_no_sanitize_env.patch #301957
-	epatch "${FILESDIR}"/${PN}-4.1.4.2-fix-etc-gshadow-reading.patch #327605
+	epatch_user
 	elibtoolize
-	epunt_cxx
 }
 
-src_compile() {
+src_configure() {
 	tc-is-cross-compiler && export ac_cv_func_setpgrp_void=yes
 	econf \
 		--without-group-name-max-length \
+		--without-tcb \
 		--enable-shared=no \
 		--enable-static=yes \
+		$(use_with acl) \
 		$(use_with audit) \
 		$(use_with cracklib libcrack) \
 		$(use_with pam libpam) \
 		$(use_with skey) \
 		$(use_with selinux) \
 		$(use_enable nls) \
-		$(use_with elibc_glibc nscd)
-	emake || die "compile problem"
+		$(use_with elibc_glibc nscd) \
+		$(use_with xattr attr)
+	has_version 'sys-libs/uclibc[-rpc]' && sed -i '/RLOGIN/d' config.h #425052
 }
 
 set_login_opt() {
@@ -64,7 +67,7 @@ set_login_opt() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" suidperms=4711 install || die "install problem"
+	emake DESTDIR="${D}" suidperms=4711 install || die
 
 	# Remove libshadow and libmisc; see bug 37725 and the following
 	# comment from shadow's README.linux:
@@ -112,15 +115,13 @@ src_install() {
 		set_login_opt LOGIN_RETRIES 3
 		set_login_opt ENCRYPT_METHOD SHA512
 	else
-		dopamd "${FILESDIR}/pam.d-include/"{su,shadow}
+		dopamd "${FILESDIR}"/pam.d-include/shadow || die
 
-		newpamd "${FILESDIR}/login.pamd.3" login
-
-		for x in passwd chpasswd chgpasswd; do
+		for x in chpasswd chgpasswd newusers; do
 			newpamd "${FILESDIR}"/pam.d-include/passwd ${x} || die
 		done
 
-		for x in chage chsh chfn newusers \
+		for x in chage chsh chfn \
 				 user{add,del,mod} group{add,del,mod} ; do
 			newpamd "${FILESDIR}"/pam.d-include/shadow ${x} || die
 		done
@@ -157,6 +158,9 @@ src_install() {
 		find "${D}"/usr/share/man \
 			'(' -name 'limits.5*' -o -name 'suauth.5*' ')' \
 			-exec rm {} +
+
+		# Remove pam.d files provided by pambase.
+		rm "${D}"/etc/pam.d/{login,passwd,su} || die
 	fi
 
 	# Remove manpages that are handled by other packages
@@ -179,11 +183,10 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
-	# Enable shadow groups (we need ROOT=/ here, as grpconv only
-	# operate on / ...).
-	if [[ ${ROOT} == / && ! -f /etc/gshadow ]] ; then
-		if grpck -r 2>/dev/null ; then
-			grpconv
+	# Enable shadow groups.
+	if [ ! -f "${ROOT}"/etc/gshadow ] ; then
+		if grpck -r -R "${ROOT}" 2>/dev/null ; then
+			grpconv -R "${ROOT}"
 		else
 			ewarn "Running 'grpck' returned errors.  Please run it by hand, and then"
 			ewarn "run 'grpconv' afterwards!"
