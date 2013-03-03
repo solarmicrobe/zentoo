@@ -124,6 +124,7 @@ ipod
 irc
 isag
 jack
+jadetex
 jai
 jbig
 jce
@@ -155,8 +156,8 @@ libnotify
 libproxy
 libsamplerate
 libssh2
-libzfs
 libwww
+libzfs
 lighttpd
 lirc
 livecd
