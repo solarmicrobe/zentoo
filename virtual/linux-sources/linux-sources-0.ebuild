@@ -14,4 +14,4 @@ KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""
-RDEPEND="sys-kernel/zentoo-sources"
+RDEPEND="sys-kernel/gentoo-sources"
