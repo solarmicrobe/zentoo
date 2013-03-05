@@ -6,7 +6,7 @@
 # @BLURB: eclass used for installing prebuilt linux kernel images
 
 IUSE=""
-SLOT="${PVR}"
+SLOT="${PV}"
 
 DEPEND=""
 RDEPEND="sys-apps/util-linux"
