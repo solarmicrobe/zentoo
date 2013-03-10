@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
+EAPI="5"
 ETYPE="sources"
 K_WANT_GENPATCHES="base extras"
-K_GENPATCHES_VER="16"
+K_GENPATCHES_VER="17"
 K_DEBLOB_AVAILABLE="1"
 inherit kernel-2
 detect_version
