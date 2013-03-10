@@ -5,7 +5,7 @@
 EAPI=4
 
 # autotools for auto* dependencies
-inherit autotools
+inherit autotools eutils
 
 DESCRIPTION="interactive process viewer"
 HOMEPAGE="http://htop.sourceforge.net"
@@ -40,6 +40,7 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}"/htop-solarized-patch.diff
 	sed -i -e '1c\#!'"${EPREFIX}"'/usr/bin/python' \
 		scripts/MakeHeader.py || die
 }
