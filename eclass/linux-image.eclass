@@ -11,7 +11,7 @@ SLOT="${PV}"
 DEPEND=""
 RDEPEND="sys-apps/util-linux"
 
-RESTRICT="binchecks"
+RESTRICT="binchecks strip"
 
 S=${WORKDIR}
 
