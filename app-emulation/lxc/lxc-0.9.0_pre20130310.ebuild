@@ -1,24 +1,17 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="4"
 
-MY_P="${P/_/-}"
+MY_SHA="90341b9e39561e37797777a34d0589c14c0c2a68"
 
-BACKPORTS=1
-
-inherit eutils linux-info versionator flag-o-matic
-
-if [[ -n ${BACKPORTS} ]]; then
-	inherit autotools
-fi
+inherit autotools eutils linux-info versionator flag-o-matic
 
 DESCRIPTION="LinuX Containers userspace utilities"
 HOMEPAGE="http://lxc.sourceforge.net/"
-SRC_URI="http://lxc.sourceforge.net/download/lxc/${MY_P}.tar.gz
-	${BACKPORTS:+http://dev.gentoo.org/~flameeyes/${PN}/${MY_P}-backports-${BACKPORTS}.tar.xz}"
-S="${WORKDIR}/${MY_P}"
+SRC_URI="https://github.com/lxc/lxc/archive/${MY_SHA}.tar.gz -> ${PF}.tar.gz"
+S="${WORKDIR}/lxc-${MY_SHA}"
 
 KEYWORDS="amd64"
 
@@ -29,7 +22,6 @@ IUSE="examples"
 RDEPEND="sys-libs/libcap"
 
 DEPEND="${RDEPEND}
-	app-text/docbook-sgml-utils
 	>=sys-kernel/linux-headers-3.2"
 
 RDEPEND="${RDEPEND}
@@ -84,10 +76,7 @@ ERROR_GRKERNSEC_CHROOT_CAPS=":CONFIG_GRKERNSEC_CHROOT_CAPS	some GRSEC features m
 DOCS=(AUTHORS CONTRIBUTING MAINTAINERS TODO README doc/FAQ.txt)
 
 src_prepare() {
-	if [[ -n ${BACKPORTS} ]]; then
-		epatch "${WORKDIR}"/patches/*
-		eautoreconf
-	fi
+	eautoreconf
 }
 
 src_configure() {
@@ -99,16 +88,12 @@ src_configure() {
 		--docdir=/usr/share/doc/${PF} \
 		--with-config-path=/etc/lxc	\
 		--with-rootfs-path=/usr/lib/lxc/rootfs \
-		--enable-doc \
 		--disable-apparmor \
 		$(use_enable examples)
 }
 
 src_install() {
 	default
-
-	rm -r "${D}"/usr/sbin/lxc-setcap \
-		|| die "unable to remove lxc-setcap"
 
 	keepdir /etc/lxc /usr/lib/lxc/rootfs
 
