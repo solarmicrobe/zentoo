@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -12,7 +12,7 @@ MY_P=${PN}-src-r${PV/_rc/-rc}
 DESCRIPTION="A high-performance, open source, schema-free document-oriented database"
 HOMEPAGE="http://www.mongodb.org"
 SRC_URI="http://downloads.mongodb.org/src/${MY_P}.tar.gz
-	mms-agent? ( http://dev.gentoo.org/~ultrabug/20120830-10gen-mms-agent.zip )"
+	mms-agent? ( http://dev.gentoo.org/~ultrabug/20121128-10gen-mms-agent.zip )"
 
 LICENSE="AGPL-3 Apache-2.0"
 SLOT="0"
@@ -54,7 +54,6 @@ src_prepare() {
 	epatch "${FILESDIR}/${PN}-2.2-r1-fix-scons.patch"
 	epatch "${FILESDIR}/${PN}-2.2-r1-fix-boost.patch"
 	epatch "${FILESDIR}/${PN}-2.2-r2-boost-1.50.patch"
-	epatch "${FILESDIR}/${PN}-2.2.1-too-verbose.patch"
 
 	# FIXME: apply only this fix [1] on x86 boxes as it breaks /usr/lib symlink
 	# on amd64 machines [2].
@@ -76,7 +75,7 @@ src_install() {
 
 	use v8 && pax-mark m "${ED}"/usr/bin/{mongo,mongod}
 
-	for x in /var/{lib,log,run}/${PN}; do
+	for x in /var/{lib,log}/${PN}; do
 		keepdir "${x}"
 		fowners mongodb:mongodb "${x}"
 	done
