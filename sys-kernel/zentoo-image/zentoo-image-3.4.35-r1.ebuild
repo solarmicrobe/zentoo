@@ -10,7 +10,7 @@ DESCRIPTION="Zentoo Kernel Image"
 HOMEPAGE="http://www.zentoo.org"
 
 BASE_URI="http://www.zentoo.org/downloads"
-SRC_URI="amd64? ( ${BASE_URI}/amd64/linux/linux-${PV}-gentoo.tar.xz )"
+SRC_URI="amd64? ( ${BASE_URI}/amd64/linux/linux-${PV}-gentoo-${PR}.tar.xz )"
 
 LICENSE="GPL-2"
 KEYWORDS="amd64"
