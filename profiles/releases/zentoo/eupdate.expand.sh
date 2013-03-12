@@ -39,6 +39,7 @@ dev-libs/openssl)                        echo "=$1-0.9.8x"
                                          echo "$1";;
 dev-libs/boost)                          echo "=$1-1.52.0-r5";;
 dev-libs/libnl)                          echo "=$1-1.1-r3";;
+dev-libs/jemalloc)                       echo "=$1-3.3.0";;
 dev-util/systemtap)                      echo "=$1-2.1";;
 dev-php/pecl-memcache)                   echo "=$1-3.0.6-r1";;
 dev-php/xdebug)                          echo "=$1-2.2.1";;

@@ -5,9 +5,10 @@ app-arch/libarchive
 app-office/openerp
 dev-db/couchdb
 dev-db/mysql-init-scripts
-media-libs/libjpeg-turbo
+dev-db/redis
 dev-ruby/rubygems
 media-gfx/imagemagick
+media-libs/libjpeg-turbo
 net-analyzer/mk-livestatus
 sys-apps/openrc
 sys-block/megacli
