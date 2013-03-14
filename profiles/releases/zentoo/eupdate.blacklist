@@ -13,7 +13,6 @@ net-analyzer/mk-livestatus
 sys-apps/openrc
 sys-block/megacli
 sys-boot/grub
-sys-kernel/genkernel
 virtual/editor
 virtual/linux-sources
 virtual/mta

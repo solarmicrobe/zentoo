@@ -20,7 +20,7 @@ IUSE="test"
 DEPEND="test? ( dev-python/nose )"
 RDEPEND=""
 
-S="${WORKDIR}/zentoo-${PN}-cf3819c"
+S="${WORKDIR}/zentoo-${PN}-48b7990"
 
 pkg_setup() {
 	python_set_active_version 2
