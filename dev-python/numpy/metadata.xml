@@ -11,4 +11,7 @@
   basic linear algebra and random number generation.
   It is the successor of Numeric and numarray.
 </longdescription>
+  <upstream>
+    <remote-id type="pypi">numpy</remote-id>
+  </upstream>
 </pkgmetadata>

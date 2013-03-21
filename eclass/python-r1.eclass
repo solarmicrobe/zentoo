@@ -47,7 +47,7 @@ elif [[ ${_PYTHON_ANY_R1} ]]; then
 	die 'python-r1.eclass can not be used with python-any-r1.eclass.'
 fi
 
-inherit python-utils-r1
+inherit multibuild python-utils-r1
 
 # @ECLASS-VARIABLE: PYTHON_COMPAT
 # @REQUIRED
@@ -171,6 +171,14 @@ _python_set_globals() {
 	PYTHON_DEPS+="dev-python/python-exec[${PYTHON_USEDEP}]"
 }
 _python_set_globals
+
+# @ECLASS-VARIABLE: DISTUTILS_JOBS
+# @DEFAULT_UNSET
+# @DESCRIPTION:
+# The number of parallel jobs to run for distutils-r1 parallel builds.
+# If unset, the job-count in ${MAKEOPTS} will be used.
+#
+# This variable is intended to be set in make.conf.
 
 # @FUNCTION: _python_validate_useflags
 # @INTERNAL
@@ -339,34 +347,19 @@ python_gen_cond_dep() {
 
 # @FUNCTION: python_copy_sources
 # @DESCRIPTION:
-# Create a single copy of the package sources (${S}) for each enabled
-# Python implementation.
+# Create a single copy of the package sources for each enabled Python
+# implementation.
 #
-# The sources are always copied from S to implementation-specific build
-# directories respecting BUILD_DIR.
+# The sources are always copied from initial BUILD_DIR (or S if unset)
+# to implementation-specific build directory matching BUILD_DIR used by
+# python_foreach_abi().
 python_copy_sources() {
 	debug-print-function ${FUNCNAME} "${@}"
 
-	_python_validate_useflags
+	local MULTIBUILD_VARIANTS
+	_python_obtain_impls
 
-	local impl
-	local bdir=${BUILD_DIR:-${S}}
-
-	debug-print "${FUNCNAME}: bdir = ${bdir}"
-	einfo "Will copy sources from ${S}"
-	# the order is irrelevant here
-	for impl in "${PYTHON_COMPAT[@]}"; do
-		_python_impl_supported "${impl}" || continue
-
-		if use "python_targets_${impl}"
-		then
-			local BUILD_DIR=${bdir%%/}-${impl}
-
-			einfo "${impl}: copying to ${BUILD_DIR}"
-			debug-print "${FUNCNAME}: [${impl}] cp ${S} => ${BUILD_DIR}"
-			cp -pr "${S}" "${BUILD_DIR}" || die
-		fi
-	done
+	multibuild_copy_sources
 }
 
 # @FUNCTION: _python_check_USE_PYTHON
@@ -577,40 +570,85 @@ _python_check_USE_PYTHON() {
 	fi
 }
 
+# @FUNCTION: _python_obtain_impls
+# @INTERNAL
+# @DESCRIPTION:
+# Set up the enabled implementation list.
+_python_obtain_impls() {
+	_python_validate_useflags
+	_python_check_USE_PYTHON
+
+	MULTIBUILD_VARIANTS=()
+
+	for impl in "${_PYTHON_ALL_IMPLS[@]}"; do
+		if has "${impl}" "${PYTHON_COMPAT[@]}" \
+			&& use "python_targets_${impl}"
+		then
+			MULTIBUILD_VARIANTS+=( "${impl}" )
+		fi
+	done
+}
+
+# @FUNCTION: _python_multibuild_wrapper
+# @USAGE: <command> [<args>...]
+# @INTERNAL
+# @DESCRIPTION:
+# Initialize the environment for Python implementation selected
+# for multibuild.
+_python_multibuild_wrapper() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	local -x EPYTHON PYTHON
+	python_export "${MULTIBUILD_VARIANT}" EPYTHON PYTHON
+
+	"${@}"
+}
+
 # @FUNCTION: python_foreach_impl
 # @USAGE: <command> [<args>...]
 # @DESCRIPTION:
 # Run the given command for each of the enabled Python implementations.
 # If additional parameters are passed, they will be passed through
-# to the command. If the command fails, python_foreach_impl dies.
-# If necessary, use ':' to force a successful return.
+# to the command.
+#
+# The function will return 0 status if all invocations succeed.
+# Otherwise, the return code from first failing invocation will
+# be returned.
 #
 # For each command being run, EPYTHON, PYTHON and BUILD_DIR are set
 # locally, and the former two are exported to the command environment.
 python_foreach_impl() {
 	debug-print-function ${FUNCNAME} "${@}"
 
-	_python_validate_useflags
-	_python_check_USE_PYTHON
+	local MULTIBUILD_VARIANTS
+	_python_obtain_impls
 
-	local impl
-	local bdir=${BUILD_DIR:-${S}}
+	multibuild_foreach_variant _python_multibuild_wrapper "${@}"
+}
 
-	debug-print "${FUNCNAME}: bdir = ${bdir}"
-	for impl in "${_PYTHON_ALL_IMPLS[@]}"; do
-		if has "${impl}" "${PYTHON_COMPAT[@]}" \
-			&& _python_impl_supported "${impl}" \
-			&& use "python_targets_${impl}"
-		then
-			local EPYTHON PYTHON
-			python_export "${impl}" EPYTHON PYTHON
-			local BUILD_DIR=${bdir%%/}-${impl}
-			export EPYTHON PYTHON
+# @FUNCTION: python_parallel_foreach_impl
+# @USAGE: <command> [<args>...]
+# @DESCRIPTION:
+# Run the given command for each of the enabled Python implementations.
+# If additional parameters are passed, they will be passed through
+# to the command.
+#
+# The function will return 0 status if all invocations succeed.
+# Otherwise, the return code from first failing invocation will
+# be returned.
+#
+# For each command being run, EPYTHON, PYTHON and BUILD_DIR are set
+# locally, and the former two are exported to the command environment.
+#
+# Multiple invocations of the command will be run in parallel, up to
+# DISTUTILS_JOBS (defaulting to '-j' option argument from MAKEOPTS).
+python_parallel_foreach_impl() {
+	debug-print-function ${FUNCNAME} "${@}"
 
-			einfo "${EPYTHON}: running ${@}"
-			"${@}" || die "${EPYTHON}: ${1} failed"
-		fi
-	done
+	local MULTIBUILD_JOBS=${MULTIBUILD_JOBS:-${DISTUTILS_JOBS}}
+	local MULTIBUILD_VARIANTS
+	_python_obtain_impls
+	multibuild_parallel_foreach_variant _python_multibuild_wrapper "${@}"
 }
 
 # @FUNCTION: python_export_best
@@ -653,8 +691,6 @@ python_export_best() {
 python_replicate_script() {
 	debug-print-function ${FUNCNAME} "${@}"
 
-	_python_validate_useflags
-
 	local suffixes=()
 
 	_add_suffix() {
@@ -678,25 +714,6 @@ python_replicate_script() {
 	for f; do
 		_python_ln_rel "${ED}"/usr/bin/python-exec "${f}" || die
 	done
-}
-
-# @FUNCTION: run_in_build_dir
-# @USAGE: <argv>...
-# @DESCRIPTION:
-# Run the given command in the directory pointed by BUILD_DIR.
-run_in_build_dir() {
-	debug-print-function ${FUNCNAME} "${@}"
-	local ret
-
-	[[ ${#} -ne 0 ]] || die "${FUNCNAME}: no command specified."
-	[[ ${BUILD_DIR} ]] || die "${FUNCNAME}: BUILD_DIR not set."
-
-	pushd "${BUILD_DIR}" >/dev/null || die
-	"${@}"
-	ret=${?}
-	popd >/dev/null || die
-
-	return ${ret}
 }
 
 _PYTHON_R1=1

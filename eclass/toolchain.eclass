@@ -146,11 +146,19 @@ if tc_version_is_at_least 4 ; then
 	in_iuse lto && RDEPEND+=" lto? ( || ( >=dev-libs/elfutils-0.143 dev-libs/libelf ) )"
 fi
 if in_iuse graphite ; then
-	RDEPEND+="
-	    graphite? (
-	        >=dev-libs/cloog-ppl-0.15.10
-	        >=dev-libs/ppl-0.11
-	    )"
+	if tc_version_is_at_least 4.8 ; then
+		RDEPEND+="
+			graphite? (
+				>=dev-libs/cloog-0.17.0
+				>=dev-libs/isl-0.10
+			)"
+	else
+		RDEPEND+="
+			graphite? (
+				>=dev-libs/cloog-ppl-0.15.10
+				>=dev-libs/ppl-0.11
+			)"
+	fi
 fi
 
 DEPEND="${RDEPEND}
@@ -1083,8 +1091,13 @@ gcc_do_configure() {
 		confgcc+=" $(use_with graphite ppl)"
 		confgcc+=" $(use_with graphite cloog)"
 		if use graphite; then
-			confgcc+=" --disable-ppl-version-check"
-			confgcc+=" --with-cloog-include=/usr/include/cloog-ppl"
+			if tc_version_is_at_least "4.8"; then
+				confgcc+=" --disable-isl-version-check"
+				confgcc+=" --with-cloog"
+			else
+				confgcc+=" --disable-ppl-version-check"
+				confgcc+=" --with-cloog-include=/usr/include/cloog-ppl"
+			fi
 		fi
 	fi
 

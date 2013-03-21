@@ -150,7 +150,7 @@ elisp_src_configure() { :; }
 # GNU Info files from them.
 
 elisp_src_compile() {
-	elisp-compile *.el || die
+	elisp-compile *.el
 	if [[ -n ${ELISP_TEXINFO} ]]; then
 		makeinfo ${ELISP_TEXINFO} || die
 	fi
@@ -164,9 +164,9 @@ elisp_src_compile() {
 # ELISP_TEXINFO and documentation listed in the DOCS variable.
 
 elisp_src_install() {
-	elisp-install ${PN} *.el *.elc || die
+	elisp-install ${PN} *.el *.elc
 	if [[ -n ${SITEFILE} ]]; then
-		elisp-site-file-install "${FILESDIR}/${SITEFILE}" || die
+		elisp-site-file-install "${FILESDIR}/${SITEFILE}"
 	fi
 	if [[ -n ${ELISP_TEXINFO} ]]; then
 		set -- ${ELISP_TEXINFO}
@@ -175,6 +175,9 @@ elisp_src_install() {
 	fi
 	if [[ -n ${DOCS} ]]; then
 		dodoc ${DOCS} || die
+	fi
+	if declare -f readme.gentoo_create_doc >/dev/null; then
+		readme.gentoo_create_doc
 	fi
 }
 
@@ -185,6 +188,9 @@ elisp_src_install() {
 
 elisp_pkg_postinst() {
 	elisp-site-regen
+	if declare -f readme.gentoo_print_elog >/dev/null; then
+		readme.gentoo_print_elog
+	fi
 }
 
 # @FUNCTION: elisp_pkg_postrm

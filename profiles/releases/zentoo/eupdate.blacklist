@@ -6,6 +6,11 @@ app-office/openerp
 dev-db/couchdb
 dev-db/mysql-init-scripts
 dev-db/redis
+dev-python/gdata
+dev-python/pychart
+dev-python/suds
+dev-python/vatnumber
+dev-python/vobject
 dev-ruby/rubygems
 media-gfx/imagemagick
 media-libs/libjpeg-turbo

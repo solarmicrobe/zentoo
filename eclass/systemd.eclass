@@ -1,9 +1,9 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: systemd.eclass
 # @MAINTAINER:
-# mgorny@gentoo.org
+# systemd@gentoo.org
 # @BLURB: helper functions to install systemd units
 # @DESCRIPTION:
 # This eclass provides a set of functions to install unit files for

@@ -49,7 +49,7 @@
 # directory is added to the load-path which makes sure that all files
 # are loadable.
 #
-#   	elisp-compile *.el || die
+#   	elisp-compile *.el
 #
 # Function elisp-make-autoload-file() can be used to generate a file
 # with autoload definitions for the lisp functions.  It takes the output
@@ -69,7 +69,7 @@
 # choose something else, but remember to tell elisp-site-file-install()
 # (see below) the change, as it defaults to ${PN}.
 #
-#   	elisp-install ${PN} *.el *.elc || die
+#   	elisp-install ${PN} *.el *.elc
 #
 # To let the Emacs support be activated by Emacs on startup, you need
 # to provide a site file (shipped in ${FILESDIR}) which contains the
@@ -111,7 +111,7 @@
 #
 # Which is then installed by
 #
-#   	elisp-site-file-install "${FILESDIR}/${SITEFILE}" || die
+#   	elisp-site-file-install "${FILESDIR}/${SITEFILE}"
 #
 # in src_install().  Any characters after the "-gentoo" part and before
 # the extension will be stripped from the destination file's name.
@@ -167,6 +167,7 @@ EMACSFLAGS="-batch -q --no-site-file"
 BYTECOMPFLAGS="-L ."
 
 # @FUNCTION: elisp-emacs-version
+# @RETURN: exit status of Emacs
 # @DESCRIPTION:
 # Output version of currently active Emacs.
 
@@ -222,7 +223,7 @@ elisp-need-emacs() {
 elisp-compile() {
 	ebegin "Compiling GNU Emacs Elisp files"
 	${EMACS} ${EMACSFLAGS} ${BYTECOMPFLAGS} -f batch-byte-compile "$@"
-	eend $? "elisp-compile: batch-byte-compile failed"
+	eend $? "elisp-compile: batch-byte-compile failed" || die
 }
 
 # @FUNCTION: elisp-make-autoload-file
@@ -258,7 +259,7 @@ elisp-make-autoload-file() {
 		--eval "(setq generated-autoload-file (expand-file-name \"${f}\"))" \
 		-f batch-update-autoloads "${@-.}"
 
-	eend $? "elisp-make-autoload-file: batch-update-autoloads failed"
+	eend $? "elisp-make-autoload-file: batch-update-autoloads failed" || die
 }
 
 # @FUNCTION: elisp-install
@@ -274,7 +275,7 @@ elisp-install() {
 		insinto "${SITELISP}/${subdir}"
 		doins "$@"
 	)
-	eend $? "elisp-install: doins failed"
+	eend $? "elisp-install: doins failed" || die
 }
 
 # @FUNCTION: elisp-site-file-install
@@ -304,7 +305,7 @@ elisp-site-file-install() {
 	)
 	ret=$?
 	rm -f "${sf}"
-	eend ${ret} "elisp-site-file-install: doins failed"
+	eend ${ret} "elisp-site-file-install: doins failed" || die
 }
 
 # @FUNCTION: elisp-site-regen

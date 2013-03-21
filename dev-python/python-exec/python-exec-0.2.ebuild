@@ -19,13 +19,12 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-append_impl() {
-	pyimpls+="${EPYTHON} "
-}
-
 src_configure() {
-	local pyimpls
-	python_foreach_impl append_impl
+	local pyimpls i EPYTHON
+	for i in "${PYTHON_COMPAT[@]}"; do
+		python_export "${i}" EPYTHON
+		pyimpls+=" ${EPYTHON}"
+	done
 
 	local myeconfargs=(
 		--with-eprefix="${EPREFIX}"

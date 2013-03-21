@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: mysql-autotools.eclass
@@ -288,6 +288,15 @@ mysql-autotools_configure_51() {
 				|| plugins_dis="${plugins_dis} ${i}"
 			done
 		fi
+
+		#Authentication plugins
+		if mysql_version_is_at_least "5.2.11" ; then
+			for i in pam ; do
+				use ${i} \
+				&& plugins_dyn="${plugins_dyn} auth_${i}" \
+				|| plugins_dis="${plugins_dis} auth_${i}"
+			done
+		fi
 	fi
 
 	if pbxt_available && [[ "${PBXT_NEWSTYLE}" == "1" ]]; then
@@ -446,6 +455,8 @@ mysql-autotools_src_prepare() {
 # @DESCRIPTION:
 # Configure mysql to build the code for Gentoo respecting the use flags.
 mysql-autotools_src_configure() {
+	# bug 401733
+	export QA_CONFIGURE_OPTIONS=".*"
 
 	# Make sure the vars are correctly initialized
 	mysql_init_vars
@@ -464,7 +475,7 @@ mysql-autotools_src_configure() {
 	filter-flags "-O" "-O[01]"
 
 	# glib-2.3.2_pre fix, bug #16496
-	append-flags "-DHAVE_ERRNO_AS_DEFINE=1"
+	append-cppflags "-DHAVE_ERRNO_AS_DEFINE=1"
 
 	# As discovered by bug #246652, doing a double-level of SSP causes NDB to
 	# fail badly during cluster startup.
@@ -647,4 +658,12 @@ mysql-autotools_src_install() {
 	fi
 
 	mysql_lib_symlinks "${ED}"
+
+	#Remove mytop if perl is not selected
+	[[ "${PN}" == "mariadb" ]] && ! use perl \
+	&& mysql_version_is_at_least "5.3" \
+	&& rm -f "${ED}/usr/bin/mytop"
+
+	#Bug 455462 remove unnecessary libtool files
+	prune_libtool_files --modules
 }
