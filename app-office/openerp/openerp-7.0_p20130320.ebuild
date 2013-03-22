@@ -57,6 +57,8 @@ OPENERP_GROUP="openerp"
 
 S="${WORKDIR}/${MY_PF}"
 
+PATCHES=( "${FILESDIR}"/openerp-7.0-setup.py.patch )
+
 python_install_all() {
 	newinitd "${FILESDIR}/${PN}.initd" ${PN}
 	newconfd "${FILESDIR}/${PN}.confd" ${PN}
@@ -72,7 +74,4 @@ python_install_all() {
 pkg_preinst() {
 	enewgroup ${OPENERP_GROUP}
 	enewuser ${OPENERP_USER} -1 -1 -1 ${OPENERP_GROUP}
-
-	#fowners ${OPENERP_USER}:${OPENERP_GROUP} /var/log/openerp
-	#fowners -R ${OPENERP_USER}:${OPENERP_GROUP} "$(python_get_sitedir)/${PN}/addons/"
 }
