@@ -3,7 +3,7 @@ require_plugin "virtualization"
 
 unless virtualization[:system]
   if File.exists?("/proc/1/cgroup")
-    if File.read("/proc/1/cgroup").match(/^\d+:.+:lxc\/.+$/)
+    if File.read("/proc/1/cgroup").match(/^\d+:.+:\/lxc\/.+$/)
       virtualization[:system] = "linux-lxc"
       virtualization[:role] = "guest"
     elsif File.read("/proc/1/cgroup").match(/^\d+:.+:\/$/) && File.exist?("/usr/sbin/lxc-start")
