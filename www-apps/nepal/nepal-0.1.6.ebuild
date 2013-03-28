@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -10,7 +10,7 @@ DESCRIPTION="nepal is a system configuration panel for virtual webhosting"
 HOMEPAGE="http://www.nepal-project.org"
 
 EGIT_REPO_URI="git://dev.itratos.de/nepal.git"
-EGIT_COMMIT="v0.1.5"
+EGIT_COMMIT="v${PV}"
 EGIT_HAS_SUBMODULES=1
 
 LICENSE="BSD"
