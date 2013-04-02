@@ -20,6 +20,7 @@ app-text/docbook-xml-simple-dtd)         echo "=$1-1.0-r1"
 app-text/openjade)                       echo "=$1-1.3.2-r5";;
 dev-db/hsqldb)                           echo "=$1-1.8.1.3-r1";;
 dev-db/postgresql-*)                     echo "=$1-9.1.6";;
+dev-haskell/cabal-install)               echo "=$1-0.14.0";;
 dev-java/antlr)                          echo "=$1-2.7.7-r2";;
 dev-java/asm)                            echo "=$1-2.0-r1";;
 dev-java/icedtea-bin)                    echo "=$1-7.2.3.4";;

@@ -260,6 +260,11 @@ EPATCH_MULTI_MSG="Applying various patches (bugfixes/updates) ..."
 # Only require patches to match EPATCH_SUFFIX rather than the extended
 # arch naming style.
 EPATCH_FORCE="no"
+# @VARIABLE: EPATCH_USER_EXCLUDE
+# @DEFAULT_UNSET
+# @DESCRIPTION:
+# List of patches not to apply.	 Note this is only file names,
+# and not the full path.  Globs accepted.
 
 # @FUNCTION: epatch
 # @USAGE: [options] [patches] [dirs of patches]
@@ -404,6 +409,15 @@ epatch() {
 			local ex
 			for ex in ${EPATCH_EXCLUDE} ; do
 				if [[ ${patchname} == ${ex} ]] ; then
+					einfo "  Skipping ${patchname} due to EPATCH_EXCLUDE ..."
+					eshopts_pop
+					continue 2
+				fi
+			done
+
+			for ex in ${EPATCH_USER_EXCLUDE} ; do
+				if [[ ${patchname} == ${ex} ]] ; then
+					einfo "  Skipping ${patchname} due to EPATCH_USER_EXCLUDE ..."
 					eshopts_pop
 					continue 2
 				fi
