@@ -4,7 +4,7 @@
 
 EAPI="2"
 
-inherit eutils java-utils-2 user
+inherit eutils java-utils-2 user autotools
 
 DESCRIPTION="ZooKeeper is a high-performance coordination service for distributed applications."
 HOMEPAGE="http://zookeeper.apache.org/"
@@ -24,24 +24,23 @@ DATA_DIR=/var/lib/${PN}
 export CONFIG_PROTECT="${CONFIG_PROTECT} ${INSTALL_DIR}/conf"
 
 pkg_setup() {
-	java-pkg-2_pkg_setup
 	enewgroup zookeeper
 	enewuser zookeeper -1 /bin/sh /var/lib/zookeeper zookeeper
 }
 
-src_prepare() {
+src_configure() {
 	cd "${S}"/src/c || die
-	eautoreconf
+	econf
 }
 
 src_compile() {
 	cd "${S}"/src/c || die
-	emake
+	emake || die
 }
 
 src_install() {
 	cd "${S}"/src/c || die
-	emake DESTDIR="${D}" install
+	emake DESTDIR="${D}" install || die
 	cd "${S}" || die
 	rm -rf src/ || die
 
