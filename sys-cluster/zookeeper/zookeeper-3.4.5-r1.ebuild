@@ -29,7 +29,22 @@ pkg_setup() {
 	enewuser zookeeper -1 /bin/sh /var/lib/zookeeper zookeeper
 }
 
+src_prepare() {
+	cd "${S}"/src/c || die
+	eautoreconf
+}
+
+src_compile() {
+	cd "${S}"/src/c || die
+	emake
+}
+
 src_install() {
+	cd "${S}"/src/c || die
+	emake DESTDIR="${D}" install
+	cd "${S}" || die
+	rm -rf src/ || die
+
 	dodir "${DATA_DIR}"
 	sed "s:^dataDir=.*:dataDir=${DATA_DIR}:" conf/zoo_sample.cfg > conf/zoo.cfg || die "sed failed"
 
