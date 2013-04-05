@@ -97,3 +97,18 @@ udev_newrules() {
 		newins "${@}"
 	)
 }
+
+# @FUNCTION: udev_reload
+# @DESCRIPTION:
+# Run udevadm control --reload to refresh rules and databases
+udev_reload() {
+	if [[ ${ROOT} != "" ]] && [[ ${ROOT} != "/" ]]; then
+		return 0
+	fi
+
+	if [[ -d ${ROOT}/run/udev ]]; then
+		ebegin "Running udev control --reload for reloading rules and databases"
+		udevadm control --reload
+		eend $?
+	fi
+}

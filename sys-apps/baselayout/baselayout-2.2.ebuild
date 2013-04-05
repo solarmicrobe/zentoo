@@ -104,6 +104,7 @@ multilib_layout() {
 				# only symlinked the lib dir on systems where we moved it
 				# to "lib32" ...
 				case ${CHOST} in
+				*-gentoo-freebsd*) ;; # We want it the other way on fbsd.
 				i?86*|x86_64*|powerpc*|sparc*|s390*)
 					if [ -d "${prefix}lib32" ] ; then
 						rm -f "${prefix}lib32"/.keep

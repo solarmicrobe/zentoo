@@ -16,6 +16,7 @@ IUSE="gudev hwdb introspection keymap +kmod selinux static-libs"
 
 DEPEND=""
 RDEPEND="|| ( >=sys-fs/udev-197-r8[gudev?,hwdb?,introspection?,keymap?,kmod?,selinux?,static-libs?]
+	>=sys-apps/systemd-198-r5[gudev?,introspection?,kmod?,selinux?,static-libs?]
 	kmod? ( >=sys-fs/eudev-1_beta2-r2[modutils,gudev?,hwdb?,introspection?,keymap?,selinux?,static-libs?] )
 	!kmod? ( >=sys-fs/eudev-1_beta2-r2[gudev?,hwdb?,introspection?,keymap?,selinux?,static-libs?] )
 	)"
