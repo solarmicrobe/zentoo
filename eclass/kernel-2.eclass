@@ -415,7 +415,8 @@ if [[ ${ETYPE} == sources ]]; then
 					  >=sys-devel/binutils-2.11.90.0.31 )"
 	RDEPEND="!build? ( >=sys-libs/ncurses-5.2
 					   sys-devel/make 
-					   dev-lang/perl )"
+					   dev-lang/perl
+					   sys-devel/bc )"
 	PDEPEND="!build? ( virtual/dev-manager )"
 
 	SLOT="${PVR}"
@@ -665,9 +666,9 @@ compile_headers_tweak_config() {
 # install functions
 #==============================================================
 install_universal() {
-	#fix silly permissions in tarball
+	# Fix silly permissions in tarball
 	cd "${WORKDIR}"
-	chown -R root:0 * >& /dev/null
+	chown -R 0:0 * >& /dev/null
 	chmod -R a+r-w+X,u+w *
 	cd ${OLDPWD}
 }

@@ -5,7 +5,7 @@
 EAPI="5"
 ETYPE="sources"
 K_WANT_GENPATCHES="base extras"
-K_GENPATCHES_VER="17"
+K_GENPATCHES_VER="21"
 K_DEBLOB_AVAILABLE="1"
 inherit kernel-2
 detect_version
