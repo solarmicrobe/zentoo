@@ -23,8 +23,8 @@ IUSE=""
 ruby_add_rdepend "
 	>=dev-ruby/activesupport-3.2
 	>=dev-ruby/eventmachine-0.12.10
-	>=dev-ruby/madvertise-ext-0.1.2
-	>=dev-ruby/madvertise-logging-0.7.2
+	>=dev-ruby/madvertise-ext-0.4.0
+	>=dev-ruby/madvertise-logging-1.0.0
 	dev-ruby/metriks
 	dev-ruby/metriks-derive
 	dev-ruby/mixlib-cli
