@@ -31,6 +31,7 @@ limit_conn - This module makes it possible to limit the number of simultaneous c
 limit_zone - This module makes it possible to limit the number of simultaneous connections for the assigned session
 lua - Embed the power of Lua into nginx
 map - This module allows you to classify, or map a set of values into a different set of values and store the result in a variable.
+metrics - collect nginx responde code metrics and more
 memcached - You can use this module to perform simple caching.
 mp4 - This module adds pseudo-streaming
 passenger - Passenger makes deployment of Ruby web applications a breeze.
