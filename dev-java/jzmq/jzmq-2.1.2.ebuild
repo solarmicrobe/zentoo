@@ -7,11 +7,9 @@ EAPI=5
 WANT_AUTOCONF="2.5"
 inherit autotools java-pkg-2
 
-MY_SHA="ac0596331ea5a06d87b2d09018ffa48f5a8591b8"
-
 DESCRIPTION="Java language binding for ZeroMQ"
 HOMEPAGE="http://www.zeromq.org/bindings:java"
-SRC_URI="https://github.com/zeromq/jzmq/archive/${MY_SHA}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/zeromq/jzmq/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
@@ -23,8 +21,6 @@ RDEPEND=">=virtual/jre-1.6
 	${COMMON_DEP}"
 DEPEND=">=virtual/jdk-1.6
 	${COMMON_DEP}"
-
-S="${WORKDIR}/jzmq-${MY_SHA}"
 
 src_prepare() {
 	eautoreconf
