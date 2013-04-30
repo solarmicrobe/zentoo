@@ -21,34 +21,41 @@
 # -aqua -gtk -motif neXt        NEXTAW
 # -aqua -gtk -motif -neXt       ATHENA
 
-# Support -cvs ebuilds, even though they're not in the official tree.
-MY_PN=${PN%-cvs}
-
-if [[ ${MY_PN} != "vim-core" ]] ; then
-	# vim supports python-2 only
-	PYTHON_DEPEND="python? 2"
-	PYTHON_USE_WITH_OPT="python"
-	PYTHON_USE_WITH="threads"
-fi
-inherit eutils vim-doc flag-o-matic versionator fdo-mime bash-completion-r1 prefix python
-
-HOMEPAGE="http://www.vim.org/"
-SLOT="0"
-LICENSE="vim"
-
 # Check for EAPI functions we need:
 case "${EAPI:-0}" in
 	0|1)
 		die "vim.eclass no longer supports EAPI 0 or 1"
 		;;
 	2|3)
-		HAS_SRC_PREPARE=1
-		HAS_USE_DEP=1
+		;;
+	5)
+		HAS_PYTHON_R1=1
 		;;
 	*)
 		die "Unknown EAPI ${EAPI}"
 		;;
 esac
+
+# Support -cvs ebuilds, even though they're not in the official tree.
+MY_PN=${PN%-cvs}
+
+if [[ ${MY_PN} != "vim-core" ]] ; then
+	if [[ ${HAS_PYTHON_R1} ]]; then
+		PYTHON_REQ_USE=threads
+		inherit python-single-r1
+	else
+		# vim supports python-2 only
+		PYTHON_DEPEND="python? 2"
+		PYTHON_USE_WITH_OPT="python"
+		PYTHON_USE_WITH="threads"
+		inherit python
+	fi
+fi
+inherit eutils vim-doc flag-o-matic versionator fdo-mime bash-completion-r1 prefix
+
+HOMEPAGE="http://www.vim.org/"
+SLOT="0"
+LICENSE="vim"
 
 if [[ ${PN##*-} == "cvs" ]] ; then
 	inherit cvs
@@ -56,13 +63,8 @@ fi
 
 IUSE="nls acl"
 
-TO_EXPORT="pkg_setup src_compile src_install src_test pkg_postinst pkg_postrm"
-if [[ $HAS_SRC_PREPARE ]]; then
-	TO_EXPORT="${TO_EXPORT} src_prepare src_configure"
-else
-	TO_EXPORT="${TO_EXPORT} src_unpack"
-fi
-EXPORT_FUNCTIONS ${TO_EXPORT}
+EXPORT_FUNCTIONS pkg_setup src_prepare src_compile src_configure \
+	src_install src_test pkg_postinst pkg_postrm
 
 DEPEND="${DEPEND}
 	>=app-admin/eselect-vi-1.1
@@ -81,6 +83,13 @@ if [[ ${MY_PN} == "vim-core" ]] ; then
 	PDEPEND="!livecd? ( app-vim/gentoo-syntax )"
 else
 	IUSE="${IUSE} cscope debug gpm perl python ruby"
+
+	if [[ ${HAS_PYTHON_R1} ]]; then
+		DEPEND="${DEPEND}
+			python? ( ${PYTHON_DEPS} )"
+		RDEPEND="${RDEPEND}
+			python? ( ${PYTHON_DEPS} )"
+	fi
 
 	DEPEND="${DEPEND}
 		cscope?  ( dev-util/cscope )
@@ -239,14 +248,14 @@ vim_pkg_setup() {
 	export HOME="${T}/home"
 
 	if [[ ${MY_PN} != "vim-core" ]] && use python; then
-		# vim supports python-2 only
-		python_set_active_version 2
-		if [[ $HAS_USE_DEP ]]; then
+		if [[ ${HAS_PYTHON_R1} ]]; then
+			python-single-r1_pkg_setup
+		else
+			# vim supports python-2 only
+			python_set_active_version 2
 			# python.eclass only defines python_pkg_setup for EAPIs that support
 			# USE dependencies
 			python_pkg_setup
-		elif ! has_version "=dev-lang/python-2*[threads]"; then
-			die "You must build dev-lang/python with USE=threads"
 		fi
 	fi
 }
@@ -419,7 +428,21 @@ vim_src_configure() {
 		myconf="${myconf} `use_enable cscope`"
 		myconf="${myconf} `use_enable gpm`"
 		myconf="${myconf} `use_enable perl perlinterp`"
-		myconf="${myconf} `use_enable python pythoninterp`"
+		if [[ ${HAS_PYTHON_R1} ]]; then
+			if use python; then
+				if [[ ${EPYTHON} == python3* ]]; then
+					myconf="${myconf} --enable-python3interp"
+					export vi_cv_path_python3="${PYTHON}"
+				else
+					myconf="${myconf} --enable-pythoninterp"
+					export vi_cv_path_python="${PYTHON}"
+				fi
+			else
+				myconf="${myconf} --disable-pythoninterp --disable-python3interp"
+			fi
+		else
+			myconf="${myconf} `use_enable python pythoninterp`"
+		fi
 		myconf="${myconf} `use_enable ruby rubyinterp`"
 		# tclinterp is broken; when you --enable-tclinterp flag, then
 		# the following command never returns:
@@ -507,8 +530,6 @@ vim_src_configure() {
 }
 
 vim_src_compile() {
-	has src_configure ${TO_EXPORT} || vim_src_configure
-
 	# The following allows emake to be used
 	emake -j1 -C src auto/osdef.h objects || die "make failed"
 

@@ -1,15 +1,17 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=5
 VIM_VERSION="7.3"
+PYTHON_COMPAT=( python{2_5,2_6,2_7,3_1,3_2,3_3} )
 inherit vim
 
 VIM_ORG_PATCHES="vim-patches-${PV}.patch.bz2"
 
 SRC_URI="ftp://ftp.vim.org/pub/vim/unix/vim-${VIM_VERSION}.tar.bz2
-	http://dev.gentoo.org/~lack/vim/${VIM_ORG_PATCHES}"
+	http://dev.gentoo.org/~lack/vim/${VIM_ORG_PATCHES}
+	http://dev.gentoo.org/~radhermit/vim/${VIM_ORG_PATCHES}"
 
 S="${WORKDIR}/vim${VIM_VERSION/.}"
 DESCRIPTION="Vim, an improved vi-style text editor"
@@ -23,4 +25,7 @@ src_prepare() {
 		epatch "${FILESDIR}"/${PN}-7.3-interix-link.patch
 	fi
 	epatch "${FILESDIR}"/${PN}-7.1.285-darwin-x11link.patch
+
+	# fix python3 support
+	epatch "${FILESDIR}"/${PN}-python3.patch
 }
