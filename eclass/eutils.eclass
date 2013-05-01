@@ -482,8 +482,11 @@ epatch() {
 
 		# Dynamically detect the correct -p# ... i'm lazy, so shoot me :/
 		local patch_cmd
+		# Handle aliased patch command #404447 #461568
+		local patch="patch"
+		eval $(alias patch 2>/dev/null | sed 's:^alias ::')
 		while [[ ${count} -lt 5 ]] ; do
-			patch_cmd="${BASH_ALIASES[patch]:-patch} -p${count} ${EPATCH_OPTS}"
+			patch_cmd="${patch} -p${count} ${EPATCH_OPTS}"
 
 			# Generate some useful debug info ...
 			(

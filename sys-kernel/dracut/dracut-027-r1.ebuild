@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit eutils linux-info
+inherit bash-completion-r1 eutils linux-info
 
 add_req_use_for() {
 	local dep="$1"; shift
@@ -23,7 +23,9 @@ LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
 
-REQUIRED_USE="dracut_modules_crypt-gpg? ( dracut_modules_crypt )
+REQUIRED_USE="
+	dracut_modules_bootchart? ( !dracut_modules_systemd )
+	dracut_modules_crypt-gpg? ( dracut_modules_crypt )
 	dracut_modules_crypt-loop? ( dracut_modules_crypt )
 	dracut_modules_livenet? ( dracut_modules_dmsquash-live )
 	"
@@ -63,8 +65,8 @@ IUSE="debug device-mapper optimization net selinux ${IUSE_DRACUT_MODULES}"
 
 RESTRICT="test"
 
-CDEPEND=">sys-fs/udev-166
-	dracut_modules_systemd? ( sys-apps/systemd )
+CDEPEND="virtual/udev
+	dracut_modules_systemd? ( >=sys-apps/systemd-199 )
 	"
 RDEPEND="${CDEPEND}
 	app-arch/cpio
@@ -77,7 +79,7 @@ RDEPEND="${CDEPEND}
 	virtual/pkgconfig
 
 	debug? ( dev-util/strace )
-	device-mapper? ( || ( sys-fs/device-mapper >=sys-fs/lvm2-2.02.33 ) )
+	device-mapper? ( >=sys-fs/lvm2-2.02.33 )
 	net? ( net-misc/curl >=net-misc/dhcp-4.2.4_p2-r1[client] sys-apps/iproute2 )
 	selinux? ( sys-libs/libselinux sys-libs/libsepol )
 	dracut_modules_biosdevname? ( sys-apps/biosdevname )
@@ -106,6 +108,10 @@ DEPEND="${CDEPEND}
 	app-text/docbook-xml-dtd:4.5
 	>=app-text/docbook-xsl-stylesheets-1.75.2
 	"
+
+DOCS=( AUTHORS HACKING NEWS README README.generic README.kernel README.modules
+	README.testsuite TODO )
+MY_LIBDIR="/usr/lib"
 
 #
 # Helper functions
@@ -149,11 +155,11 @@ rm_module() {
 #
 
 src_prepare() {
-	epatch "${FILESDIR}/${PV}-0001-Fallback-to-external-blkid-and-path_id.patch"
-	epatch "${FILESDIR}/${PV}-0002-dracut-functions.sh-fixed-inst_rules-s.patch"
-	epatch "${FILESDIR}/${PV}-0003-dracut-functions.sh-support-for-altern.patch"
-	epatch "${FILESDIR}/${PV}-0004-gentoo.conf-let-udevdir-be-handled-by-.patch"
-	chmod +x "${S}/modules.d/95udev-rules/udev-rules-prepare.sh"
+	epatch "${FILESDIR}/${PV}-0000-fix-version-print.patch"
+	epatch "${FILESDIR}/${PV}-0001-dracut-functions.sh-support-for-altern.patch"
+	epatch "${FILESDIR}/${PV}-0002-gentoo.conf-let-udevdir-be-handled-by-.patch"
+	epatch "${FILESDIR}/${PV}-0003-Do-not-call-plymouth-with-full-path.patch"
+	epatch "${FILESDIR}/${PV}-0004-plymouth-plymouth-pretrigger.sh-fixup-.patch"
 
 	if use dracut_modules_systemd; then
 		local systemdutildir="$($(tc-getPKG_CONFIG) systemd \
@@ -172,29 +178,36 @@ src_prepare() {
 	fi
 }
 
+src_configure() {
+	econf --libdir="${MY_LIBDIR}"
+}
+
 src_compile() {
-	emake prefix=/usr sysconfdir=/etc DESTDIR="${D}" doc
+	emake doc
+
 	if use optimization; then
 		ewarn "Enabling experimental optimization!"
 		tc-export CC
-		emake prefix=/usr sysconfdir=/etc DESTDIR="${D}" install/dracut-install
+		emake install/dracut-install
 	fi
 }
 
 src_install() {
-	local libdir="/usr/lib"
+	default
 
-	emake prefix=/usr libdir="${libdir}" sysconfdir=/etc \
-		DESTDIR="${D}" install
+	newbashcomp "${PN}-bash-completion.sh" "${PN}"
 
-	dodir /var/lib/dracut/overlay
-	dodoc HACKING TODO AUTHORS NEWS README*
+	local dracutlibdir="${MY_LIBDIR#/}/dracut"
 
-	insinto /etc/dracut.conf.d
+	echo "DRACUT_VERSION=$PVR" > "${D%/}/${dracutlibdir}/dracut-version.sh"
+
+	insinto "${dracutlibdir}/dracut.conf.d/"
 	newins dracut.conf.d/gentoo.conf.example gentoo.conf
 
 	insinto /etc/logrotate.d
 	newins dracut.logrotate dracut
+
+	dodir /var/lib/dracut/overlay
 
 	dohtml dracut.html
 
@@ -202,7 +215,7 @@ src_install() {
 	# Modules
 	#
 	local module
-	modules_dir="${D%/}/${libdir#/}/dracut/modules.d"
+	modules_dir="${D%/}/${dracutlibdir}/modules.d"
 
 	# Remove modules not enabled by USE flags
 	for module in ${IUSE_DRACUT_MODULES} ; do
@@ -218,6 +231,14 @@ src_install() {
 	# for others and as so have no practical use, so remove these modules.
 	use device-mapper  || rm_module 90dm
 	use net || rm_module 40network 45ifcfg 45url-lib
+
+	if use dracut_modules_systemd; then
+		# With systemd following modules do not make sense
+		rm_module 96securityfs 98selinux
+	else
+		# Without systemd following modules do not make sense
+		rm_module 00systemd-bootchart
+	fi
 
 	# Remove S/390 modules which are not tested at all
 	rm_module 80cms 95dasd 95dasd_mod 95zfcp 95znet
@@ -239,13 +260,12 @@ pkg_postinst() {
 		ewarn "kernel before booting image generated with this Dracut version."
 		ewarn ""
 
-		local CONFIG_CHECK="~BLK_DEV_INITRD ~DEVTMPFS ~MODULES"
+		local CONFIG_CHECK="~BLK_DEV_INITRD ~DEVTMPFS"
 
 		# Kernel configuration options descriptions:
 		local desc_DEVTMPFS="Maintain a devtmpfs filesystem to mount at /dev"
 		local desc_BLK_DEV_INITRD="Initial RAM filesystem and RAM disk "\
 "(initramfs/initrd) support"
-		local desc_MODULES="Enable loadable module support"
 
 		local opt desc
 
@@ -267,7 +287,6 @@ pkg_postinst() {
 		ewarn ""
 		ewarn "  CONFIG_BLK_DEV_INITRD"
 		ewarn "  CONFIG_DEVTMPFS"
-		ewarn "  CONFIG_MODULES"
 		ewarn ""
 	fi
 
