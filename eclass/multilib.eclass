@@ -396,7 +396,7 @@ multilib_toolchain_setup() {
 	if [[ ${__DEFAULT_ABI_SAVED} == "true" ]] ; then
 		for v in CHOST CBUILD AS CC CXX LD PKG_CONFIG_{LIBDIR,PATH} ; do
 			vv="__abi_saved_${v}"
-			export ${v}="${!vv}"
+			[[ ${!vv+set} == "set" ]] && export ${v}="${!vv}" || unset ${v}
 			unset ${vv}
 		done
 		unset __DEFAULT_ABI_SAVED
@@ -407,7 +407,8 @@ multilib_toolchain_setup() {
 	if [[ ${ABI} != ${DEFAULT_ABI} ]] ; then
 		# Back that multilib-ass up so we can restore it later
 		for v in CHOST CBUILD AS CC CXX LD PKG_CONFIG_{LIBDIR,PATH} ; do
-			export __abi_saved_${v}="${!v}"
+			vv="__abi_saved_${v}"
+			[[ ${!v+set} == "set" ]] && export ${vv}="${!v}" || unset ${vv}
 		done
 		export __DEFAULT_ABI_SAVED="true"
 

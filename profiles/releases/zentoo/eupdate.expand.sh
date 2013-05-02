@@ -2,10 +2,10 @@
 
 case $1 in
 app-admin/syslog-ng)                     echo "=$1-3.3.5-r1";;
-app-emulation/virtualbox)                echo "=$1-4.2.6-r1";;
-app-emulation/virtualbox-additions)      echo "=$1-4.2.6";;
-app-emulation/virtualbox-extpack-oracle) echo "=$1-4.2.6";;
-app-emulation/virtualbox-modules)        echo "=$1-4.2.6";;
+app-emulation/virtualbox)                echo "=$1-4.2.12";;
+app-emulation/virtualbox-additions)      echo "=$1-4.2.12";;
+app-emulation/virtualbox-extpack-oracle) echo "=$1-4.2.12";;
+app-emulation/virtualbox-modules)        echo "=$1-4.2.12";;
 app-text/docbook-sgml-dtd)               echo "=$1-3.0-r3"
                                          echo "=$1-3.1-r3"
                                          echo "=$1-4.0-r3"

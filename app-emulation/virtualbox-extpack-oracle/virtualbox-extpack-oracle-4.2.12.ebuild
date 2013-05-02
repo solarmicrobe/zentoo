@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ EAPI=2
 
 inherit eutils multilib
 
-MY_BUILD="82870"
+MY_BUILD="84980"
 MY_PN="Oracle_VM_VirtualBox_Extension_Pack"
 MY_PV="${PV/beta/BETA}"
 MY_PV="${MY_PV/rc/RC}"
