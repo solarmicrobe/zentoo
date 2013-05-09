@@ -1,5 +1,5 @@
 #!/sbin/runscript
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 CONNTRACKD_BIN="/usr/sbin/conntrackd"
@@ -35,28 +35,6 @@ checkconfig() {
 		eerror
 		eerror "  modprobe nf_conntrack # (for newer kernels)"
 		eerror "  modprobe ip_conntrack # (for older kernels)"
-		eerror
-		return 1
-	fi
-	# check if netfilter conntrack TCP window tracking is disabled
-	local nf_ct_tcp_be_liberal=0
-	for k in net.netfilter.nf_conntrack_tcp_be_liberal \
-		net.ipv4.netfilter.ip_conntrack_tcp_be_liberal; do
-		nf_ct_tcp_be_liberal=$(sysctl -e -n ${k} 2>/dev/null)
-		if [ ${?} -ne 0 ]; then
-			continue # sysctl key not found
-		else
-			break # sysctl key found
-		fi
-	done
-	if [ ${nf_ct_tcp_be_liberal} -ne 1 ]; then
-		eerror
-		eerror "You need to disable TCP window tracking!"
-		eerror "Add the following line to your /etc/sysctl.conf:"
-		eerror
-		eerror "  ${k} = 1"
-		eerror
-		eerror "...and run this to activate the setting: sysctl -q -p"
 		eerror
 		return 1
 	fi

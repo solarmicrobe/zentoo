@@ -1,9 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
-
+EAPI=5
 inherit autotools-utils linux-info
 
 DESCRIPTION="programming interface (API) to the in-kernel connection tracking state table"
@@ -15,9 +14,14 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="static-libs"
 
-RDEPEND=">=net-libs/libnfnetlink-1.0.0"
-DEPEND="${RDEPEND}
-	virtual/pkgconfig"
+RDEPEND="
+	>=net-libs/libmnl-1.0.3
+	>=net-libs/libnfnetlink-1.0.0
+"
+DEPEND="
+	${RDEPEND}
+	virtual/pkgconfig
+"
 
 DOCS=( README )
 

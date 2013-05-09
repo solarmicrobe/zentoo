@@ -184,7 +184,7 @@ EXPORT_FUNCTIONS src_prepare src_configure src_compile src_install src_test
 # @CODE
 
 # @ECLASS-VARIABLE: AUTOTOOLS_PRUNE_LIBTOOL_FILES
-# @DEFAULT-UNSET
+# @DEFAULT_UNSET
 # @DESCRIPTION:
 # Sets the mode of pruning libtool files. The values correspond to
 # prune_libtool_files parameters, with leading dashes stripped.
@@ -199,6 +199,9 @@ EXPORT_FUNCTIONS src_prepare src_configure src_compile src_install src_test
 # If set to 'all', all .la files will be removed unconditionally. This
 # option is discouraged and shall be used only if 'modules' does not
 # remove the files.
+#
+# If set to 'none', no .la files will be pruned ever. Use in corner
+# cases only.
 
 # Determine using IN or OUT source build
 _check_build_dir() {
@@ -528,7 +531,9 @@ autotools-utils_src_install() {
 
 	# Remove libtool files and unnecessary static libs
 	local prune_ltfiles=${AUTOTOOLS_PRUNE_LIBTOOL_FILES}
-	prune_libtool_files ${prune_ltfiles:+--${prune_ltfiles}}
+	if [[ ${prune_ltfiles} != none ]]; then
+		prune_libtool_files ${prune_ltfiles:+--${prune_ltfiles}}
+	fi
 }
 
 # @FUNCTION: autotools-utils_src_test
@@ -539,7 +544,12 @@ autotools-utils_src_test() {
 
 	_check_build_dir
 	pushd "${BUILD_DIR}" > /dev/null || die
-	# Run default src_test as defined in ebuild.sh
-	default_src_test
+
+	if make -n check &>/dev/null; then
+		emake check "${@}" || die 'emake check failed.'
+	elif make -n test &>/dev/null; then
+		emake test "${@}" || die 'emake test failed.'
+	fi
+
 	popd > /dev/null || die
 }

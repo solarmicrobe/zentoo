@@ -1,9 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
-inherit linux-info eutils
+EAPI="4"
+
+inherit linux-info
 
 DESCRIPTION="Connection tracking userspace tools"
 HOMEPAGE="http://conntrack-tools.netfilter.org"
@@ -12,13 +13,15 @@ SRC_URI="http://www.netfilter.org/projects/conntrack-tools/files/${P}.tar.bz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
+IUSE="doc"
 
 RDEPEND="
+	>=net-libs/libnetfilter_conntrack-1.0.1
+	>=net-libs/libnetfilter_cttimeout-1.0.0
 	>=net-libs/libnfnetlink-1.0.0
-	>=net-libs/libnetfilter_conntrack-0.0.101
-	!net-firewall/conntrack"
+	net-libs/libmnl"
 DEPEND="${RDEPEND}
+	doc? ( app-text/xmlto )
 	virtual/pkgconfig
 	sys-devel/bison
 	sys-devel/flex"
@@ -48,16 +51,23 @@ pkg_setup() {
 			"are not set when one at least should be."
 }
 
-src_install() {
-	emake DESTDIR="${D}" install || die "emake install failed"
+src_configure() {
+	econf --disable-silent-rules
+}
+src_compile() {
+	default
+	use doc && emake -C doc/manual
+}
 
-	newinitd "${FILESDIR}/conntrackd.initd-r1" conntrackd || die
-	newconfd "${FILESDIR}/conntrackd.confd-r1" conntrackd || die
+src_install() {
+	default
+
+	newinitd "${FILESDIR}/conntrackd.initd-r2" conntrackd
+	newconfd "${FILESDIR}/conntrackd.confd-r1" conntrackd
 
 	insinto /etc/conntrackd
-	doins doc/stats/conntrackd.conf || die
+	doins doc/stats/conntrackd.conf
 
-	dodoc AUTHORS TODO || die
-	insinto /usr/share/doc/${PF}
-	doins -r doc/* || die
+	dodoc -r doc/sync doc/stats AUTHORS TODO
+	use doc && dohtml doc/manual/${PN}.html
 }
