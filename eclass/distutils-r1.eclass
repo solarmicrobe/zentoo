@@ -222,14 +222,6 @@ esetup.py() {
 
 	local add_args=()
 	if [[ ${BUILD_DIR} ]]; then
-		# if setuptools is used, adjust egg_info path as well
-		# (disabled since it causes build not to install scripts)
-#		if "${PYTHON:-python}" setup.py --help egg_info &>/dev/null; then
-#			add_args+=(
-#				egg_info --egg-base "${BUILD_DIR}"
-#			)
-#		fi
-
 		add_args+=(
 			build
 			--build-base "${BUILD_DIR}"
@@ -247,6 +239,13 @@ esetup.py() {
 			# make the ebuild writer lives easier
 			--build-scripts "${BUILD_DIR}/scripts"
 		)
+
+		# if setuptools is used, adjust egg_info path as well
+		if "${PYTHON:-python}" setup.py --help egg_info &>/dev/null; then
+			add_args+=(
+				egg_info --egg-base "${BUILD_DIR}"
+			)
+		fi
 	elif [[ ! ${DISTUTILS_IN_SOURCE_BUILD} ]]; then
 		die 'Out-of-source build requested, yet BUILD_DIR unset.'
 	fi
@@ -394,9 +393,11 @@ _distutils-r1_rename_scripts() {
 	while IFS= read -r -d '' f; do
 		debug-print "${FUNCNAME}: found executable at ${f#${D}/}"
 
-		if [[ "$(head -n 1 "${f}")" == '#!'*${EPYTHON}* ]]
+		local shebang
+		read -r shebang < "${f}"
+		if [[ ${shebang} == '#!'*${EPYTHON}* ]]
 		then
-			debug-print "${FUNCNAME}: matching shebang: $(head -n 1 "${f}")"
+			debug-print "${FUNCNAME}: matching shebang: ${shebang}"
 
 			local newf=${f}-${EPYTHON}
 			debug-print "${FUNCNAME}: renaming to ${newf#${D}/}"
@@ -448,47 +449,8 @@ distutils-r1_python_install() {
 
 	if [[ ! ${DISTUTILS_SINGLE_IMPL} ]]; then
 		_distutils-r1_rename_scripts "${root}"
-		_distutils-r1_merge_root "${root}" "${D}"
+		multibuild_merge_root "${root}" "${D}"
 	fi
-}
-
-# @FUNCTION: distutils-r1_merge_root
-# @USAGE: <src-root> <dest-root>
-# @INTERNAL
-# @DESCRIPTION:
-# Merge the directory tree from <src-root> to <dest-root>, removing
-# the <src-root> in the process.
-_distutils-r1_merge_root() {
-	local src=${1}
-	local dest=${2}
-
-	local lockfile=${T}/distutils-r1-merge-lock
-
-	if type -P lockf &>/dev/null; then
-		# On BSD, we have 'lockf' wrapper.
-		tar -C "${src}" -f - -c . \
-			| lockf "${lockfile}" tar -x -f - -C "${dest}"
-	else
-		local lock_fd
-		if type -P flock &>/dev/null; then
-			# On Linux, we have 'flock' which can lock fd.
-			redirect_alloc_fd lock_fd "${lockfile}" '>>'
-			flock ${lock_fd}
-		else
-			ewarn "distutils-r1: no locking service found, please report."
-		fi
-
-		cp -a -l -n "${src}"/. "${dest}"/
-
-		if [[ ${lock_fd} ]]; then
-			# Close the lock file when we are done with it.
-			# Prevents deadlock if we aren't in a subshell.
-			eval "exec ${lock_fd}>&-"
-		fi
-	fi
-	[[ ${?} == 0 ]] || die "Merging ${EPYTHON} image failed."
-
-	rm -rf "${src}"
 }
 
 # @FUNCTION: distutils-r1_python_install_all
@@ -571,11 +533,16 @@ distutils-r1_run_phase() {
 _distutils-r1_run_common_phase() {
 	local DISTUTILS_ORIG_BUILD_DIR=${BUILD_DIR}
 
-	local MULTIBUILD_VARIANTS
-	_python_obtain_impls
+	if [[ ! ${DISTUTILS_SINGLE_IMPL} ]]; then
+		local MULTIBUILD_VARIANTS
+		_python_obtain_impls
 
-	multibuild_for_best_variant _python_multibuild_wrapper \
-		distutils-r1_run_phase "${@}"
+		multibuild_for_best_variant _python_multibuild_wrapper \
+			distutils-r1_run_phase "${@}"
+	else
+		# semi-hack, be careful.
+		_distutils-r1_run_foreach_impl "${@}"
+	fi
 }
 
 # @FUNCTION: _distutils-r1_run_foreach_impl
