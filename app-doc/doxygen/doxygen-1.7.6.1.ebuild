@@ -24,7 +24,7 @@ for X in "${LANGS[@]}" ; do
 	IUSE="${IUSE} linguas_${X}"
 done
 
-RDEPEND="qt4? ( x11-libs/qt-gui:4 )
+RDEPEND="qt4? ( dev-qt/qtgui:4 )
 	latex? ( app-text/texlive[extra] )
 	dev-lang/perl
 	virtual/libiconv

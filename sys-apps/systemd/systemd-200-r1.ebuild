@@ -15,7 +15,7 @@ LICENSE="GPL-2 LGPL-2.1 MIT"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="acl audit cryptsetup doc gcrypt gudev http
-	introspection +kmod lzma pam python qrcode selinux static-libs
+	introspection +kmod lzma openrc pam python qrcode selinux static-libs
 	tcpd vanilla xattr"
 
 MINKV="2.6.39"
@@ -42,6 +42,7 @@ COMMON_DEPEND=">=sys-apps/dbus-1.6.8-r1
 # baselayout-2.2 has /run
 RDEPEND="${COMMON_DEPEND}
 	>=sys-apps/baselayout-2.2
+	openrc? ( >=sys-fs/udev-init-scripts-25 )
 	|| (
 		>=sys-apps/util-linux-2.22
 		<sys-apps/sysvinit-2.88-r4
@@ -73,6 +74,8 @@ src_configure() {
 		--with-rootlibdir=/usr/$(get_libdir)
 		# but pam modules have to lie in /lib*
 		--with-pamlibdir=$(getpam_mod_dir)
+		# avoid bash-completion dep, default is stupid
+		--with-bashcompletiondir=/usr/share/bash-completion
 		# make sure we get /bin:/sbin in $PATH
 		--enable-split-usr
 		# disable sysv compatibility

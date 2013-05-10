@@ -178,8 +178,6 @@ src_install() {
 pkg_preinst() {
 	rm -f "${ROOT}"/etc/pam.d/system-auth.new \
 		"${ROOT}/etc/login.defs.new"
-
-	use pam && pam_epam_expand "${D}"/etc/pam.d/login
 }
 
 pkg_postinst() {

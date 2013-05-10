@@ -24,7 +24,7 @@ else
 fi
 
 DESCRIPTION="QEMU + Kernel-based Virtual Machine userland tools"
-HOMEPAGE="http://www.linux-kvm.org"
+HOMEPAGE="http://www.qemu.org http://www.linux-kvm.org"
 
 LICENSE="GPL-2 LGPL-2 BSD-2"
 SLOT="0"

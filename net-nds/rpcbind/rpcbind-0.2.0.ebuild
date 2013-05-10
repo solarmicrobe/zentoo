@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -33,7 +33,9 @@ src_prepare() {
 	if [[ ${PV} == "9999" ]] ; then
 		eautoreconf
 	else
+		sed -i 's:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:' configure.in || die #467018
 		epatch "${FILESDIR}"/${P}-pkgconfig.patch
+		epatch "${FILESDIR}"/${P}-no-nss.patch
 		eautoreconf
 	fi
 }

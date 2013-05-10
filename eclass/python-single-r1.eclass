@@ -206,6 +206,7 @@ python-single-r1_pkg_setup() {
 			fi
 
 			python_export "${impl}" EPYTHON PYTHON
+			python_wrapper_setup
 		fi
 	done
 

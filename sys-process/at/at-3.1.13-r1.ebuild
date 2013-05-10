@@ -1,10 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 
-inherit autotools eutils flag-o-matic pam
+inherit autotools eutils flag-o-matic pam user
 
 DESCRIPTION="Queues jobs for later execution"
 HOMEPAGE="http://packages.qa.debian.org/a/at.html"
@@ -13,15 +13,17 @@ SRC_URI="mirror://debian/pool/main/a/at/${PN}_${PV}.orig.tar.gz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="pam"
+IUSE="pam selinux"
 
 DEPEND="virtual/mta
 	>=sys-devel/autoconf-2.64
 	sys-devel/bison
 	>=sys-devel/flex-2.5.4a
-	pam? ( virtual/pam )"
+	pam? ( virtual/pam )
+	selinux? ( sec-policy/selinux-at )"
 RDEPEND="virtual/mta
-	virtual/logger"
+	virtual/logger
+	selinux? ( sec-policy/selinux-at )"
 
 pkg_setup() {
 	enewgroup at 25

@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,11 +15,11 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="examples"
 
-RDEPEND="x11-libs/qt-gui:4
-	x11-libs/qt-webkit:4
-	x11-libs/qt-core:4
-	x11-libs/qt-svg:4
-	x11-libs/qt-xmlpatterns:4"
+RDEPEND="dev-qt/qtgui:4
+	dev-qt/qtwebkit:4
+	dev-qt/qtcore:4
+	dev-qt/qtsvg:4
+	dev-qt/qtxmlpatterns:4"
 DEPEND="${RDEPEND}"
 
 # Tests pull data from websites and require a

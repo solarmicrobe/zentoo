@@ -20,7 +20,7 @@
    always a description without a lang attribute. Also there are no overlapping
    descriptions allowed (multiple description tags with the same language)
 
-   $Header: /var/cvsroot/gentoo/xml/htdocs/proj/en/metastructure/herds/herds.xml,v 1.998 2013/02/05 18:00:09 pacho Exp $
+   $Header: /var/cvsroot/gentoo/xml/htdocs/proj/en/metastructure/herds/herds.xml,v 1.1019 2013/04/27 15:30:52 pacho Exp $
 
 -->
 <herds>
@@ -63,16 +63,8 @@
   <email>bazaar@gentoo.org</email>
   <description>Bazaar distributed version control system and related packages</description>
   <maintainer>
-    <email>pva@gentoo.org</email>
-    <name>Peter Volkov</name>
-  </maintainer>
-  <maintainer>
     <email>fauli@gentoo.org</email>
     <name>Christian Faulhammer</name>
-  </maintainer>
-  <maintainer>
-    <email>serkan@gentoo.org</email>
-    <name>Serkan Kaba</name>
   </maintainer>
   <maintainer>
     <email>marienz@gentoo.org</email>
@@ -114,15 +106,6 @@
   </maintainer>
 </herd>
 <herd>
-  <name>comm-fax</name>
-  <email>comm-fax@gentoo.org</email>
-  <description>Comm, fax, and related packages</description>
-  <maintainer>
-    <email>kingtaco@gentoo.org</email>
-    <name>Mike Doty</name>
-  </maintainer>
-</herd>
-<herd>
   <name>forensics</name>
   <email>forensics@gentoo.org</email>
   <description>This will contain all applications that aid the investigation of intrusions and general stuff that would be used by system adminstrators and law enforcement agencies. By the dual purpose nature of the applications some disaster recover mechanism tools may also fall under our maintence</description>
@@ -142,11 +125,6 @@
   <maintainer>
     <email>vapier@gentoo.org</email>
     <role>dcron</role>
-  </maintainer>
-  <maintainer>
-    <email>wschlich@gentoo.org</email>
-    <name>Wolfram Schlich</name>
-    <role>fcron</role>
   </maintainer>
 </herd>
 <herd>
@@ -195,6 +173,10 @@
     <email>xarthisius@gentoo.org</email>
     <name>Kacper Kowalik</name>
   </maintainer>
+  <maintainer>
+  	<email>hwoarang@gentoo.org</email>
+	<name>Markos Chandras</name>
+  </maintainer>
 </herd>
 <herd>
   <name>enlightenment</name>
@@ -205,9 +187,6 @@
   </maintainer>
   <maintainer>
     <email>vapier@gentoo.org</email>
-  </maintainer>
-  <maintainer>
-    <email>pva@gentoo.org</email>
   </maintainer>
 </herd>
 <herd>
@@ -221,10 +200,6 @@
   <maintainer>
     <email>angelos@gentoo.org</email>
     <name>Christoph Mende</name>
-  </maintainer>
-  <maintainer>
-    <email>ssuominen@gentoo.org</email>
-    <name>Samuli Suominen</name>
   </maintainer>
 </herd>
 <herd>
@@ -504,11 +479,6 @@
   <email>base-system@gentoo.org</email>
   <description>Core system utilities and libraries.</description>
   <maintainer>
-    <email>pebenito@gentoo.org</email>
-    <name>Chris Pebenito</name>
-    <role>Selinux guy</role>
-  </maintainer>
-  <maintainer>
     <email>vapier@gentoo.org</email>
     <role>Miscellaneous leet stuff</role>
   </maintainer>
@@ -546,16 +516,15 @@
     <email>flameeyes@gentoo.org</email>
     <name>Diego Elio Pettenò</name>
   </maintainer>
+  <maintainer>
+    <email>hwoarang@gentoo.org</email>
+    <name>Markos Chandras</name>
+  </maintainer>
 </herd>
 <herd>
   <name>hardened</name>
   <email>hardened@gentoo.org</email>
   <description>Hardened Gentoo project packages and policy</description>
-  <maintainer>
-    <email>pebenito@gentoo.org</email>
-    <name>Chris PeBenito</name>
-    <role>SELinux developer</role>
-  </maintainer>
   <maintainer>
     <email>solar@gentoo.org</email>
     <name>Ned Ludd</name>
@@ -634,6 +603,10 @@
     <email>blueness@gentoo.org</email>
     <name>Anthony G. Basile</name>
   </maintainer>
+  <maintainer>
+    <email>ago@gentoo.org</email>
+    <name>Agostino Sarubbo</name>
+  </maintainer>
 </herd>
 <herd>
   <name>games</name>
@@ -669,11 +642,6 @@
       <email>robbat2@gentoo.org</email>
       <role>Team leader</role>
       <name>Robin H. Johnson</name>
-  </maintainer>
-  <maintainer>
-    <email>wschlich@gentoo.org</email>
-    <name>Wolfram Schlich</name>
-    <role>Bacula</role>
   </maintainer>
 </herd>
 <herd>
@@ -1106,10 +1074,6 @@
     <name>Andrey Kislyuk</name>
   </maintainer>
   <maintainer>
-    <email>wschlich@gentoo.org</email>
-    <name>Wolfram Schlich</name>
-  </maintainer>
-  <maintainer>
     <email>xarthisius@gentoo.org</email>
     <name>Kacper Kowalik</name>
   </maintainer>
@@ -1145,11 +1109,6 @@
     <name>Tony Vroon</name>
     <role>ejabberd and jabber-base</role>
   </maintainer>
-  <maintainer>
-    <email>wschlich@gentoo.org</email>
-    <name>Wolfram Schlich</name>
-    <role>MCabber</role>
-  </maintainer>
 </herd>
 <herd>
   <name>sparc</name>
@@ -1167,11 +1126,19 @@
     <email>xmw@gentoo.org</email>
     <name>Michael Weber</name>
   </maintainer>
+  <maintainer>
+    <email>ago@gentoo.org</email>
+    <name>Agostino Sarubbo</name>
+  </maintainer>
 </herd>
 <herd>
   <name>mips</name>
   <email>mips@gentoo.org</email>
   <description>Gentoo/MIPS Team</description>
+  <maintainer>
+  	<email>hwoarang@gentoo.org</email>
+	<name>Markos Chandras</name>
+  </maintainer>
   <maintainer>
     <email>blueness@gentoo.org</email>
     <name>Anthony G. Basile</name>
@@ -1273,11 +1240,6 @@
   <email>media-tv@gentoo.org</email>
   <description>TV related applications and modules</description>
   <maintainer>
-    <email>cardoe@gentoo.org</email>
-    <name>Doug Goldstein</name>
-    <role>MythTV related bits</role>
-  </maintainer>
-  <maintainer>
     <email>zzam@gentoo.org</email>
     <name>Matthias Schwarzott</name>
     <role>vdr and related things</role>
@@ -1349,6 +1311,11 @@
     <name>Stratos Psomadakis</name>
     <role>gentoo-sources</role>
   </maintainer>
+  <maintainer>
+    <email>TomWij@gentoo.org</email>
+    <name>Tom Wijsman</name>
+    <role>gentoo-sources</role>
+  </maintainer>
 </herd>
 <herd>
   <name>kernel-misc</name>
@@ -1366,6 +1333,10 @@
     <email>radhermit@gentoo.org</email>
     <name>Tim Harder</name>
   </maintainer>
+  <maintainer>
+    <email>ssuominen@gentoo.org></email>
+    <name>Samuli Suominen</name>
+  </maintainer>
 </herd>
 <herd>
   <name>openoffice</name>
@@ -1377,10 +1348,6 @@
   <name>app-dicts</name>
   <email>app-dicts@gentoo.org</email>
   <description>Spell checking programs and dictionaries</description>
-  <maintainer>
-    <email>pva@gentoo.org</email>
-    <name>Peter Volkov</name>
-  </maintainer>
 </herd>
 <herd>
   <name>voip</name>
@@ -1418,6 +1385,10 @@
     <email>sochotnicky@gentoo.org</email>
     <name>Stanislav Ochotnický</name>
   </maintainer>
+  <maintainer>
+    <email>ssuominen@gentoo.org</email>
+    <name>Samuli Suominen</name>
+  </maintainer>
 </herd>
 <herd>
   <name>dev-embedded</name>
@@ -1444,15 +1415,7 @@
   <name>desktop-effects</name>
   <email>desktop-effects@gentoo.org</email>
   <description>Compiz and other 3D Window Managers</description>
-  <maintainer>
-    <email>jmbsvicetto@gentoo.org</email>
-    <name>Jorge Manuel B. S. Vicetto</name>
-  </maintainer>
-  <maintainer>
-    <email>pinkbyte@gentoo.org</email>
-    <name>Sergey Popov</name>
-    <role>Team lead</role>
-  </maintainer>
+  <maintainingproject>/proj/en/desktop/effects/index.xml</maintainingproject>
 </herd>
 <herd>
   <name>desktop-misc</name>
@@ -1560,18 +1523,15 @@
     <name>Stefan Briesenick</name>
   </maintainer>
   <maintainer>
-    <email>pva@gentoo.org</email>
-    <name>Peter Volkov</name>
+    <email>pinkbyte@gentoo.org</email>
+    <name>Sergey Popov</name>
   </maintainer>
 </herd>
 <herd>
   <name>embedded</name>
   <email>embedded@gentoo.org</email>
   <description>Embedded systems packages</description>
-  <!-- Either maintainers or a maintaining project is allowed, not both -->    <maintainer>
-    <email>pebenito@gentoo.org</email>
-    <name>Chris PeBenito</name>
-  </maintainer>
+  <!-- Either maintainers or a maintaining project is allowed, not both -->
   <maintainer>
     <email>solar@gentoo.org</email>
     <name>Ned Ludd</name>
@@ -1588,6 +1548,10 @@
   <maintainer>
     <email>radhermit@gentoo.org</email>
     <name>Tim Harder</name>
+  </maintainer>
+  <maintainer>
+  	<email>hwoarang@gentoo.org</email>
+	<name>Markos Chandras</name>
   </maintainer>
   <!-- Do not enable it until the file does not give 500 errors anymore
   <maintainingproject>/proj/en/base/embedded/index.xml</maintainingproject>
@@ -1606,6 +1570,10 @@
   <maintainer>
     <email>jer@gentoo.org</email>
     <name>Jeroen Roovers</name>
+  </maintainer>
+  <maintainer>
+    <email>ago@gentoo.org</email>
+    <name>Agostino Sarubbo</name>
   </maintainer>
 </herd>
 <herd>
@@ -1634,6 +1602,14 @@
   <maintainer>
     <email>blueness@gentoo.org</email>
     <name>Anthony G. Basile</name>
+  </maintainer>
+  <maintainer>
+    <email>ssuominen@gentoo.org</email>
+    <name>Samuli Suominen</name>
+  </maintainer>
+  <maintainer>
+    <email>ago@gentoo.org</email>
+    <name>Agostino Sarubbo</name>
   </maintainer>
 </herd>
 <herd>
@@ -1702,6 +1678,10 @@
     <email>mattst88@gentoo.org</email>
     <name>Matt Turner</name>
   </maintainer>
+  <maintainer>
+    <email>ago@gentoo.org</email>
+    <name>Agostino Sarubbo</name>
+  </maintainer>
 </herd>
 <herd>
   <name>ia64</name>
@@ -1712,6 +1692,10 @@
   </maintainer>
   <maintainer>
   <email>armin76@gentoo.org</email>
+  </maintainer>
+  <maintainer>
+    <email>ago@gentoo.org</email>
+    <name>Agostino Sarubbo</name>
   </maintainer>
 </herd>
 <herd>
@@ -1733,21 +1717,12 @@
     <role>netcat and a small handful of packages</role>
   </maintainer>
   <maintainer>
-    <email>pva@gentoo.org</email>
-    <name>Peter Volkov</name>
-  </maintainer>
-  <maintainer>
       <email>cedk@gentoo.org</email>
       <name>Cédric Krier</name>
   </maintainer>
   <maintainer>
     <email>jer@gentoo.org</email>
     <name>Jeroen Roovers</name>
-  </maintainer>
-  <maintainer>
-    <email>wschlich@gentoo.org</email>
-    <name>Wolfram Schlich</name>
-    <role>Zabbix</role>
   </maintainer>
   <maintainer>
     <email>constanze@gentoo.org</email>
@@ -1793,6 +1768,10 @@
   <maintainer>
     <email>armin76@gentoo.org</email>
   </maintainer>
+  <maintainer>
+    <email>ago@gentoo.org</email>
+    <name>Agostino Sarubbo</name>
+  </maintainer>
 </herd>
 <herd>
   <name>sh</name>
@@ -1804,6 +1783,10 @@
   <maintainer>
     <email>armin76@gentoo.org</email>
     <name>Raúl Porcel</name>
+  </maintainer>
+  <maintainer>
+    <email>ago@gentoo.org</email>
+    <name>Agostino Sarubbo</name>
   </maintainer>
 </herd>
 <herd>
@@ -1825,15 +1808,6 @@
   <name>sysadmin</name>
   <email>sysadmin@gentoo.org</email>
   <description>System Administration packages</description>
-  <maintainer>
-    <email>klieber@gentoo.org</email>
-    <name>Kurt Lieber</name>
-    <role>Team lead</role>
-  </maintainer>
-  <maintainer>
-    <email>pva@gentoo.org</email>
-    <name>Peter Volkov</name>
-  </maintainer>
   <maintainer>
     <email>dev-zero@gentoo.org</email>
     <name>Tiziano Müller</name>
@@ -1868,9 +1842,6 @@
   </maintainer>
   <maintainer>
     <email>jer@gentoo.org</email>
-  </maintainer>
-  <maintainer>
-    <email>pva@gentoo.org</email>
   </maintainer>
 </herd>
 <herd>
@@ -1927,6 +1898,10 @@
   <maintainer>
     <email>xarthisius@gentoo.org</email>
     <name>Kacper Kowalik</name>
+  </maintainer>
+  <maintainer>
+    <email>ssuominen@gentoo.org</email>
+    <name>Samuli Suominen</name>
   </maintainer>
 </herd>
 <herd>
@@ -2017,9 +1992,12 @@
   <email>net-proxy@gentoo.org</email>
   <description>Network proxies</description>
   <maintainer>
-    <email>wschlich@gentoo.org</email>
-    <name>Wolfram Schlich</name>
-    <role>MySQL Proxy</role>
+    <email>TomWij@gentoo.org</email>
+    <name>Tom Wijsman</name>
+  </maintainer>
+  <maintainer>
+    <email>dastergon@gentoo.org</email>
+    <name>Pavlos Ratis</name>
   </maintainer>
 </herd>
 <herd>
@@ -2083,11 +2061,6 @@
     <email>hollow@gentoo.org</email>
     <name>Benedikt Böhm</name>
     <role>Linux-VServer</role>
-  </maintainer>
-  <maintainer>
-    <email>pva@gentoo.org</email>
-    <name>Peter Volkov</name>
-    <role>OpenVZ</role>
   </maintainer>
 </herd>
 <herd>
@@ -2166,10 +2139,6 @@
     <name>sgml</name>
     <email>sgml@gentoo.org</email>
     <description>SGML and docbook packages (split of text-markup)</description>
-    <maintainer>
-        <email>floppym@gentoo.org</email>
-        <name>Mike Gilbert</name>
-    </maintainer>
 </herd>
 <herd>
     <name>theology</name>
@@ -2185,8 +2154,8 @@
     <email>mythtv@gentoo.org</email>
     <description>MythTV related packages</description>
     <maintainer>
-	<email>cardoe@gentoo.org</email>
-	<name>Doug Goldstein</name>
+        <email>cardoe@gentoo.org</email>
+	    <name>Doug Goldstein</name>
     </maintainer>
     <maintainer>
         <email>rich0@gentoo.org</email>
@@ -2234,10 +2203,6 @@
     <name>selinux</name>
     <email>selinux@gentoo.org</email>
     <description>Gentoo's Security-Enhanced Linux (SELinux) packages</description>
-    <maintainer>
-        <email>pebenito@gentoo.org</email>
-        <name>Chris PeBenito</name>
-    </maintainer>
     <maintainer>
         <email>blueness@gentoo.org</email>
         <name>Anthony G. Basile</name>

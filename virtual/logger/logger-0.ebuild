@@ -2,6 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+EAPI="2"
+
 DESCRIPTION="Virtual for system loggers"
 HOMEPAGE=""
 SRC_URI=""
@@ -20,4 +22,5 @@ RDEPEND="|| (
 	app-admin/syslog-ng
 	app-admin/syslogread
 	sys-freebsd/freebsd-usbin
+	sys-apps/busybox[syslog]
 )"

@@ -36,6 +36,9 @@ src_prepare() {
 	use zlib || make_sed+=( -e '/_PROGRAMS/s:(gd2topng|gd2copypal|gd2togif|giftogd2|gdparttopng|pngtogd2)::g' )
 	sed -i -r "${make_sed[@]}" Makefile.am || die
 
+	# bug 466996
+	sed -i 's/AM_PROG_CC_STDC/AC_PROG_CC/' configure.ac || die
+
 	cat <<-EOF > acinclude.m4
 	m4_ifndef([AM_ICONV],[m4_define([AM_ICONV],[:])])
 	EOF

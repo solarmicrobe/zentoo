@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -97,6 +97,9 @@ do_filter_flags() {
 	# Bug #269433 & #290202
 	filter-flags -fno-strict-overflow
 	filter-flags -fstrict-overflow
+
+	# Bug #442784
+	filter-flags '-W*'
 
 	# ...sure, why not?
 	strip-unsupported-flags

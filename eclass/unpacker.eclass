@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: unpacker.eclass
@@ -177,7 +177,7 @@ unpack_makeself() {
 		local skip=0
 		exe=tail
 		case ${ver} in
-			1.5.*|1.6.0-nv)	# tested 1.5.{3,4,5} ... guessing 1.5.x series is same
+			1.5.*|1.6.0-nv*)	# tested 1.5.{3,4,5} ... guessing 1.5.x series is same
 				skip=$(grep -a ^skip= "${src}" | cut -d= -f2)
 				;;
 			2.0|2.0.1)
@@ -233,6 +233,9 @@ unpack_makeself() {
 		compress*)
 			eval ${exe} | gunzip | tar --no-same-owner -xf -
 			;;
+		XZ*)
+			eval ${exe} | unxz | tar --no-same-owner -xf -
+			;;
 		*)
 			eerror "Unknown filetype \"${filetype}\" ?"
 			false
@@ -273,6 +276,10 @@ unpack_deb() {
 	fi
 
 	unpacker ./data.tar*
+
+	# Clean things up #458658.  No one seems to actually care about
+	# these, so wait until someone requests to do something else ...
+	rm -f debian-binary {control,data}.tar*
 }
 
 # @FUNCTION: unpack_cpio
@@ -292,6 +299,23 @@ unpack_cpio() {
 		unpack_banner "${cpio}"
 		"${cpio_cmd[@]}" <"${cpio}"
 	fi
+}
+
+# @FUNCTION: unpack_zip
+# @USAGE: <zip file>
+# @DESCRIPTION:
+# Unpack zip archives.
+# This function ignores all non-fatal errors (i.e. warnings).
+# That is useful for zip archives with extra crap attached
+# (e.g. self-extracting archives).
+unpack_zip() {
+	[[ $# -eq 1 ]] || die "Usage: ${FUNCNAME} <file>"
+
+	local zip=$(find_unpackable_file "$1")
+	unpack_banner "${zip}"
+	unzip -qo "${zip}"
+
+	[[ $? -le 1 ]] || die "unpacking ${zip} failed (arch=unpack_zip)"
 }
 
 # @FUNCTION: _unpacker
@@ -345,6 +369,8 @@ _unpacker() {
 			arch="unpack_makeself"
 		fi
 		;;
+	*.zip)
+		arch="unpack_zip" ;;
 	esac
 
 	# finally do the unpack
@@ -409,6 +435,8 @@ unpacker_src_uri_depends() {
 			d="app-arch/p7zip" ;;
 		*.xz)
 			d="app-arch/xz-utils" ;;
+		*.zip)
+			d="app-arch/unzip" ;;
 		esac
 		deps+=" ${d}"
 	done

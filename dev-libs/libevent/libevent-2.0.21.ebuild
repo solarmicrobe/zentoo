@@ -2,8 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
-
+EAPI=5
 inherit eutils libtool
 
 MY_P="${P}-stable"
@@ -24,6 +23,8 @@ RDEPEND="
 "
 
 S=${WORKDIR}/${MY_P}
+
+DOCS=( README ChangeLog )
 
 src_prepare() {
 	elibtoolize
@@ -48,9 +49,6 @@ src_test() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die "make install failed"
-	dodoc README ChangeLog
-	if ! use static-libs; then
-		rm -f "${D}"/usr/lib*/libevent*.la
-	fi
+	default
+	prune_libtool_files
 }

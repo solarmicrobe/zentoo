@@ -568,7 +568,7 @@ apache-2_pkg_postinst() {
 
 	echo
 	elog "Attention: cgi and cgid modules are now handled via APACHE2_MODULES flags"
-	elog "in /etc/make.conf. Make sure to enable those in order to compile them."
+	elog "in make.conf. Make sure to enable those in order to compile them."
 	elog "In general, you should use 'cgid' with threaded MPMs and 'cgi' otherwise."
 	echo
 

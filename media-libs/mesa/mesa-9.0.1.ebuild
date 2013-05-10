@@ -96,7 +96,7 @@ RDEPEND="!<x11-base/xorg-server-1.7
 	vdpau? ( >=x11-libs/libvdpau-0.4.1 )
 	wayland? ( >=dev-libs/wayland-1.0.3 )
 	xorg? (
-		x11-base/xorg-server
+		<x11-base/xorg-server-1.13.49
 		x11-libs/libdrm[libkms]
 	)
 	xvmc? ( >=x11-libs/libXvMC-1.0.6 )
@@ -117,6 +117,7 @@ done
 DEPEND="${RDEPEND}
 	llvm? (
 		>=sys-devel/llvm-2.9
+		<sys-devel/llvm-3.3_rc
 		r600-llvm-compiler? ( =sys-devel/llvm-3.1* )
 		video_cards_radeonsi? ( =sys-devel/llvm-3.1* )
 	)

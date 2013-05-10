@@ -1,11 +1,11 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="2"
 
 DESCRIPTION="a set of command-line programs providing a simple interface to inotify"
-HOMEPAGE="http://inotify-tools.sourceforge.net/"
+HOMEPAGE="https://github.com/rvoicilas/inotify-tools/wiki"
 SRC_URI="mirror://sourceforge/${PN}/${P}.tar.gz"
 
 LICENSE="GPL-2"

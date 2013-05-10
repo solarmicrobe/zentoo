@@ -13,7 +13,7 @@ SRC_URI="mirror://sourceforge/freetype/${P/_/}.tar.bz2
 	doc?	( mirror://sourceforge/freetype/${PN}-doc-${PV}.tar.bz2 )
 	infinality? ( http://dev.gentoo.org/~polynomial-c/${P}-infinality-patches.tar.xz )"
 
-LICENSE="FTL GPL-2"
+LICENSE="|| ( FTL GPL-2+ )"
 SLOT="2"
 KEYWORDS="amd64"
 IUSE="X auto-hinter bindist bzip2 debug doc fontforge infinality static-libs utils"
@@ -67,8 +67,8 @@ src_prepare() {
 	fi
 
 	epatch "${FILESDIR}"/${PN}-2.3.2-enable-valid.patch
-
 	epatch "${FILESDIR}"/${P}-auto-hinter_compile_fix.patch # 453956
+	epatch "${FILESDIR}"/${P}-locale.patch # 454804
 
 	if use utils; then
 		cd "${WORKDIR}/ft2demos-${PV}"
@@ -80,7 +80,6 @@ src_prepare() {
 	fi
 
 	elibtoolize
-	epunt_cxx
 }
 
 src_configure() {

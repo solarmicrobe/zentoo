@@ -26,7 +26,6 @@ DEPEND="
 RDEPEND="${DEPEND}
 	dev-python/paramiko
 	>=dev-python/pexpect-2.1
-	>=dev-python/py-gnupg-0.3.2
 	s3? ( dev-python/boto )
 "
 

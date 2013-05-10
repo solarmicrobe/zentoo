@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -57,6 +57,7 @@ src_prepare() {
 	# emul-linux-x86-gtklibs
 	if multilib_enabled ; then
 		epatch "${FILESDIR}/${PN}-1.26.0-lib64.patch"
+		epatch "${FILESDIR}/${P}-AM_CONFIG_HEADER.patch" # fixed in 1.34
 		eautoreconf
 	fi
 

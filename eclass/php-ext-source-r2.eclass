@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: php-ext-source-r2.eclass
@@ -25,7 +25,7 @@ RDEPEND=""
 
 # Because of USE deps, we require at least EAPI 2
 case ${EAPI} in
-	2|3|4|5) ;;
+	4|5) ;;
 	*)
 		die "php-ext-source-r2 is not compatible with EAPI=${EAPI}"
 esac
@@ -67,20 +67,21 @@ esac
 # Defaults to ${S}
 [[ -z "${PHP_EXT_S}" ]] && PHP_EXT_S="${S}"
 
-#Make sure at least one target is installed. Abuses USE dependencies.
+#Make sure at least one target is installed.
+REQUIRED_USE="|| ( "
 for target in ${USE_PHP}; do
 	IUSE="${IUSE} php_targets_${target}"
 	target=${target/+}
-	SELFDEPEND="${SELFDEPEND} =${CATEGORY}/${PF}[php_targets_${target}]"
+	REQUIRED_USE+="php_targets_${target} "
 	slot=${target/php}
 	slot=${slot/-/.}
 	PHPDEPEND="${PHPDEPEND}
 	php_targets_${target}? ( dev-lang/php:${slot} )"
 done
+REQUIRED_USE+=")"
 
 RDEPEND="${RDEPEND}
 	${PHP_EXT_OPTIONAL_USE}${PHP_EXT_OPTIONAL_USE:+? ( }
-	|| ( ${SELFDEPEND} )
 	${PHPDEPEND}
 	${PHP_EXT_OPTIONAL_USE:+ )}"
 
@@ -261,13 +262,9 @@ php-ext-source-r2_createinifiles() {
 		local inifile
 		for inifile in ${PHPINIFILELIST} ; do
 			if [[ -n "${PHP_EXT_INIFILE}" ]]; then
-				cat "${FILESDIR}/${PHP_EXT_INIFILE}" > "${inifile}"
+				cat "${FILESDIR}/${PHP_EXT_INIFILE}" >> "${ED}/${inifile}"
 				einfo "Added content of ${FILESDIR}/${PHP_EXT_INIFILE} to ${inifile}"
 			fi
-
-
-
-
 			inidir="${inifile/${PHP_EXT_NAME}.ini/}"
 			inidir="${inidir/ext/ext-active}"
 			dodir "/${inidir}"

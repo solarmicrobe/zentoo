@@ -6,7 +6,7 @@ EAPI="5"
 PYTHON_COMPAT=( python{2_5,2_6,2_7} )
 # Tests crash with pypy
 
-inherit distutils-r1 eutils flag-o-matic
+inherit distutils-r1 eutils flag-o-matic prefix
 
 DESCRIPTION="Tools for generating printable PDF documents from any data source."
 HOMEPAGE="http://www.reportlab.com/ http://pypi.python.org/pypi/reportlab"
@@ -44,6 +44,8 @@ python_prepare_all() {
 
 	rm -fr src/rl_addons/renderPM/libart_lgpl
 	epatch "${FILESDIR}/${PN}-2.4-external_libart_lgpl.patch"
+
+	eprefixify setup.py
 
 	epatch "${FILESDIR}/${PN}-2.5-pypy-implicit-PyArg_NoArgs.patch"
 }

@@ -5,6 +5,3 @@
 # These USE flags are what is common between the various sub-profiles. Stages 2
 # and 3 are built against these, so be careful what you add.
 USE="acl gdbm gpm nptl unicode"
-
-# Default to zentoo.org distfiles mirror
-GENTOO_MIRRORS="http://www.zentoo.org"

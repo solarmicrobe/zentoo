@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -17,8 +17,8 @@ IUSE="examples qt4"
 
 RDEPEND="dev-lang/lua
 	qt4? (
-		x11-libs/qt-gui:4
-		x11-libs/qt-core:4
+		dev-qt/qtgui:4
+		dev-qt/qtcore:4
 	)"
 DEPEND="${RDEPEND}
 	dev-libs/boost"

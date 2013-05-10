@@ -40,8 +40,9 @@ python_prepare_all() {
 		sed -e 's/HAVE_SASL//g' -i setup.cfg || die
 	fi
 	use ssl && mylibs="${mylibs} ssl crypto"
+	use elibc_glibc && mylibs="${mylibs} resolv"
 
-	sed -e "s:^libs = .*:libs = lber resolv ${mylibs}:" \
+	sed -e "s:^libs = .*:libs = lber ${mylibs}:" \
 		-i setup.cfg || die "error setting up libs in setup.cfg"
 
 	distutils-r1_python_prepare_all

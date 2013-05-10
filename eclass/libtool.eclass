@@ -48,6 +48,13 @@ ELT_try_and_apply_patch() {
 	fi
 	printf '\nTrying %s\n' "${disp}" >> "${log}"
 
+	if [[ ! -e ${file} ]] ; then
+		echo "File not found: ${file}" >> "${log}"
+		return 1
+	fi
+
+	# Save file for permission restoration.  `patch` sometimes resets things.
+	cp -p "${file}" "${file}.gentoo.elt"
 	# We only support patchlevel of 0 - why worry if its static patches?
 	if patch -p0 --dry-run "${file}" "${patch}" >> "${log}" 2>&1 ; then
 		einfo "  Applying ${disp} ..."
@@ -57,6 +64,8 @@ ELT_try_and_apply_patch() {
 	else
 		ret=1
 	fi
+	chmod --reference="${file}.gentoo.elt" "${file}"
+	rm -f "${file}.gentoo.elt"
 
 	return "${ret}"
 }
@@ -131,7 +140,7 @@ elibtoolize() {
 	local deptoremove=
 	local do_shallow="no"
 	local force="false"
-	local elt_patches="install-sh ltmain portage relink max_cmd_len sed test tmp cross as-needed"
+	local elt_patches="install-sh ltmain portage relink max_cmd_len sed test tmp cross as-needed target-nm"
 
 	for x in "$@" ; do
 		case ${x} in
@@ -348,6 +357,10 @@ elibtoolize() {
 						# have at least one patch succeeded.
 						ret=0
 					fi
+					;;
+				target-nm)
+					ELT_walk_patches "${d}/configure" "${p}"
+					ret=$?
 					;;
 				install-sh)
 					ELT_walk_patches "${d}/install-sh" "${p}"

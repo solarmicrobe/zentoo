@@ -33,7 +33,7 @@ fi
 
 if [[ ! ${_PYTHON_UTILS_R1} ]]; then
 
-inherit multilib
+inherit multilib toolchain-funcs
 
 # @ECLASS-VARIABLE: _PYTHON_ALL_IMPLS
 # @INTERNAL
@@ -133,6 +133,34 @@ _python_impl_supported() {
 # Example value:
 # @CODE
 # /usr/lib64/libpython2.6.so
+# @CODE
+
+# @ECLASS-VARIABLE: PYTHON_CFLAGS
+# @DESCRIPTION:
+# Proper C compiler flags for building against Python. Obtained from
+# pkg-config or python-config.
+#
+# Set and exported on request using python_export().
+# Valid only for CPython. Requires a proper build-time dependency
+# on the Python implementation and on pkg-config.
+#
+# Example value:
+# @CODE
+# -I/usr/include/python2.7
+# @CODE
+
+# @ECLASS-VARIABLE: PYTHON_LIBS
+# @DESCRIPTION:
+# Proper C compiler flags for linking against Python. Obtained from
+# pkg-config or python-config.
+#
+# Set and exported on request using python_export().
+# Valid only for CPython. Requires a proper build-time dependency
+# on the Python implementation and on pkg-config.
+#
+# Example value:
+# @CODE
+# -lpython2.7
 # @CODE
 
 # @ECLASS-VARIABLE: PYTHON_PKG_DEP
@@ -237,7 +265,7 @@ python_export() {
 						libname=lib${impl}
 						;;
 					*)
-						die "${EPYTHON} lacks a dynamic library"
+						die "${impl} lacks a dynamic library"
 						;;
 				esac
 
@@ -245,6 +273,46 @@ python_export() {
 
 				export PYTHON_LIBPATH=${path}/${libname}$(get_libname)
 				debug-print "${FUNCNAME}: PYTHON_LIBPATH = ${PYTHON_LIBPATH}"
+				;;
+			PYTHON_CFLAGS)
+				local val
+
+				case "${impl}" in
+					python2.5|python2.6)
+						# old versions support python-config only
+						val=$("${impl}-config" --includes)
+						;;
+					python*)
+						# python-2.7, python-3.2, etc.
+						val=$($(tc-getPKG_CONFIG) --cflags ${impl/n/n-})
+						;;
+					*)
+						die "${impl}: obtaining ${var} not supported"
+						;;
+				esac
+
+				export PYTHON_CFLAGS=${val}
+				debug-print "${FUNCNAME}: PYTHON_CFLAGS = ${PYTHON_CFLAGS}"
+				;;
+			PYTHON_LIBS)
+				local val
+
+				case "${impl}" in
+					python2.5|python2.6)
+						# old versions support python-config only
+						val=$("${impl}-config" --libs)
+						;;
+					python*)
+						# python-2.7, python-3.2, etc.
+						val=$($(tc-getPKG_CONFIG) --libs ${impl/n/n-})
+						;;
+					*)
+						die "${impl}: obtaining ${var} not supported"
+						;;
+				esac
+
+				export PYTHON_LIBS=${val}
+				debug-print "${FUNCNAME}: PYTHON_LIBS = ${PYTHON_LIBS}"
 				;;
 			PYTHON_PKG_DEP)
 				local d
@@ -352,6 +420,40 @@ python_get_library_path() {
 	echo "${PYTHON_LIBPATH}"
 }
 
+# @FUNCTION: python_get_CFLAGS
+# @USAGE: [<impl>]
+# @DESCRIPTION:
+# Obtain and print the compiler flags for building against Python,
+# for the given implementation. If no implementation is provided,
+# ${EPYTHON} will be used.
+#
+# Please note that this function can be used with CPython only.
+# It requires Python and pkg-config installed, and therefore proper
+# build-time dependencies need be added to the ebuild.
+python_get_CFLAGS() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	python_export "${@}" PYTHON_CFLAGS
+	echo "${PYTHON_CFLAGS}"
+}
+
+# @FUNCTION: python_get_LIBS
+# @USAGE: [<impl>]
+# @DESCRIPTION:
+# Obtain and print the compiler flags for linking against Python,
+# for the given implementation. If no implementation is provided,
+# ${EPYTHON} will be used.
+#
+# Please note that this function can be used with CPython only.
+# It requires Python and pkg-config installed, and therefore proper
+# build-time dependencies need be added to the ebuild.
+python_get_LIBS() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	python_export "${@}" PYTHON_LIBS
+	echo "${PYTHON_LIBS}"
+}
+
 # @FUNCTION: _python_rewrite_shebang
 # @INTERNAL
 # @USAGE: [<EPYTHON>] <path>...
@@ -390,8 +492,9 @@ _python_rewrite_shebang() {
 
 	local f
 	for f; do
-		local shebang=$(head -n 1 "${f}")
-		local from
+		local from shebang
+		read -r shebang < "${f}"
+		shebang=${shebang%$'\r'}
 		debug-print "${FUNCNAME}: path = ${f}"
 		debug-print "${FUNCNAME}: shebang = ${shebang}"
 
@@ -713,6 +816,100 @@ python_doheader() {
 
 	insinto "${d}"
 	doins -r "${@}" || die
+}
+
+# @FUNCTION: python_wrapper_setup
+# @USAGE: [<path> [<impl>]]
+# @DESCRIPTION:
+# Create proper 'python' executable and pkg-config wrappers
+# (if available) in the directory named by <path>. Set up PATH
+# and PKG_CONFIG_PATH appropriately. <path> defaults to ${T}/${EPYTHON}.
+#
+# The wrappers will be created for implementation named by <impl>,
+# or for one named by ${EPYTHON} if no <impl> passed.
+#
+# If the named directory contains a python symlink already, it will
+# be assumed to contain proper wrappers already and only environment
+# setup will be done. If wrapper update is requested, the directory
+# shall be removed first.
+python_wrapper_setup() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	local workdir=${1:-${T}/${EPYTHON}}
+	local impl=${2:-${EPYTHON}}
+
+	[[ ${workdir} ]] || die "${FUNCNAME}: no workdir specified."
+	[[ ${impl} ]] || die "${FUNCNAME}: no impl nor EPYTHON specified."
+
+	if [[ ! -x ${workdir}/bin/python ]]; then
+		mkdir -p "${workdir}"/{bin,pkgconfig} || die
+
+		# Clean up, in case we were supposed to do a cheap update.
+		rm -f "${workdir}"/bin/python{,2,3,-config}
+		rm -f "${workdir}"/bin/2to3
+		rm -f "${workdir}"/pkgconfig/python{,2,3}.pc
+
+		local EPYTHON PYTHON
+		python_export "${impl}" EPYTHON PYTHON
+
+		local pyver
+		if [[ ${EPYTHON} == python3* ]]; then
+			pyver=3
+		else # includes pypy & jython
+			pyver=2
+		fi
+
+		# Python interpreter
+		ln -s "${PYTHON}" "${workdir}"/bin/python || die
+		ln -s python "${workdir}"/bin/python${pyver} || die
+
+		local nonsupp=()
+
+		# CPython-specific
+		if [[ ${EPYTHON} == python* ]]; then
+			ln -s "${PYTHON}-config" "${workdir}"/bin/python-config || die
+
+			# Python 2.6+.
+			if [[ ${EPYTHON} != python2.5 ]]; then
+				ln -s "${PYTHON/python/2to3-}" "${workdir}"/bin/2to3 || die
+			else
+				nonsupp+=( 2to3 )
+			fi
+
+			# Python 2.7+.
+			if [[ ${EPYTHON} != python2.[56] ]]; then
+				ln -s "${EPREFIX}"/usr/$(get_libdir)/pkgconfig/${EPYTHON/n/n-}.pc \
+					"${workdir}"/pkgconfig/python.pc || die
+			else
+				# XXX?
+				ln -s /dev/null "${workdir}"/pkgconfig/python.pc || die
+			fi
+			ln -s python.pc "${workdir}"/pkgconfig/python${pyver}.pc || die
+		else
+			nonsupp+=( 2to3 python-config )
+		fi
+
+		local x
+		for x in "${nonsupp[@]}"; do
+			echo >"${workdir}"/bin/${x} <<__EOF__ || die
+#!/bin/sh
+echo "${x} is not supported by ${EPYTHON}" >&2
+exit 1
+__EOF__
+			chmod +x "${workdir}"/bin/${x} || die
+		done
+
+		# Now, set the environment.
+		# But note that ${workdir} may be shared with something else,
+		# and thus already on top of PATH.
+		if [[ ${PATH##:*} != ${workdir}/bin ]]; then
+			PATH=${workdir}/bin${PATH:+:${PATH}}
+		fi
+		if [[ ${PKG_CONFIG_PATH##:*} != ${workdir}/pkgconfig ]]; then
+			PKG_CONFIG_PATH=${workdir}/pkgconfig${PKG_CONFIG_PATH:+:${PKG_CONFIG_PATH}}
+		fi
+		export PATH PKG_CONFIG_PATH
+	fi
 }
 
 _PYTHON_UTILS_R1=1

@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # mozconfig.eclass: the new mozilla.eclass
@@ -16,7 +16,6 @@ RDEPEND="app-arch/zip
 	app-arch/unzip
 	>=app-text/hunspell-1.2
 	dev-libs/expat
-	>=dev-libs/libIDL-0.8.0
 	>=dev-libs/libevent-1.4.7
 	>=x11-libs/cairo-1.8[X]
 	>=x11-libs/gtk+-2.8.6:2
@@ -64,6 +63,9 @@ mozconfig_config() {
 	mozconfig_use_enable dbus
 	mozconfig_use_enable debug
 	mozconfig_use_enable debug tests
+	if ! use debug ; then
+		mozconfig_annotate 'disabled by Gentoo' --disable-debug-symbols
+	fi
 	mozconfig_use_enable startup-notification
 	mozconfig_use_enable system-sqlite
 	mozconfig_use_enable wifi necko-wifi

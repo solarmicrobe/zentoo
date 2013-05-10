@@ -32,8 +32,24 @@ IUSE="+binary"
 REQUIRED_USE="ppc? ( binary )
 	ppc64? ( binary )"
 
-DEPEND="!binary? ( sys-power/iasl )"
+DEPEND="!binary? (
+		>=sys-power/iasl-20060912
+		<sys-power/iasl-20130117
+		)"
 RDEPEND=""
+
+pkg_pretend() {
+	if ! use binary; then
+		ewarn "You have decided to compile your own SeaBIOS. This is not"
+		ewarn "supported by upstream unless you use their recommended"
+		ewarn "toolchain (which you are not)."
+		elog
+		ewarn "If you are intending to use this build with QEMU, realize"
+		ewarn "you will not receive any support if you have compiled your"
+		ewarn "own SeaBIOS. Virtual machines subtly fail based on changes"
+		ewarn "in SeaBIOS."
+	fi
+}
 
 pkg_setup() {
 	python_set_active_version 2

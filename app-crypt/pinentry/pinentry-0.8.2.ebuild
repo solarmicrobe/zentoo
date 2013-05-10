@@ -1,10 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-inherit multilib eutils flag-o-matic
+inherit autotools multilib eutils flag-o-matic
 
 DESCRIPTION="Collection of simple PIN or passphrase entry dialogs which utilize the Assuan protocol"
 HOMEPAGE="http://gnupg.org/aegypten2/index.html"
@@ -20,7 +20,7 @@ RDEPEND="
 	caps? ( sys-libs/libcap )
 	gtk? ( x11-libs/gtk+:2 )
 	ncurses? ( sys-libs/ncurses )
-	qt4? ( >=x11-libs/qt-gui-4.4.1:4 )
+	qt4? ( >=dev-qt/qtgui-4.4.1:4 )
 	static? ( >=sys-libs/ncurses-5.7-r5[static-libs,-gpm] )
 "
 DEPEND="${RDEPEND}
@@ -43,6 +43,9 @@ src_prepare() {
 			"${EPREFIX}"/usr/bin/moc ${f/.moc/.h} > ${f} || die
 		done
 	fi
+	epatch "${FILESDIR}/${P}-ncurses.patch"
+	sed -i 's/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/g' configure.ac || die
+	eautoreconf
 }
 
 src_configure() {

@@ -50,7 +50,7 @@ src_install() {
 	[[ -s ${ED}/usr/bin/peekfd ]] || rm -f "${ED}"/usr/bin/peekfd
 	[[ -e ${ED}/usr/bin/peekfd ]] || rm -f "${ED}"/usr/share/man/man1/peekfd.1
 
-	# fuser is needed by init.d scripts
+	# fuser is needed by init.d scripts; use * wildcard for #458250
 	dodir /bin
-	mv "${ED}"/usr/bin/fuser "${ED}"/bin || die
+	mv "${ED}"/usr/bin/*fuser "${ED}"/bin || die
 }

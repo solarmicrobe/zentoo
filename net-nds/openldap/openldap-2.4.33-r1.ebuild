@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit db-use eutils flag-o-matic multilib ssl-cert versionator toolchain-funcs autotools
+inherit db-use eutils flag-o-matic multilib ssl-cert versionator toolchain-funcs autotools user
 
 BIS_PN=rfc2307bis.schema
 BIS_PV=20120525

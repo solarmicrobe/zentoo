@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -25,7 +25,7 @@ RDEPEND="
 	nls? ( >=sys-devel/gettext-0.12.1-r2 )
 	readline? ( >=sys-libs/readline-5.2 )
 	selinux? ( sys-libs/libselinux )
-	device-mapper? ( || ( >=sys-fs/lvm2-2.02.45 sys-fs/device-mapper ) )
+	device-mapper? ( >=sys-fs/lvm2-2.02.45 )
 "
 DEPEND="
 	${RDEPEND}

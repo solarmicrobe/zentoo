@@ -112,7 +112,7 @@ if [[ ${PN} != "kgcc64" && ${PN} != gcc-* ]] ; then
 		tc_version_is_at_least "4.1" && IUSE+=" libssp objc++"
 		tc_version_is_at_least "4.2" && IUSE+=" openmp"
 		tc_version_is_at_least "4.3" && IUSE+=" fixed-point"
-		tc_version_is_at_least "4.4" && IUSE+=" graphite"
+		tc_version_is_at_least "4.6" && IUSE+=" graphite"
 		[[ ${GCC_BRANCH_VER} == 4.5 ]] && IUSE+=" lto"
 		tc_version_is_at_least "4.7" && IUSE+=" go"
 	fi
@@ -149,8 +149,8 @@ if in_iuse graphite ; then
 	if tc_version_is_at_least 4.8 ; then
 		RDEPEND+="
 			graphite? (
-				>=dev-libs/cloog-0.17.0
-				>=dev-libs/isl-0.10
+				>=dev-libs/cloog-0.18.0
+				>=dev-libs/isl-0.11.1
 			)"
 	else
 		RDEPEND+="
@@ -162,7 +162,6 @@ if in_iuse graphite ; then
 fi
 
 DEPEND="${RDEPEND}
-	>=sys-apps/texinfo-4.8
 	>=sys-devel/bison-1.875
 	>=sys-devel/flex-2.5.4
 	test? (
@@ -1079,26 +1078,21 @@ gcc_do_configure() {
 	# users to control this feature in the event they need the support.
 	tc_version_is_at_least "4.3" && confgcc+=" $(use_enable fixed-point)"
 
-	# Graphite support was added in 4.4, which depends on external libraries
-	# for optimizations.  Current versions use cloog-ppl (cloog fork with Parma
-	# PPL backend).  Sometime in the future we will use upstream cloog with the
-	# ISL backend (note: PPL will still be a requirement).  cloog-ppl's include
-	# path was modified to prevent collisions between the two packages (library
-	# names are different).
-	#
-	# We disable the PPL version check so we can use >=ppl-0.11.
-	if tc_version_is_at_least "4.4"; then
-		confgcc+=" $(use_with graphite ppl)"
+	# graphite was added in 4.4 but we only support it in 4.6+ due to external
+	# library issues.  4.6/4.7 uses cloog-ppl which is a fork of CLooG with a
+	# PPL backend.  4.8+ uses upstream CLooG with the ISL backend.  We install
+	# cloog-ppl into a non-standard location to prevent collisions.
+	if tc_version_is_at_least "4.8" ; then
 		confgcc+=" $(use_with graphite cloog)"
-		if use graphite; then
-			if tc_version_is_at_least "4.8"; then
-				confgcc+=" --disable-isl-version-check"
-				confgcc+=" --with-cloog"
-			else
-				confgcc+=" --disable-ppl-version-check"
-				confgcc+=" --with-cloog-include=/usr/include/cloog-ppl"
-			fi
-		fi
+		use graphite && confgcc+=" --disable-isl-version-check"
+	elif tc_version_is_at_least "4.6" ; then
+		confgcc+=" $(use_with graphite cloog)"
+		confgcc+=" $(use_with graphite ppl)"
+		use graphite && confgcc+=" --with-cloog-include=/usr/include/cloog-ppl"
+		use graphite && confgcc+=" --disable-ppl-version-check"
+	elif tc_version_is_at_least "4.4" ; then
+		confgcc+=" --without-cloog"
+		confgcc+=" --without-ppl"
 	fi
 
 	# LTO support was added in 4.5, which depends upon elfutils.  This allows
@@ -1191,7 +1185,7 @@ gcc_do_configure() {
 	# destructors", but apparently requires glibc.
 	case ${CTARGET} in
 	*-uclibc*)
-		confgcc+=" --disable-__cxa_atexit --enable-target-optspace $(use_enable nptl tls)"
+		confgcc+=" --disable-__cxa_atexit $(use_enable nptl tls)"
 		[[ ${GCCMAJOR}.${GCCMINOR} == 3.3 ]] && confgcc+=" --enable-sjlj-exceptions"
 		if tc_version_is_at_least 3.4 && ! tc_version_is_at_least 4.3 ; then
 			confgcc+=" --enable-clocale=uclibc"
@@ -1226,6 +1220,10 @@ gcc_do_configure() {
 		--with-bugurl=http://bugs.gentoo.org/ \
 		--with-pkgversion="${BRANDING_GCC_PKGVERSION}"
 	set -- ${confgcc} "$@" ${EXTRA_ECONF}
+
+	# Disable gcc info regeneration -- it ships with generated info pages
+	# already.  Our custom version/urls/etc... trigger it.  #464008
+	export gcc_cv_prog_makeinfo_modern=no
 
 	# Do not let the X detection get in our way.  We know things can be found
 	# via system paths, so no need to hardcode things that'll break multilib.
@@ -1289,10 +1287,6 @@ toolchain_death_notice() {
 # Travis Tilley <lv@gentoo.org> (04 Sep 2004)
 #
 gcc_do_make() {
-	# Fix for libtool-portage.patch
-	local OLDS=${S}
-	S=${WORKDIR}/build
-
 	# Set make target to $1 if passed
 	[[ -n $1 ]] && GCC_MAKE_TARGET=$1
 	# default target
@@ -1331,7 +1325,7 @@ gcc_do_make() {
 		BOOT_CFLAGS=${BOOT_CFLAGS-"$(get_abi_CFLAGS ${TARGET_DEFAULT_ABI}) ${CFLAGS}"}
 	fi
 
-	pushd "${WORKDIR}"/build
+	pushd "${WORKDIR}"/build >/dev/null
 
 	emake \
 		LDFLAGS="${LDFLAGS}" \
@@ -1355,11 +1349,12 @@ gcc_do_make() {
 		fi
 	fi
 
-	popd
+	popd >/dev/null
 }
 
 # This is mostly a stub function to be overwritten in an ebuild
 gcc_do_filter_flags() {
+
 	strip-flags
 
 	# In general gcc does not like optimization, and add -O2 where
@@ -1409,9 +1404,14 @@ gcc_do_filter_flags() {
 		;;
 	esac
 
-	# Compile problems with these (bug #6641 among others)...
-	#filter-flags "-fno-exceptions -fomit-frame-pointer -fforce-addr"
-
+	case ${GCC_BRANCH_VER} in
+	4.6)
+		# https://bugs.gentoo.org/411333
+		# https://bugs.gentoo.org/466454
+		replace-cpu-flags c3-2 pentium2 pentium3 pentium3m pentium-m i686
+		;;
+	esac
+	
 	# CFLAGS logic (verified with 3.4.3):
 	# CFLAGS:
 	#	This conflicts when creating a crosscompiler, so set to a sane
@@ -1486,20 +1486,28 @@ toolchain_src_install() {
 
 	cd "${WORKDIR}"/build
 	# Do allow symlinks in private gcc include dir as this can break the build
-	find gcc/include*/ -type l -print0 | xargs -0 rm -f
+	find gcc/include*/ -type l -delete
+	# Copy over the info pages.  We disabled their generation earlier, but the
+	# build system only expects to install out of the build dir, not the source.  #464008
+	mkdir -p gcc/doc
+	for x in "${S}"/gcc/doc/*.info* ; do
+		if [[ -f ${x} ]] ; then
+			cp "${x}" gcc/doc/ || die
+		fi
+	done
 	# Remove generated headers, as they can cause things to break
 	# (ncurses, openssl, etc).
-	for x in $(find gcc/include*/ -name '*.h') ; do
+	while read x ; do
 		grep -q 'It has been auto-edited by fixincludes from' "${x}" \
 			&& rm -f "${x}"
-	done
+	done < <(find gcc/include*/ -name '*.h')
 	# Do the 'make install' from the build directory
 	S=${WORKDIR}/build \
 	emake -j1 DESTDIR="${D}" install || die
 	# Punt some tools which are really only useful while building gcc
 	find "${D}" -name install-tools -prune -type d -exec rm -rf "{}" \;
 	# This one comes with binutils
-	find "${D}" -name libiberty.a -exec rm -f "{}" \;
+	find "${D}" -name libiberty.a -delete
 
 	# Move the libraries to the proper location
 	gcc_movelibs
@@ -1960,18 +1968,22 @@ setup_multilib_osdirnames() {
 	esac
 	config+="/t-linux64"
 
+	local sed_args=()
+	if tc_version_is_at_least 4.6 ; then
+		sed_args+=( -e 's:$[(]call if_multiarch[^)]*[)]::g' )
+	fi
 	if [[ ${SYMLINK_LIB} == "yes" ]] ; then
 		einfo "updating multilib directories to be: ${libdirs}"
-		if tc_version_is_at_least 4.7 ; then
-			set -- -e '/^MULTILIB_OSDIRNAMES.*lib32/s:[$][(]if.*):../lib32:'
+		if tc_version_is_at_least 4.6.4 || tc_version_is_at_least 4.7 ; then
+			sed_args+=( -e '/^MULTILIB_OSDIRNAMES.*lib32/s:[$][(]if.*):../lib32:' )
 		else
-			set -- -e "/^MULTILIB_OSDIRNAMES/s:=.*:= ${libdirs}:"
+			sed_args+=( -e "/^MULTILIB_OSDIRNAMES/s:=.*:= ${libdirs}:" )
 		fi
 	else
 		einfo "using upstream multilib; disabling lib32 autodetection"
-		set -- -r -e 's:[$][(]if.*,(.*)[)]:\1:'
+		sed_args+=( -r -e 's:[$][(]if.*,(.*)[)]:\1:' )
 	fi
-	sed -i "$@" "${S}"/gcc/config/${config} || die
+	sed -i "${sed_args[@]}" "${S}"/gcc/config/${config} || die
 }
 
 # make sure the libtool archives have libdir set to where they actually

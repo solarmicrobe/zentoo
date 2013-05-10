@@ -4,7 +4,7 @@
 
 EAPI="3"
 
-inherit eutils flag-o-matic
+inherit eutils flag-o-matic toolchain-funcs
 
 if [[ ${PV} == *_p* ]] ; then
 	DEB_DIFF=${PN}_${PV/_p/-}
@@ -33,18 +33,19 @@ src_prepare() {
 	[[ -n ${DEB_DIFF} ]] && epatch "${WORKDIR}"/${DEB_DIFF}.diff
 	epatch "${FILESDIR}"/${P}-proto.patch
 	epatch "${FILESDIR}"/${P}-tests.patch #429954
+	sed -i "/^AR =/s:=.*:= $(tc-getAR):" Makefile.in || die #444086
 }
 
 src_configure() {
 	use static && append-ldflags -static
 	econf \
 		$(use_enable nls) \
-		--docdir=/usr/share/doc/${PF}
+		--docdir="${EPREFIX}"/usr/share/doc/${PF}
 }
 
 src_install() {
 	emake install DESTDIR="${D}" || die
-	rm "${D}"/usr/share/doc/${PF}/{COPYING,flex.pdf} || die
+	rm "${ED}"/usr/share/doc/${PF}/{COPYING,flex.pdf} || die
 	dodoc AUTHORS ChangeLog NEWS ONEWS README* THANKS TODO
 	dosym flex /usr/bin/lex
 }

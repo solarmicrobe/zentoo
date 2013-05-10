@@ -31,7 +31,6 @@ limit_conn - This module makes it possible to limit the number of simultaneous c
 limit_zone - This module makes it possible to limit the number of simultaneous connections for the assigned session
 lua - Embed the power of Lua into nginx
 map - This module allows you to classify, or map a set of values into a different set of values and store the result in a variable.
-metrics - collect nginx responde code metrics and more
 memcached - You can use this module to perform simple caching.
 mp4 - This module adds pseudo-streaming
 passenger - Passenger makes deployment of Ruby web applications a breeze.
@@ -53,7 +52,6 @@ sub - This module can search and replace text in the nginx response.
 upload - Enable support for handling file uploads using multipart/form-data encoding
 upload_progress - This module adds the ability to track POST upload progress via JSON API
 upstream_ip_hash - This module provides the ability to distribute upstream requests based on the IP-address of the client.
-upstream_check - Check upstream server health
 userid - This module gives out cookies for identification of clients.
 uwsgi - External module for the uWSGI protocol for python web apps.
 xslt - This module is a filter which converts an XML response with the aid of one or more XSLT templates.

@@ -1,8 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 inherit autotools eutils
 
 DESCRIPTION="A decoder implementation of the JBIG2 image compression format"
@@ -15,7 +15,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="png static-libs test"
 
-RDEPEND="png? ( >=media-libs/libpng-1.2:0 )"
+RDEPEND="png? ( media-libs/libpng:0= )"
 DEPEND="${RDEPEND}
 	test? ( app-arch/unzip )"
 
@@ -25,6 +25,7 @@ RESTRICT="test"
 DOCS="CHANGES README"
 
 src_prepare() {
+	sed -i -e 's:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:' configure.ac || die #466998
 	epatch "${FILESDIR}"/${P}-libpng15.patch
 	eautoreconf
 
@@ -43,5 +44,5 @@ src_configure() {
 
 src_install() {
 	default
-	find "${ED}" -name '*.la' -exec rm -f {} +
+	prune_libtool_files
 }

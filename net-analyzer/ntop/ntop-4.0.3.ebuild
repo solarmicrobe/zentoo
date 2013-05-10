@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -17,7 +17,7 @@ IUSE="ipv6 ssl"
 #snmp support is disabled
 
 #snmp? ( net-analyzer/net-snmp )
-COMMON_DEPEND="sys-apps/gawk
+COMMON_DEPEND="virtual/awk
 	dev-lang/perl
 	sys-libs/gdbm
 	dev-libs/libevent

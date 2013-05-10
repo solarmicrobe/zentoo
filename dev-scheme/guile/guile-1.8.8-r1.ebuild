@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -28,9 +28,13 @@ SLOT="12"
 MAJOR="1.8"
 
 src_prepare() {
-	#
 	epatch "${FILESDIR}/${P}-fix_guile-config.patch" \
-		"${FILESDIR}"/${P}-gcc46.patch
+		"${FILESDIR}/${P}-gcc46.patch" \
+		"${FILESDIR}/${P}-makeinfo-5.patch"
+	sed \
+		-e "s/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/g" \
+		-e "/AM_PROG_CC_STDC/d" \
+		-i guile-readline/configure.in
 	eautoreconf
 }
 

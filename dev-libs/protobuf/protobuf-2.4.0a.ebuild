@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -33,6 +33,7 @@ pkg_setup() {
 		python_set_active_version 2
 		python_pkg_setup
 	fi
+	use java && java-pkg-opt-2_pkg_setup
 }
 
 src_prepare() {

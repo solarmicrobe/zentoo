@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -25,7 +25,7 @@ KEYWORDS="amd64"
 IUSE="acl avahi dbus debug +filters gnutls java +jpeg kerberos ldap pam perl
 	+png python selinux slp +ssl static-libs +threads +tiff usb X xinetd"
 
-LANGS="da de es eu fi fr id it ja ko nl no pl pt pt_BR ru sv zh zh_TW"
+LANGS="es"
 for X in ${LANGS} ; do
 	IUSE="${IUSE} linguas_${X}"
 done

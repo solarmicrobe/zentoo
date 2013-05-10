@@ -46,9 +46,6 @@ src_configure() {
 	# the included gnutls -- force ioctl.h to include this header
 	[[ ${CHOST} == *-solaris* ]] && append-flags -DBSD_COMP=1
 
-	# the configure script contains a few hacks to workaround openssl
-	# build limitations.  disable those, and use openssl's pkg-config.
-	eval export ac_cv_lib_{z_compress,dl_{dlopen,shl_load}}=no
 	# some libraries tests lack configure options :( #432468
 	eval export ac_cv_{header_pcre_h,lib_pcre_pcre_compile}=$(usex pcre)
 	eval export ac_cv_{header_uuid_uuid_h,lib_uuid_uuid_generate}=$(usex uuid)

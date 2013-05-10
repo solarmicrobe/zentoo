@@ -3,7 +3,7 @@
 # $Header: $
 
 AUTOTOOLS_AUTO_DEPEND="no"
-inherit autotools toolchain-funcs
+inherit autotools toolchain-funcs multilib
 
 DESCRIPTION="Standard (de)compression library"
 HOMEPAGE="http://www.zlib.net/"

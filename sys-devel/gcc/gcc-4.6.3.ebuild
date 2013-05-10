@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-PATCH_VER="1.11"
+PATCH_VER="1.13"
 UCLIBC_VER="1.0"
 
 # Hardened gcc 4 stuff
@@ -22,7 +22,7 @@ inherit toolchain
 
 DESCRIPTION="The GNU Compiler Collection"
 
-LICENSE="GPL-3 LGPL-3 || ( GPL-3 libgcc libstdc++ gcc-runtime-library-exception-3.1 ) FDL-1.2"
+LICENSE="GPL-3+ LGPL-3+ || ( GPL-3+ libgcc libstdc++ gcc-runtime-library-exception-3.1 ) FDL-1.3+"
 KEYWORDS="amd64"
 
 RDEPEND=""

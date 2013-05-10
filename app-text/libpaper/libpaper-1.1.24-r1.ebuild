@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,6 +21,7 @@ S="${WORKDIR}/${PN}-${MY_PV}"
 DOCS=( README ChangeLog debian/changelog )
 
 src_prepare() {
+	sed -e "s/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/" -i configure.ac || die
 	eautoreconf
 }
 
@@ -37,11 +38,10 @@ src_install() {
 	dodir /etc
 	(paperconf 2>/dev/null || echo a4) > "${ED}"/etc/papersize \
 		|| die "papersize config failed"
-}
 
-pkg_postinst() {
-	echo
-	elog "run \"paperconf -p letter\" as root to use letter-pagesizes"
-	elog "or paperconf with normal user privileges."
-	echo
+	if ! has_version app-text/libpaper ; then
+		echo
+		elog "run e.g. \"paperconfig -p letter\" as root to use letter-pagesizes"
+		echo
+	fi
 }

@@ -17,12 +17,13 @@ SRC_URI="mirror://gentoo/${P}.tar.gz"
 LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="examples mysql postgres sqlite"
+IUSE="examples mysql postgres sqlite test"
 
 RDEPEND="mysql? ( >=dev-python/mysql-python-1.2.2[${PYTHON_USEDEP}] )
 	postgres? ( dev-python/psycopg[${PYTHON_USEDEP}] )"
-DEPEND="${RDEPEND}"
-
+DEPEND="${RDEPEND}
+	test? ( dev-python/twill
+		dev-python/pycurl )"
 S="${WORKDIR}/openid-python-openid-b666238"
 
 python_prepare_all() {

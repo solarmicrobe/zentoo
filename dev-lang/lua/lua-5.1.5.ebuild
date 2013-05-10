@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -55,9 +55,9 @@ src_prepare() {
 
 	# We want packages to find our things...
 	sed -i \
-		-e 's:/usr/local:/usr:' \
+		-e 's:/usr/local:'${EPREFIX}'/usr:' \
 		-e "s:/\<lib\>:/$(get_libdir):g" \
-		etc/lua.pc
+		etc/lua.pc src/luaconf.h || die
 }
 
 # no need for a configure phase

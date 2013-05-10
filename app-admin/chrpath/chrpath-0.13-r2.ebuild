@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -22,6 +22,8 @@ src_prepare() {
 	epatch "${FILESDIR}"/${P}-testsuite-1.patch
 	# disable installing redundant docs in the wrong dir
 	sed -i -e '/doc_DATA/d' Makefile.am || die
+	# fix for automake-1.13, #467538
+	sed -i -e 's/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/' configure.ac || die
 	eautoreconf
 }
 

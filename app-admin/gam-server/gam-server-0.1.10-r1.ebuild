@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -50,6 +50,11 @@ src_prepare() {
 
 	# Drop DEPRECATED flags
 	sed -i -e 's:-DG_DISABLE_DEPRECATED:$(NULL):g' server/Makefile.am || die
+
+	sed -i \
+		-e 's:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:' \
+		-e 's:AM_PROG_CC_STDC:AC_PROG_CC:' \
+		configure.in || die #466948
 
 	# autoconf is required as the user-cflags patch modifies configure.in
 	# however, elibtoolize is also required, so when the above patch is

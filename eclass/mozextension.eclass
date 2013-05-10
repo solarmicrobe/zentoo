@@ -1,11 +1,10 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 #
 # @ECLASS: mozextension.eclass
 # @MAINTAINER:
 # Mozilla team <mozilla@gentoo.org>
-# @DESCRIPTION:
-# Install extensions for use in mozilla products.
+# @BLURB: Install extensions for use in mozilla products.
 
 
 inherit eutils

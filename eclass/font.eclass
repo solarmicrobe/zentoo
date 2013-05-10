@@ -55,6 +55,7 @@ DEPEND="X? (
 		media-fonts/encodings
 	)
 	>=media-libs/fontconfig-2.4.0"
+RDEPEND="${DEPEND}"
 
 # @FUNCTION: font_xfont_config
 # @DESCRIPTION:

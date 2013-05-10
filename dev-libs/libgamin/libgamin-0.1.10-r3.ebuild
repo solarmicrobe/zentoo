@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -74,6 +74,11 @@ src_prepare() {
 
 	# Python bindings are built/installed manually.
 	sed -e "/SUBDIRS += python/d" -i Makefile.am
+
+	sed -i \
+		-e 's:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:' \
+		-e 's:AM_PROG_CC_STDC:AC_PROG_CC:' \
+		configure.in || die #466962
 
 	# autoconf is required as the user-cflags patch modifies configure.in
 	# however, elibtoolize is also required, so when the above patch is

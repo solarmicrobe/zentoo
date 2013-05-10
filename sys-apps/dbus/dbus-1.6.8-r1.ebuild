@@ -1,9 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
-inherit autotools eutils linux-info flag-o-matic python systemd virtualx user
+PYTHON_COMPAT=( python2_7 )
+inherit autotools eutils linux-info flag-o-matic python-any-r1 systemd virtualx user
 
 DESCRIPTION="A message bus system, a simple way for applications to talk to each other"
 HOMEPAGE="http://dbus.freedesktop.org/"
@@ -33,7 +34,7 @@ DEPEND="${RDEPEND}
 		)
 	test? (
 		>=dev-libs/glib-2.24
-		dev-lang/python:2.7
+		${PYTHON_DEPS}
 		)"
 
 # out of sources build directory
@@ -45,10 +46,7 @@ pkg_setup() {
 	enewgroup messagebus
 	enewuser messagebus -1 -1 -1 messagebus
 
-	if use test; then
-		python_set_active_version 2
-		python_pkg_setup
-	fi
+	use test && python-any-r1_pkg_setup
 
 	if use kernel_linux; then
 		CONFIG_CHECK="~EPOLL"

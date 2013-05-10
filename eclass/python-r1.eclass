@@ -73,6 +73,25 @@ if ! declare -p PYTHON_COMPAT &>/dev/null; then
 	fi
 fi
 
+# @ECLASS-VARIABLE: PYTHON_COMPAT_OVERRIDE
+# @INTERNAL
+# @DESCRIPTION:
+# This variable can be used when working with ebuilds to override
+# the in-ebuild PYTHON_COMPAT. It is a string listing all
+# the implementations which package will be built for. It need be
+# specified in the calling environment, and not in ebuilds.
+#
+# It should be noted that in order to preserve metadata immutability,
+# PYTHON_COMPAT_OVERRIDE does not affect IUSE nor dependencies.
+# The state of PYTHON_TARGETS is ignored, and all the implementations
+# in PYTHON_COMPAT_OVERRIDE are built. Dependencies need to be satisfied
+# manually.
+#
+# Example:
+# @CODE
+# PYTHON_COMPAT_OVERRIDE='pypy2_0 python3_3' emerge -1v dev-python/foo
+# @CODE
+
 # @ECLASS-VARIABLE: PYTHON_REQ_USE
 # @DEFAULT_UNSET
 # @DESCRIPTION:
@@ -210,6 +229,9 @@ _python_validate_useflags() {
 # are both in PYTHON_COMPAT and match any of the patterns passed
 # as parameters to the function.
 #
+# Remember to escape or quote the patterns to premature evaluation as a file
+# name glob.
+#
 # When all implementations are requested, please use ${PYTHON_USEDEP}
 # instead. Please also remember to set an appropriate REQUIRED_USE
 # to avoid ineffective USE flags.
@@ -217,7 +239,7 @@ _python_validate_useflags() {
 # Example:
 # @CODE
 # PYTHON_COMPAT=( python{2_7,3_2} )
-# DEPEND="doc? ( dev-python/epydoc[$(python_gen_usedep python2*)] )"
+# DEPEND="doc? ( dev-python/epydoc[$(python_gen_usedep 'python2*')] )"
 # @CODE
 #
 # It will cause the dependency to look like:
@@ -575,6 +597,21 @@ _python_check_USE_PYTHON() {
 # @DESCRIPTION:
 # Set up the enabled implementation list.
 _python_obtain_impls() {
+	if [[ ${PYTHON_COMPAT_OVERRIDE} ]]; then
+		if [[ ! ${_PYTHON_COMPAT_OVERRIDE_WARNED} ]]; then
+			ewarn "WARNING: PYTHON_COMPAT_OVERRIDE in effect. The following Python"
+			ewarn "implementations will be enabled:"
+			ewarn
+			ewarn "	${PYTHON_COMPAT_OVERRIDE}"
+			ewarn
+			ewarn "Dependencies won't be satisfied, and PYTHON_TARGETS will be ignored."
+			_PYTHON_COMPAT_OVERRIDE_WARNED=1
+		fi
+
+		MULTIBUILD_VARIANTS=( ${PYTHON_COMPAT_OVERRIDE} )
+		return
+	fi
+
 	_python_validate_useflags
 	_python_check_USE_PYTHON
 
@@ -599,7 +636,9 @@ _python_multibuild_wrapper() {
 	debug-print-function ${FUNCNAME} "${@}"
 
 	local -x EPYTHON PYTHON
+	local -x PATH=${PATH} PKG_CONFIG_PATH=${PKG_CONFIG_PATH}
 	python_export "${MULTIBUILD_VARIANT}" EPYTHON PYTHON
+	python_wrapper_setup
 
 	"${@}"
 }
@@ -660,24 +699,19 @@ python_parallel_foreach_impl() {
 python_export_best() {
 	debug-print-function ${FUNCNAME} "${@}"
 
-	_python_validate_useflags
-
 	[[ ${#} -gt 0 ]] || set -- EPYTHON PYTHON
 
-	local impl best
-	for impl in "${_PYTHON_ALL_IMPLS[@]}"; do
-		if has "${impl}" "${PYTHON_COMPAT[@]}" \
-			&& _python_impl_supported "${impl}" \
-			&& use "python_targets_${impl}"
-		then
-			best=${impl}
-		fi
-	done
+	local best MULTIBUILD_VARIANTS
+	_python_obtain_impls
 
-	[[ ${best+1} ]] || die "python_export_best(): no implementation found!"
+	_python_set_best() {
+		best=${MULTIBUILD_VARIANT}
+	}
+	multibuild_for_best_variant _python_set_best
 
-	debug-print "${FUNCNAME}: Best implementation is: ${impl}"
-	python_export "${impl}" "${@}"
+	debug-print "${FUNCNAME}: Best implementation is: ${best}"
+	python_export "${best}" "${@}"
+	python_wrapper_setup
 }
 
 # @FUNCTION: python_replicate_script

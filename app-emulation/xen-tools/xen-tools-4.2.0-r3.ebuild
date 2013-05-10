@@ -268,11 +268,16 @@ src_install() {
 		keepdir /var/log/xen-consoles
 	fi
 
+	# Set dirs for qemu files,; Bug #458818
 	if use qemu; then
-		mkdir -p "${D}"usr/lib64/xen/bin || die
-		mv "${D}"usr/lib/xen/bin/qemu* "${D}"usr/lib64/xen/bin/ || die
-	fi	# For -static-libs wrt Bug 384355
+		if use x86; then
+			dodir /usr/lib/xen/bin
+		elif use amd64; then
+			mv "${D}"usr/lib/xen/bin/qemu* "${D}"usr/$(get_libdir)/xen/bin/ || die
+		fi
+	fi
 
+	# For -static-libs wrt Bug 384355
 	if ! use static-libs; then
 		rm -f "${D}"usr/$(get_libdir)/*.a "${ED}"usr/$(get_libdir)/ocaml/*/*.a
 	fi

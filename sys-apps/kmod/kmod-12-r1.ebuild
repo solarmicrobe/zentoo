@@ -4,7 +4,9 @@
 
 EAPI=4
 
-inherit autotools eutils libtool multilib linux-info
+VIRTUAL_MODUTILS=1
+
+inherit autotools eutils libtool multilib linux-mod
 
 if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="git://git.kernel.org/pub/scm/utils/kernel/${PN}/${PN}.git"
@@ -38,7 +40,7 @@ DEPEND="${RDEPEND}
 	zlib? ( virtual/pkgconfig )"
 
 pkg_setup() {
-	CONFIG_CHECK="~MODULES"
+	CONFIG_CHECK="~MODULES ~MODULE_UNLOAD"
 
 	linux-info_pkg_setup
 }
@@ -95,4 +97,13 @@ src_install()
 
 	insinto /lib/modprobe.d
 	doins "${T}"/usb-load-ehci-first.conf #260139
+}
+
+pkg_postinst() {
+	# Upgrade path from sys-apps/module-init-tools
+	if [[ -d ${ROOT}/lib/modules/${KV_FULL} ]]; then
+		if [[ -z ${REPLACING_VERSIONS} ]]; then
+			update_depmod
+		fi
+	fi
 }

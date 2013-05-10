@@ -5,7 +5,7 @@
 EAPI="5"
 
 # jython depends on java-config, so don't add it or things will breake.
-PYTHON_COMPAT=( python{2_6,2_7,3_1,3_2,3_3} pypy{1_8,1_9} )
+PYTHON_COMPAT=( python{2_6,2_7,3_1,3_2,3_3} )
 
 inherit distutils-r1 eutils fdo-mime gnome2-utils
 
@@ -19,7 +19,9 @@ KEYWORDS="amd64"
 IUSE=""
 
 DEPEND=""
-RDEPEND=">=dev-java/java-config-wrapper-0.15"
+RDEPEND=">=dev-java/java-config-wrapper-0.15
+	!sys-apps/baselayout-java
+	!app-admin/eselect-java"
 # https://bugs.gentoo.org/show_bug.cgi?id=315229
 PDEPEND=">=virtual/jre-1.5"
 # Tests fail when java-config isn't already installed.

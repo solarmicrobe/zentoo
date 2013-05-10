@@ -1,10 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
-
-WANT_AUTOMAKE=1.9
 
 inherit eutils autotools toolchain-funcs
 
@@ -40,6 +38,8 @@ src_prepare() {
 	cd "${S}/src/kmk" || die
 	eautoreconf
 	cd "${S}/src/sed" || die
+	# AM_CONFIG_HEADER is obsolete since automake-1.13 (bug #467104)
+	sed 's@AM_CONFIG_HEADER@AC_CONFIG_HEADERS@' -i configure.ac || die
 	eautoreconf
 
 	sed -e "s@_LDFLAGS\.${ARCH}*.*=@& ${LDFLAGS}@g" \

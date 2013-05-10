@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -26,11 +26,13 @@ src_prepare() {
 	epatch "${FILESDIR}"/${P}-xz.patch #269742
 	touch doc/install-info.1 #354589
 	epatch "${FILESDIR}"/${P}-texi2dvi-regexp-range.patch #311885
-	touch doc/{texi2dvi,texi2pdf,pdftexi2dvi}.1 #354589
 	epatch "${FILESDIR}"/${P}-accentenc-test.patch
 	# waiting to be sent upstream for my copyright assignment form to be
 	# ready - Flameeyes
 	epatch "${FILESDIR}"/${P}-docbook.patch
+	epatch "${FILESDIR}"/${P}-tinfo.patch #457556
+	# timestamps must be newer than configure.ac touched by ${P}-tinfo.patch
+	touch doc/{texi2dvi,texi2pdf,pdftexi2dvi}.1 #354589
 }
 
 src_configure() {

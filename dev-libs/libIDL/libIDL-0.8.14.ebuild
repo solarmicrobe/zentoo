@@ -1,8 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-GNOME2_LA_PUNT="yes"
+EAPI=5
+GNOME_TARBALL_SUFFIX="bz2"
+GCONF_DEBUG="no"
 
 inherit eutils gnome2
 
@@ -14,7 +16,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND=">=dev-libs/glib-2.4"
+RDEPEND=">=dev-libs/glib-2.4:2"
 DEPEND="${RDEPEND}
 	sys-devel/flex
 	virtual/yacc
@@ -22,8 +24,3 @@ DEPEND="${RDEPEND}
 
 DOCS="AUTHORS BUGS ChangeLog HACKING MAINTAINERS NEWS README"
 G2CONF="--disable-static"
-
-src_unpack() {
-	gnome2_src_unpack
-	epunt_cxx
-}

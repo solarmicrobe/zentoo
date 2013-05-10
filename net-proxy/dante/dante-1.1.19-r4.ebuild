@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -8,7 +8,7 @@ DESCRIPTION="A free socks4,5 and msproxy implementation"
 HOMEPAGE="http://www.inet.no/dante/"
 SRC_URI="ftp://ftp.inet.no/pub/socks/${P}.tar.gz"
 
-LICENSE="BSD"
+LICENSE="BSD GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="tcpd debug selinux pam"
@@ -33,6 +33,8 @@ src_unpack() {
 		-e 's:/etc/socks\.conf:/etc/socks/socks.conf:' \
 		-e 's:/etc/sockd\.conf:/etc/socks/sockd.conf:' \
 		doc/{faq.ps,faq.tex,sockd.8,sockd.conf.5,socks.conf.5}
+
+	sed -i -e 's:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:' configure.ac || die
 
 	eautoreconf
 }
