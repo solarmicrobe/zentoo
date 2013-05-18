@@ -6,6 +6,7 @@ app-office/openerp
 dev-db/couchdb
 dev-db/mysql-init-scripts
 dev-db/redis
+dev-java/oracle-jdk-bin
 dev-python/gdata
 dev-python/pychart
 dev-python/suds
