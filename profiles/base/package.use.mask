@@ -1,12 +1,31 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.466 2013/05/10 15:22:47 johu Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.473 2013/06/04 15:52:37 ssuominen Exp $
 
 # This file requires >=portage-2.1.1
 # New entries go on top.
 #
 
-# Alexis Ballier <aballier@gentoo.org> <08 May 2013>
+# Robin H. Johnson <robbat2@gentoo.org> (02 Jun 2013)
+# PBXT is no longer supported by upstream, and fails testcases.
+>=dev-db/mysql-5.5 pbxt
+>=dev-db/mariadb-5.5 pbxt
+# overlay -- no inline comments wrt bug #472292, ssuominen (04 Jun 2013)
+>=dev-db/mysql-cluster-5.5 pbxt
+>=dev-db/mariadb-galera-5.5 pbxt
+>=dev-db/percona-server-5.5 pbxt
+>=dev-db/google-mysql-5.5 pbxt
+
+# XFCE <xfce@gentoo.org> (01 Jun 2013)
+# Masked temporarily while waiting for >=net-libs/webkit-gtk-2 unmasking from
+# profiles/package.mask
+>=www-client/midori-0.5.2 webkit2
+
+# Kacper Kowalik <xarthisius@gentoo.org> (19 May 2013)
+# Fails to build, haven't had time to debug
+app-doc/doxygen sqlite
+
+# Alexis Ballier <aballier@gentoo.org> (08 May 2013)
 # On behalf of Pavel Sanda <ps@twin.jikos.cz>
 # Lyx is currently not working with subversion 1.7 and needs 1.6.
 app-office/lyx subversion

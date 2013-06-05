@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit toolchain-funcs
+inherit toolchain-funcs multilib
 
 DESCRIPTION="XFS data management API library"
 HOMEPAGE="http://oss.sgi.com/projects/xfs/"

@@ -1,6 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
+
+EAPI="4"
 
 inherit toolchain-funcs
 
@@ -13,6 +15,9 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
+RDEPEND="sys-libs/glibc[nscd(+)]"
+DEPEND="${RDEPEND}"
+
 S=${WORKDIR}
 
 src_unpack() {
@@ -21,10 +26,10 @@ src_unpack() {
 
 src_compile() {
 	tc-export CC
-	emake unscd || die
+	emake unscd
 }
 
 src_install() {
-	newinitd "${FILESDIR}"/unscd.initd unscd || die
-	dosbin unscd || die
+	newinitd "${FILESDIR}"/unscd.initd unscd
+	dosbin unscd
 }

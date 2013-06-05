@@ -6,7 +6,7 @@ EAPI=4
 
 inherit vim-plugin
 
-DESCRIPTION="vim plugin: Gentoo Ebuild, Eclass, GLEP, ChangeLog and Portage Files syntax highlighting, filetype and indent settings"
+DESCRIPTION="vim plugin: Gentoo and portage related syntax highlighting, filetype, and indent settings"
 HOMEPAGE="http://www.gentoo.org/"
 SRC_URI="mirror://gentoo/${P}.tar.bz2"
 

@@ -47,6 +47,9 @@ src_prepare() {
 src_configure() {
 	local myconf
 
+	# Respect ar, bug #468114
+	tc-export AR
+
 	# -fomit-frame-pointer	"Assembler messages: Error: junk `8' after expression"
 	#                       while compiling insn_sse.c in none/tests/x86
 	# -fpie                 valgrind seemingly hangs when built with pie on

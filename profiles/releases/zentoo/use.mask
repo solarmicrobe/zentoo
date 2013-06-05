@@ -123,6 +123,7 @@ ios
 ipod
 irc
 isag
+iscsi
 jack
 jadetex
 jai
@@ -229,6 +230,7 @@ pda
 pgo
 plasma
 plotutils
+polarssl
 policykit
 portaudio
 ppds
@@ -245,6 +247,7 @@ quicktime
 radius
 rdesktop
 recode
+regression-test
 rpm
 sapdb
 savedconfig

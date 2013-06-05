@@ -2,8 +2,8 @@
 app-emulation/virtualbox headless
 
 # only support headless X11
-x11-base/xorg-server minimal
 x11-apps/xinit minimal
+x11-base/xorg-server minimal
 
 # force-enable default dracut modules
 sys-kernel/dracut device-mapper net dracut_modules_lvm dracut_modules_mdraid dracut_modules_syslog dracut_modules_systemd
@@ -13,6 +13,7 @@ x11-libs/cairo X
 x11-libs/gdk-pixbuf X
 
 # make LVM and mdadm static
+sys-apps/systemd static-libs
 sys-fs/lvm2 static
 sys-fs/mdadm static
 sys-fs/udev static-libs

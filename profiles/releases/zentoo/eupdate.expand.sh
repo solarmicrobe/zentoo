@@ -2,7 +2,7 @@
 
 case $1 in
 app-admin/eselect-php)                   echo "=$1-0.7.1";;
-app-admin/syslog-ng)                     echo "=$1-3.4.1";;
+app-admin/syslog-ng)                     echo "=$1-3.4.2";;
 app-editors/vim*)                        echo "=$1-7.3.905";;
 app-emulation/virtualbox*)               echo "=$1-4.2.12";;
 app-misc/tmux)                           echo "=$1-1.8";;
@@ -92,7 +92,7 @@ sys-devel/autoconf)                      echo "=$1-2.13"
 sys-devel/automake)                      echo "=$1-1.11.6"
                                          echo "$1";;
 sys-devel/bc)                            echo "=$1-1.06.95-r1";;
-sys-firmware/seabios)                    echo "=$1-1.7.1";;
+sys-firmware/seabios)                    echo "=$1-1.7.2.1";;
 sys-fs/lvm2)                             echo "=$1-2.02.97-r1";;
 sys-fs/mdadm)                            echo "=$1-3.2.6";;
 sys-kernel/dracut)                       echo "=$1-027-r1";;
@@ -104,7 +104,7 @@ virtual/jdk)                             echo "=$1-1.7.0";;
 virtual/jre)                             echo "=$1-1.7.0";;
 virtual/perl-digest-base)                echo "=$1-1.160.0-r1";;
 virtual/ruby-*)                          echo "=$1-1";;
-www-servers/nginx)                       echo "=$1-1.4.1-r1";;
+www-servers/nginx)                       echo "=$1-1.4.1-r5";;
 x11-libs/gtk+)                           echo "=$1-2.24.17";;
 *)                                       echo $1;;
 esac

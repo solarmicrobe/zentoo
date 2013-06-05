@@ -11,12 +11,13 @@ EXPORT_FUNCTIONS src_install pkg_postinst pkg_postrm
 
 VIM_PLUGIN_VIM_VERSION="${VIM_PLUGIN_VIM_VERSION:-7.0}"
 
-IUSE=""
 DEPEND="|| ( >=app-editors/vim-${VIM_PLUGIN_VIM_VERSION}
 	>=app-editors/gvim-${VIM_PLUGIN_VIM_VERSION} )"
 RDEPEND="${DEPEND}"
-SRC_URI="mirror://gentoo/${P}.tar.bz2
-	http://dev.gentoo.org/~radhermit/vim/${P}.tar.bz2"
+if [[ ${PV} != 9999* ]] ; then
+	SRC_URI="mirror://gentoo/${P}.tar.bz2
+		http://dev.gentoo.org/~radhermit/vim/${P}.tar.bz2"
+fi
 SLOT="0"
 
 vim-plugin_src_install() {

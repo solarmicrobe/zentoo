@@ -76,7 +76,7 @@ src_prepare() {
 	sed -i '/^SET_X/s:=.*:=set -x:' Makefile.shared
 
 	# allow openssl to be cross-compiled
-	cp "${FILESDIR}"/gentoo.config-1.0.0 gentoo.config || die
+	cp "${FILESDIR}"/gentoo.config-1.0.1 gentoo.config || die
 	chmod a+rx gentoo.config
 
 	append-flags -fno-strict-aliasing

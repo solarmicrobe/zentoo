@@ -9,8 +9,8 @@ PYTHON_DEPEND="2"
 inherit linux-info autotools eutils python
 
 DESCRIPTION="A linux trace/probe tool"
-HOMEPAGE="http://sourceware.org/systemtap/"
-SRC_URI="http://sources.redhat.com/${PN}/ftp/releases/${P}.tar.gz"
+HOMEPAGE="http://www.sourceware.org/systemtap/"
+SRC_URI="http://www.sourceware.org/${PN}/ftp/releases/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"

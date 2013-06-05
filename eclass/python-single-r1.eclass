@@ -132,6 +132,27 @@ fi
 # python_targets_python2_7(-)?,python_single_target_python2_7(+)?
 # @CODE
 
+# @ECLASS-VARIABLE: PYTHON_REQUIRED_USE
+# @DESCRIPTION:
+# This is an eclass-generated required-use expression which ensures the following:
+# 1. Exactly one PYTHON_SINGLE_TARGET value has been enabled.
+# 2. The selected PYTHON_SINGLE_TARGET value is enabled in PYTHON_TARGETS.
+#
+# This expression should be utilized in an ebuild by including it in
+# REQUIRED_USE, optionally behind a use flag.
+#
+# Example use:
+# @CODE
+# REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
+# @CODE
+#
+# Example value:
+# @CODE
+# python_single_target_python2_6? ( python_targets_python2_6 )
+# python_single_target_python2_7? ( python_targets_python2_7 )
+# ^^ ( python_single_target_python2_6 python_single_target_python2_7 )
+# @CODE
+
 _python_single_set_globals() {
 	local impls=()
 
@@ -143,7 +164,7 @@ _python_single_set_globals() {
 		# The chosen targets need to be in PYTHON_TARGETS as well.
 		# This is in order to enforce correct dependencies on packages
 		# supporting multiple implementations.
-		#REQUIRED_USE+=" python_single_target_${i}? ( python_targets_${i} )"
+		PYTHON_REQUIRED_USE+=" python_single_target_${i}? ( python_targets_${i} )"
 
 		python_export "${i}" PYTHON_PKG_DEP
 		PYTHON_DEPS+="python_single_target_${i}? ( ${PYTHON_PKG_DEP} ) "
@@ -162,7 +183,7 @@ _python_single_set_globals() {
 	optflags+=,${flags[@]/%/(+)?}
 
 	IUSE="${flags_mt[*]} ${flags[*]}"
-	#REQUIRED_USE="|| ( ${flags_mt[*]} ) ^^ ( ${flags[*]} )"
+	PYTHON_REQUIRED_USE+=" ^^ ( ${flags[*]} )"
 	PYTHON_USEDEP=${optflags// /,}
 
 	# 1) well, python-exec would suffice as an RDEP

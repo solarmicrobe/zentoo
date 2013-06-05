@@ -60,8 +60,7 @@ RDEPEND="${DEPEND}
 		cryptsetup? ( sys-fs/cryptsetup )
 		app-arch/cpio
 		>=app-misc/pax-utils-0.2.1
-		!=app-misc/pax-utils-0.5
-		<app-misc/pax-utils-0.6
+		<app-misc/pax-utils-0.5
 		!<sys-apps/openrc-0.9.9"
 # pax-utils is used for lddtree
 

@@ -24,7 +24,7 @@ SRC_URI="http://www.sudo.ws/sudo/dist/${uri_prefix}${MY_P}.tar.gz
 LICENSE="ISC BSD"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="ldap nls pam offensive selinux skey"
+IUSE="ldap nls pam offensive selinux skey +sendmail"
 
 DEPEND="pam? ( virtual/pam )
 	skey? ( >=sys-auth/skey-1.1.5-r1 )
@@ -39,7 +39,7 @@ RDEPEND="${DEPEND}
 	pam? ( sys-auth/pambase )
 	>=app-misc/editor-wrapper-3
 	virtual/editor
-	virtual/mta"
+	sendmail? ( virtual/mta )"
 DEPEND="${DEPEND}
 	sys-devel/bison"
 
@@ -115,6 +115,7 @@ src_configure() {
 		$(use_with pam) \
 		$(use_with skey) \
 		$(use_with selinux) \
+		$(use_with sendmail) \
 		--without-opie \
 		--without-linux-audit \
 		--with-timedir="${EPREFIX}"/var/db/sudo \

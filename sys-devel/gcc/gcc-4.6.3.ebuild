@@ -51,8 +51,10 @@ src_unpack() {
 pkg_setup() {
 	toolchain_pkg_setup
 
-	ewarn
-	ewarn "LTO support is still experimental and unstable."
-	ewarn "Any bugs resulting from the use of LTO will not be fixed."
-	ewarn
+	if use lto ; then
+		ewarn
+		ewarn "LTO support is still experimental and unstable."
+		ewarn "Any bugs resulting from the use of LTO will not be fixed."
+		ewarn
+	fi
 }

@@ -86,15 +86,13 @@ gnuconfig_do_update() {
 # this searches the standard locations for the newest config.{sub|guess}, and
 # returns the directory where they can be found.
 gnuconfig_findnewest() {
-	local locations="
+	local locations=(
+		/usr/share/misc/config.sub
 		/usr/share/gnuconfig/config.sub
-		/usr/share/automake-1.9/config.sub
-		/usr/share/automake-1.8/config.sub
-		/usr/share/automake-1.7/config.sub
-		/usr/share/automake-1.6/config.sub
-		/usr/share/automake-1.5/config.sub
-		/usr/share/automake-1.4/config.sub
+		/usr/share/automake*/config.sub
 		/usr/share/libtool/config.sub
-	"
-	grep -s '^timestamp' ${locations} | sort -n -t\' -k2 | tail -n 1 | sed 's,/config.sub:.*$,,'
+	)
+	grep -s '^timestamp' "${locations[@]}" | \
+		sort -r -n -t\' -k2 | \
+		sed -n '1{s,/config.sub:.*$,,;p;q}'
 }

@@ -25,6 +25,7 @@ DEPEND="virtual/jpeg
 	scanner? ( media-gfx/sane-backends )
 	X? ( x11-misc/xdg-utils )"
 RDEPEND="${DEPEND}"
+RDEPEND+=" !dev-python/pillow"
 
 S="${WORKDIR}/${MY_P}"
 

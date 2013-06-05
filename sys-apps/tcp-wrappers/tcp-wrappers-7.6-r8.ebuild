@@ -1,8 +1,8 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit eutils toolchain-funcs
+inherit eutils toolchain-funcs multilib
 
 MY_P="${P//-/_}"
 PATCH_VER="1.0"
@@ -15,8 +15,6 @@ LICENSE="tcp_wrappers_license"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="ipv6"
-
-DEPEND=""
 
 S=${WORKDIR}/${MY_P}
 

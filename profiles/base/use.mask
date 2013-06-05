@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/use.mask,v 1.168 2013/05/04 13:38:27 mgorny Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/use.mask,v 1.170 2013/06/01 15:52:32 kensington Exp $
 
 # masking here and unmasking in default/linux/
 kmod
@@ -309,11 +309,6 @@ ipmi
 # netlink is a Linux-specific interface
 netlink
 
-# Mike Gilbert <floppym@gentoo.org> (08 Oct 2012)
-# Python 3.3 is masked for testing.
-python_targets_python3_3
-python_single_target_python3_3
-
 # Luca barbato <lu_zero@gentoo.org> (14 Oct 2012)
 # Pending keywording on arches
 fdk
@@ -350,3 +345,8 @@ clozurecl
 # Mask systemd flag globally, unmasked on arches on which systemd
 # is keyworded.
 systemd
+
+# Michael Palimaka <kensington@gentoo.org> (1 May 2013)
+# Mask until Qt 5 is in portage. (The flag is here already
+# to permit the neccessary package preparation.)
+qt5

@@ -32,7 +32,8 @@ ___ECLASS_ONCE_FCAPS="recur -_+^+_- spank"
 
 IUSE="+filecaps"
 
-DEPEND="filecaps? ( || ( sys-libs/libcap sys-libs/libcap-ng ) )"
+# We can't use libcap-ng atm due to #471414.
+DEPEND="filecaps? ( sys-libs/libcap )"
 
 # @ECLASS-VARIABLE: FILECAPS
 # @DEFAULT_UNSET
@@ -144,7 +145,8 @@ fcaps() {
 						-e "s:^.{${#file}} +::" \
 						-e 's:, +:\n:g' \
 						-e 2p | \
-					LC_ALL=C sort) || return 1
+					LC_ALL=C sort)
+				[[ ${PIPESTATUS[0]} -eq 0 ]] || return 1
 				icaps=$(echo "${caps//,cap_}" | LC_ALL=C sort)
 				[[ ${rcaps} == ${icaps} ]]
 			}

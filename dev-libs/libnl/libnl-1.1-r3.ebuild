@@ -6,7 +6,7 @@ EAPI=4
 
 inherit eutils multilib
 
-DESCRIPTION="A library for applications dealing with netlink socket"
+DESCRIPTION="A collection of libraries providing APIs to netlink protocol based Linux kernel interfaces"
 HOMEPAGE="http://www.infradead.org/~tgr/libnl/"
 SRC_URI="http://www.infradead.org/~tgr/libnl/files/${P}.tar.gz"
 LICENSE="LGPL-2.1"

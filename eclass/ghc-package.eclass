@@ -101,6 +101,21 @@ ghc-supports-threaded-runtime() {
 	$(ghc-getghc) --info | grep "RTS ways" | grep -q "thr"
 }
 
+# @FUNCTION: ghc-supports-smp
+# @DESCRIPTION:
+# checks if ghc is built with support for multiple cores runtime
+ghc-supports-smp() {
+	$(ghc-getghc) --info | grep "Support SMP" | grep -q "YES"
+}
+
+# @FUNCTION: ghc-supports-dynamic-by-default
+# @DESCRIPTION:
+# checks if ghc link against shared haskell libraries by default
+ghc-supports-dynamic-by-default() {
+	$(ghc-getghc) --info | grep "Dynamic by default" | grep -q "YES"
+}
+
+
 # @FUNCTION: ghc-extractportageversion
 # @DESCRIPTION:
 # extract the version of a portage-installed package

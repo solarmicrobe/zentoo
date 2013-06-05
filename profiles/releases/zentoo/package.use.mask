@@ -17,6 +17,7 @@ dev-vcs/subversion webdav-serf
 media-gfx/graphviz cairo
 media-gfx/imagemagick autotrace raw opencl
 media-libs/libsdl audio aalib
+media-libs/mesa xorg
 net-analyzer/mk-livestatus perl
 net-analyzer/nagios-plugins ups nagios-game nagios-ping
 net-analyzer/rrdtool dbi

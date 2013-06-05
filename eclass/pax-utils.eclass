@@ -40,7 +40,7 @@ PAX_MARKINGS=${PAX_MARKINGS:="PT"}
 # Flags are passed directly to the utilities unchanged
 #
 #	p: disable PAGEEXEC		P: enable PAGEEXEC
-#	e: disable EMUTRMAP		E: enable EMUTRMAP
+#	e: disable EMUTRAMP		E: enable EMUTRAMP
 #	m: disable MPROTECT		M: enable MPROTECT
 #	r: disable RANDMMAP		R: enable RANDMMAP
 #	s: disable SEGMEXEC		S: enable SEGMEXEC
