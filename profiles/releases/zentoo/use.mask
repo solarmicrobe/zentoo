@@ -144,7 +144,6 @@ kontact
 kpathsea
 ladspa
 lame
-lapack
 lash
 latex
 lcms
