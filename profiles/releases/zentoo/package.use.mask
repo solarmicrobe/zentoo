@@ -64,3 +64,6 @@ sys-apps/portage xattr
 
 # skip ruby18
 dev-vcs/subversion ruby
+
+# force disable bindist on openssl
+dev-libs/openssl bindist
