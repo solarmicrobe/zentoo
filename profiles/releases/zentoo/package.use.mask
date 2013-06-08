@@ -67,3 +67,4 @@ dev-vcs/subversion ruby
 
 # force disable bindist on openssl
 dev-libs/openssl bindist
+net-misc/openssh bindist
