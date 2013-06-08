@@ -22,4 +22,4 @@ VIDEO_CARDS=""
 GRUB_PLATFORMS="efi-64 pc"
 
 # systemd bootstrap support
-BOOTSTRAP_USE="${BOOTSTRAP_USE} udev"
+BOOTSTRAP_USE="${BOOTSTRAP_USE} udev python_single_target_python2_7"
