@@ -39,6 +39,10 @@ ruby_add_rdepend "~app-admin/chef-${PV}
 	>=dev-ruby/yajl-ruby-1.0
 	<dev-ruby/yajl-ruby-2"
 
+RUBY_PATCHES=(
+	"${FILESDIR}"/shutdown-race.patch
+)
+
 all_ruby_install() {
 	all_fakegem_install
 

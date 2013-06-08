@@ -1,0 +1,18 @@
+commit 5806c7ec568da56e392272ef868b0ca4043b39d8
+Author: Benedikt Böhm <bb@xnull.de>
+Date:   Sat Jun 8 22:28:27 2013 +0200
+
+    hotfix restarting workers during shutdown race
+
+diff --git a/chef-expander/lib/chef/expander/cluster_supervisor.rb b/chef-expander/lib/chef/expander/cluster_supervisor.rb
+index 56d6e70..7a2a5ca 100644
+--- a/chef-expander/lib/chef/expander/cluster_supervisor.rb
++++ b/chef-expander/lib/chef/expander/cluster_supervisor.rb
+@@ -84,6 +84,7 @@ module Chef
+       end
+ 
+       def start_worker(index)
++        return unless @running
+         log.info { "Starting cluster worker #{index}" }
+         worker_params = {:index => index}
+         child_pid = fork do
