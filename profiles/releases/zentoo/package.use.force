@@ -18,3 +18,6 @@ sys-fs/lvm2 static
 sys-fs/mdadm static
 sys-fs/udev static-libs
 virtual/udev static-libs
+
+# force disable bindist on openssl
+dev-libs/openssl -bindist

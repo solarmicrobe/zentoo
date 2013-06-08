@@ -20,3 +20,6 @@ VIDEO_CARDS=""
 
 # default GRUB2 modules
 GRUB_PLATFORMS="efi-64 pc"
+
+# systemd bootstrap support
+BOOTSTRAP_USE="${BOOTSTRAP_USE} udev"
