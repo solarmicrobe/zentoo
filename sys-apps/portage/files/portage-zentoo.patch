@@ -1,11 +1,20 @@
-commit 1f556a9f3131a58f1d561d588b055475e0f3f6de
-Author: Benedikt Böhm <bb@xnull.de>
-Date:   Thu Apr 11 09:20:04 2013 +0200
+From 48cdadca134c014fe0e0ba2080da230e86923f10 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Benedikt=20B=C3=B6hm?= <bb@xnull.de>
+Date: Sun, 9 Jun 2013 20:42:05 +0200
+Subject: [PATCH] make portage output terse
 
-    make portage way more silent
+---
+ pym/_emerge/actions.py               |  2 +-
+ pym/_emerge/chk_updated_cfg_files.py | 29 +----------------------------
+ pym/_emerge/depgraph.py              | 17 ++---------------
+ pym/_emerge/unmerge.py               |  1 -
+ pym/portage/dbapi/bintree.py         |  4 ----
+ pym/portage/news.py                  | 14 +-------------
+ pym/portage/util/_info_files.py      | 13 +------------
+ 7 files changed, 6 insertions(+), 74 deletions(-)
 
 diff --git a/pym/_emerge/actions.py b/pym/_emerge/actions.py
-index d6e8100..3dd23d9 100644
+index a46f565..b3adc29 100644
 --- a/pym/_emerge/actions.py
 +++ b/pym/_emerge/actions.py
 @@ -392,6 +392,7 @@ def action_build(settings, trees, mtimedb,
@@ -16,7 +25,7 @@ index d6e8100..3dd23d9 100644
  		# Don't ask again (e.g. when auto-cleaning packages after merge)
  		if mergecount != 0:
  			myopts.pop("--ask", None)
-@@ -454,7 +455,6 @@ def action_build(settings, trees, mtimedb,
+@@ -479,7 +480,6 @@ def action_build(settings, trees, mtimedb,
  			if retval == os.EX_OK and \
  				not (buildpkgonly or fetchonly or pretend):
  				if "yes" == settings.get("AUTOCLEAN"):
@@ -62,10 +71,10 @@ index 9f2ab6f..4ebc41d 100644
 -			_("man page to learn how to update config files."))
 +	pass
 diff --git a/pym/_emerge/depgraph.py b/pym/_emerge/depgraph.py
-index 3e29508..2726ad8 100644
+index 99b96bf..4e63577 100644
 --- a/pym/_emerge/depgraph.py
 +++ b/pym/_emerge/depgraph.py
-@@ -7815,21 +7815,8 @@ def _spinner_start(spinner, myopts):
+@@ -7781,21 +7781,8 @@ def _spinner_start(spinner, myopts):
  			action = "built"
  		else:
  			action = "merged"
@@ -88,7 +97,7 @@ index 3e29508..2726ad8 100644
  	if not show_spinner:
  		spinner.update = spinner.update_quiet
  
-@@ -7846,7 +7833,7 @@ def _spinner_stop(spinner):
+@@ -7812,7 +7799,7 @@ def _spinner_stop(spinner):
  		# so don't output backspaces in that case.
  		portage.writemsg_stdout("\b\b")
  
@@ -174,3 +183,6 @@ index 0e3a210..d6ee64b 100644
 -			else:
 -				if icount > 0 and portage.util.noiselimit >= 0:
 -					out.einfo("Processed %d info files." % (icount,))
+-- 
+1.8.1.5
+

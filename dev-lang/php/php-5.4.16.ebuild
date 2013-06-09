@@ -12,7 +12,7 @@ function php_get_uri ()
 {
 	case "${1}" in
 		"php-pre")
-			echo "http://downloads.php.net/johannes/${2}"
+			echo "http://downloads.php.net/stas/${2}"
 		;;
 		"php")
 			echo "http://www.php.net/distributions/${2}"
@@ -47,7 +47,7 @@ PHP_PATCHSET_LOC="olemarkus"
 
 PHP_SRC_URI="$(php_get_uri "${PHP_RELEASE}" "${PHP_P}.tar.bz2")"
 
-PHP_PATCHSET="0"
+PHP_PATCHSET="2"
 PHP_PATCHSET_URI="
 	$(php_get_uri "${PHP_PATCHSET_LOC}" "php-patchset-${SLOT}-r${PHP_PATCHSET}.tar.bz2")"
 
@@ -80,9 +80,9 @@ IUSE="${IUSE} bcmath berkdb bzip2 calendar cdb cjk
 	mssql mysql mysqlnd mysqli nls
 	oci8-instant-client odbc pcntl pdo +phar +posix postgres qdbm
 	readline recode selinux +session sharedmem
-	+simplexml snmp soap sockets spell sqlite2 sqlite ssl
+	+simplexml snmp soap sockets spell sqlite ssl
 	sybase-ct sysvipc tidy +tokenizer truetype unicode wddx
-	+xml xmlreader xmlwriter xmlrpc xpm xsl zip zlib"
+	+xml xmlreader xmlwriter xmlrpc xpm xslt zip zlib"
 
 DEPEND="
 	>=app-admin/eselect-php-0.7.0[apache2?,fpm?]
@@ -133,8 +133,7 @@ DEPEND="
 	snmp? ( >=net-analyzer/net-snmp-5.2 )
 	soap? ( >=dev-libs/libxml2-2.6.8 )
 	spell? ( >=app-text/aspell-0.50 )
-	sqlite2? ( =dev-db/sqlite-2* )
-	sqlite? ( >=dev-db/sqlite-3.7.7.1 )
+	sqlite? ( >=dev-db/sqlite-3.7.6.3 )
 	ssl? ( >=dev-libs/openssl-0.9.7 )
 	sybase-ct? ( dev-db/freetds )
 	tidy? ( app-text/htmltidy )
@@ -155,7 +154,7 @@ DEPEND="
 		virtual/jpeg
 		media-libs/libpng:0= sys-libs/zlib
 	)
-	xsl? ( dev-libs/libxslt >=dev-libs/libxml2-2.6.8 )
+	xslt? ( dev-libs/libxslt >=dev-libs/libxml2-2.6.8 )
 	zip? ( sys-libs/zlib )
 	zlib? ( sys-libs/zlib )
 	virtual/mta
@@ -175,7 +174,7 @@ REQUIRED_USE="
 	wddx? ( xml )
 	xmlrpc? ( || ( xml iconv ) )
 	xmlreader? ( xml )
-	xsl? ( xml )
+	xslt? ( xml )
 	ldap-sasl? ( ldap )
 	mhash? ( hash )
 	phar? ( hash )
@@ -288,6 +287,7 @@ src_prepare() {
 	addpredict /session_mm_cli0.sem
 
 	# Change PHP branding
+	# Get the alpha/beta/rc version
 	sed -re	"s|^(PHP_EXTRA_VERSION=\").*(\")|\1-pl${PR/r/}-gentoo\2|g" \
 		-i configure.in || die "Unable to change PHP branding"
 
@@ -295,12 +295,6 @@ src_prepare() {
 	EPATCH_SOURCE="${WORKDIR}/patches/generic" EPATCH_SUFFIX="patch" \
 		EPATCH_FORCE="yes" \
 		EPATCH_MULTI_MSG="Applying generic patches and fixes from upstream..." epatch
-
-	#Fix bug 463498
-	epatch "${FILESDIR}/fix-libstdc++-underlinking.patch"
-
-	# Patch for pkg-config-0.28 (Bug 455040)
-	epatch "${FILESDIR}"/missing-openssl-include.patch
 
 	# Patch PHP to show Gentoo as the server platform
 	sed -e 's/PHP_UNAME=`uname -a | xargs`/PHP_UNAME=`uname -s -n -r -v | xargs`/g' \
@@ -326,29 +320,28 @@ src_prepare() {
 
 	#force rebuilding aclocal.m4
 	rm aclocal.m4
+	eautoreconf
 
-	# work around divert() issues with newer autoconf, bug #281697
-	if has_version '>=sys-devel/autoconf-2.64' ; then
-		sed -i -r \
-			-e 's:^((m4_)?divert)[(]([0-9]*)[)]:\1(600\3):' \
-			$(grep -l divert $(find . -name '*.m4') configure.in) || die
+	if [[ ${CHOST} == *-darwin* ]] ; then
+		# http://bugs.php.net/bug.php?id=48795, bug #343481
+		sed -i -e '/BUILD_CGI="\\$(CC)/s/CC/CXX/' configure || die
 	fi
-	eautoreconf --force -W no-cross
 }
 
 src_configure() {
 	addpredict /usr/share/snmp/mibs/.index
 	addpredict /var/lib/net-snmp/mib_indexes
 
-	PHP_DESTDIR="/usr/$(get_libdir)/php${SLOT}"
+	PHP_DESTDIR="${EPREFIX}/usr/$(get_libdir)/php${SLOT}"
 
 	# This is a global variable and should be in caps. It isn't because the
 	# phpconfutils eclass relies on exactly this name...
 	# for --with-libdir see bug #327025
-	my_conf="--prefix=${PHP_DESTDIR}
-		--mandir=${PHP_DESTDIR}/man
-		--infodir=${PHP_DESTDIR}/info
-		--libdir=${PHP_DESTDIR}/lib
+	my_conf="
+		--prefix="${PHP_DESTDIR}"
+		--mandir="${PHP_DESTDIR}"/man
+		--infodir="${PHP_DESTDIR}"/info
+		--libdir="${PHP_DESTDIR}"/lib
 		--with-libdir=$(get_libdir)
 		--without-pear
 		$(use_enable threads maintainer-zts)"
@@ -356,68 +349,61 @@ src_configure() {
 	#                             extension		  USE flag        shared
 	my_conf+="
 	$(use_enable bcmath bcmath )
-	$(use_with bzip2 bz2 )
+	$(use_with bzip2 bz2 "${EPREFIX}"/usr)
 	$(use_enable calendar calendar )
 	$(use_enable ctype ctype )
-	$(use_with curl curl )
-	$(use_with curlwrappers curlwrappers )
+	$(use_with curl curl "${EPREFIX}"/usr)
+	$(use_with curlwrappers curlwrappers "${EPREFIX}"/usr)
 	$(use_enable xml dom )
-	$(use_with enchant enchant /usr)
+	$(use_with enchant enchant "${EPREFIX}"/usr)
 	$(use_enable exif exif )
 	$(use_enable fileinfo fileinfo )
 	$(use_enable filter filter )
 	$(use_enable ftp ftp )
-	$(use_with nls gettext )
-	$(use_with gmp gmp )
+	$(use_with nls gettext "${EPREFIX}"/usr)
+	$(use_with gmp gmp "${EPREFIX}"/usr)
 	$(use_enable hash hash )
-	$(use_with mhash mhash )
-	$(use_with iconv iconv )
+	$(use_with mhash mhash "${EPREFIX}"/usr)
+	$(use_with iconv iconv $(use elibc_glibc || echo "${EPREFIX}"/usr))
 	$(use_enable intl intl )
 	$(use_enable ipv6 ipv6 )
 	$(use_enable json json )
-	$(use_with kerberos kerberos /usr)
+	$(use_with kerberos kerberos "${EPREFIX}"/usr)
 	$(use_enable xml libxml )
+	$(use_with xml libxml-dir "${EPREFIX}"/usr)
 	$(use_enable unicode mbstring )
-	$(use_with crypt mcrypt )
-	$(use_with mssql mssql )
-	$(use_with unicode onig /usr)
-	$(use_with ssl openssl )
-	$(use_with ssl openssl-dir /usr)
+	$(use_with crypt mcrypt "${EPREFIX}"/usr)
+	$(use_with mssql mssql "${EPREFIX}"/usr)
+	$(use_with unicode onig "${EPREFIX}"/usr)
+	$(use_with ssl openssl "${EPREFIX}"/usr)
+	$(use_with ssl openssl-dir "${EPREFIX}"/usr)
 	$(use_enable pcntl pcntl )
 	$(use_enable phar phar )
 	$(use_enable pdo pdo )
-	$(use_with postgres pgsql )
+	$(use_with postgres pgsql "${EPREFIX}"/usr)
 	$(use_enable posix posix )
-	$(use_with spell pspell )
-	$(use_with recode recode )
+	$(use_with spell pspell "${EPREFIX}"/usr)
+	$(use_with recode recode "${EPREFIX}"/usr)
 	$(use_enable simplexml simplexml )
 	$(use_enable sharedmem shmop )
-	$(use_with snmp snmp )
+	$(use_with snmp snmp "${EPREFIX}"/usr)
 	$(use_enable soap soap )
-	$(use_enable sockets sockets )"
-	if version_is_at_least 5.3.16-r2; then
-		my_conf+=" $(use_with sqlite2 sqlite /usr) "
-		use sqlite2 && my_conf+=" $(use_enable unicode sqlite-utf8)"
-	else
-		my_conf+=" $(use_with sqlite sqlite /usr) "
-		use sqlite && my_conf+=" $(use_enable unicode sqlite-utf8)"
-	fi
-    my_conf+="
-	$(use_with sqlite sqlite3 /usr)
-	$(use_with sybase-ct sybase-ct /usr)
+	$(use_enable sockets sockets )
+	$(use_with sqlite sqlite3 "${EPREFIX}"/usr)
+	$(use_with sybase-ct sybase-ct "${EPREFIX}"/usr)
 	$(use_enable sysvipc sysvmsg )
 	$(use_enable sysvipc sysvsem )
 	$(use_enable sysvipc sysvshm )
-	$(use_with tidy tidy )
+	$(use_with tidy tidy "${EPREFIX}"/usr)
 	$(use_enable tokenizer tokenizer )
 	$(use_enable wddx wddx )
 	$(use_enable xml xml )
 	$(use_enable xmlreader xmlreader )
 	$(use_enable xmlwriter xmlwriter )
-	$(use_with xmlrpc xmlrpc )
-	$(use_with xsl xsl )
+	$(use_with xmlrpc xmlrpc)
+	$(use_with xslt xsl "${EPREFIX}"/usr)
 	$(use_enable zip zip )
-	$(use_with zlib zlib )
+	$(use_with zlib zlib "${EPREFIX}"/usr)
 	$(use_enable debug debug )"
 
 	# DBA support
@@ -428,57 +414,57 @@ src_configure() {
 
 	# DBA drivers support
 	my_conf+="
-	$(use_with cdb cdb )
-	$(use_with berkdb db4 )
+	$(use_with cdb cdb)
+	$(use_with berkdb db4 ${EPREFIX}/usr)
 	$(use_enable flatfile flatfile )
-	$(use_with gdbm gdbm )
+	$(use_with gdbm gdbm ${EPREFIX}/usr)
 	$(use_enable inifile inifile )
-	$(use_with qdbm qdbm )"
+	$(use_with qdbm qdbm ${EPREFIX}/usr)"
 
 	# Support for the GD graphics library
 	my_conf+="
-	$(use_with truetype freetype-dir /usr)
-	$(use_with truetype t1lib /usr)
+	$(use_with truetype freetype-dir ${EPREFIX}/usr)
+	$(use_with truetype t1lib ${EPREFIX}/usr)
 	$(use_enable cjk gd-jis-conv )
-	$(use_with gd jpeg-dir /usr)
-	$(use_with gd png-dir /usr)
-	$(use_with xpm xpm-dir /usr)"
+	$(use_with gd jpeg-dir ${EPREFIX}/usr)
+	$(use_with gd png-dir ${EPREFIX}/usr)
+	$(use_with xpm xpm-dir ${EPREFIX}/usr)"
 	# enable gd last, so configure can pick up the previous settings
 	my_conf+="
-	$(use_with gd gd )"
+	$(use_with gd gd)"
 
 	# IMAP support
 	if use imap ; then
 		my_conf+="
-		$(use_with imap imap )
-		$(use_with ssl imap-ssl )"
+		$(use_with imap imap ${EPREFIX}/usr)
+		$(use_with ssl imap-ssl ${EPREFIX}/usr)"
 	fi
 
 	# Interbase/firebird support
 
 	if use firebird ; then
 		my_conf+="
-		$(use_with firebird interbase /usr)"
+		$(use_with firebird interbase ${EPREFIX}/usr)"
 	fi
 
 	# LDAP support
 	if use ldap ; then
 		my_conf+="
-		$(use_with ldap ldap )
-		$(use_with ldap-sasl ldap-sasl )"
+		$(use_with ldap ldap ${EPREFIX}/usr)
+		$(use_with ldap-sasl ldap-sasl ${EPREFIX}/usr)"
 	fi
 
 	# MySQL support
 	if use mysql ; then
 		if use mysqlnd ; then
 			my_conf+="
-			$(use_with mysqlnd mysql mysqlnd)"
+			$(use_with mysql mysql mysqlnd)"
 		else
 			my_conf+="
-			$(use_with mysql mysql /usr)"
+			$(use_with mysql mysql ${EPREFIX}/usr)"
 		fi
 		my_conf+="
-		$(use_with mysql mysql-sock /var/run/mysqld/mysqld.sock)"
+		$(use_with mysql mysql-sock ${EPREFIX}/var/run/mysqld/mysqld.sock)"
 	fi
 
 	# MySQLi support
@@ -487,18 +473,18 @@ src_configure() {
 		$(use_with mysqli mysqli mysqlnd)"
 	else
 		my_conf+="
-		$(use_with mysqli mysqli /usr/bin/mysql_config)"
+		$(use_with mysqli mysqli ${EPREFIX}/usr/bin/mysql_config)"
 	fi
 
 	# ODBC support
 	if use odbc ; then
 		my_conf+="
-		$(use_with odbc unixODBC /usr)"
+		$(use_with odbc unixODBC ${EPREFIX}/usr)"
 	fi
 
 	if use iodbc ; then
 		my_conf+="
-		$(use_with iodbc iodbc /usr)"
+		$(use_with iodbc iodbc ${EPREFIX}/usr)"
 	fi
 
 	# Oracle support
@@ -513,15 +499,15 @@ src_configure() {
 		$(use_with mssql pdo-dblib )"
 		if use mysqlnd ; then
 			my_conf+="
-			$(use_with mysql pdo-mysql mysqlnd)"
+			$(use_with mysqlnd pdo-mysql mysqlnd)"
 		else
 			my_conf+="
-			$(use_with mysql pdo-mysql /usr)"
+			$(use_with mysql pdo-mysql ${EPREFIX}/usr)"
 		fi
 		my_conf+="
 		$(use_with postgres pdo-pgsql )
-		$(use_with sqlite pdo-sqlite /usr)
-		$(use_with odbc pdo-odbc unixODBC,/usr)"
+		$(use_with sqlite pdo-sqlite ${EPREFIX}/usr)
+		$(use_with odbc pdo-odbc unixODBC,${EPREFIX}/usr)"
 		if use oci8-instant-client ; then
 			my_conf+="
 			$(use_with oci8-instant-client pdo-oci)"
@@ -530,13 +516,13 @@ src_configure() {
 
 	# readline/libedit support
 	my_conf+="
-	$(use_with readline readline )
-	$(use_with libedit libedit )"
+	$(use_with readline readline ${EPREFIX}/usr)
+	$(use_with libedit libedit ${EPREFIX}/usr)"
 
 	# Session support
 	if use session ; then
 		my_conf+="
-		$(use_with sharedmem mm )"
+		$(use_with sharedmem mm ${EPREFIX}/usr)"
 	else
 		my_conf+="
 		$(use_enable session session )"
@@ -548,7 +534,7 @@ src_configure() {
 	# we use the system copy of pcre
 	# --with-pcre-regex affects ext/pcre
 	# --with-pcre-dir affects ext/filter and ext/zip
-	my_conf="${my_conf} --with-pcre-regex=/usr --with-pcre-dir=/usr"
+	my_conf="${my_conf} --with-pcre-regex=${EPREFIX}/usr --with-pcre-dir=${EPREFIX}/usr"
 
 	# Catch CFLAGS problems
     # Fixes bug #14067.
@@ -584,7 +570,7 @@ src_configure() {
 
 				apache2)
 					if [[ "${one_sapi}" == "${sapi}" ]] ; then
-						sapi_conf="${sapi_conf} --with-apxs2=/usr/sbin/apxs"
+						sapi_conf="${sapi_conf} --with-apxs2=${EPREFIX}/usr/sbin/apxs"
 					else
 						sapi_conf="${sapi_conf} --without-apxs2"
 					fi
@@ -652,7 +638,8 @@ src_install() {
 				keepdir "/usr/$(get_libdir)/apache2/modules"
 			else
 				# needed each time, php_install_ini would reset it
-				into "${PHP_DESTDIR#${EPREFIX}}"
+				local dest="${PHP_DESTDIR#${EPREFIX}}"
+				into "${dest}"
 				case "$sapi" in
 					cli)
 						source="sapi/cli/php"
@@ -675,6 +662,8 @@ src_install() {
 					dolib.so "${source}" || die "Unable to install ${sapi} sapi"
 				else
 					dobin "${source}" || die "Unable to install ${sapi} sapi"
+					local name="$(basename ${source})"
+					dosym "${dest}/bin/${name}" "/usr/bin/${name}${SLOT}"
 				fi
 			fi
 
@@ -781,8 +770,8 @@ pkg_postinst() {
 		fi
 	done
 
-	elog "Make sure that PHP_TARGETS in /etc/portage/make.conf includes php${SLOT/./-}"
-	elog "in order to compile extensions for the ${SLOT} ABI"
+	elog "Make sure that PHP_TARGETS in ${EPREFIX}/etc/make.conf includes php${SLOT/./-} in order"
+	elog "to compile extensions for the ${SLOT} ABI"
 	elog
 	if ! use readline && use cli ; then
 		ewarn "Note that in order to use php interactivly, you need to enable"
@@ -791,8 +780,8 @@ pkg_postinst() {
 	elog
 	elog "This ebuild installed a version of php.ini based on php.ini-${PHP_INI_VERSION} version."
 	elog "You can chose which version of php.ini to install by default by setting PHP_INI_VERSION to either"
-	elog "'production' or 'development' in /etc/portage/make.conf"
-	ewarn "Both versions of php.ini can be found in /usr/share/doc/${PF}"
+	elog "'production' or 'development' in ${EPREFIX}/etc/make.conf"
+	elog "Both versions of php.ini can be found in ${EPREFIX}/usr/share/doc/${PF}"
 
 	elog
 	elog "For more details on how minor version slotting works (PHP_TARGETS) please read the upgrade guide:"
@@ -803,4 +792,3 @@ pkg_postinst() {
 pkg_prerm() {
 	eselect php cleanup
 }
-

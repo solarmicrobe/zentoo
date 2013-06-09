@@ -31,8 +31,8 @@ dev-java/tomcat-servlet-api)             echo "=$1-4.1.36"
 dev-java/xml-commons-external)           echo "=$1-1.3.04"
                                          echo "=$1-1.4.01";;
 dev-lang/R)                              echo "=$1-2.15.3";;
-dev-lang/php)                            echo "=$1-5.3.24"
-                                         echo "=$1-5.4.14";;
+dev-lang/php)                            echo "=$1-5.3.26"
+                                         echo "=$1-5.4.16";;
 dev-lang/python)                         echo "=$1-2.7.4";;
 dev-libs/openssl)                        echo "=$1-0.9.8x"
                                          echo "$1";;

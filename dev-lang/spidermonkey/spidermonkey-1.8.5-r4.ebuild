@@ -53,6 +53,8 @@ src_prepare() {
 	# https://bugs.gentoo.org/show_bug.cgi?id=441934
 	epatch "${FILESDIR}"/${PN}-1.8.5-ia64-fix.patch
 	epatch "${FILESDIR}"/${PN}-1.8.5-ia64-static-strings.patch
+	# https://bugs.gentoo.org/show_bug.cgi?id=431560
+	epatch "${FILESDIR}"/${PN}-1.8.5-isfinite.patch
 
 	epatch_user
 

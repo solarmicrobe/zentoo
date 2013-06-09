@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -12,7 +12,7 @@ DESCRIPTION="SpamAssassin is an extensible email filter which is used to identif
 HOMEPAGE="http://spamassassin.apache.org/"
 SRC_URI="mirror://apache/spamassassin/source/${MY_P}.tar.bz2"
 
-LICENSE="Apache-2.0"
+LICENSE="Apache-2.0 GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
 # need keyword request for Mail-SPF ppc ppc64

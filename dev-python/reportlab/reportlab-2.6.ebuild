@@ -18,7 +18,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc examples"
 
-RDEPEND="dev-python/imaging
+RDEPEND="virtual/python-imaging
 	media-fonts/ttf-bitstream-vera
 	media-libs/libart_lgpl
 	sys-libs/zlib"
