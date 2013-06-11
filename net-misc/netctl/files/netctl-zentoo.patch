@@ -1,0 +1,80 @@
+From 04d56110bb7deb27072363a8ac6700595f6eb874 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Benedikt=20B=C3=B6hm?= <bb@xnull.de>
+Date: Tue, 11 Jun 2013 12:39:23 +0200
+Subject: [PATCH] add static routes prio to default gateway
+
+Some hosters use a /32 allocation to save IP addresses and secure their
+network. These addresses can either be configured as point-to-point
+(a.k.a. peer in iproute2) which netctl does not support, or by injecting
+a static route to the default gateway, e.g.:
+
+ip addr add 1.2.3.4/32 dev eth0
+ip route add 1.2.3.1 dev eth0
+ip route add default via 1.2.3.1
+
+However this does not work with netctl because the default gateway is
+set prior to other static routes.
+
+This patch fixes this issue.
+---
+ src/lib/ip | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
+
+diff --git a/src/lib/ip b/src/lib/ip
+index 8dd2d63..25932a0 100644
+--- a/src/lib/ip
++++ b/src/lib/ip
+@@ -10,6 +10,17 @@ resolvconf_add() {
+     printf "%s\n" "$@" | resolvconf -a "$interface"
+ }
+ 
++add_static_routes() {
++    if [[ $IP ]]; then
++        # Add static IP routes
++        for route in "${Routes[@]}"; do
++            if ! do_debug ip route add $route dev "$Interface"; then
++                report_error "Could not add route '$route' to interface '$Interface'"
++                return 1
++            fi
++        done
++    fi
++}
+ 
+ ## Set up an IP configuration
+ # $Interface: interface name
+@@ -49,6 +60,7 @@ ip_set() {
+             return 1
+           ;;
+         esac
++        add_static_routes
+       ;;
+       static)
+         for addr in "${Address[@]}"; do
+@@ -57,6 +69,7 @@ ip_set() {
+                 return 1
+             fi
+         done
++        add_static_routes
+         if [[ $Gateway ]]; then
+             if ! do_debug ip route add default via "$Gateway" dev "$Interface"; then
+                 report_error "Could not set gateway '$Gateway' on interface '$Interface'"
+@@ -72,16 +85,6 @@ ip_set() {
+       ;;
+     esac
+ 
+-    if [[ $IP ]]; then
+-        # Add static IP routes
+-        for route in "${Routes[@]}"; do
+-            if ! do_debug ip route add $route dev "$Interface"; then
+-                report_error "Could not add route '$route' to interface '$Interface'"
+-                return 1
+-            fi
+-        done
+-    fi
+-
+     # Load ipv6 module if necessary
+     case "$IP6" in
+       dhcp*|stateless|static)
+-- 
+1.8.1.5
+

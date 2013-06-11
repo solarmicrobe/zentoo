@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit bash-completion-r1
+inherit bash-completion-r1 eutils
 
 if [[ ${PV} = *9999* ]]; then
 	EGIT_REPO_URI="git://projects.archlinux.org/netctl.git"
@@ -34,6 +34,7 @@ RDEPEND="
 "
 
 src_prepare() {
+	epatch "${FILESDIR}"/netctl-zentoo.patch
 	sed -i -e "s:/usr/bin/ifplugd:/usr/sbin/ifplugd:" \
 		"services/netctl-ifplugd@.service" || die
 }
