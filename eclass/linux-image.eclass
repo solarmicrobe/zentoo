@@ -45,13 +45,7 @@ linux-image_pkg_config() {
 	eend $?
 
 	# kernel command line
-	cmdline="rd.md=1 rd.lvm=1 rd.lvm.vg=vg"
-
-	# systemd support
-	# TODO: eventually systemd should be /sbin/init
-	if [[ $(</proc/1/cmdline) == /usr/bin/systemd ]]; then
-		cmdline+=" init=/usr/bin/systemd"
-	fi
+	cmdline="rd.md=1 rd.lvm=1 rd.lvm.vg=vg init=/usr/lib/systemd/systemd"
 
 	# on MBR systems use grub-1, on GPT/EFI use grub-2
 	# the heuristic may not be the best but works in the general case
