@@ -81,6 +81,7 @@ net-dns/openresolv)                      echo "=$1-3.5.4-r3";;
 net-libs/nodejs)                         echo "=$1-0.8.23";;
 net-libs/zeromq)                         echo "=$1-3.2.3";;
 net-misc/dhcp)                           echo "=$1-4.2.4_p2-r1";;
+net-misc/dhcpcd)                         echo "=$1-5.6.8";;
 net-nds/openldap)                        echo "=$1-2.4.33-r1";;
 sys-apps/dbus)                           echo "=$1-1.6.8-r1";;
 sys-apps/shadow)                         echo "=$1-4.1.5.1-r1";;
