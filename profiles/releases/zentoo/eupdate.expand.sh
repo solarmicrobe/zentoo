@@ -77,6 +77,7 @@ dev-vcs/cvs)                             echo "=$1-1.12.13.1";;
 java-virtuals/servlet-api)               echo "=$1-2.3"
                                          echo "=$1-2.5-r1";;
 media-gfx/pydot)                         echo "=$1-1.0.28-r1";;
+net-dns/openresolv)                      echo "=$1-3.5.4-r3";;
 net-libs/nodejs)                         echo "=$1-0.8.23";;
 net-libs/zeromq)                         echo "=$1-3.2.3";;
 net-misc/dhcp)                           echo "=$1-4.2.4_p2-r1";;
