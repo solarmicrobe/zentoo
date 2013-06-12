@@ -10,7 +10,7 @@ RUBY_FAKEGEM_RECIPE_TEST="rspec"
 
 RUBY_FAKEGEM_EXTRA_DOC="README.md"
 
-inherit ruby-fakegem
+inherit ruby-fakegem eutils
 
 DESCRIPTION="Run external commands on Unix or Windows"
 HOMEPAGE="http://github.com/opscode/mixlib-shellout"
@@ -23,6 +23,8 @@ KEYWORDS="amd64"
 IUSE=""
 
 each_ruby_prepare() {
+	epatch "${FILESDIR}"/mixlib-shellout-env.patch
+
 	# Make sure we actually use the right interpreter for testing
 	sed -i -e "/ruby_eval/ s:ruby :${RUBY} :" spec/mixlib/shellout_spec.rb || die
 }
