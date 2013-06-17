@@ -21,7 +21,7 @@ linux-image_src_install() {
 
 linux-image_pkg_config() {
 	# use UUID for rootfs in fstab
-	root_device=$(grep ' / ' /proc/mounts | grep -v ^rootfs | awk '{ print $1 }')
+	root_device=$(grep ' / ' /proc/mounts | grep -v ^rootfs | grep -v ^aufs | awk '{ print $1 }')
 	root_uuid=$(blkid -s UUID -o value ${root_device})
 
 	if [[ -z ${root_uuid} ]]; then
