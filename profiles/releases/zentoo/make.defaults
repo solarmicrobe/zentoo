@@ -1,5 +1,6 @@
 # sane defaults
 PKGDIR="/usr/portage/packages/${ARCH}"
+PORTAGE_BINHOST="http://chef.zenops.net/${ARCH}/"
 FEATURES="splitdebug"
 
 # disable masked USE flags
