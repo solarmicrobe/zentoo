@@ -14,7 +14,7 @@ x11-libs/gdk-pixbuf X
 
 # make LVM and mdadm static
 sys-apps/systemd static-libs
-sys-fs/lvm2 static
+sys-fs/lvm2 static static-libs
 sys-fs/mdadm static
 sys-fs/udev static-libs
 virtual/udev static-libs
