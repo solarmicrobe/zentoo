@@ -4,6 +4,7 @@ case $1 in
 app-admin/eselect-php)                   echo "=$1-0.7.1";;
 app-admin/syslog-ng)                     echo "=$1-3.4.2";;
 app-editors/vim*)                        echo "=$1-7.3.905";;
+app-emulation/vagrant)                   echo "=$1-1.2.2";;
 app-emulation/virtualbox*)               echo "=$1-4.2.12";;
 app-misc/tmux)                           echo "=$1-1.8";;
 app-text/docbook-sgml-dtd)               echo "=$1-3.0-r3"
@@ -67,7 +68,8 @@ dev-ruby/i18n)                           echo "=$1-0.6.1";;
 dev-ruby/eventmachine)                   echo "=$1-1.0.0";;
 dev-ruby/json)                           echo "=$1-1.7.6";;
 dev-ruby/mysql-ruby)                     echo "=$1-2.9.0-r1";;
-dev-ruby/net-ssh)                        echo "=$1-2.6.3";;
+dev-ruby/net-scp)                        echo "=$1-1.1.0";;
+dev-ruby/net-ssh)                        echo "=$1-2.6.7";;
 dev-ruby/net-ssh-multi)                  echo "=$1-1.1";;
 dev-ruby/ohai)                           echo "=$1-0.6.12";;
 dev-ruby/tilt)                           echo "=$1-1.3.3";;
