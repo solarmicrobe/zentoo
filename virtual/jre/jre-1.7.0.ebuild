@@ -11,8 +11,5 @@ SLOT="1.7"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="|| (
-		=virtual/jdk-1.7.0*
-		=dev-java/oracle-jre-bin-1.7.0*
-	)"
+RDEPEND="=virtual/jdk-1.7.0*"
 DEPEND=""
