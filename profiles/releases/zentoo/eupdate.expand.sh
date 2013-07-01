@@ -100,8 +100,7 @@ sys-firmware/seabios)                    echo "=$1-1.7.2.1";;
 sys-fs/lvm2)                             echo "=$1-2.02.97-r1";;
 sys-fs/mdadm)                            echo "=$1-3.2.6";;
 sys-kernel/dracut)                       echo "=$1-027-r1";;
-sys-kernel/gentoo-sources)               echo "=$1-3.4.44"
-                                         echo "=$1-3.9.1-r1";;
+sys-kernel/gentoo-sources)               echo "=$1-3.4.51";;
 virtual/httpd-php)                       echo "=$1-5.3"
                                          echo "$1";;
 virtual/jdk)                             echo "=$1-1.7.0";;
