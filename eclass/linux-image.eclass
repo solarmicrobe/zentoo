@@ -47,9 +47,17 @@ linux-image_pkg_config() {
 	# kernel command line
 	cmdline="rd.md=1 rd.lvm=1 rd.lvm.vg=vg init=/usr/lib/systemd/systemd"
 
-	# on MBR systems use grub-1, on GPT/EFI use grub-2
-	# the heuristic may not be the best but works in the general case
-	if partx -s -o SCHEME /dev/sda | grep -q gpt; then
+	# figure out the physical boot device
+	if mdadm --detail $root_device &>/dev/null; then
+		boot_devices=$(mdadm --detail $root_device | grep 'active sync' | awk '{ print $7 }' | grep -o '/dev/sd.')
+	else
+		boot_devices=$(echo $root_device | grep -o '/dev/sd.')
+	fi
+
+	# support old MBR systems too :-(
+	partx -s -o SCHEME $(echo ${boot_devices} | awk '{print $1}') | grep -q gpt
+
+	if [[ $? -eq 0 ]]; then
 		einfo "Using grub-2 with GPT partition map"
 
 		emerge --nospinner -q -n sys-boot/grub:2
@@ -58,7 +66,8 @@ linux-image_pkg_config() {
 		mkdir -p /boot/grub2
 		grub2-mkconfig -o /boot/grub2/grub.cfg
 
-		for device in /dev/sd?; do
+		for device in ${boot_devices}; do
+			einfo "Installing boot loader to ${device}"
 			grub2-install ${device}
 		done
 	else
@@ -74,7 +83,9 @@ linux-image_pkg_config() {
 
 		echo quit | /sbin/grub --batch --no-floppy --device-map=/boot/grub/device.map >/dev/null 2>&1
 
-		for device in /dev/sd?; do
+		for device in ${boot_devices}; do
+			einfo "Installing boot loader to ${device}"
+
 			grub_device=$(grep "${device}\$" /boot/grub/device.map | awk '{ print $1; }' | sed -e 's:[()]::g')
 
 			if [ -z "${grub_device}" ]; then
