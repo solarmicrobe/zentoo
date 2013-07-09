@@ -24,6 +24,11 @@ linux-image_pkg_config() {
 	root_device=$(grep ' / ' /proc/mounts | grep -v ^rootfs | grep -v ^aufs | awk '{ print $1 }')
 	root_uuid=$(blkid -s UUID -o value ${root_device})
 
+	# sometimes blkid does not work :-(
+	if [[ -z ${root_uuid} ]]; then
+		root_uuid=$(blkid -s UUID -o value ${root_device})
+	fi
+
 	if [[ -z ${root_uuid} ]]; then
 		die "could not lookup rootfs UUID"
 	fi
