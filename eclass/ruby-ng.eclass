@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: ruby-ng.eclass
@@ -16,6 +16,7 @@
 # Currently available targets are:
 #  * ruby18 - Ruby (MRI) 1.8.x
 #  * ruby19 - Ruby (MRI) 1.9.x
+#  * ruby20 - Ruby (MRI) 2.0.x
 #  * ree18  - Ruby Enterprise Edition 1.8.x
 #  * jruby  - JRuby
 #  * rbx    - Rubinius
@@ -106,6 +107,10 @@ ruby_implementation_depend() {
 		ruby19)
 			rubypn="dev-lang/ruby"
 			rubyslot=":1.9"
+			;;
+		ruby20)
+			rubypn="dev-lang/ruby"
+			rubyslot=":2.0"
 			;;
 		ree18)
 			rubypn="dev-lang/ruby-enterprise"

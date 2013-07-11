@@ -1,8 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
+EAPI=5
 
 USE_RUBY="ruby18 ree18 ruby19 jruby"
 
@@ -80,24 +80,11 @@ each_ruby_install() {
 	doruby -r *
 	popd &>/dev/null
 
-	case "${RUBY}" in
-		*ruby19)
-			local sld=$(ruby_rbconfig_value 'sitelibdir')
-			insinto "${sld#${EPREFIX}}"  # bug #320813
-			newins "${FILESDIR}/auto_gem.rb.ruby19" auto_gem.rb || die
-			;;
-		*)
-			doruby "${FILESDIR}/auto_gem.rb" || die
-			;;
-	esac
-
 	newbin bin/gem $(basename ${RUBY} | sed -e 's:ruby:gem:') || die
 }
 
 all_ruby_install() {
 	dodoc History.txt README.rdoc
-
-	doenvd "${FILESDIR}/10rubygems"
 }
 
 pkg_postinst() {
@@ -109,14 +96,4 @@ pkg_postinst() {
 	ewarn "To switch between available Ruby profiles, execute as root:"
 	ewarn "\teselect ruby set ruby(18|19|...)"
 	ewarn
-}
-
-pkg_postrm() {
-	ewarn "If you have uninstalled dev-ruby/rubygems, Ruby applications are unlikely"
-	ewarn "to run in current shells because of missing auto_gem."
-	ewarn "Please run \"unset RUBYOPT\" in your shells before using ruby"
-	ewarn "or start new shells"
-	ewarn
-	ewarn "If you have not uninstalled dev-ruby/rubygems, please do not unset "
-	ewarn "RUBYOPT"
 }
