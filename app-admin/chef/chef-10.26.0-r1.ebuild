@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 USE_RUBY="ruby19"
 
 RUBY_FAKEGEM_TASK_DOC=""
@@ -53,6 +53,8 @@ ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 each_ruby_prepare() {
 	ruby_fakegem_metadata_gemspec ../metadata ${RUBY_FAKEGEM_GEMSPEC}
 
+	epatch "${FILESDIR}"/rubygems-2.0.patch
+
 	# bunny
 	sed -i -e 's/"< 0.8.0", //' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
 }
@@ -61,9 +63,6 @@ all_ruby_install() {
 	all_fakegem_install
 
 	keepdir /etc/chef /var/lib/chef /var/log/chef
-
-	doinitd "${FILESDIR}/initd/chef-client"
-	doconfd "${FILESDIR}/confd/chef-client"
 
 	insinto /etc/chef
 	doins "${FILESDIR}/client.rb"
@@ -76,11 +75,4 @@ all_ruby_install() {
 pkg_setup() {
 	enewgroup chef
 	enewuser chef -1 -1 /var/lib/chef chef
-}
-
-pkg_postinst() {
-	elog
-	elog "You should edit /etc/chef/client.rb before starting the service with"
-	elog "/etc/init.d/chef-client start"
-	elog
 }
