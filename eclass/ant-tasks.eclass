@@ -24,21 +24,21 @@ EXPORT_FUNCTIONS src_unpack src_compile src_install
 
 # -----------------------------------------------------------------------------
 # @variable-preinherit ANT_TASK_JDKVER
-# @variable-default 1.4
+# @variable-default 1.5
 #
-# Affects the >=virtual/jdk version set in DEPEND string. Defaults to 1.4, can
+# Affects the >=virtual/jdk version set in DEPEND string. Defaults to 1.5, can
 # be overriden from ebuild BEFORE inheriting this eclass.
 # -----------------------------------------------------------------------------
-ANT_TASK_JDKVER=${ANT_TASK_JDKVER-1.4}
+ANT_TASK_JDKVER=${ANT_TASK_JDKVER-1.5}
 
 # -----------------------------------------------------------------------------
 # @variable-preinherit ANT_TASK_JREVER
-# @variable-default 1.4
+# @variable-default 1.5
 #
-# Affects the >=virtual/jre version set in DEPEND string. Defaults to 1.4, can
+# Affects the >=virtual/jre version set in DEPEND string. Defaults to 1.5, can
 # be overriden from ebuild BEFORE inheriting this eclass.
 # -----------------------------------------------------------------------------
-ANT_TASK_JREVER=${ANT_TASK_JREVER-1.4}
+ANT_TASK_JREVER=${ANT_TASK_JREVER-1.5}
 
 # -----------------------------------------------------------------------------
 # @variable-internal ANT_TASK_NAME
@@ -89,6 +89,9 @@ else
 	MY_PV=${PV}
 	UPSTREAM_PREFIX="mirror://apache/ant/source"
 	case ${PV} in
+	1.9.1)
+		GENTOO_PREFIX="http://dev.gentoo.org/~tomwij/files/dist"
+		;;
 	1.8.4)
 		GENTOO_PREFIX="http://dev.gentoo.org/~sera/distfiles"
 		;;
@@ -110,7 +113,6 @@ SRC_URI="${UPSTREAM_PREFIX}/${MY_P}-src.tar.bz2
 	${GENTOO_PREFIX}/ant-${PV}-gentoo.tar.bz2"
 LICENSE="Apache-2.0"
 SLOT="0"
-IUSE=""
 
 RDEPEND="~dev-java/ant-core-${PV}"
 DEPEND="${RDEPEND}"

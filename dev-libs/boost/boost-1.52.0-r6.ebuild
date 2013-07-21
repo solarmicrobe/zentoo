@@ -23,6 +23,7 @@ RDEPEND="icu? ( >=dev-libs/icu-3.6:= )
 	!icu? ( virtual/libiconv )
 	mpi? ( || ( sys-cluster/openmpi[cxx] sys-cluster/mpich2[cxx,threads] ) )
 	python? ( ${PYTHON_DEPS} )
+	app-arch/bzip2
 	sys-libs/zlib
 	!app-admin/eselect-boost"
 DEPEND="${RDEPEND}

@@ -73,7 +73,7 @@ src_configure() {
 		--with-system-xpdf \
 		--with-system-poppler \
 		--with-system-zziplib \
-	    --disable-multiplatform \
+	    --disable-multiplatform
 
 	for i in ${PRELIBS} ; do
 		einfo "Configuring $i"

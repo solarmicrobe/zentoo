@@ -14,8 +14,6 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="build kernel_linux"
 
-PDEPEND="sys-apps/openrc"
-
 pkg_setup() {
 	multilib_layout
 }

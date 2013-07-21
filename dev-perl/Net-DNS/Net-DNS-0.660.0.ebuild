@@ -42,6 +42,4 @@ src_prepare() {
 
 src_compile() {
 	emake AR="$(tc-getAR)" OTHERLDFLAGS="${LDFLAGS}"
-
-	perl-module_src_compile
 }

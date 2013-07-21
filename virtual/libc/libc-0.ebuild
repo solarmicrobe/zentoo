@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -18,6 +18,7 @@ DEPEND=""
 # a different SLOT for cross-compiling
 RDEPEND="!prefix? (
 		elibc_glibc? ( sys-libs/glibc:2.2 )
+		elibc_musl? ( sys-libs/musl )
 		elibc_uclibc? ( sys-libs/uclibc )
 		elibc_FreeBSD? ( sys-freebsd/freebsd-lib )
 	)"

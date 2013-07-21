@@ -18,6 +18,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="crypt debug python static-libs"
 
+REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
+
 RDEPEND=">=dev-libs/libxml2-2.8.0:2
 	crypt?  ( >=dev-libs/libgcrypt-1.1.42:= )
 	python? (

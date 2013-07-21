@@ -39,7 +39,10 @@ RDEPEND="${RDEPEND}
 DEPEND="${DEPEND_COMMON}
 		virtual/pkgconfig
 		>=sys-devel/binutils-2.20.1-r1
-		static? ( virtual/udev[static-libs] )"
+		static? (
+			udev? ( virtual/udev[static-libs] )
+			selinux? ( sys-libs/libselinux[static-libs] )
+		)"
 
 S="${WORKDIR}/${PN/lvm/LVM}.${PV}"
 
@@ -106,6 +109,11 @@ src_prepare() {
 
 	# Upstream patch for https://bugs.gentoo.org/444328
 	epatch "${FILESDIR}"/${P}-strict-aliasing.patch
+
+	# for https://bugs.gentoo.org/370217
+	epatch "${FILESDIR}"/${P}-udev-static.patch
+	# for https://bugs.gentoo.org/439414
+	epatch "${FILESDIR}"/${P}-selinux-static.patch
 
 	# Fix calling AR directly with USE static, bug #444082
 	if use static ; then

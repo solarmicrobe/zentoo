@@ -1,8 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # This is a common location for functions used in the sys-libs/db ebuilds
 #
-# Bugs: pauldv@gentoo.org
+# Bugs: maintainer-needed@gentoo.org
 
 inherit eutils multilib
 
@@ -167,6 +167,7 @@ db_src_test() {
 		sed -ri \
 			-e '/regsub .test_path ./s,(regsub),#\1,g' \
 			-e '/regsub .src_root ./s,(regsub),#\1,g' \
+			-e '/regsub .tcl_utils ./s,(regsub),#\1,g' \
 			"${test_parallel}"
 		cd "${S}"
 		for t in \

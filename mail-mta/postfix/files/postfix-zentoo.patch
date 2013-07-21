@@ -1,4 +1,4 @@
-From 170eb9b2e94ff284559b35d5c495e7ac8601d2c6 Mon Sep 17 00:00:00 2001
+From d12f823231015d8f9ca2c3b7fc69c83d672af5e9 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Benedikt=20B=C3=B6hm?= <bb@xnull.de>
 Date: Mon, 8 Apr 2013 13:42:50 +0200
 Subject: [PATCH] be silent

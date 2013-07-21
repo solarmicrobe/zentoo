@@ -22,7 +22,7 @@ SRC_URI="mirror://sourceforge/${PN}/${P}.tar.gz
 
 LICENSE="BSD"
 SLOT="0"
-IUSE="doc umfpack"
+IUSE="doc sparse"
 KEYWORDS="amd64"
 
 CDEPEND="
@@ -32,11 +32,11 @@ CDEPEND="
 	sci-libs/superlu
 	virtual/cblas
 	virtual/lapack
-	umfpack? ( sci-libs/umfpack )"
+	sparse? ( sci-libs/umfpack )"
 DEPEND="${CDEPEND}
 	virtual/pkgconfig
 	doc? ( app-arch/unzip )
-	umfpack? ( dev-lang/swig )"
+	sparse? ( dev-lang/swig )"
 RDEPEND="${CDEPEND}
 	dev-python/imaging"
 
@@ -49,7 +49,7 @@ pkg_setup() {
 	fortran-2_pkg_setup
 	# scipy automatically detects libraries by default
 	export {FFTW,FFTW3,UMFPACK}=None
-	use umfpack && unset UMFPACK
+	use sparse && unset UMFPACK
 	# the missing symbols are in -lpythonX.Y, but since the version can
 	# differ, we just introduce the same scaryness as on Linux/ELF
 	[[ ${CHOST} == *-darwin* ]] \

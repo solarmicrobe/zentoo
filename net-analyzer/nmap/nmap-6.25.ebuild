@@ -30,7 +30,6 @@ NMAP_PYTHON_DEPEND="
 	dev-lang/python:2.7[sqlite]
 	dev-lang/python:2.6[sqlite]
 	dev-lang/python:2.5[sqlite]
-	dev-python/pysqlite:2
 )
 "
 RDEPEND="

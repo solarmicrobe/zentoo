@@ -123,6 +123,8 @@ src_prepare() {
 	# Disable PATH reset, trust what portage gives us. bug 254615
 	sed -i -e 's:^PATH=/:#PATH=/:' configure || die
 
+	epatch_user #473004
+
 	# Now we can build a sane merged version.h
 	(
 		sed '/^#define SSH_RELEASE/d' version.h.* | sort -u

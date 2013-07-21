@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,7 +21,7 @@ IUSE="doc examples twisted"
 
 DEPEND="dev-python/setuptools
 	twisted? (
-		dev-python/twisted
+		dev-python/twisted-core
 		dev-python/twisted-web
 	)"
 RDEPEND="${DEPEND}"

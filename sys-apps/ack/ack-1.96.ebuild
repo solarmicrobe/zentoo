@@ -16,7 +16,7 @@ SRC_URI+=" http://dev.gentoo.org/~tove/distfiles/${CATEGORY}/${PN}/${ACK_PATCH}.
 LICENSE="Artistic-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="bash-completion"
+IUSE=""
 
 DEPEND=">=dev-perl/File-Next-1.02"
 RDEPEND="${DEPEND}"

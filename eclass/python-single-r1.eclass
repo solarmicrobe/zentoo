@@ -81,6 +81,8 @@ fi
 # for all implementations in PYTHON_COMPAT, so it may be necessary to
 # use USE defaults.
 #
+# This should be set before calling `inherit'.
+#
 # Example:
 # @CODE
 # PYTHON_REQ_USE="gdbm,ncurses(-)?"

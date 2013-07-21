@@ -1,7 +1,8 @@
 # skip unnecessary dependencies
 app-admin/syslog-ng dbi json smtp sql
 app-backup/duplicity s3
-app-emulation/qemu tls usbredir 
+app-editors/joe xterm
+app-emulation/qemu tls usbredir xen
 app-emulation/virtualbox vboxwebsrv
 app-text/texlive-core X xetex
 dev-java/ant testutil

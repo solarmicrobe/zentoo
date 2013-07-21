@@ -56,7 +56,7 @@ src_install() {
 	distutils_src_install
 	python_convert_shebangs 2 contrib/hg-ssh
 
-	newbashcomp contrib/bash_completion ${PN} || die
+	newbashcomp contrib/bash_completion hg || die
 
 	if use zsh-completion ; then
 		insinto /usr/share/zsh/site-functions

@@ -21,3 +21,6 @@ virtual/udev static-libs
 
 # force disable bindist on openssl
 dev-libs/openssl -bindist
+
+# force openssl on lftp
+net-ftp/lftp openssl

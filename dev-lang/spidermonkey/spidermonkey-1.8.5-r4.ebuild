@@ -4,7 +4,9 @@
 
 EAPI="5"
 WANT_AUTOCONF="2.1"
-inherit autotools eutils toolchain-funcs multilib python versionator pax-utils
+PYTHON_COMPAT=( python2_{6,7} )
+PYTHON_REQ_USE="threads"
+inherit autotools eutils toolchain-funcs multilib python-any-r1 versionator pax-utils
 
 MY_PN="js"
 TARBALL_PV="$(replace_all_version_separators '' $(get_version_component_range 1-3))"
@@ -24,14 +26,12 @@ BUILDDIR="${S}/js/src"
 
 RDEPEND=">=dev-libs/nspr-4.7.0"
 DEPEND="${RDEPEND}
+	${PYTHON_DEPS}
 	app-arch/zip
-	=dev-lang/python-2*[threads]
 	virtual/pkgconfig"
 
 pkg_setup(){
 	if [[ ${MERGE_TYPE} != "binary" ]]; then
-		python_set_active_version 2
-		python_pkg_setup
 		export LC_ALL="C"
 	fi
 }
@@ -67,7 +67,7 @@ src_configure() {
 
 	CC="$(tc-getCC)" CXX="$(tc-getCXX)" \
 	AR="$(tc-getAR)" RANLIB="$(tc-getRANLIB)" \
-	LD="$(tc-getLD)" PYTHON="$(PYTHON)" \
+	LD="$(tc-getLD)" \
 	econf \
 		${myopts} \
 		--enable-jemalloc \

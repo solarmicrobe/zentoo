@@ -2,8 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
-
+EAPI=3
 inherit eutils autotools
 
 DESCRIPTION="GNU system accounting utilities"
@@ -16,8 +15,9 @@ KEYWORDS="amd64"
 IUSE=""
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-6.5.5-cross-compile.patch
-	epatch "${FILESDIR}"/${PN}-6.5.5-no-gets.patch
+	epatch \
+		"${FILESDIR}"/${PN}-6.5.5-cross-compile.patch \
+		"${FILESDIR}"/${PN}-6.5.5-no-gets.patch
 	eautoreconf
 }
 
@@ -35,9 +35,9 @@ src_install() {
 	newins "${FILESDIR}"/acct.logrotate acct || die
 
 	# sys-apps/sysvinit already provides this
-	rm "${D}"/usr/bin/last "${D}"/usr/share/man/man1/last.1 || die
+	rm "${ED}"/usr/bin/last "${ED}"/usr/share/man/man1/last.1 || die
 
 	# accton in / is only a temp workaround for #239748
 	dodir /sbin
-	mv "${D}"/usr/sbin/accton "${D}"/sbin/ || die
+	mv "${ED}"/usr/sbin/accton "${ED}"/sbin/ || die
 }

@@ -113,29 +113,22 @@ fi
 # @CODE
 
 _python_build_set_globals() {
-	local usestr
+	local usestr i PYTHON_PKG_DEP
 	[[ ${PYTHON_REQ_USE} ]] && usestr="[${PYTHON_REQ_USE}]"
 
-	PYTHON_DEPS=
-	local i
-	for i in "${_PYTHON_ALL_IMPLS[@]}"; do
-		if has "${i}" "${PYTHON_COMPAT[@]}"
-		then
-			local d
-			case ${i} in
-				python*)
-					d='dev-lang/python';;
-				jython*)
-					d='dev-java/jython';;
-				pypy*)
-					d='dev-python/pypy';;
-				*)
-					die "Invalid implementation: ${i}"
-			esac
+	# check for invalid PYTHON_COMPAT
+	for i in "${PYTHON_COMPAT[@]}"; do
+		# the function simply dies on invalid impl
+		_python_impl_supported "${i}"
+	done
 
-			local v=${i##*[a-z]}
-			PYTHON_DEPS="${d}:${v/_/.}${usestr} ${PYTHON_DEPS}"
-		fi
+	PYTHON_DEPS=
+	for i in "${_PYTHON_ALL_IMPLS[@]}"; do
+		has "${i}" "${PYTHON_COMPAT[@]}" || continue
+
+		python_export "${i}" PYTHON_PKG_DEP
+
+		PYTHON_DEPS="${PYTHON_PKG_DEP} ${PYTHON_DEPS}"
 	done
 	PYTHON_DEPS="|| ( ${PYTHON_DEPS})"
 }

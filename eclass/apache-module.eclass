@@ -175,7 +175,7 @@ apache-module_src_install() {
 	debug-print-function $FUNCNAME $*
 
 	local CD_DIR=$(apache_cd_dir)
-	cd "${CD_DIR}" || die "cd ${CD_DIR} failed"
+	pushd "${CD_DIR}" >/dev/null || die "cd ${CD_DIR} failed"
 
 	local MOD_FILE=$(apache_mod_file)
 
@@ -206,6 +206,8 @@ apache-module_src_install() {
 		[[ -n "${OTHER_DOCS}" ]] && dodoc ${OTHER_DOCS}
 		[[ -n "${HTML_DOCS}" ]] && dohtml ${HTML_DOCS}
 	fi
+
+	popd >/dev/null
 }
 
 # @FUNCTION: apache-module_pkg_postinst

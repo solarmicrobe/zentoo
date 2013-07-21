@@ -1,8 +1,8 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # This is a common location for functions that aid the use of sys-libs/db
 #
-# Bugs: pauldv@gentoo.org
+# Bugs: maintainer-needed@gentoo.org
 
 inherit versionator multilib
 

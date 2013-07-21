@@ -9,7 +9,7 @@
 inherit vim-doc
 EXPORT_FUNCTIONS src_install pkg_postinst pkg_postrm
 
-VIM_PLUGIN_VIM_VERSION="${VIM_PLUGIN_VIM_VERSION:-7.0}"
+VIM_PLUGIN_VIM_VERSION="${VIM_PLUGIN_VIM_VERSION:-7.3}"
 
 DEPEND="|| ( >=app-editors/vim-${VIM_PLUGIN_VIM_VERSION}
 	>=app-editors/gvim-${VIM_PLUGIN_VIM_VERSION} )"

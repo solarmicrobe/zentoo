@@ -15,7 +15,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="+cxx jbig jpeg lzma static-libs zlib"
 
-RDEPEND="jpeg? ( virtual/jpeg:= )
+RDEPEND="jpeg? ( virtual/jpeg:0= )
 	jbig? ( media-libs/jbigkit:= )
 	lzma? ( app-arch/xz-utils:= )
 	zlib? ( sys-libs/zlib:= )"

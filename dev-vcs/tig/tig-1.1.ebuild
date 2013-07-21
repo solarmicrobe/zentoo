@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit bash-completion-r1
+inherit bash-completion-r1 toolchain-funcs
 
 DESCRIPTION="Tig: text mode interface for git"
 HOMEPAGE="http://jonas.nitro.dk/tig/"
@@ -15,9 +15,15 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-DEPEND="sys-libs/ncurses"
-RDEPEND="${DEPEND}
+CDEPEND="sys-libs/ncurses"
+DEPEND="${CDEPEND}
+	virtual/pkgconfig"
+RDEPEND="${CDEPEND}
 	dev-vcs/git"
+
+src_configure() {
+	econf CURSES_LIB="$($(tc-getPKG_CONFIG) --libs ncursesw)"
+}
 
 src_install() {
 	emake DESTDIR="${D}" install install-doc-man

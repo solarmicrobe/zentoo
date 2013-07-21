@@ -22,12 +22,13 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-fbsd.patch
+	eaclocal
 	eautoreconf
 }
 
 src_configure() {
 	# FreeBSD doesn't seem to support PIE neither does hppa
-	if use kernel_FreeBSD || use hppa; then
+	if use kernel_FreeBSD; then
 		export libc_cv_fpie="no"
 	fi
 

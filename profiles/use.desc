@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/use.desc,v 1.502 2013/06/01 15:48:26 kensington Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/use.desc,v 1.505 2013/07/21 10:40:45 pacho Exp $
 
 # Keep them sorted
 
@@ -53,6 +53,7 @@ cdr - Adds support for CD writer hardware
 cgi - Add CGI script support
 cjk - Adds support for Multi-byte character languages (Chinese, Japanese, Korean)
 clamav - Adds support for Clam AntiVirus software (usually with a plugin)
+connman - Add support for net-misc/connman
 coreaudio - Build the CoreAudio driver on Mac OS X systems
 cracklib - Support for cracklib strong password checking
 crypt - Add support for encryption -- using mcrypt or gpg where applicable
@@ -359,6 +360,7 @@ upnp - Enable UPnP port mapping support
 upnp-av - Enable UPnP audio/video streaming support
 usb - Adds USB support to applications that have optional USB support (e.g. cups)
 v4l - Enable support for video4linux (using linux-headers or userspace libv4l libraries)
+vala - Enable bindings for dev-lang/vala
 vanilla - Do not add extra patches which change default behaviour; DO NOT USE THIS ON A GLOBAL SCALE as the severity of the meaning changes drastically
 vcd - Video CD support
 vdpau - Enable the Video Decode and Presentation API for Unix acceleration interface
@@ -372,7 +374,6 @@ wavpack - Add support for wavpack audio compression tools
 wddx - Adds support for Web Distributed Data eXchange
 webkit - Add support for the WebKit HTML rendering/layout engine
 wifi - Enable wireless network functions
-win32codecs - use win32codecs package for dll avi decoding support (wmv and what not)
 wmf - Adds support for the Windows Metafile vector image format
 wxwidgets - Adds support for wxWidgets/wxGTK GUI toolkit
 x264 - Enable h264 encoding using x264

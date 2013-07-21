@@ -145,8 +145,6 @@ src_configure() {
 		my_conf="${my_conf} --release "
 	fi
 
-	use ppc64 && my_conf="${my_conf} --english-only" #263641
-
 	use qt4 && my_conf="${my_conf} --with-doxywizard"
 
 	# On non GNU userland (e.g. BSD), configure script picks up make and bails

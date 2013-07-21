@@ -45,8 +45,8 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch	"${FILESDIR}"/0001_"${P}"-configure.ac.patch
-	epatch	"${FILESDIR}/${PN}"-1.4.5-automake-1.11.2.patch
+	epatch	"${FILESDIR}"/${PN}-1.4.5-automake-1.11.2.patch
+	epatch	"${FILESDIR}"/${P}-configure.ac.patch
 
 	# bug 281694
 	# bug 456810

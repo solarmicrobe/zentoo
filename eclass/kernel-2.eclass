@@ -688,7 +688,6 @@ install_headers() {
 		emake headers_install INSTALL_HDR_PATH="${D}"/${ddir}/.. ${xmakeopts} || die
 
 		# let other packages install some of these headers
-		rm -rf "${D}"/${ddir}/sound #alsa-headers
 		rm -rf "${D}"/${ddir}/scsi  #glibc/uclibc/etc...
 		return 0
 	fi
@@ -814,7 +813,8 @@ postinst_sources() {
 	# optionally display security unsupported message
 	#  Start with why
 	if [[ ${K_SECURITY_UNSUPPORTED} = deblob ]]; then
-		ewarn "Deblobbed kernels are UNSUPPORTED by Gentoo Security."
+		ewarn "Deblobbed kernels may not be up-to-date security-wise"
+		ewarn "as they depend on external scripts."
 	elif [[ -n ${K_SECURITY_UNSUPPORTED} ]]; then
 		ewarn "${PN} is UNSUPPORTED by Gentoo Security."
 	fi

@@ -43,8 +43,8 @@
 # @ECLASS-VARIABLE: FORTRAN_NEEDED
 # @DESCRIPTION:
 # If your package has an optional fortran support, set this variable
-# to the space seperated list of USE triggering the fortran
-# dependence.
+# to the space separated list of USE triggering the fortran
+# dependency.
 #
 # e.g. FORTRAN_NEEDED=lapack would result in
 #
@@ -108,11 +108,13 @@ _fortran_compile_test() {
 	local fcode=${filebase}.f${fdia}
 	local ret
 
-	[[ $# -lt 1 ]] && die "_fortran_compile_test() needs at least one arguments"
+	[[ $# -lt 1 ]] && \
+		die "_fortran_compile_test() needs at least one argument"
 
 	[[ -f ${fcode} ]] || _fortran_write_testsuite
 
-	${fcomp} "${fcode}" -o "${fcode}.x" >> "${T}"/_fortran_compile_test.log 2>&1
+	${fcomp} "${fcode}" -o "${fcode}.x" \
+		>> "${T}"/_fortran_compile_test.log 2>&1
 	ret=$?
 
 	rm -f "${fcode}.x"
@@ -120,7 +122,7 @@ _fortran_compile_test() {
 }
 
 # @FUNCTION: _fortran-has-openmp
-# @RETURN: compilers return value
+# @RETURN: return code of the compiler
 # @INTERNAL
 # @DESCRIPTION:
 # See if the fortran supports OpenMP.
@@ -137,7 +139,8 @@ _fortran-has-openmp() {
 	EOF
 
 	for flag in -fopenmp -xopenmp -openmp -mp -omp -qsmp=omp; do
-		${_fc} ${flag} "${fcode}" -o "${fcode}.x" &>> "${T}"/_fortran_compile_test.log
+		${_fc} ${flag} "${fcode}" -o "${fcode}.x" \
+			&>> "${T}"/_fortran_compile_test.log
 		ret=$?
 		(( ${ret} )) || break
 	done
@@ -154,8 +157,8 @@ _fortran_die_msg() {
 	echo
 	eerror "Please install currently selected gcc version with USE=fortran."
 	eerror "If you intend to use a different compiler then gfortran, please"
-	eerror "set FC variable accordingly and take care that the neccessary"
-	eerror "fortran dialects are support."
+	eerror "set FC variable accordingly and take care that the necessary"
+	eerror "fortran dialects are supported."
 	echo
 	die "Currently no working fortran compiler is available"
 }
@@ -163,7 +166,8 @@ _fortran_die_msg() {
 # @FUNCTION: _fortran_test_function
 # @INTERNAL
 # @DESCRIPTION:
-# Internal testfunction for working fortran compiler. It is called in fortran-2_pkg_setup
+# Internal test function for working fortran compiler.
+# It is called in fortran-2_pkg_setup.
 _fortran_test_function() {
 	local dialect
 
@@ -172,9 +176,12 @@ _fortran_test_function() {
 	: ${FORTRAN_STANDARD:=77}
 	for dialect in ${FORTRAN_STANDARD}; do
 		case ${dialect} in
-			77) _fortran_compile_test $(tc-getF77) || _fortran_die_msg ;;
-			90|95) _fortran_compile_test $(tc-getFC) 90 || _fortran_die_msg ;;
-			2003) _fortran_compile_test $(tc-getFC) 03 || _fortran_die_msg ;;
+			77) _fortran_compile_test $(tc-getF77) || \
+				_fortran_die_msg ;;
+			90|95) _fortran_compile_test $(tc-getFC) 90 || \
+				_fortran_die_msg ;;
+			2003) _fortran_compile_test $(tc-getFC) 03 || \
+				_fortran_die_msg ;;
 			2008) die "Future" ;;
 			*) die "${dialect} is not a Fortran dialect." ;;
 		esac
@@ -194,10 +201,11 @@ _fortran_test_function() {
 	fi
 }
 
-# @FUNCTION: fortran-2_pkg_setup
+# @FUNCTION: _fortran-2_pkg_setup
+# @INTERNAL
 # @DESCRIPTION:
-# Setup functionallity, checks for a valid fortran compiler and optionally for its openmp support.
-fortran-2_pkg_setup() {
+# _The_ fortran-2_pkg_setup() code
+_fortran-2_pkg_setup() {
 	for _f_use in ${FORTRAN_NEEDED}; do
    	case ${_f_use} in
       	always)
@@ -219,7 +227,29 @@ fortran-2_pkg_setup() {
 	done
 }
 
+
+# @FUNCTION: fortran-2_pkg_setup
+# @DESCRIPTION:
+# Setup functionality,
+# checks for a valid fortran compiler and optionally for its openmp support.
+fortran-2_pkg_setup() {
+	case ${EAPI:-0} in
+		0|1|2|3)
+			eqawarn "Support for EAPI < 4 will be removed from the"
+			eqawarn "fortran-2.eclass in until 2013-09-30."
+			eqawarn "Please migrate your package to a higher EAPI"
+			eqawarn "or file a bug at https://bugs.gentoo.org"
+			_fortran-2_pkg_setup ;;
+		4|5)
+			if [[ ${MERGE_TYPE} != binary ]]; then
+				_fortran-2_pkg_setup
+			fi
+			;;
+	esac
+}
+
 case ${EAPI:-0} in
 	0|1|2|3|4|5) EXPORT_FUNCTIONS pkg_setup ;;
 	*) die "EAPI=${EAPI} is not supported" ;;
 esac
+

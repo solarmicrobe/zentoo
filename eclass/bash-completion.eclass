@@ -1,7 +1,7 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-# @DEPRECATED
+# DEPRECATED
 # This eclass has been superseded by bash-completion-r1 eclass.
 # Please modify your ebuilds to use that one instead.
 

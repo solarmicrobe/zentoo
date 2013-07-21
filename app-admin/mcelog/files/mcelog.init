@@ -8,7 +8,7 @@ description='Start/stop mcelog in daemon mode'
 PIDFILE="/var/run/mcelog.pid"
 
 depend() {
-	after udev
+	after udev 
 	need localmount
 	use logging
 }
@@ -18,8 +18,8 @@ start() {
 	start-stop-daemon \
 		--start \
 		--pidfile ${PIDFILE} \
-		--exec /usr/sbin/mcelog -- --daemon --pidfile ${PIDFILE} ${MCELOG_OPTS}
-	eend $?
+		--exec /usr/sbin/mcelog -- --daemon --pidfile ${PIDFILE} ${MCELOG_OPTS} 
+        eend $?
 }
 
 stop() {

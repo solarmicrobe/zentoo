@@ -24,8 +24,8 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch \
-	"${FILESDIR}"/0.80-impl-dec.patch \
-	"${FILESDIR}"/${P}-tinfo.patch
+		"${FILESDIR}"/0.80-impl-dec.patch \
+		"${FILESDIR}"/${PV}-tinfo.patch
 
 	# Keep this comment and following mv, even in case ebuild does not need
 	# it: kept gtk-2.0.m4 in SRC_URI but you'll have to mv it before autoreconf

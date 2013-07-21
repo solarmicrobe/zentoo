@@ -16,7 +16,7 @@ KEYWORDS="amd64"
 IUSE="doc lpsol pch static-libs test"
 
 RDEPEND=">=dev-libs/gmp-4.1.3[cxx]
-	lpsol? ( sci-mathematics/glpk )
+	lpsol? ( <=sci-mathematics/glpk-4.48 )
 	!<dev-libs/cloog-ppl-0.15.10"
 DEPEND="${RDEPEND}
 	sys-devel/m4"

@@ -29,7 +29,7 @@ COMMON_DEPEND="
 	)
 	curl? ( net-misc/curl )
 	jpeg? ( virtual/jpeg )
-	jpeg2k? ( media-libs/openjpeg )
+	jpeg2k? ( media-libs/openjpeg:0 )
 	lcms? ( media-libs/lcms:2 )
 	png? ( >=media-libs/libpng-1.4:0 )
 	qt4? (
@@ -101,11 +101,4 @@ src_install() {
 		insinto /usr/share/gtk-doc/html/poppler
 		doins -r "${S}"/glib/reference/html/*
 	fi
-}
-
-pkg_postinst() {
-	ewarn "After upgrading app-text/poppler you may need to reinstall packages"
-	ewarn "linking to it. For EAPI=5 subslot-capable packages this may be done"
-	ewarn "automatically. Anyway, if you're not a portage-2.2_rc user, you're advised"
-	ewarn "to run revdep-rebuild."
 }

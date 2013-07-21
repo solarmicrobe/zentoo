@@ -9,7 +9,7 @@
 # This eclass contains various functions that are used when building Qt4.
 
 case ${EAPI} in
-	3|4|5)	: ;;
+	4|5)	: ;;
 	*)	die "qt4-build.eclass: unsupported EAPI=${EAPI:-0}" ;;
 esac
 
@@ -35,7 +35,7 @@ case ${QT4_BUILD_TYPE} in
 		EGIT_BRANCH=${PV%.9999}
 		;;
 	release)
-		SRC_URI="http://releases.qt-project.org/qt4/source/${MY_P}.tar.gz"
+		SRC_URI="http://download.qt-project.org/official_releases/qt/${PV%.*}/${PV}/${MY_P}.tar.gz"
 		;;
 esac
 
@@ -100,6 +100,8 @@ qt4-build_src_unpack() {
 
 	if ! version_is_at_least 4.1 $(gcc-version); then
 		ewarn "Using a GCC version lower than 4.1 is not supported."
+	elif use_if_iuse c++0x && ! version_is_at_least 4.4 $(gcc-version); then
+		ewarn "USE=c++0x requires GCC 4.4 or later."
 	fi
 
 	if [[ ${CATEGORY}/${PN} == dev-qt/qtwebkit ]]; then
@@ -178,35 +180,25 @@ qt4-build_src_prepare() {
 		symlink_binaries_to_buildtree
 	fi
 
-	if [[ ${CHOST} == *86*-apple-darwin* ]]; then
-		# qmake bus errors with -O2 or -O3 but -O1 works
-		# Bug 373061
-		replace-flags -O[23] -O1
-	fi
-
-	# Bug 178652
-	if [[ $(gcc-major-version) == 3 ]] && use amd64; then
-		ewarn "Appending -fno-gcse to CFLAGS/CXXFLAGS"
-		append-flags -fno-gcse
-	fi
-
 	if use_if_iuse c++0x; then
 		append-cxxflags -std=c++0x
 	fi
 
-	# Unsupported old gcc versions - hardened needs this :(
-	if [[ $(gcc-major-version) -lt 4 ]]; then
-		ewarn "Appending -fno-stack-protector to CXXFLAGS"
-		append-cxxflags -fno-stack-protector
-		# Bug 253127
-		sed -e "/^QMAKE_CFLAGS\t/ s:$: -fno-stack-protector-all:" \
-			-i mkspecs/common/g++.conf || die
-	fi
-
 	# Bug 261632
 	if use ppc64; then
-		ewarn "Appending -mminimal-toc to CFLAGS/CXXFLAGS"
 		append-flags -mminimal-toc
+	fi
+
+	# Bug 373061
+	# qmake bus errors with -O2 or -O3 but -O1 works
+	if [[ ${CHOST} == *86*-apple-darwin* ]]; then
+		replace-flags -O[23] -O1
+	fi
+
+	# Bug 417105
+	# graphite on gcc 4.7 causes miscompilations
+	if [[ $(gcc-version) == "4.7" ]]; then
+		filter-flags -fgraphite-identity
 	fi
 
 	# Respect CC, CXX, {C,CXX,LD}FLAGS in .qmake.cache
@@ -551,8 +543,7 @@ build_directories() {
 			CXX="$(tc-getCXX)" \
 			LINK="$(tc-getCXX)" \
 			RANLIB=":" \
-			STRIP=":" \
-			|| die "emake failed"
+			STRIP=":"
 		popd >/dev/null || die
 	done
 }
@@ -565,7 +556,7 @@ build_directories() {
 install_directories() {
 	for x in "$@"; do
 		pushd "${S}"/${x} >/dev/null || die
-		emake INSTALL_ROOT="${D}" install || die "emake install failed"
+		emake INSTALL_ROOT="${D}" install
 		popd >/dev/null || die
 	done
 }
@@ -596,7 +587,7 @@ install_qconfigs() {
 			[[ -n ${!x} ]] && echo ${x}=${!x} >> "${T}"/${PN}-qconfig.pri
 		done
 		insinto ${QTDATADIR#${EPREFIX}}/mkspecs/gentoo
-		doins "${T}"/${PN}-qconfig.pri || die "installing ${PN}-qconfig.pri failed"
+		doins "${T}"/${PN}-qconfig.pri
 	fi
 
 	if [[ -n ${QCONFIG_DEFINE} ]]; then
@@ -604,7 +595,7 @@ install_qconfigs() {
 			echo "#define ${x}" >> "${T}"/gentoo-${PN}-qconfig.h
 		done
 		insinto ${QTHEADERDIR#${EPREFIX}}/Gentoo
-		doins "${T}"/gentoo-${PN}-qconfig.h || die "installing ${PN}-qconfig.h failed"
+		doins "${T}"/gentoo-${PN}-qconfig.h
 	fi
 }
 
@@ -804,10 +795,9 @@ qt_mkspecs_dir() {
 # @FUNCTION: qt_nolibx11
 # @INTERNAL
 # @DESCRIPTION:
-# Ignore X11 tests for packages that don't need X libraries installed.
+# Skip X11 tests for packages that don't need X libraries installed.
 qt_nolibx11() {
-	sed -i "/unixtests\/compile.test.*config.tests\/x11\/xlib/,/fi$/d" "${S}"/configure ||
-		die "x11 check sed failed"
+	sed -i -e '/^if.*PLATFORM_X11.*CFG_GUI/,/^fi$/d' "${S}"/configure || die
 }
 
 EXPORT_FUNCTIONS pkg_setup src_unpack src_prepare src_configure src_compile src_install src_test pkg_postrm pkg_postinst

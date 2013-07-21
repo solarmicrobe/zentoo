@@ -23,7 +23,10 @@ RDEPEND="virtual/libiconv
 	sys-libs/zlib
 	|| (
 		>=dev-libs/elfutils-0.142
-		>=dev-libs/libelf-0.8.12 )
+		>=dev-libs/libelf-0.8.12
+		>=sys-freebsd/freebsd-lib-9.2_rc1
+		)
+	selinux? ( sys-libs/libselinux )
 	xattr? ( sys-apps/attr )
 	fam? ( virtual/fam )
 	utils? ( >=dev-util/gdbus-codegen-${PV} )"

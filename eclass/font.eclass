@@ -53,8 +53,7 @@ IUSE="X"
 DEPEND="X? (
 		x11-apps/mkfontdir
 		media-fonts/encodings
-	)
-	>=media-libs/fontconfig-2.4.0"
+	)"
 RDEPEND=""
 
 # @FUNCTION: font_xfont_config
@@ -214,6 +213,8 @@ font_pkg_postinst() {
 		ebegin "Updating global fontcache"
 		fc-cache -fs
 		eend $?
+	else
+		einfo "Skipping fontcache update (media-libs/fontconfig is not installed or ROOT != /)"
 	fi
 }
 
@@ -231,5 +232,7 @@ font_pkg_postrm() {
 		ebegin "Updating global fontcache"
 		fc-cache -fs
 		eend $?
+	else
+		einfo "Skipping fontcache update (media-libs/fontconfig is not installed or ROOT != /)"
 	fi
 }

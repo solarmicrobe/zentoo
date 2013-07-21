@@ -66,11 +66,7 @@ inherit multibuild python-utils-r1
 # PYTHON_COMPAT=( python{2_5,2_6,2_7} )
 # @CODE
 if ! declare -p PYTHON_COMPAT &>/dev/null; then
-	if [[ ${CATEGORY}/${PN} == dev-python/python-exec ]]; then
-		PYTHON_COMPAT=( "${_PYTHON_ALL_IMPLS[@]}" )
-	else
-		die 'PYTHON_COMPAT not declared.'
-	fi
+	die 'PYTHON_COMPAT not declared.'
 fi
 
 # @ECLASS-VARIABLE: PYTHON_COMPAT_OVERRIDE
@@ -99,6 +95,8 @@ fi
 # implementations, formed as a USE-dependency string. It should be valid
 # for all implementations in PYTHON_COMPAT, so it may be necessary to
 # use USE defaults.
+#
+# This should be set before calling `inherit'.
 #
 # Example:
 # @CODE

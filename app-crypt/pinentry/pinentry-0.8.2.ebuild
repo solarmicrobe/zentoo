@@ -44,6 +44,7 @@ src_prepare() {
 		done
 	fi
 	epatch "${FILESDIR}/${P}-ncurses.patch"
+	epatch "${FILESDIR}/${P}-texi.patch"
 	sed -i 's/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/g' configure.ac || die
 	eautoreconf
 }

@@ -1,10 +1,9 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=5
-
-PYTHON_COMPAT=( python2_7 )
+EAPI="5"
+PYTHON_COMPAT=( python{2_6,2_7} pypy{1_9,2_0} )
 
 inherit distutils-r1
 
@@ -17,9 +16,18 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="test vies"
 
-RDEPEND="vies? ( dev-python/suds[${PYTHON_USEDEP}] )"
+RDEPEND="vies? ( dev-python/suds )"
 DEPEND="${RDEPEND}
 	dev-python/setuptools[${PYTHON_USEDEP}]
-	test? ( dev-python/suds[${PYTHON_USEDEP}] )"
+	test? ( dev-python/suds )"
 
-DOCS=( COPYRIGHT README CHANGELOG )
+PARCHES=( "${FILESDIR}"/${P}-skiptest.patch )
+
+python_test() {
+	esetup.py test
+}
+
+src_install() {
+	distutils-r1_src_install
+	dodoc COPYRIGHT README CHANGELOG
+}

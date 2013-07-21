@@ -8,6 +8,6 @@ inherit vim-plugin
 
 DESCRIPTION="vim plugin: Nginx configuration files syntax"
 HOMEPAGE="http://www.vim.org/scripts/script.php?script_id=1886"
-LICENSE="vim.org"
+LICENSE="vim"
 KEYWORDS="amd64"
 IUSE=""

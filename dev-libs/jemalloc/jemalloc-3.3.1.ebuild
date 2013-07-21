@@ -34,5 +34,12 @@ src_install() {
 	default
 	dohtml doc/jemalloc.html
 
-	use static-libs || find "${ED}" -name '*.a' -delete
+	if [[ ${CHOST} == *-darwin* ]] ; then
+		# fixup install_name, #437362
+		install_name_tool \
+			-id "${EPREFIX}"/usr/$(get_libdir)/libjemalloc.1.dylib \
+			"${ED}"/usr/$(get_libdir)/libjemalloc.1.dylib || die
+	fi
+
+	use static-libs || find "${D}" -name '*.a' -delete
 }

@@ -172,16 +172,28 @@ BYTECOMPFLAGS="-L ."
 # Output version of currently active Emacs.
 
 elisp-emacs-version() {
-	local ret
+	local version ret
 	# The following will work for at least versions 18-24.
 	echo "(princ emacs-version)" >"${T}"/emacs-version.el
-	${EMACS} ${EMACSFLAGS} -l "${T}"/emacs-version.el
+	version=$(
+		# EMACS could be a microemacs variant that ignores the -batch
+		# option and would therefore hang, waiting for user interaction.
+		# Redirecting stdin and unsetting TERM and DISPLAY will cause
+		# most of them to exit with an error.
+		unset TERM DISPLAY
+		${EMACS} ${EMACSFLAGS} -l "${T}"/emacs-version.el </dev/null
+	)
 	ret=$?
 	rm -f "${T}"/emacs-version.el
 	if [[ ${ret} -ne 0 ]]; then
 		eerror "elisp-emacs-version: Failed to run ${EMACS}"
+		return ${ret}
 	fi
-	return ${ret}
+	if [[ -z ${version} ]]; then
+		eerror "elisp-emacs-version: Could not determine Emacs version"
+		return 1
+	fi
+	echo "${version}"
 }
 
 # @FUNCTION: elisp-need-emacs
