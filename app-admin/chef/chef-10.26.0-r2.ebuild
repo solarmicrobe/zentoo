@@ -54,6 +54,7 @@ each_ruby_prepare() {
 	ruby_fakegem_metadata_gemspec ../metadata ${RUBY_FAKEGEM_GEMSPEC}
 
 	epatch "${FILESDIR}"/rubygems-2.0.patch
+	epatch "${FILESDIR}"/run_lock.patch
 
 	# bunny
 	sed -i -e 's/"< 0.8.0", //' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
