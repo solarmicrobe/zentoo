@@ -26,6 +26,8 @@ dev-python
 dev-qt
 dev-ruby
 dev-scheme
+dev-tex
+dev-texlive
 dev-util
 dev-vcs
 gnome-base

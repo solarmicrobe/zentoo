@@ -108,7 +108,7 @@ _python_implementation() {
 		return 0
 	elif [[ "${CATEGORY}/${PN}" == "dev-java/jython" ]]; then
 		return 0
-	elif [[ "${CATEGORY}/${PN}" == "dev-python/pypy" ]]; then
+	elif [[ "${CATEGORY}/${PN}" == "virtual/pypy" ]]; then
 		return 0
 	else
 		return 1
@@ -2053,7 +2053,7 @@ python_get_implementational_package() {
 		elif [[ "$(_python_get_implementation "${PYTHON_ABI}")" == "Jython" ]]; then
 			echo "=dev-java/jython-${PYTHON_ABI%-jython}*"
 		elif [[ "$(_python_get_implementation "${PYTHON_ABI}")" == "PyPy" ]]; then
-			echo "=dev-python/pypy-${PYTHON_ABI#*-pypy-}*"
+			echo "=virtual/pypy-${PYTHON_ABI#*-pypy-}*"
 		fi
 	else
 		if [[ "$(_python_get_implementation "${PYTHON_ABI}")" == "CPython" ]]; then
@@ -2061,7 +2061,7 @@ python_get_implementational_package() {
 		elif [[ "$(_python_get_implementation "${PYTHON_ABI}")" == "Jython" ]]; then
 			echo "dev-java/jython:${PYTHON_ABI%-jython}"
 		elif [[ "$(_python_get_implementation "${PYTHON_ABI}")" == "PyPy" ]]; then
-			echo "dev-python/pypy:${PYTHON_ABI#*-pypy-}"
+			echo "virtual/pypy:${PYTHON_ABI#*-pypy-}"
 		fi
 	fi
 }

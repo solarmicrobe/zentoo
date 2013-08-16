@@ -3,6 +3,7 @@ app-admin/syslog-ng dbi json smtp sql
 app-backup/duplicity s3
 app-emulation/qemu tls usbredir 
 app-emulation/virtualbox vboxwebsrv
+app-text/texlive-core X xetex
 dev-java/ant testutil
 dev-java/icedtea alsa systemtap pax_kernel webstart
 dev-lang/ghc ghcbootstrap
