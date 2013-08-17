@@ -6,7 +6,8 @@ app-emulation/qemu tls usbredir xen
 app-emulation/virtualbox vboxwebsrv
 app-text/texlive-core X xetex
 dev-java/ant testutil
-dev-java/icedtea alsa systemtap pax_kernel webstart
+dev-java/icedtea X alsa systemtap pax_kernel webstart
+dev-java/icedtea-bin X alsa systemtap pax_kernel webstart
 dev-lang/ghc ghcbootstrap
 dev-lang/php sqlite
 dev-libs/gecode gist
@@ -31,7 +32,6 @@ net-libs/libpcap canusb
 net-libs/zeromq pgm
 net-mail/dovecot lucene
 net-misc/curl metalink rtmp ssh
-net-print/cups filters
 sys-apps/systemd http qrcode
 sys-firmware/ipxe iso
 sys-fs/btrfs-progs debug-utils
@@ -52,7 +52,6 @@ dev-python/imaging X
 media-gfx/imagemagick X
 media-libs/giflib X
 media-libs/t1lib X
-net-print/cups X
 net-analyzer/net-snmp X
 net-misc/openssh X
 sys-apps/groff X

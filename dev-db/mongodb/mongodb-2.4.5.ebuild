@@ -21,7 +21,7 @@ IUSE="kerberos mms-agent sharedclient spidermonkey ssl static-libs"
 
 PDEPEND="mms-agent? ( dev-python/pymongo app-arch/unzip )"
 RDEPEND="
-	!spidermonkey? ( <dev-lang/v8-3.19 )
+	<dev-lang/v8-3.19
 	>=dev-libs/boost-1.50[threads(+)]
 	dev-libs/libpcre[cxx]
 	dev-util/google-perftools
@@ -93,9 +93,9 @@ src_install() {
 	doman debian/mongo*.1
 	dodoc README docs/building.md
 
-	newinitd "${FILESDIR}/${PN}.initd-r1" ${PN}
+	newinitd "${FILESDIR}/${PN}.initd" ${PN}
 	newconfd "${FILESDIR}/${PN}.confd" ${PN}
-	newinitd "${FILESDIR}/${PN/db/s}.initd-r1" ${PN/db/s}
+	newinitd "${FILESDIR}/${PN/db/s}.initd" ${PN/db/s}
 	newconfd "${FILESDIR}/${PN/db/s}.confd" ${PN/db/s}
 
 	insinto /etc/logrotate.d/
