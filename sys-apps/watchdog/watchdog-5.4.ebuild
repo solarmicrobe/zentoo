@@ -2,7 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit eutils
+EAPI=5
+inherit eutils systemd
 
 DESCRIPTION="A software watchdog"
 HOMEPAGE="http://sourceforge.net/projects/watchdog/"
@@ -29,7 +30,9 @@ src_install() {
 	emake DESTDIR="${D}" install || die "make install failed"
 
 	newconfd "${FILESDIR}"/${PN}-conf.d ${PN}
-	newinitd "${FILESDIR}"/${PN}-init.d ${PN}
+#	newinitd "${FILESDIR}"/${PN}-init.d ${PN}
+	systemd_dounit "${FILESDIR}"/${PN}.service
+	systemd_enable_service multi-user "${PN}".service
 
 	dodoc AUTHORS README TODO NEWS ChangeLog
 	docinto examples
