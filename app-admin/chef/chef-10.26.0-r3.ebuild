@@ -58,6 +58,8 @@ each_ruby_prepare() {
 
 	# bunny
 	sed -i -e 's/"< 0.8.0", //' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
+	# json
+	sed -i -e 's/"<= 1.7.7", //' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
 }
 
 all_ruby_install() {
