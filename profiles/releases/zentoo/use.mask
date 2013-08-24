@@ -219,6 +219,7 @@ openct
 openexr
 opengl
 openntpd
+openrc
 oracle
 osc
 oscar
