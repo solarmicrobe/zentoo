@@ -2,7 +2,7 @@
 app-admin/syslog-ng dbi json smtp sql
 app-backup/duplicity s3
 app-editors/joe xterm
-app-emulation/libvirt numa openvz xen virt-network firewalld qemu
+app-emulation/libvirt numa openvz xen virt-network firewalld qemu macvtap vepa
 app-emulation/qemu tls usbredir xen
 app-emulation/virtualbox vboxwebsrv
 app-text/texlive-core X xetex
