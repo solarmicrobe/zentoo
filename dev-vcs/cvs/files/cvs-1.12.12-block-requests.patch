@@ -1,6 +1,5 @@
 Author: Robin H. Johnson <robbat2@gentoo.org>
-Original-Date: 2006-08-09
-Forward-Port-Date: 2007-12-06
+Date: 2006-08-09
 
 This patch allows a CVS server to deny usage of specific commands, based on
 input in the environment.
@@ -20,10 +19,17 @@ See the companion cvs-custom.c for a wrapper that can enforce the environment va
 
 Signed-off-by: Robin H. Johnson <robbat2@gentoo.org>
 
-diff -Nuar cvs-1.12.13.1.orig/src/server.c cvs-1.12.13.1/src/server.c
---- cvs-1.12.13.1.orig/src/server.c	2006-06-21 11:55:21.000000000 -0700
-+++ cvs-1.12.13.1/src/server.c	2007-12-06 16:25:38.109309990 -0800
-@@ -6244,6 +6244,49 @@
+diff -Nuar --exclude '*~' -U 10 cvs-1.12.12.orig/src/server.c cvs-1.12.12/src/server.c
+--- cvs-1.12.12.orig/src/server.c	2005-04-14 14:13:29.000000000 +0000
++++ cvs-1.12.12/src/server.c	2006-08-09 01:40:44.000000000 +0000
+@@ -5836,43 +5836,90 @@
+ #undef REQ_LINE
+ };
+ #endif /* SERVER_SUPPORT or CLIENT_SUPPORT */
+ 
+ 
+ 
+ #ifdef SERVER_SUPPORT
  /*
   * This server request is not ignored by the secondary.
   */
@@ -73,12 +79,23 @@ diff -Nuar cvs-1.12.13.1.orig/src/server.c cvs-1.12.13.1/src/server.c
  static void
  serve_valid_requests (char *arg)
  {
-@@ -6262,11 +6305,15 @@
+     struct request *rq;
+ 
+     /* Since this is processed in the first pass, don't reprocess it in the
+      * second.
+      *
+      * We still print errors since new errors could have been generated in the
+      * second pass.
+      */
+     if (print_pending_error ()
+ #ifdef PROXY_SUPPORT
+ 	|| reprocessing
+ #endif /* PROXY_SUPPORT */
         )
  	return;
- 
++	
 +    build_blocked_requests();
-+
+ 
      buf_output0 (buf_to_net, "Valid-requests");
      for (rq = requests; rq->name != NULL; rq++)
      {
@@ -89,13 +106,35 @@ diff -Nuar cvs-1.12.13.1.orig/src/server.c cvs-1.12.13.1/src/server.c
  	    buf_append_char (buf_to_net, ' ');
  	    buf_output0 (buf_to_net, rq->name);
  	}
-@@ -6706,6 +6753,9 @@
+     }
+     buf_output0 (buf_to_net, "\nok\n");
+ 
+     /* The client is waiting for the list of valid requests, so we
+        must send the output now.  */
+     buf_flush (buf_to_net, 1);
+ }
+@@ -6353,20 +6400,24 @@
+ 		    cmd += len;
+ 		else if (cmd[len] == ' ')
+ 		    cmd += len + 1;
+ 		else
+ 		    /*
+ 		     * The first len characters match, but it's a different
+ 		     * command.  e.g. the command is "cooperate" but we matched
  		     * "co".
  		     */
  		    continue;
 +		// Ignore commands that we are supposed to ignore.
 +		if(serve_valid_requests_checker(rq->name))
-+			continue;
++				continue;
++
  
  		if (!(rq->flags & RQ_ROOTLESS)
  		    && current_parsed_root == NULL)
+ 		{
+ 		    /* For commands which change the way in which data
+ 		       is sent and received, for example Gzip-stream,
+ 		       this does the wrong thing.  Since the client
+ 		       assumes that everything is being compressed,
+ 		       unconditionally, there is no way to give this
+ 		       error to the client without turning on
