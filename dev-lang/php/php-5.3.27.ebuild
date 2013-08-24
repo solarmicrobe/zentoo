@@ -256,7 +256,7 @@ php_install_ini() {
 	# SAPI-specific handling
 
 	if [[ "${sapi}" == "fpm" ]] ; then
-        [[ -z ${PHP_FPM_CONF_VER} ]] && PHP_FPM_CONF_VER=0
+		[[ -z ${PHP_FPM_CONF_VER} ]] && PHP_FPM_CONF_VER=0
 		einfo "Installing FPM CGI config file php-fpm.conf"
 		insinto "${PHP_INI_DIR#${EPREFIX}}"
 		newins "${FILESDIR}/php-fpm-r${PHP_FPM_CONF_VER}.conf" php-fpm.conf
@@ -402,7 +402,7 @@ src_configure() {
 		my_conf+=" $(use_with sqlite sqlite /usr) "
 		use sqlite && my_conf+=" $(use_enable unicode sqlite-utf8)"
 	fi
-    my_conf+="
+	my_conf+="
 	$(use_with sqlite sqlite3 /usr)
 	$(use_with sybase-ct sybase-ct /usr)
 	$(use_enable sysvipc sysvmsg )
@@ -551,9 +551,9 @@ src_configure() {
 	my_conf="${my_conf} --with-pcre-regex=/usr --with-pcre-dir=/usr"
 
 	# Catch CFLAGS problems
-    # Fixes bug #14067.
-    # Changed order to run it in reverse for bug #32022 and #12021.
-    replace-cpu-flags "k6*" "i586"
+	# Fixes bug #14067.
+	# Changed order to run it in reverse for bug #32022 and #12021.
+	replace-cpu-flags "k6*" "i586"
 
 	# Support user-passed configuration parameters
 	my_conf="${my_conf} ${EXTRA_ECONF:-}"
@@ -806,4 +806,3 @@ pkg_postinst() {
 pkg_prerm() {
 	eselect php cleanup
 }
-

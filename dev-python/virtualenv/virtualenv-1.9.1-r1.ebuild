@@ -3,7 +3,8 @@
 # $Header: $
 
 EAPI="5"
-PYTHON_COMPAT=( python{2_5,2_6,2_7,3_1,3_2,3_3} pypy{1_9,2_0} )
+
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} pypy{1_9,2_0} )
 
 inherit distutils-r1 vcs-snapshot
 
@@ -38,6 +39,7 @@ python_compile_all() {
 }
 
 python_install_all() {
+	distutils-r1_python_install_all
 	use doc && dohtml -r docs/_build/html/
 }
 

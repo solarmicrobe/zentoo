@@ -25,6 +25,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-4.0.3-tiff2pdf-colors.patch #145055
 	epatch "${FILESDIR}"/${P}-CVE-2012-{4447,4564}.patch #440944
 	epatch "${FILESDIR}"/${P}-CVE-2013-{1960,1961}.patch #468334
+	epatch "${FILESDIR}"/${P}-CVE-2013-{4231,4232}.patch #480466
 	epatch "${FILESDIR}"/${P}-libjpeg-turbo.patch
 
 	elibtoolize

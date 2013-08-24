@@ -4,7 +4,7 @@
 
 EAPI="4"
 
-inherit eutils versionator
+inherit eutils systemd versionator
 
 # Select version (stable, RC, Beta):
 MY_PV_TREE=$(get_version_component_range 1-2)   # for devel versions use "development/$(get_version_component_range 1-2)"
@@ -43,6 +43,7 @@ src_install() {
 	cd "${WORKDIR}/${P}"
 	DESTDIR="${D}" ./install.sh "${FILESDIR}"/shorewallrc_new || die "install.sh failed"
 	newinitd "${FILESDIR}"/shorewall.initd shorewall
+	systemd_newunit "${FILESDIR}"/shorewall.systemd 'shorewall.service' || die
 
 	dodoc changelog.txt releasenotes.txt
 	if use doc; then
@@ -50,5 +51,4 @@ src_install() {
 		cd "${WORKDIR}/${MY_P_DOCS}"
 		dohtml -r *
 	fi
-	dodir /var/lock/subsys
 }

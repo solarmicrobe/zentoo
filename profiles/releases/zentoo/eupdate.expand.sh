@@ -3,7 +3,8 @@
 case $1 in
 app-admin/eselect-php)                   echo "=$1-0.7.1";;
 app-admin/syslog-ng)                     echo "=$1-3.4.2";;
-app-editors/vim*)                        echo "=$1-7.3.905";;
+app-arch/xz-utils)                       echo "=$1-5.0.5-r1";;
+app-editors/vim*)                        echo "=$1-7.3.1214";;
 app-emulation/vagrant)                   echo "=$1-1.2.4";;
 app-emulation/virtualbox*)               echo "=$1-4.2.16";;
 app-misc/tmux)                           echo "=$1-1.8";;
@@ -36,6 +37,7 @@ dev-lang/php)                            echo "=$1-5.3.27"
 dev-lang/python)                         echo "=$1-2.7.5";;
 dev-lang/ruby)                           echo "=$1-1.9.3_p448"
                                          echo "=$1-2.0.0_p247";;
+dev-lang/v8)                             echo "=$1-3.18.5.14";;
 dev-libs/openssl)                        echo "=$1-0.9.8x"
                                          echo "$1";;
 dev-libs/libpcre)                        echo "=$1-8.32-r1";;
@@ -82,7 +84,6 @@ dev-ruby/rubygems)                       echo "=$1-1.8.25"
 dev-ruby/tilt)                           echo "=$1-1.4.1";;
 dev-util/boost-build)                    echo "=$1-1.52.0-r1";;
 dev-util/google-perftools)               echo "=$1-2.0-r2";;
-dev-vcs/cvs)                             echo "=$1-1.12.13.1";;
 java-virtuals/servlet-api)               echo "=$1-2.3"
                                          echo "=$1-2.5-r1";;
 media-gfx/pydot)                         echo "=$1-1.0.28-r1";;
@@ -93,7 +94,11 @@ net-misc/dhcp)                           echo "=$1-4.2.4_p2-r1";;
 net-misc/dhcpcd)                         echo "=$1-6.0.3";;
 net-nds/openldap)                        echo "=$1-2.4.33-r1";;
 sys-apps/dbus)                           echo "=$1-1.6.8-r1";;
+sys-apps/hwids)                          echo "=$1-20130717-r1";;
+sys-apps/kmod)                           echo "=$1-14-r2";;
+sys-apps/openrc)                         echo "=$1-0.12";;
 sys-apps/shadow)                         echo "=$1-4.1.5.1-r1";;
+sys-apps/systemd)                        echo "=$1-206-r3";;
 sys-apps/watchdog)                       echo "=$1-5.13-r1";;
 sys-auth/pambase)                        echo "=$1-20120417-r1";;
 sys-boot/grub)                           echo "=$1-2.00-r1";;
@@ -118,6 +123,7 @@ virtual/perl-ExtUtils-CBuilder)          echo "=$1-0.280.205";;
 virtual/ruby-*)                          echo "=$1-1";;
 virtual/rubygems)                        echo "=$1-4"
                                          echo "=$1-6";;
+virtual/udev)                            echo "=$1-206-r2";;
 www-servers/nginx)                       echo "=$1-1.4.1-r5";;
 x11-libs/gtk+)                           echo "=$1-2.24.17";;
 *)                                       echo $1;;

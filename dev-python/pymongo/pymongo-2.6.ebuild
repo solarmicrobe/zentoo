@@ -42,8 +42,6 @@ pkg_setup() {
 	reqcheck pkg_setup
 }
 
-PATCHES=( "${FILESDIR}"/${PN}-2.5.1-greenlet.patch )
-
 python_compile_all() {
 	if use doc; then
 		mkdir html || die

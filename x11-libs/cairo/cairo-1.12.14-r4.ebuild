@@ -2,37 +2,43 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=3
+EAPI=5
 
-EGIT_REPO_URI="git://anongit.freedesktop.org/git/cairo"
-[[ ${PV} == *9999 ]] && GIT_ECLASS="git"
+inherit eutils flag-o-matic autotools
 
-inherit eutils flag-o-matic autotools ${GIT_ECLASS}
+if [[ ${PV} == *9999* ]]; then
+	inherit git-2
+	EGIT_REPO_URI="git://anongit.freedesktop.org/git/cairo"
+	SRC_URI=""
+	KEYWORDS=""
+else
+	SRC_URI="http://cairographics.org/releases/${P}.tar.xz"
+	KEYWORDS="amd64"
+fi
 
 DESCRIPTION="A vector graphics library with cross-device output support"
 HOMEPAGE="http://cairographics.org/"
-[[ ${PV} == *9999 ]] || SRC_URI="http://cairographics.org/releases/${P}.tar.gz"
-
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
-KEYWORDS="amd64"
-IUSE="X aqua debug directfb doc drm gallium +glib opengl openvg qt4 static-libs +svg xcb"
+IUSE="X aqua debug directfb doc drm gallium gles2 +glib legacy-drivers opengl openvg qt4 static-libs +svg valgrind xcb xlib-xcb"
 
 # Test causes a circular depend on gtk+... since gtk+ needs cairo but test needs gtk+ so we need to block it
 RESTRICT="test"
 
 RDEPEND="media-libs/fontconfig
 	media-libs/freetype:2
-	media-libs/libpng:0
+	media-libs/libpng:0=
 	sys-libs/zlib
-	>=x11-libs/pixman-0.18.4
+	>=x11-libs/pixman-0.28.0
 	directfb? ( dev-libs/DirectFB )
-	glib? ( dev-libs/glib:2 )
+	gles2? ( media-libs/mesa[gles2] )
+	glib? ( >=dev-libs/glib-2.28.6:2 )
 	opengl? ( || ( media-libs/mesa[egl] media-libs/opengl-apple ) )
-	openvg? ( media-libs/mesa[gallium] )
+	openvg? ( media-libs/mesa[openvg] )
 	qt4? ( >=dev-qt/qtgui-4.8:4 )
 	X? (
 		>=x11-libs/libXrender-0.6
+		x11-libs/libXext
 		x11-libs/libX11
 		drm? (
 			>=virtual/udev-136
@@ -58,14 +64,22 @@ DEPEND="${RDEPEND}
 		)
 	)"
 
+# drm module requires X
+# for gallium we need to enable drm
+REQUIRED_USE="
+	drm? ( X )
+	gallium? ( drm )
+	gles2? ( !opengl )
+	openvg? ( || ( gles2 opengl ) )
+	xlib-xcb? ( xcb )
+"
+
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.8.8-interix.patch
-	epatch "${FILESDIR}"/${PN}-1.10.0-buggy_gradients.patch
-	epatch "${FILESDIR}"/${P}-interix.patch
-	epatch "${FILESDIR}"/${P}-qt-surface.patch
-	epatch "${FILESDIR}"/${P}-export-symbols.patch
-	epatch "${FILESDIR}"/${P}-ubuntu.patch
+	use legacy-drivers && epatch "${FILESDIR}"/${PN}-1.10.0-buggy_gradients.patch
 	epatch "${FILESDIR}"/${PN}-respect-fontconfig.patch
+	epatch "${FILESDIR}"/${PN}-1.12.12-disable-test-suite.patch
+	epatch "${FILESDIR}"/${PN}-1.12.14-libpng16.patch
 	epatch_user
 
 	# Slightly messed build system YAY
@@ -83,60 +97,23 @@ src_prepare() {
 src_configure() {
 	local myopts
 
-	# SuperH doesn't have native atomics yet
-	use sh && myopts+=" --disable-atomic"
-
 	[[ ${CHOST} == *-interix* ]] && append-flags -D_REENTRANT
-
-	# tracing fails to compile, because Solaris' libelf doesn't do large files
-	[[ ${CHOST} == *-solaris* ]] && myopts+=" --disable-trace"
-
-	# 128-bits long arithemetic functions are missing
-	[[ ${CHOST} == powerpc*-*-darwin* ]] && filter-flags -mcpu=*
-
-	#gets rid of fbmmx.c inlining warnings
-	append-flags -finline-limit=1200
-
-	if use X; then
-		myopts+="
-			--enable-tee=yes
-			$(use_enable drm)
-		"
-
-		if use drm; then
-			myopts+="
-				$(use_enable gallium)
-				$(use_enable xcb xcb-drm)
-			"
-		else
-			use gallium && ewarn "Gallium use requires drm use enabled. So disabling for now."
-			myopts+="
-				--disable-gallium
-				--disable-xcb-drm
-			"
-		fi
-	else
-		use drm && ewarn "drm use requires X use enabled. So disabling for now."
-		myopts+="
-			--disable-drm
-			--disable-gallium
-			--disable-xcb-drm
-		"
-	fi
 
 	use elibc_FreeBSD && myopts+=" --disable-symbol-lookup"
 
-	# --disable-xcb-lib:
-	#	do not override good xlib backed by hardforcing rendering over xcb
 	econf \
 		--disable-dependency-tracking \
 		$(use_with X x) \
+		$(use_enable X tee) \
 		$(use_enable X xlib) \
 		$(use_enable X xlib-xrender) \
 		$(use_enable aqua quartz) \
 		$(use_enable aqua quartz-image) \
 		$(use_enable debug test-surfaces) \
+		$(use_enable drm) \
 		$(use_enable directfb) \
+		$(use_enable gallium) \
+		$(use_enable gles2 glesv2) \
 		$(use_enable glib gobject) \
 		$(use_enable doc gtk-doc) \
 		$(use_enable openvg vg) \
@@ -144,19 +121,32 @@ src_configure() {
 		$(use_enable qt4 qt) \
 		$(use_enable static-libs static) \
 		$(use_enable svg) \
+		$(use_enable valgrind) \
 		$(use_enable xcb) \
 		$(use_enable xcb xcb-shm) \
+		$(use_enable xlib-xcb) \
 		--enable-ft \
 		--enable-pdf \
 		--enable-png \
 		--enable-ps \
-		--disable-xlib-xcb \
 		${myopts}
 }
 
 src_install() {
 	# parallel make install fails
-	emake -j1 DESTDIR="${D}" install || die
+	emake -j1 DESTDIR="${D}" install
 	find "${ED}" -name '*.la' -exec rm -f {} +
-	dodoc AUTHORS ChangeLog NEWS README || die
+	dodoc AUTHORS ChangeLog NEWS README
+}
+
+pkg_postinst() {
+	if use !xlib-xcb; then
+		if has_version net-misc/nxserver-freenx \
+				|| has_version net-misc/x2goserver; then
+			ewarn "cairo-1.12 is known to cause GTK+ errors with NX servers."
+			ewarn "Enable USE=\"xlib-xcb\" if you notice incorrect behavior in GTK+"
+			ewarn "applications that are running inside NX sessions. For details, see"
+			ewarn "https://bugs.gentoo.org/441878 or https://bugs.freedesktop.org/59173"
+		fi
+	fi
 }

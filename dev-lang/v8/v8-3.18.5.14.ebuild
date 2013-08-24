@@ -46,7 +46,7 @@ src_configure() {
 			fi ;;
 		arm*-*)
 			myarch="arm"
-			myconf+=" -Dv8_target_arch=arm -Darm_fpu="
+			myconf+=" -Dv8_target_arch=arm -Darm_fpu=default"
 			if [[ ${CHOST} == *-hardfloat-* ]] ; then
 				myconf+=" -Dv8_use_arm_eabi_hardfloat=true"
 			else

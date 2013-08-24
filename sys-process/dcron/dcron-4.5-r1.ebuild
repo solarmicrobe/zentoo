@@ -1,10 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI=4
 
-inherit cron toolchain-funcs eutils
+inherit cron toolchain-funcs eutils systemd
 
 DESCRIPTION="A cute little cron from Matt Dillon"
 HOMEPAGE="http://www.jimpryor.net/linux/dcron.html http://apollo.backplane.com/FreeSrc/"
@@ -26,7 +26,7 @@ src_prepare() {
 }
 
 src_install() {
-	emake install DESTDIR="${D}" || die
+	emake install DESTDIR="${D}"
 	dodoc CHANGELOG README "${FILESDIR}"/crontab
 
 	docrondir
@@ -34,13 +34,14 @@ src_install() {
 	docrontab
 
 	insinto /etc
-	doins "${FILESDIR}"/crontab || die
+	doins "${FILESDIR}"/crontab
 	insinto /etc/cron.d
-	doins extra/prune-cronstamps || die
+	doins extra/prune-cronstamps
 	dodoc extra/run-cron extra/root.crontab
 
-	newinitd "${FILESDIR}"/dcron.init-4.5 dcron || die
+	newinitd "${FILESDIR}"/dcron.init-4.5 dcron
 	newconfd "${FILESDIR}"/dcron.confd-4.4 dcron
+	systemd_dounit "${FILESDIR}"/dcron.service
 
 	insinto /etc/logrotate.d
 	newins extra/crond.logrotate dcron

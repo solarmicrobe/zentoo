@@ -13,14 +13,14 @@ SRC_URI="http://download.zeromq.org/${P}.tar.gz"
 LICENSE="LGPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="pgm test static-libs"
+IUSE="pgm test static-libs elibc_glibc"
 
-DEPEND="sys-devel/gcc
+DEPEND="|| ( sys-devel/gcc sys-devel/gcc-apple )
 		pgm? (
 		  virtual/pkgconfig
 		  =net-libs/openpgm-5.1.118
 		)
-		sys-apps/util-linux"
+		elibc_glibc? ( sys-apps/util-linux )"
 RDEPEND=""
 
 src_prepare() {

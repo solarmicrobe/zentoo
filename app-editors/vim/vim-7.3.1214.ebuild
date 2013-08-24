@@ -10,13 +10,12 @@ inherit vim
 VIM_ORG_PATCHES="vim-patches-${PV}.patch.bz2"
 
 SRC_URI="ftp://ftp.vim.org/pub/vim/unix/vim-${VIM_VERSION}.tar.bz2
-	http://dev.gentoo.org/~lack/vim/${VIM_ORG_PATCHES}
 	http://dev.gentoo.org/~radhermit/vim/${VIM_ORG_PATCHES}"
 
-S="${WORKDIR}/vim${VIM_VERSION/.}"
 DESCRIPTION="Vim, an improved vi-style text editor"
 KEYWORDS="amd64"
-IUSE=""
+
+S=${WORKDIR}/vim${VIM_VERSION/.}
 
 src_prepare() {
 	vim_src_prepare
@@ -27,5 +26,5 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-7.1.285-darwin-x11link.patch
 
 	# fix python3 support
-	epatch "${FILESDIR}"/${PN}-python3.patch
+	epatch "${FILESDIR}"/${P}-python3.patch
 }

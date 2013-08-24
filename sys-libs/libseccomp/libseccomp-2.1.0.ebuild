@@ -15,24 +15,27 @@ SRC_URI="mirror://sourceforge/${PN}/${P}.tar.gz"
 LICENSE="LGPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="static-libs tools"
+IUSE="static-libs"
 
 src_prepare() {
 	sed -i \
-		-e "/^SUBDIRS_BUILD/s:=.*:= src $(usex tools tools ''):" \
+		-e '/^SUBDIRS_BUILD/s:tests::' \
 		Makefile || die
+	sed -i \
+		-e '/^LDFLAGS/s|:=|+=|' \
+		{tests,tools}/Makefile || die
+	export MAKEOPTS+=" V=1"
 	tc-export AR CC
 	export GCC=${CC}
 }
 
 src_test() {
-	emake SUBDIRS_BUILD='tools tests'
+	emake SUBDIRS_BUILD='tests'
 	cd tests
-	./regression
+	./regression || die
 }
 
 src_install() {
 	default
-	use tools && dobin tools/{bpf_{disasm,sim},sys_{inspector,resolver}}
 	use static-libs && dolib.a src/libseccomp.a
 }

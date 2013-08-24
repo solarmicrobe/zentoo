@@ -12,16 +12,18 @@ MY_P=${PN}-src-r${PV/_rc/-rc}
 DESCRIPTION="A high-performance, open source, schema-free document-oriented database"
 HOMEPAGE="http://www.mongodb.org"
 SRC_URI="http://downloads.mongodb.org/src/${MY_P}.tar.gz
-	mms-agent? ( http://dev.gentoo.org/~ultrabug/20130605-10gen-mms-agent.zip )"
+	mms-agent? ( http://dev.gentoo.org/~ultrabug/20130821-10gen-mms-agent.zip )"
 
 LICENSE="AGPL-3 Apache-2.0"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="kerberos mms-agent sharedclient spidermonkey ssl static-libs"
+IUSE="-embedded-v8 kerberos mms-agent sharedclient spidermonkey ssl static-libs"
 
 PDEPEND="mms-agent? ( dev-python/pymongo app-arch/unzip )"
 RDEPEND="
-	<dev-lang/v8-3.19
+	!spidermonkey? (
+		!embedded-v8? ( <dev-lang/v8-3.19 )
+	)
 	>=dev-libs/boost-1.50[threads(+)]
 	dev-libs/libpcre[cxx]
 	dev-util/google-perftools
@@ -56,7 +58,11 @@ pkg_setup() {
 	if use spidermonkey; then
 		scons_opts+=" --usesm"
 	else
-		scons_opts+=" --use-system-v8"
+		if use embedded-v8; then
+			scons_opts+=" --usev8"
+		else
+			scons_opts+=" --use-system-v8"
+		fi
 	fi
 
 	if use ssl; then
@@ -93,9 +99,9 @@ src_install() {
 	doman debian/mongo*.1
 	dodoc README docs/building.md
 
-	newinitd "${FILESDIR}/${PN}.initd" ${PN}
+	newinitd "${FILESDIR}/${PN}.initd-r1" ${PN}
 	newconfd "${FILESDIR}/${PN}.confd" ${PN}
-	newinitd "${FILESDIR}/${PN/db/s}.initd" ${PN/db/s}
+	newinitd "${FILESDIR}/${PN/db/s}.initd-r1" ${PN/db/s}
 	newconfd "${FILESDIR}/${PN/db/s}.confd" ${PN/db/s}
 
 	insinto /etc/logrotate.d/
@@ -125,6 +131,14 @@ src_test() {
 }
 
 pkg_postinst() {
+	if use embedded-v8; then
+		ewarn "You chose to build ${PN} using embedded v8."
+		ewarn "This is not recommended by Gentoo and should be used to resolve"
+		ewarn "blockers with packages requiring >=v8-3.19 only !"
+		ewarn "See the following bug [1] and jira issue [2] for more info."
+		ewarn "    [1] https://bugs.gentoo.org/show_bug.cgi?id=471582"
+		ewarn "    [2] https://jira.mongodb.org/browse/SERVER-10282"
+	fi
 	if [[ ${REPLACING_VERSIONS} < 2.4 ]]; then
 		ewarn "You just upgraded from a previous version of mongodb !"
 		ewarn "Make sure you run 'mongod --upgrade' before using this version."
