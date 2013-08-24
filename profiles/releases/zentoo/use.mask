@@ -93,7 +93,6 @@ ggi
 gimp
 ginac
 glut
-gmp
 gnome
 gnome-keyring
 gnuplot
@@ -332,6 +331,11 @@ yaz
 zemberek
 zeroconf
 zsh-completion
+
+# foreign ABIs
+abi_mips_n32
+abi_mips_n64
+abi_mips_o32
 
 # curl ssl libraries
 curl_ssl_axtls
