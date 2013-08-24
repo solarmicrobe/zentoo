@@ -21,7 +21,6 @@ mail-mta/postfix
 media-gfx/imagemagick
 media-libs/libjpeg-turbo
 sys-apps/newrelic-sysmond
-sys-apps/openrc
 sys-apps/portage
 sys-block/megacli
 sys-boot/grub

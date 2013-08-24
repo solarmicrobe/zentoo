@@ -7,7 +7,8 @@ inherit udev eutils
 
 DESCRIPTION="Hardware (PCI, USB, OUI, IAB) IDs databases"
 HOMEPAGE="https://github.com/gentoo/hwids"
-SRC_URI="https://github.com/gentoo/hwids/archive/${P}.tar.gz"
+SRC_URI="https://github.com/gentoo/hwids/archive/${P}.tar.gz
+	http://dev.gentoo.org/~ssuominen/${P}-keyboard.patch.xz"
 
 LICENSE="|| ( GPL-2 BSD ) public-domain"
 SLOT="0"
@@ -16,7 +17,7 @@ IUSE="+udev"
 
 DEPEND="udev? (
 	dev-lang/perl
-	>=virtual/udev-197-r1
+	>=virtual/udev-206
 )"
 RDEPEND="!<sys-apps/pciutils-3.1.9-r2
 	!<sys-apps/usbutils-005-r1"
@@ -25,6 +26,8 @@ S=${WORKDIR}/hwids-${P}
 
 src_prepare() {
 	sed -i -e '/udevadm hwdb/d' Makefile || die
+	# Import required 60-keyboard.hwdb for sys-fs/udev >= 206
+	epatch "${WORKDIR}"/${P}-keyboard.patch
 }
 
 src_compile() {
@@ -40,5 +43,12 @@ src_install() {
 }
 
 pkg_postinst() {
-	use udev && udevadm hwdb --update --root="${ROOT%/}"
+	if use udev; then
+		udevadm hwdb --update --root="${ROOT%/}"
+		# http://cgit.freedesktop.org/systemd/systemd/commit/?id=1fab57c209035f7e66198343074e9cee06718bda
+		if [[ ${ROOT} != "" ]] && [[ ${ROOT} != "/" ]]; then
+			return 0
+		fi
+		udevadm control --reload
+	fi
 }

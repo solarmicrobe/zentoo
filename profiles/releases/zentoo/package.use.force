@@ -12,13 +12,6 @@ sys-kernel/dracut device-mapper net dracut_modules_lvm dracut_modules_mdraid dra
 x11-libs/cairo X
 x11-libs/gdk-pixbuf X
 
-# make LVM and mdadm static
-sys-apps/systemd static-libs
-sys-fs/lvm2 static static-libs
-sys-fs/mdadm static
-sys-fs/udev static-libs
-virtual/udev static-libs
-
 # force disable bindist on openssl
 dev-libs/openssl -bindist
 

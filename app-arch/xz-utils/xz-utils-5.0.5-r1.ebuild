@@ -7,7 +7,7 @@
 
 EAPI="4"
 
-inherit eutils multilib toolchain-funcs libtool
+inherit eutils multilib toolchain-funcs libtool multilib-minimal
 
 if [[ ${PV} == "9999" ]] ; then
 	EGIT_REPO_URI="http://git.tukaani.org/xz.git"
@@ -44,16 +44,20 @@ src_prepare() {
 	fi
 }
 
-src_configure() {
-	econf \
+multilib_src_configure() {
+	ECONF_SOURCE="${S}" econf \
 		$(use_enable nls) \
 		$(use_enable threads) \
-		$(use_enable static-libs static)
+		$(use_enable static-libs static) \
+		$(multilib_is_native_abi || echo --disable-{xz,xzdec,lzmadec,lzmainfo,lzma-links,scripts})
 }
 
-src_install() {
+multilib_src_install() {
 	default
-	gen_usr_ldscript -a lzma
+	multilib_is_native_abi && gen_usr_ldscript -a lzma
+}
+
+multilib_src_install_all() {
 	prune_libtool_files --all
 	rm "${ED}"/usr/share/doc/xz/COPYING* || die
 	mv "${ED}"/usr/share/doc/{xz,${PF}} || die
