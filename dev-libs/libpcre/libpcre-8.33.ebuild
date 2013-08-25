@@ -20,7 +20,7 @@ fi
 LICENSE="BSD"
 SLOT="3"
 KEYWORDS="amd64"
-IUSE="bzip2 +cxx +jit libedit pcre16 +readline +recursion-limit static-libs unicode zlib"
+IUSE="bzip2 +cxx +jit libedit pcre16 pcre32 +readline +recursion-limit static-libs unicode zlib"
 REQUIRED_USE="readline? ( !libedit )
 	libedit? ( !readline )"
 
@@ -51,6 +51,7 @@ src_configure() {
 		$(use_enable cxx cpp) \
 		$(use_enable jit) $(use_enable jit pcregrep-jit) \
 		$(use_enable pcre16) \
+		$(use_enable pcre32) \
 		$(use_enable libedit pcretest-libedit) \
 		$(use_enable readline pcretest-libreadline) \
 		$(use_enable static-libs static) \

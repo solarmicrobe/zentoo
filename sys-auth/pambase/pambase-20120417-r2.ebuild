@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 inherit eutils
 
 DESCRIPTION="PAM base configuration files"
@@ -44,6 +44,7 @@ DEPEND="app-portage/portage-utils"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-systemd.patch
+	epatch "${FILESDIR}"/${P}-lastlog-silent.patch
 }
 
 src_compile() {
@@ -101,5 +102,11 @@ pkg_postinst() {
 		elog "Please note that the change only affects the newly-changed passwords"
 		elog "and that SHA512-hashed passwords will not work on earlier versions"
 		elog "of glibc or Linux-PAM."
+	fi
+
+	if use systemd && use consolekit; then
+		ewarn "You are enabling 2 session trackers, ConsoleKit and systemd-logind"
+		ewarn "at the same time. This is not recommended setup to have, please"
+		ewarn "consider disabling either USE=\"consolekit\" or USE=\"systemd\."
 	fi
 }

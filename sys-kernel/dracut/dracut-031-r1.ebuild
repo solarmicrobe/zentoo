@@ -71,7 +71,6 @@ CDEPEND="virtual/udev
 RDEPEND="${CDEPEND}
 	app-arch/cpio
 	>=app-shells/bash-4.0
-	>=app-shells/dash-0.5.4.11
 	>=sys-apps/baselayout-1.12.14-r1
 	>sys-apps/kmod-5[tools]
 	>=sys-apps/sysvinit-2.87-r3
@@ -157,7 +156,7 @@ rm_module() {
 src_prepare() {
 	epatch "${FILESDIR}/${PV}-0001-dracut-functions.sh-support-for-altern.patch"
 	epatch "${FILESDIR}/${PV}-0002-gentoo.conf-let-udevdir-be-handled-by-.patch"
-	epatch "${FILESDIR}/${PV}-0003-LatArCyrHeb-16-as-a-default-i18n-font-.patch"
+	epatch "${FILESDIR}/${PV}-0003-Revert-base-setup-correct-system-time-.patch"
 
 	if use dracut_modules_systemd; then
 		local systemdutildir="$(systemd_get_utildir)"
@@ -183,8 +182,6 @@ src_configure() {
 }
 
 src_compile() {
-	emake doc
-
 	if use optimization; then
 		ewarn "Enabling experimental optimization!"
 		tc-export CC
@@ -248,6 +245,9 @@ src_install() {
 
 	# Remove extra modules which go to future dracut-extras
 	rm_module 05busybox 97masterkey 98ecryptfs 98integrity
+
+	# dash module is no longer supported
+	rm_module 00dash
 }
 
 pkg_postinst() {

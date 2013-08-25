@@ -21,7 +21,7 @@ HOMEPAGE="http://git.kernel.org/?p=utils/kernel/kmod/kmod.git"
 
 LICENSE="LGPL-2"
 SLOT="0"
-IUSE="debug doc lzma +openrc static-libs +tools zlib"
+IUSE="debug doc lzma static-libs +tools zlib"
 
 # Upstream does not support running the test suite with custom configure flags.
 # I was also told that the test suite is intended for kmod developers.
@@ -32,7 +32,6 @@ RESTRICT="test"
 RDEPEND="!sys-apps/module-init-tools
 	!sys-apps/modutils
 	lzma? ( >=app-arch/xz-utils-5.0.4-r1 )
-	openrc? ( !<sys-apps/openrc-0.12 )
 	zlib? ( >=sys-libs/zlib-1.2.6 )" #427130
 DEPEND="${RDEPEND}
 	dev-libs/libxslt
@@ -46,6 +45,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-errno_syscall.patch
+
 	if [ ! -e configure ]; then
 		if use doc; then
 			gtkdocize --copy --docdir libkmod/docs || die
@@ -56,18 +57,12 @@ src_prepare() {
 	else
 		elibtoolize
 	fi
-
-	# Restore possibility of running --enable-static wrt #472608
-	sed -i \
-		-e '/--enable-static is not supported by kmod/s:as_fn_error:echo:' \
-		configure || die
 }
 
 src_configure() {
 	econf \
 		--bindir=/bin \
 		--with-rootlibdir=/$(get_libdir) \
-		--enable-shared \
 		$(use_enable static-libs static) \
 		$(use_enable tools) \
 		$(use_enable debug) \
@@ -99,8 +94,6 @@ src_install() {
 
 	insinto /lib/modprobe.d
 	doins "${T}"/usb-load-ehci-first.conf #260139
-
-	use openrc && doinitd "${FILESDIR}"/kmod-static-nodes
 }
 
 pkg_postinst() {
@@ -108,31 +101,6 @@ pkg_postinst() {
 	if [[ -d ${ROOT}/lib/modules/${KV_FULL} ]]; then
 		if [[ -z ${REPLACING_VERSIONS} ]]; then
 			update_depmod
-		fi
-	fi
-
-	if use openrc; then
-		# Add kmod to the runlevel automatically if this is the first install of this package.
-		if [[ -L ${ROOT}etc/runlevels/boot/static-nodes ]]; then
-			ewarn "Removing deprecated static-nodes init script from the boot runlevel"
-			rm -f "${ROOT}"etc/runlevels/boot/static-nodes
-		fi
-
-		if [[ -z ${REPLACING_VERSIONS} ]]; then
-			if [[ -x ${ROOT}etc/init.d/kmod-static-nodes && -d ${ROOT}etc/runlevels/sysinit ]]; then
-				ln -s /etc/init.d/kmod-static-nodes "${ROOT}"/etc/runlevels/sysinit/kmod-static-nodes
-			fi
-		fi
-
-		if [[ -e ${ROOT}etc/runlevels/sysinit ]]; then
-			if [[ ! -e ${ROOT}etc/runlevels/sysinit/kmod-static-nodes ]]; then
-				ewarn
-				ewarn "You need to add kmod-static-nodes to the sysinit runlevel."
-				ewarn "If you do not do this,"
-				ewarn "your system will not necessarily have the required static nodes!"
-				ewarn "Run this command:"
-				ewarn "\trc-update add kmod-static-nodes sysinit"
-			fi
 		fi
 	fi
 }

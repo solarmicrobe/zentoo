@@ -99,6 +99,8 @@ src_prepare() {
 		epatch "${WORKDIR}/${PV}-${PATCHSET_REVISION}"
 
 	epatch "${FILESDIR}/${P}-library-path.patch" #474882
+	epatch "${FILESDIR}/${P}-re_unsigned_ptrdiff.patch" #476426
+	epatch "${FILESDIR}/CVE-2013-4238_py27.patch"
 
 	sed -i -e "s:@@GENTOO_LIBDIR@@:$(get_libdir):g" \
 		Lib/distutils/command/install.py \

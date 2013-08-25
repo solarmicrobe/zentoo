@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 PYTHON_COMPAT=( python2_7 )
 inherit autotools eutils linux-info flag-o-matic python-any-r1 systemd virtualx user
 
@@ -20,7 +20,7 @@ RDEPEND=">=dev-libs/expat-2
 		sec-policy/selinux-dbus
 		sys-libs/libselinux
 		)
-	systemd? ( >=sys-apps/systemd-44-r1 )
+	systemd? ( sys-apps/systemd )
 	X? (
 		x11-libs/libX11
 		x11-libs/libXt

@@ -49,8 +49,6 @@ src_prepare() {
 		staprun/Makefile.am \
 		stapdyn/Makefile.am \
 		buildrun.cxx \
-		runtime/bench2/bench.rb \
-		runtime/bench2/Makefile \
 		testsuite/systemtap.unprivileged/unprivileged_probes.exp \
 		testsuite/systemtap.unprivileged/unprivileged_myproc.exp \
 		testsuite/systemtap.base/stmt_rel_user.exp \
