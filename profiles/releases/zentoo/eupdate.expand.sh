@@ -88,6 +88,7 @@ net-misc/dhcp)                           echo "=$1-4.2.4_p2-r1";;
 net-misc/dhcpcd)                         echo "=$1-6.0.3";;
 net-nds/openldap)                        echo "=$1-2.4.33-r1";;
 sys-apps/openrc)                         echo "=$1-0.12";;
+sys-apps/systemd)                        echo "=$1-201";;
 sys-apps/watchdog)                       echo "=$1-5.13-r1";;
 sys-boot/grub)                           echo "=$1-2.00-r1";;
 sys-devel/autoconf)                      echo "=$1-2.13"
