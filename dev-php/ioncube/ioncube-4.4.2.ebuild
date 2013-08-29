@@ -28,6 +28,7 @@ DEPEND=""
 RDEPEND="${DEPEND}"
 
 S="${WORKDIR}"/${PN}
+PHP_EXT_S="${S}"
 
 src_configure() {
 	:
