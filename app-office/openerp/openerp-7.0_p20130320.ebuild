@@ -28,6 +28,7 @@ RDEPEND="${PYTHON_DEPS}
 	ssl? ( dev-python/pyopenssl[${PYTHON_USEDEP}] )
 	ldap? ( dev-python/python-ldap[${PYTHON_USEDEP}] )
 	dev-python/Babel[${PYTHON_USEDEP}]
+	dev-python/docutils[${PYTHON_USEDEP}]
 	dev-python/feedparser[${PYTHON_USEDEP}]
 	dev-python/gdata[${PYTHON_USEDEP}]
 	dev-python/imaging[${PYTHON_USEDEP}]
