@@ -108,6 +108,12 @@ HTTP_DAV_EXT_MODULE_P="ngx_dav_ext-${HTTP_DAV_EXT_MODULE_PV}"
 HTTP_DAV_EXT_MODULE_URI="http://github.com/arut/nginx-dav-ext-module/archive/v${HTTP_DAV_EXT_MODULE_PV}.tar.gz"
 HTTP_DAV_EXT_MODULE_WD="${WORKDIR}/nginx-dav-ext-module-${HTTP_DAV_EXT_MODULE_PV}"
 
+# nginx-echo-module (https://github.com/agentzh/echo-nginx-module, BSd license)
+HTTP_ECHO_MODULE_PV="0.47"
+HTTP_ECHO_MODULE_P="ngx_echo-${HTTP_ECHO_MODULE_PV}"
+HTTP_ECHO_MODULE_URI="https://github.com/agentzh/echo-nginx-module/archive/v${HTTP_ECHO_MODULE_PV}.tar.gz"
+HTTP_ECHO_MODULE_WD="${WORKDIR}/echo-nginx-module-${HTTP_ECHO_MODULE_PV}"
+
 inherit eutils ssl-cert toolchain-funcs perl-module flag-o-matic user systemd versionator
 
 DESCRIPTION="Robust, small and high performance http and reverse proxy server"
@@ -127,7 +133,8 @@ SRC_URI="http://nginx.org/download/${P}.tar.gz
 	nginx_modules_http_metrics? ( ${HTTP_METRICS_MODULE_URI} -> ${HTTP_METRICS_MODULE_P}.tar.gz )
 	nginx_modules_http_naxsi? ( ${HTTP_NAXSI_MODULE_URI} -> ${HTTP_NAXSI_MODULE_P}.tar.gz )
 	rtmp? ( ${RTMP_MODULE_URI} -> ${RTMP_MODULE_P}.tar.gz )
-	nginx_modules_http_dav_ext? ( ${HTTP_DAV_EXT_MODULE_URI} -> ${HTTP_DAV_EXT_MODULE_P}.tar.gz )"
+	nginx_modules_http_dav_ext? ( ${HTTP_DAV_EXT_MODULE_URI} -> ${HTTP_DAV_EXT_MODULE_P}.tar.gz )
+	nginx_modules_http_echo? ( ${HTTP_ECHO_MODULE_URI} -> ${HTTP_ECHO_MODULE_P}.tar.gz )"
 
 LICENSE="BSD-2 BSD SSLeay MIT GPL-2 GPL-2+"
 SLOT="0"
@@ -151,7 +158,8 @@ NGINX_MODULES_3RD="
 	http_upstream_check
 	http_metrics
 	http_naxsi
-	http_dav_ext"
+	http_dav_ext
+	http_echo"
 
 IUSE="aio debug +http +http-cache ipv6 libatomic +pcre pcre-jit rtmp selinux ssl
 syslog userland_GNU vim-syntax"
@@ -353,6 +361,11 @@ src_configure() {
 		myconf+=" --add-module=${HTTP_DAV_EXT_MODULE_WD}"
 	fi
 
+	if use nginx_modules_http_echo ; then
+		http_enabled=1
+		myconf+=" --add-module=${HTTP_ECHO_MODULE_WD}"
+	fi
+
 	if use http || use http-cache; then
 		http_enabled=1
 	fi
@@ -511,6 +524,11 @@ src_install() {
 	if use nginx_modules_http_dav_ext; then
 		docinto ${HTTP_DAV_EXT_MODULE_P}
 		dodoc "${HTTP_DAV_EXT_MODULE_WD}"/README
+	fi
+
+	if use nginx_modules_http_echo; then
+		docinto ${HTTP_ECHO_MODULE_P}
+		dodoc "${HTTP_ECHO_MODULE_WD}"/README
 	fi
 }
 
