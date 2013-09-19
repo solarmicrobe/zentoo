@@ -4,7 +4,7 @@
 
 EAPI="5"
 
-PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} pypy{1_9,2_0} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} pypy2_0 )
 
 inherit distutils-r1 vcs-snapshot
 
@@ -25,8 +25,7 @@ DEPEND="${RDEPEND}
 		dev-python/nose[${PYTHON_USEDEP}]
 	)"
 
-DOCS="docs/index.txt docs/news.txt"
-PYTHON_MODNAME="virtualenv.py virtualenv_support"
+DOCS=( docs/index.txt docs/news.txt )
 
 # let the python eclass handle script versioning
 PATCHES=(
