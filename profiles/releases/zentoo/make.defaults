@@ -10,7 +10,7 @@ USE="${USE} -dri -vhosts"
 USE="${USE} bash-completion bzip2 caps cups fontconfig postscript idn jpeg pcre png svg syslog tiff truetype urandom vim-syntax"
 
 # create and use binary packages
-EMERGE_DEFAULT_OPTS="--quiet-build --buildpkg --with-bdeps=y --binpkg-respect-use=y --rebuilt-binaries=n --keep-going --usepkg --getbinpkg"
+EMERGE_DEFAULT_OPTS="--quiet-build --buildpkg --with-bdeps=y --binpkg-respect-use=y --rebuilt-binaries=n --keep-going"
 
 # don't bother with these
 ACCEPT_LICENSE="*"
