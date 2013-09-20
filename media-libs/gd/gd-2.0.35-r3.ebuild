@@ -16,7 +16,7 @@ KEYWORDS="amd64"
 IUSE="fontconfig jpeg png static-libs truetype xpm zlib"
 
 RDEPEND="fontconfig? ( media-libs/fontconfig )
-	jpeg? ( virtual/jpeg )
+	jpeg? ( virtual/jpeg:0 )
 	png? ( >=media-libs/libpng-1.2:0 )
 	truetype? ( >=media-libs/freetype-2.1.5 )
 	xpm? ( x11-libs/libXpm x11-libs/libXt )

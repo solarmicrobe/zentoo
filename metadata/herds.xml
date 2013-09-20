@@ -20,7 +20,7 @@
    always a description without a lang attribute. Also there are no overlapping
    descriptions allowed (multiple description tags with the same language)
 
-   $Header: /var/cvsroot/gentoo/xml/htdocs/proj/en/metastructure/herds/herds.xml,v 1.1042 2013/07/21 10:24:16 pacho Exp $
+   $Header: /var/cvsroot/gentoo/xml/htdocs/proj/en/metastructure/herds/herds.xml,v 1.1058 2013/09/20 04:14:15 jmorgan Exp $
 
 -->
 <herds>
@@ -117,6 +117,10 @@
     <email>radhermit@gentoo.org</email>
     <name>Tim Harder</name>
   </maintainer>
+  <maintainer>
+    <email>zerochaos@gentoo.org</email>
+    <name>Rick Farina</name>
+  </maintainer>
 </herd>
 <herd>
   <name>cron</name>
@@ -196,6 +200,10 @@
   <maintainer>
     <email>angelos@gentoo.org</email>
     <name>Christoph Mende</name>
+  </maintainer>
+  <maintainer>
+    <email>TomWij@gentoo.org</email>
+    <name>Tom Wijsman</name>
   </maintainer>
 </herd>
 <herd>
@@ -400,7 +408,7 @@
     <name>Markus Duft</name>
   </maintainer>
   <maintainer>
-    <email>abcd@gentoo.org</email>
+    <email>jcallen@gentoo.org</email>
     <name>Jonathan Callen</name>
   </maintainer>
   <maintainer>
@@ -584,6 +592,10 @@
   <maintainer>
     <email>ago@gentoo.org</email>
     <name>Agostino Sarubbo</name>
+  </maintainer>
+  <maintainer>
+    <email>jmorgan@gentoo.org</email>
+    <name>Jack Morgan</name>
   </maintainer>
 </herd>
 <herd>
@@ -1003,6 +1015,10 @@
     <email>dilfridge@gentoo.org</email>
     <name>Andreas K. Huettel</name>
   </maintainer>
+  <maintainer>
+    <email>mrueg@gentoo.org</email>
+    <name>Manuel Rüger</name>
+  </maintainer>
 </herd>
 <herd>
   <name>gnustep</name>
@@ -1073,6 +1089,10 @@
     <name>Tony Vroon</name>
     <role>ejabberd and jabber-base</role>
   </maintainer>
+  <maintainer>
+    <email>mrueg@gentoo.org</email>
+    <name>Manuel Rüger</name>
+  </maintainer>
 </herd>
 <herd>
   <name>sparc</name>
@@ -1094,6 +1114,14 @@
     <email>ago@gentoo.org</email>
     <name>Agostino Sarubbo</name>
   </maintainer>
+  <maintainer>
+    <email>zlogene@gentoo.org</email>
+    <name>Mikle Kolyada</name>
+  </maintainer>
+  <maintainer>
+    <email>jmorgan@gentoo.org</email>
+    <name>Jack Morgan</name>
+  </maintainer>
 </herd>
 <herd>
   <name>mips</name>
@@ -1112,10 +1140,6 @@
     <name>Joshua Kinard</name>
   </maintainer>
   <maintainer>
-    <email>alexxy@gentoo.org</email>
-    <name>Alexey Shvetsov</name>
-  </maintainer>
-  <maintainer>
     <email>leio@gentoo.org</email>
     <name>Mart Raudsepp</name>
   </maintainer>
@@ -1124,8 +1148,8 @@
     <name>Matt Turner</name>
   </maintainer>
   <maintainer>
-    <email>ryao@gentoo.org</email>
-    <name>Richard Yao</name>
+    <email>pinkbyte@gentoo.org</email>
+    <name>Sergey Popov</name>
   </maintainer>
 </herd>
 <herd>
@@ -1139,6 +1163,14 @@
   <maintainer>
     <email>blueness@gentoo.org</email>
     <name>Anthony G. Basile</name>
+  </maintainer>
+  <maintainer>
+    <email>twitch153@gentoo.org</email>
+    <name>Devan Franchini</name>
+  </maintainer>
+  <maintainer>
+    <email>jmbsvicetto@gentoo.org</email>
+    <name>Jorge Manuel B. S. Vicetto</name>
   </maintainer>
 </herd>
 <herd>
@@ -1576,6 +1608,10 @@
     <email>vapier@gentoo.org</email>
     <role>help with portmap/nfs-utils/etc...</role>
   </maintainer>
+  <maintainer>
+    <email>radhermit@gentoo.org</email>
+    <name>Tim Harder</name>
+  </maintainer>
 </herd>
 <herd>
   <name>prolog</name>
@@ -1624,6 +1660,10 @@
     <email>ago@gentoo.org</email>
     <name>Agostino Sarubbo</name>
   </maintainer>
+  <maintainer>
+     <email>zlogene@gentoo.org</email>
+     <name>Mikle Kolyada</name>
+  </maintainer>	
 </herd>
 <herd>
   <name>ia64</name>
@@ -1639,15 +1679,27 @@
     <email>ago@gentoo.org</email>
     <name>Agostino Sarubbo</name>
   </maintainer>
+  <maintainer>
+    <email>zlogene@gentoo.org</email>
+    <name>Mikle Kolyada</name>
+  </maintainer>
+  <maintainer>
+    <email>jmorgan@gentoo.org</email>
+    <name>Jack Morgan</name>
+  </maintainer>
 </herd>
 <herd>
   <name>lang-misc</name>
   <email>lang-misc@gentoo.org</email>
-  <description>Programming language related packages (mostly under dev-lang) that do not easilly fall under individual category</description>
+  <description>Programming language related packages (mostly under dev-lang) that do not easily fall under individual category</description>
   <maintainer>
     <email>george@gentoo.org</email>
     <name>George Shapovalov</name>
     <role>initiator of the herd, maintain some of the packages (see individual metadata)</role>
+  </maintainer>
+  <maintainer>
+    <email>radhermit@gentoo.org</email>
+    <name>Tim Harder</name>
   </maintainer>
 </herd>
 <herd>
@@ -1819,10 +1871,6 @@
     <name>Mark Loeser</name>
   </maintainer>
   <maintainer>
-    <email>kumba@gentoo.org</email>
-    <name>Joshua Kinard</name>
-  </maintainer>
-  <maintainer>
     <email>lu_zero@gentoo.org</email>
     <name>Luca Barbato</name>
   </maintainer>
@@ -1974,8 +2022,8 @@
   <email>mobile-phone@gentoo.org</email>
   <description>Mobile phone related applications</description>
   <maintainer>
-    <email>alonbl@gentoo.org</email>
-    <name>Alon Bar-Lev</name>
+    <email>creffett@gentoo.org</email>
+    <name>Chris Reffett</name>
   </maintainer>
 </herd>
 <herd>
@@ -2143,46 +2191,7 @@
     <name>proxy-maintainers</name>
     <email>proxy-maint@gentoo.org</email>
     <description>Orphaned packages maintained by Gentoo's proxy-maintainers team</description>
-    <maintainer>
-        <email>hwoarang@gentoo.org</email>
-        <name>Markos Chandras</name>
-    </maintainer>
-    <maintainer>
-        <email>maksbotan@gentoo.org</email>
-        <name>Maxim Koltsov</name>
-    </maintainer>
-    <maintainer>
-        <email>pinkbyte@gentoo.org</email>
-        <name>Sergey Popov</name>
-    </maintainer>
-    <maintainer>
-        <email>phajdan.jr@gentoo.org</email>
-        <name>Paweł Hajdan</name>
-    </maintainer>
-    <maintainer>
-        <email>qnikst@gentoo.org</email>
-        <name>Alexander V. Vershilov</name>
-    </maintainer>
-    <maintainer>
-        <email>titanofold@gentoo.org</email>
-        <name>Aaron W. Swenson</name>
-    </maintainer>
-    <maintainer>
-        <email>yngwin@gentoo.org</email>
-        <name>Ben de Groot</name>
-    </maintainer>
-    <maintainer>
-        <email>xmw@gentoo.org</email>
-        <name>Michael Weber</name>
-    </maintainer>
-    <maintainer>
-        <email>mrueg@gentoo.org</email>
-        <name>Manuel Rüger</name>
-    </maintainer>
-    <maintainer>
-        <email>TomWij@gentoo.org</email>
-        <name>Tom Wijsman</name>
-    </maintainer>
+    <maintainingproject>/proj/en/qa/proxy-maintainers/index.xml</maintainingproject>
 </herd>
 <herd>
     <name>radio</name>

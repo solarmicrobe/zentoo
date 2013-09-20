@@ -4,7 +4,7 @@
 
 EAPI=5
 # Other implementations ship argparse.
-PYTHON_COMPAT=( python{2_5,2_6,3_1} )
+PYTHON_COMPAT=( python2_6 )
 
 inherit distutils-r1
 

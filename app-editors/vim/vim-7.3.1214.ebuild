@@ -4,7 +4,7 @@
 
 EAPI=5
 VIM_VERSION="7.3"
-PYTHON_COMPAT=( python{2_5,2_6,2_7,3_1,3_2,3_3} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 inherit vim
 
 VIM_ORG_PATCHES="vim-patches-${PV}.patch.bz2"

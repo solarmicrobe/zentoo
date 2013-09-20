@@ -30,6 +30,9 @@ if ! has "${EAPI:-0}" 0 1 2 3 4 5; then
 	die "API of python.eclass in EAPI=\"${EAPI}\" not established"
 fi
 
+# Please do not add any new versions of Python here! Instead, please
+# focus on converting packages to use the new eclasses.
+
 _CPYTHON2_GLOBALLY_SUPPORTED_ABIS=(2.4 2.5 2.6 2.7)
 _CPYTHON3_GLOBALLY_SUPPORTED_ABIS=(3.1 3.2 3.3)
 _JYTHON_GLOBALLY_SUPPORTED_ABIS=(2.5-jython 2.7-jython)

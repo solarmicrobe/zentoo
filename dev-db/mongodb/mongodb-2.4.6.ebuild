@@ -47,6 +47,11 @@ pkg_setup() {
 	scons_opts+=" --use-system-snappy"
 	scons_opts+=" --use-system-boost"
 
+	if use prefix; then
+		scons_opts+=" --cpppath=${EPREFIX}/usr/include"
+		scons_opts+=" --libpath=${EPREFIX}/usr/$(get_libdir)"
+	fi
+
 	if use kerberos; then
 		scons_opts+=" --use-sasl-client"
 	fi

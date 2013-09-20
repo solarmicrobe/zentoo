@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit autotools
+inherit autotools eutils
 
 DESCRIPTION="ZeroMQ is a brokerless kernel"
 HOMEPAGE="http://www.zeromq.org/"
@@ -24,9 +24,13 @@ DEPEND="|| ( sys-devel/gcc sys-devel/gcc-apple )
 RDEPEND=""
 
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-unused-variable.patch || die
 	einfo "Removing bundled OpenPGM library"
 	sed -i 's/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/g' configure.in || die
 	rm -r "${S}"/foreign/openpgm/libpgm* || die
+	# apply effective bit of below commit to fix compilation on Darwin
+	# https://github.com/zeromq/zeromq3-x/commit/400cbc208a768c4df5039f401dd2688eede6e1ca
+	sed -i -e '/strndup/d' tests/test_disconnect_inproc.cpp || die
 	eautoreconf
 }
 

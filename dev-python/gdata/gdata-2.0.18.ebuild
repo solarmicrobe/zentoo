@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=5
-PYTHON_COMPAT=( python{2_5,2_6,2_7} pypy2_0 )
+PYTHON_COMPAT=( python{2_6,2_7} pypy2_0 )
 PYTHON_REQ_USE="ssl(+),xml(+)"
 
 inherit distutils-r1

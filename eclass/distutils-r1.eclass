@@ -423,7 +423,7 @@ _distutils-r1_wrap_scripts() {
 		local PYTHON_SCRIPTDIR=${EPREFIX}/usr/bin
 	fi
 
-	mkdir -p "${path}/usr/bin" || die
+	mkdir -p "${path}${EPREFIX}/usr/bin" || die
 	local f
 	while IFS= read -r -d '' f; do
 		local basename=${f##*/}

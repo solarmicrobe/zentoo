@@ -4,7 +4,7 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_5,2_6,2_7} pypy{1_9,2_0} )
+PYTHON_COMPAT=( python{2_6,2_7} pypy2_0 )
 
 inherit distutils-r1
 
@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="virtual/pyparsing[${PYTHON_USEDEP}]
+RDEPEND="dev-python/pyparsing[${PYTHON_USEDEP}]
 	media-gfx/graphviz"
 DEPEND="${RDEPEND}
 	dev-python/setuptools[${PYTHON_USEDEP}]"

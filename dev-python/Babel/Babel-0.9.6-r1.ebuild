@@ -4,7 +4,7 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_5,2_6,2_7} pypy{1_9,2_0} )
+PYTHON_COMPAT=( python{2_6,2_7} pypy2_0 )
 inherit distutils-r1
 
 DESCRIPTION="A collection of tools for internationalizing Python applications"

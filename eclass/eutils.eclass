@@ -355,7 +355,7 @@ EPATCH_FORCE="no"
 # epatch is designed to greatly simplify the application of patches.  It can
 # process patch files directly, or directories of patches.  The patches may be
 # compressed (bzip/gzip/etc...) or plain text.  You generally need not specify
-# the -p option as epatch will automatically attempt -p0 to -p5 until things
+# the -p option as epatch will automatically attempt -p0 to -p4 until things
 # apply successfully.
 #
 # If you do not specify any patches/dirs, then epatch will default to the
@@ -1642,6 +1642,43 @@ prune_libtool_files() {
 	if [[ ${queue[@]} ]]; then
 		rm -f "${queue[@]}"
 	fi
+}
+
+einstalldocs() {
+	debug-print-function ${FUNCNAME} "${@}"
+
+	local dodoc_opts=-r
+	has ${EAPI} 0 1 2 3 && dodoc_opts=
+
+	if ! declare -p DOCS &>/dev/null ; then
+		local d
+		for d in README* ChangeLog AUTHORS NEWS TODO CHANGES \
+				THANKS BUGS FAQ CREDITS CHANGELOG ; do
+			if [[ -s ${d} ]] ; then
+				dodoc "${d}" || die
+			fi
+		done
+	elif [[ $(declare -p DOCS) == "declare -a"* ]] ; then
+		if [[ ${DOCS[@]} ]] ; then
+			dodoc ${dodoc_opts} "${DOCS[@]}" || die
+		fi
+	else
+		if [[ ${DOCS} ]] ; then
+			dodoc ${dodoc_opts} ${DOCS} || die
+		fi
+	fi
+
+	if [[ $(declare -p HTML_DOCS 2>/dev/null) == "declare -a"* ]] ; then
+		if [[ ${HTML_DOCS[@]} ]] ; then
+			dohtml -r "${HTML_DOCS[@]}" || die
+		fi
+	else
+		if [[ ${HTML_DOCS} ]] ; then
+			dohtml -r ${HTML_DOCS} || die
+		fi
+	fi
+
+	return 0
 }
 
 check_license() { die "you no longer need this as portage supports ACCEPT_LICENSE itself"; }

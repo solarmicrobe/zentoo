@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI="5"
-PYTHON_COMPAT=( python{2_5,2_6,2_7} )
+PYTHON_COMPAT=( python{2_6,2_7} )
 # Tests crash with pypy
 
 inherit distutils-r1 eutils flag-o-matic prefix
@@ -63,8 +63,9 @@ python_compile_all() {
 }
 
 python_test() {
-	cd tests || die
-	"${PYTHON}" runAll.py || die
+	pushd tests > /dev/null || die
+	"${PYTHON}" runAll.py || die "Testing failed with ${EPYTHON}"
+	popd > /dev/null || die
 }
 
 python_install_all() {

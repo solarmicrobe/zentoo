@@ -1,13 +1,29 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/eapi-5-files/package.use.stable.mask,v 1.15 2013/07/02 16:14:46 ago Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/eapi-5-files/package.use.stable.mask,v 1.23 2013/09/12 18:07:19 cardoe Exp $
 
 # This file requires eapi 5 or later. New entries go on top.
 # Please use the same syntax as in package.use.mask
 
-# Mike Gilbert <floppym@gentoo.org> (09 Jun 2013)
-# Requires dev-python/pillow to be stable.
-virtual/python-imaging python_targets_python3_2 python_targets_python3_3
+# Doug Goldstein <cardoe@gentoo.org> (12 Sep 2013)
+# Waiting on glusterfs maintainers in bug #484016
+app-emulation/qemu glusterfs
+
+# Pacho Ramos <pacho@gentoo.org> (07 Sep 2013)
+# It requires newer emul sets to be stabilized (#477182#c5)
+~sci-libs/fftw-3.3.3 abi_x86_32
+
+# Agostino Sarubbo <ago@gentoo.org> (31 Aug 2013)
+# Clang is not stable
+app-portage/eix clang
+
+# Alexandre Rostovtsev <tetromino@gentoo.org> (15 Aug 2013)
+# Remove when app-crypt/libsecret is stable
+=gnome-base/gvfs-1.14.2 gnome-keyring
+
+# Samuli Suominen <ssuominen@gentoo.org> (01 Aug 2013)
+# The dependencies for these flags are still in ~arch.
+sys-fs/lvm2 clvm cman
 
 # Agostino Sarubbo <ago@gentoo.org> (24 May 2013)
 # Justin Lecher <jlec@gentoo.org> (30 May 2313)
@@ -24,10 +40,6 @@ net-libs/libkolabxml php
 # Samuli Suominen <ssuominen@gentoo.org> (12 Apr 2013)
 # Waiting for >=app-cdr/brasero-3 stabilization
 app-pda/gtkpod cdr
-
-# Pawel Hajdan jr <phajdan.jr@gentoo.org> (11 Apr 2013)
-# Usually requires recent ffmpeg/libav, not ready for stable.
-www-client/chromium system-ffmpeg
 
 # Pacho Ramos <pacho@gentoo.org> (01 Apr 2013)
 # Needed to stabilize anjuta-3.6

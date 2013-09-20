@@ -4,7 +4,7 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_5,2_6,2_7,3_1,3_2,3_3} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 
 inherit distutils-r1
 
@@ -35,6 +35,11 @@ python_compile_all() {
 		rst2html.py Doc/pycrypt.rst > Doc/index.html
 		epydoc --config=Doc/epydoc-config --exclude-introspect="^Crypto\.(Random\.OSRNG\.nt|Util\.winrandom)$" || die
 	fi
+}
+
+python_compile() {
+	python_is_python3 || local -x CFLAGS="${CFLAGS} -fno-strict-aliasing"
+	distutils-r1_python_compile
 }
 
 python_test() {

@@ -89,7 +89,7 @@ src_install() {
 	case $(tc-arch) in
 		ppc*)  devs="hvc0 hvsi0 ttyPSC0";;
 		hppa)  devs="ttyB0";;
-		arm)   devs="ttyFB0 ttySAC0 ttySAC1 ttySAC2 ttySAC3 ttymxc0 ttymxc1 ttyO0 ttyO1 ttyO2";;
+		arm)   devs="ttyFB0 ttySAC0 ttySAC1 ttySAC2 ttySAC3 ttymxc0 ttymxc1 ttymxc2 ttymxc3 ttyO0 ttyO1 ttyO2";;
 		sh)    devs="ttySC0 ttySC1";;
 	esac
 	[[ -n ${devs} ]] && printf '%s\n' ${devs} >> "${D}"/etc/securetty

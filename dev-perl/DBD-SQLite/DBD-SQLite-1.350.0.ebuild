@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,7 +15,7 @@ KEYWORDS="amd64"
 IUSE="test"
 
 RDEPEND=">=dev-perl/DBI-1.57
-	>=dev-db/sqlite-3.6.22[extensions]
+	>=dev-db/sqlite-3.6.22[extensions(+)]
 	!<dev-perl/DBD-SQLite-1"
 DEPEND="${RDEPEND}
 	test? ( >=virtual/perl-Test-Simple-0.86 )"

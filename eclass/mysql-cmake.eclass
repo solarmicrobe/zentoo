@@ -1,6 +1,5 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/mysql-cmake.eclass,v 1.15 2013/03/04 19:10:31 robbat2 Exp $
 
 # @ECLASS: mysql-cmake.eclass
 # @MAINTAINER:
@@ -154,12 +153,12 @@ configure_cmake_standard() {
 		mycmakeargs+=( -DWITH_SSL=bundled )
 	fi
 
-	if use jemalloc; then
-		mycmakeargs+=( -DWITH_SAFEMALLOC=OFF )
+	if mysql_version_is_at_least "5.5" && use jemalloc; then
+		mycmakeargs+=( -DCMAKE_EXE_LINKER_FLAGS='-ljemalloc' -DWITH_SAFEMALLOC=OFF )
 	fi
 
-	if use tcmalloc; then
-		mycmakeargs+=( -DWITH_SAFEMALLOC=OFF )
+	if mysql_version_is_at_least "5.5" && use tcmalloc; then
+		mycmakeargs+=( -DCMAKE_EXE_LINKER_FLAGS='-ltcmalloc' -DWITH_SAFEMALLOC=OFF )
 	fi
 
 	# Storage engines
@@ -196,17 +195,6 @@ configure_cmake_standard() {
 			$(cmake-utils_use_with pam)
 		)
 	fi
-
-	if [[ ${PN} == "mysql-cluster" ]]; then
-		# TODO: This really should include the following options,
-		# but the memcached package doesn't install the files it seeks.
-		# -DWITH_BUNDLED_MEMCACHED=OFF
-		# -DMEMCACHED_HOME=${EPREFIX}/usr
-		mycmakeargs+=(
-			-DWITH_BUNDLED_LIBEVENT=OFF
-			$(cmake-utils_use_with java NDB_JAVA)
-		)
-	fi
 }
 
 #
@@ -237,13 +225,6 @@ mysql-cmake_src_prepare() {
 	[[ -f ${i} ]] && sed -i -e '/CFLAGS/s,-prefer-non-pic,,g' "${i}"
 
 	rm -f "scripts/mysqlbug"
-	if use jemalloc; then
-		echo "TARGET_LINK_LIBRARIES(mysqld jemalloc)" >> "${S}/sql/CMakeLists.txt"
-	fi
-
-	if use tcmalloc; then
-		echo "TARGET_LINK_LIBRARIES(mysqld tcmalloc)" >> "${S}/sql/CMakeLists.txt"
-	fi
 	epatch_user
 }
 
@@ -400,7 +381,7 @@ mysql-cmake_src_install() {
 		fi
 
 		diropts "-m0755"
-		for folder in "${MY_LOGDIR#${EPREFIX}}" ; do
+		for folder in "${MY_LOGDIR#${EPREFIX}}" "/var/run/mysqld" ; do
 			dodir "${folder}"
 			keepdir "${folder}"
 			chown -R mysql:mysql "${ED}/${folder}"

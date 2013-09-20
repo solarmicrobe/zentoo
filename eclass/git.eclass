@@ -1,9 +1,11 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-# DEPRECATED
-# This eclass has been superseded by git-2 eclass.
-# Please modify your ebuilds to use that one instead.
+# @DEAD
+# Michał Górny <mgorny@gentoo.org> (2 Aug 2013)
+# This eclass has been superseded by git-2 eclass and will be removed
+# on 2013-09-02. Please modify your ebuilds to use git-2 instead.
+# Bug #479474.
 
 # @ECLASS: git.eclass
 # @MAINTAINER:

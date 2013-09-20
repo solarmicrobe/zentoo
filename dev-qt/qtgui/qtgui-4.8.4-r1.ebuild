@@ -26,7 +26,7 @@ RDEPEND="
 	media-libs/freetype:2
 	media-libs/libpng:0
 	sys-libs/zlib
-	virtual/jpeg
+	virtual/jpeg:0
 	~dev-qt/qtcore-${PV}[aqua=,debug=,glib=,qt3support=]
 	~dev-qt/qtscript-${PV}[aqua=,debug=]
 	!aqua? (

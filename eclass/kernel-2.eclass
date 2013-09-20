@@ -39,7 +39,13 @@
 # K_DEFCONFIG			- Allow specifying a different defconfig target.
 #						  If length zero, defaults to "defconfig".
 # K_WANT_GENPATCHES		- Apply genpatches to kernel source. Provide any
-# 						  combination of "base" and "extras"
+# 						  combination of "base", "extras" or "experimental".
+# K_EXP_GENPATCHES_PULL	- If set, we pull "experimental" regardless of the USE FLAG
+#						  but expect the ebuild maintainer to use K_EXP_GENPATCHES_LIST.
+# K_EXP_GENPATCHES_NOUSE	- If set, no USE flag will be provided for "experimental";
+# 						  as a result the user cannot choose to apply those patches.
+# K_EXP_GENPATCHES_LIST	- A list of patches to pick from "experimental" to apply when
+# 						  the USE flag is unset and K_EXP_GENPATCHES_PULL is set.
 # K_GENPATCHES_VER		- The version of the genpatches tarball(s) to apply.
 #						  A value of "5" would apply genpatches-2.6.12-5 to
 #						  my-sources-2.6.12.ebuild
@@ -129,18 +135,32 @@ handle_genpatches() {
 	# respectively.  Handle this.
 
 	for i in ${K_WANT_GENPATCHES} ; do
-	if [[ ${KV_MAJOR} -ge 3 ]]; then
-		if [[ ${#OKV_ARRAY[@]} -ge 3 ]]; then
-			tarball="genpatches-${KV_MAJOR}.${KV_MINOR}-${K_GENPATCHES_VER}.${i}.tar.xz"
+		if [[ ${KV_MAJOR} -ge 3 ]]; then
+			if [[ ${#OKV_ARRAY[@]} -ge 3 ]]; then
+				tarball="genpatches-${KV_MAJOR}.${KV_MINOR}-${K_GENPATCHES_VER}.${i}.tar.xz"
+			else
+				tarball="genpatches-${KV_MAJOR}.${KV_PATCH}-${K_GENPATCHES_VER}.${i}.tar.xz"
+			fi
 		else
-			tarball="genpatches-${KV_MAJOR}.${KV_PATCH}-${K_GENPATCHES_VER}.${i}.tar.xz"
+			tarball="genpatches-${OKV}-${K_GENPATCHES_VER}.${i}.tar.xz"
 		fi
-	else
-		tarball="genpatches-${OKV}-${K_GENPATCHES_VER}.${i}.tar.xz"
-	fi
-	debug-print "genpatches tarball: $tarball"
-	GENPATCHES_URI="${GENPATCHES_URI} mirror://gentoo/${tarball}"
-	UNIPATCH_LIST_GENPATCHES="${UNIPATCH_LIST_GENPATCHES} ${DISTDIR}/${tarball}"
+
+		local use_cond_start="" use_cond_end=""
+
+		if [[ "${i}" == "experimental" && -z ${K_EXP_GENPATCHES_PULL} && -z ${K_EXP_GENPATCHES_NOUSE} ]] ; then
+			use_cond_start="experimental? ( "
+			use_cond_end=" )"
+
+			if use experimental ; then
+				UNIPATCH_LIST_GENPATCHES+=" ${DISTDIR}/${tarball}"
+				debug-print "genpatches tarball: $tarball"
+			fi
+		else
+			UNIPATCH_LIST_GENPATCHES+=" ${DISTDIR}/${tarball}"
+			debug-print "genpatches tarball: $tarball"
+		fi
+
+		GENPATCHES_URI+=" ${use_cond_start}mirror://gentoo/${tarball}${use_cond_end}"
 	done
 }
 
@@ -953,6 +973,20 @@ unipatch() {
 					$(${PIPE_CMD} ${i} > ${KPATCH_DIR}/${x}.patch${PATCH_LEVEL}) || die "uncompressing patch failed"
 				fi
 			fi
+		fi
+
+		# If experimental was not chosen by the user, drop experimental patches not in K_EXP_GENPATCHES_LIST.
+		if [[ "${i}" == *"genpatches-"*".experimental."* && -n ${K_EXP_GENPATCHES_PULL} ]] ; then
+			if [[ -z ${K_EXP_GENPATCHES_NOUSE} ]] && use experimental; then
+				continue
+			fi
+
+			local j
+			for j in ${KPATCH_DIR}/*/50*_*.patch*; do
+				if [[ ! "${K_EXP_GENPATCHES_LIST}" == *"$(basename ${j})"* ]] ; then
+					UNIPATCH_DROP+=" $(basename ${j})"
+				fi
+			done
 		fi
 	done
 

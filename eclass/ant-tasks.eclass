@@ -1,6 +1,6 @@
 # Eclass for building dev-java/ant-* packages
 #
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License, v2 or later
 # Author Vlastimil Babka <caster@gentoo.org>
 
@@ -89,7 +89,7 @@ else
 	MY_PV=${PV}
 	UPSTREAM_PREFIX="mirror://apache/ant/source"
 	case ${PV} in
-	1.9.1)
+	1.9.*)
 		GENTOO_PREFIX="http://dev.gentoo.org/~tomwij/files/dist"
 		;;
 	1.8.4)

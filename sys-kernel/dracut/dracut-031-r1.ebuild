@@ -93,7 +93,7 @@ RDEPEND="${CDEPEND}
 	dracut_modules_gensplash? ( media-gfx/splashutils )
 	dracut_modules_iscsi? ( >=sys-block/open-iscsi-2.0.871.3 )
 	dracut_modules_lvm? ( >=sys-fs/lvm2-2.02.33 )
-	dracut_modules_mdraid? ( sys-fs/mdadm )
+	dracut_modules_mdraid? ( >=sys-fs/mdadm-3.2.6-r1 )
 	dracut_modules_multipath? ( sys-fs/multipath-tools )
 	dracut_modules_nbd? ( sys-block/nbd )
 	dracut_modules_nfs? ( net-fs/nfs-utils net-nds/rpcbind )

@@ -25,6 +25,7 @@ DOCS=( ChangeLog CREDITS README TODO )
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}+gcc-4.7.patch
+	epatch "${FILESDIR}"/${P}-cross-compile.patch #473970
 	sed -i -e '/CXXFLAGS/d' configure.in || die
 
 	eautoreconf
@@ -44,6 +45,6 @@ src_install() {
 
 	if use vim-syntax; then
 		insinto /usr/share/vim/vimfiles/syntax
-		doins ragel.vim || die "doins ragel.vim failed"
+		doins ragel.vim
 	fi
 }

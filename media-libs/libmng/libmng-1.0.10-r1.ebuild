@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,7 +14,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="lcms static-libs"
 
-RDEPEND="virtual/jpeg
+RDEPEND="virtual/jpeg:0
 	>=sys-libs/zlib-1.1.4
 	lcms? ( =media-libs/lcms-1* )"
 DEPEND="${RDEPEND}"

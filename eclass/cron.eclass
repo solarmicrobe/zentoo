@@ -26,8 +26,7 @@ SLOT="0"
 
 DEPEND=">=sys-apps/sed-4.0.5"
 
-RDEPEND="virtual/mta
-	>=sys-process/cronbase-0.3.2"
+RDEPEND=">=sys-process/cronbase-0.3.2"
 for pn in vixie-cron bcron cronie dcron fcron; do
 	[[ ${pn} == "${PN}" ]] || RDEPEND="${RDEPEND} !sys-process/${pn}"
 done

@@ -5,7 +5,7 @@
 EAPI=5
 
 # pypy: bug #458558 (wrong linker options due to not respecting CC)
-PYTHON_COMPAT=( python{2_5,2_6,2_7} )
+PYTHON_COMPAT=( python{2_6,2_7} )
 
 inherit distutils-r1 multilib
 

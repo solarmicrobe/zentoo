@@ -1,10 +1,71 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.490 2013/07/17 15:23:53 chithanh Exp $
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.use.mask,v 1.513 2013/09/15 18:45:00 tomwij Exp $
 
 # This file requires >=portage-2.1.1
 # New entries go on top.
 #
+
+# Tom Wijsman <TomWij@gentoo.org> (15 Sep 2013)
+# Mask JCE functionality of diablo-jdk because it depends on masked sun-jce-bin,
+# this needs to be revisited to either be dropped from the Portage tree or to
+# use the new way of doing JCE as part of a revision or version bump.
+dev-java/diablo-jdk jce
+
+# Tom Wijsman <TomWij@gentoo.org> (7 Sep 2013)
+# Dependency (www-servers/mongrel) currently only
+# works with Ruby 1.8; so, masking Ruby 1.9 USE flag
+# until Ruby 1.9 support is added to mongrel.
+net-proxy/swiftiply ruby_targets_ruby19
+
+# Jeff Horelick <jdhore@gentoo.org> (1 Sep 2013)
+# Dependency (media-libs/libsidplayfp) only keyworded
+# on x86 and amd64. Will unmask there.
+>=media-plugins/audacious-plugins-3.4 sid
+
+# Julian Ospald <hasufell@gentoo.org> (31 Aug 2013)
+# Randomly breaks consumers at runtime. Do not report
+# gentoo bugs.
+media-libs/libsdl2 custom-cflags
+
+# Mike Gilbert <floppym@gentoo.org> (23 Aug 2013)
+# Requires hard-masked ffmpeg.
+>=www-client/chromium-30 system-ffmpeg
+
+# Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (22 Aug 2013)
+# Causes build to fail, issue is being discussed with upstream
+>=www-plugins/gnash-0.8.10_p20130822 openvg
+
+# Tim Harder <radhermit@gentoo.org> (13 Aug 2013)
+# Requires dev-lang/luajit which is not keyworded by most arches.
+app-editors/vim luajit
+app-editors/gvim luajit
+
+# Alexis Ballier <aballier@gentoo.org> (11 Aug 2013)
+# Multilib migrated version for binary compatibility.
+# Those useflags have deps that are not migrated yet.
+=media-video/ffmpeg-0.10* libass pulseaudio frei0r openal gnutls rtmp vaapi sdl openssl
+
+# Kacper Kowalik <xarthisius@gentoo.org> (09 Aug 2013)
+# Doesn't work on most profiles. Easier to mask here and 
+# unmask in particular profiles
+sys-apps/hwloc cuda gl opencl
+
+# Samuli Suominen <ssuominen@gentoo.org> (07 Aug 2013)
+# There is no support for recent app-pda/libimobiledevice wrt bug #471920
+# Upstream removed entire support in future release:
+# http://code.google.com/p/clementine-player/source/detail?r=3d434f1c881890dd77fea6d0e3de3afc86971196
+# Remove this entry once <=media-sound/clementine-1.1.1 has left the building
+media-sound/clementine ios ipod
+
+# Ben de Groot <yngwin@gentoo.org> (07 Aug 2013)
+# Newer lightdm doesn't work with current razorqt-lightdm-greeter, bug 479734
+>=x11-misc/lightdm-1.5.0 razor
+
+# Andreas K. Huettel <dilfridge@gentoo.org> (21 Jul 2013)
+# designer is pulled in by kdelibs, designer[phonon] blocks kdelibs...
+# Lots of reports on difficulties. Acked by kensington for qt team
+dev-qt/designer phonon
 
 # Chí-Thanh Christopher Nguyễn <chithanh@gentoo.org> (13 Jul 2013)
 # GL/GLES support in cairo is mutually exclusive, bug #428770.
@@ -20,10 +81,10 @@ sys-libs/libcxxrt libunwind
 
 # Michael Weber <xmw@gentoo.org>  (19 Jun 2013)
 # Not fit for production
-=www-client/netsurf-3.0 fbcon pdf-writer gstreamer
+=www-client/netsurf-3.0* fbcon pdf-writer gstreamer
 
 # Anthony G. Basile <blueness@gentoo.org> (18 Jun 2013)
-# Only work on amd64/x86 
+# Only work on amd64/x86
 net-libs/cyassl aes-ni
 
 # Sergey Popov <pinkbyte@gentoo.org> (08 Jun 2013)
@@ -54,7 +115,7 @@ app-doc/doxygen sqlite
 # Lyx is currently not working with subversion 1.7 and needs 1.6.
 app-office/lyx subversion
 
-# Christian Faulhammer <fauli@gentoo.org> (0 May 2013)
+# Christian Faulhammer <fauli@gentoo.org> (08 May 2013)
 # Will not build successfully yet
 mail-client/claws-mail gtk3
 
@@ -109,11 +170,6 @@ media-sound/audacity ffmpeg
 # This flag is experimental and breaks googleearth
 # in numerous ways. Unsupportable.
 >=sci-geosciences/googleearth-7.0.2.8415-r2 system-qt
-
-# Samuli Suominen <ssuominen@gentoo.org> (20 Mar 2011)
-# The dependencies for these flags are still in ~arch so
-# we unmask them only for >=sys-fs/lvm2-2.02.98.
-<sys-fs/lvm2-2.02.98 clvm cman
 
 # Alexandre Rostovtsev <tetromino@gentoo.org> (30 Dec 2012)
 # sys-apps/biosdevname is keyworded only for amd64/x86
@@ -177,11 +233,6 @@ sys-auth/pam_mktemp prevent-removal
 # Ben de Groot <yngwin@gentoo.org> (30 Jul 2012)
 # fontconfig-infinality dependency not yet keyworded on most arches
 media-libs/freetype infinality
-
-# Ole Markus With <olemarkus@gentoo.org> (20 Jul 2012)
-# Kolab support broken with newer c-client. Masking use flag until either
-# problem is solved or the kolab patch is removed. Bug #416859
-dev-lang/php kolab
 
 # Ralph Sennhauser <sera@gentoo.org> (18 Jul 2012)
 # Requires masked eclipse-sdk.
@@ -319,11 +370,6 @@ dev-lang/path64 debugger
 # Samuli Suominen <ssuominen@gentoo.org> (16 Oct 2011)
 # Mask libbluray support here, and enable it per arch instead
 gnome-base/gvfs bluray
-
-# Alex Legler <a3li@gentoo.org> (13 Oct 2011)
-# The Ubuntu ALSA patch for tvtime is still somewhat unstable
-# c.f. bug 384215
-media-tv/tvtime alsa
 
 # Pawel Hajdan jr <phajdan.jr@gentoo.org> (12 Oct 2011)
 # Upstream support before 27.x not ready:
@@ -500,7 +546,5 @@ media-video/vlc audioqueue ios-vout macosx macosx-audio macosx-dialog-provider m
 media-video/vlc media-library
 
 # Alexis Ballier <aballier@gentoo.org> <28 Apr 2011>
-# Requires masked libcelt
-# Leave it unmasked for live ebuild, people should know what they do if they use
-# it anyway
-<media-video/ffmpeg-9999 celt
+# Requires ~arch libcelt and keywording
+<media-video/ffmpeg-2.0 celt

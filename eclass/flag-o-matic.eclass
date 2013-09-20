@@ -324,7 +324,9 @@ filter-mfpmath() {
 	orig_mfpmath=$(get-flag -mfpmath)
 	# get the value of the current -mfpmath flag
 	new_math=$(get-flag mfpmath)
-	new_math=" ${new_math//,/ } "
+	# convert "both" to something we can filter
+	new_math=${new_math/both/387,sse}
+	new_math=" ${new_math//[,+]/ } "
 	# figure out which math values are to be removed
 	prune_math=""
 	for prune_math in "$@" ; do

@@ -16,7 +16,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="jpeg opengl static-libs"
 
-RDEPEND="jpeg? ( virtual/jpeg )
+RDEPEND="jpeg? ( virtual/jpeg:0 )
 	opengl? ( virtual/opengl media-libs/freeglut )"
 DEPEND="${RDEPEND}
 	app-arch/unzip"

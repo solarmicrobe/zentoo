@@ -36,9 +36,9 @@ RDEPEND="
 	"
 
 python_prepare_all()  {
-	python_export_best
+	local PATCHES=( "${FILESDIR}"/layman-2.0.0.doctest.patch )
+	distutils-r1_python_prepare_all
 	eprefixify etc/layman.cfg layman/config.py
-	epatch "${FILESDIR}"/layman-2.0.0.doctest.patch
 }
 
 python_test() {

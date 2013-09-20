@@ -24,7 +24,8 @@ IUSE="debug minimal static-libs test"
 S="${WORKDIR}/${MY_P}"
 BUILDDIR="${S}/js/src"
 
-RDEPEND=">=dev-libs/nspr-4.7.0"
+RDEPEND=">=dev-libs/nspr-4.7.0
+	x64-macos? ( dev-libs/jemalloc )"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	app-arch/zip
@@ -109,6 +110,8 @@ src_compile() {
 
 src_test() {
 	cd "${BUILDDIR}/jsapi-tests" || die
+	# for bug 415791
+	pax-mark mr jsapi-tests
 	emake check
 }
 

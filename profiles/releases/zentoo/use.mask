@@ -23,6 +23,7 @@ authdaemond
 avahi
 avalon-framework
 avalon-logkit
+beautifulsoup3
 birdstep
 blas
 bluetooth
@@ -38,6 +39,8 @@ cdparanoia
 cdr
 chasen
 cjk
+clang
+clvm
 consolekit
 coreaudio
 cryptsetup

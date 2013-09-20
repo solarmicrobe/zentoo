@@ -4,7 +4,7 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_5,2_6,2_7,3_1,3_2} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2} )
 
 FORTRAN_NEEDED=lapack
 
@@ -63,7 +63,8 @@ pc_libs() {
 python_prepare_all() {
 	epatch \
 		"${FILESDIR}"/${PN}-1.6.1-atlas.patch \
-		"${FILESDIR}"/${P}-test-pareto.patch
+		"${FILESDIR}"/${PN}-1.6.2-distutils.patch \
+		"${FILESDIR}"/${PN}-1.6.2-test-pareto.patch
 
 	if use lapack; then
 		append-ldflags "$($(tc-getPKG_CONFIG) --libs-only-other cblas lapack)"

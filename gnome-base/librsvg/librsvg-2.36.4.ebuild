@@ -73,29 +73,11 @@ src_compile() {
 pkg_postinst() {
 	# causes segfault if set, see bug 375615
 	unset __GL_NO_DSO_FINALIZER
-
-	tmp_file=$(mktemp -t tmp.XXXXXXXXXXlibrsvg_ebuild)
-	# be atomic!
-	gdk-pixbuf-query-loaders > "${tmp_file}"
-	if [ "${?}" = "0" ]; then
-		cat "${tmp_file}" > "${EROOT}usr/$(get_libdir)/gdk-pixbuf-2.0/2.10.0/loaders.cache"
-	else
-		ewarn "Cannot update loaders.cache, gdk-pixbuf-query-loaders failed to run"
-	fi
-	rm "${tmp_file}"
+	gnome2_pkg_postinst
 }
 
 pkg_postrm() {
 	# causes segfault if set, see bug 375615
 	unset __GL_NO_DSO_FINALIZER
-
-	tmp_file=$(mktemp -t tmp.XXXXXXXXXXlibrsvg_ebuild)
-	# be atomic!
-	gdk-pixbuf-query-loaders > "${tmp_file}"
-	if [ "${?}" = "0" ]; then
-		cat "${tmp_file}" > "${EROOT}usr/$(get_libdir)/gdk-pixbuf-2.0/2.10.0/loaders.cache"
-	else
-		ewarn "Cannot update loaders.cache, gdk-pixbuf-query-loaders failed to run"
-	fi
-	rm "${tmp_file}"
+	gnome2_pkg_postrm
 }

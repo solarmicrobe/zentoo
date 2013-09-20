@@ -25,7 +25,7 @@ CDEPEND="
 	virtual/blas
 	cairo? ( x11-libs/cairo[X] x11-libs/pango )
 	icu? ( dev-libs/icu )
-	jpeg? ( virtual/jpeg )
+	jpeg? ( virtual/jpeg:0 )
 	lapack? ( virtual/lapack )
 	perl? ( dev-lang/perl )
 	png? ( media-libs/libpng )

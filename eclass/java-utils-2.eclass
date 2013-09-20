@@ -2330,10 +2330,10 @@ java-pkg_init_paths_() {
 	debug-print-function ${FUNCNAME} $*
 
 	local pkg_name
-	if [[ "$SLOT" == "0" ]] ; then
+	if [[ "${SLOT%/*}" == "0" ]] ; then
 		JAVA_PKG_NAME="${PN}"
 	else
-		JAVA_PKG_NAME="${PN}-${SLOT}"
+		JAVA_PKG_NAME="${PN}-${SLOT%/*}"
 	fi
 
 	JAVA_PKG_SHAREPATH="${DESTTREE}/share/${JAVA_PKG_NAME}"

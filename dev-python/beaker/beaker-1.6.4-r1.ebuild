@@ -8,7 +8,7 @@ EAPI=5
 # pypy random exceptions, someone should take a closer look, it may
 # be just the usual test suite overload
 # py3.3 unfit with some types
-PYTHON_COMPAT=( python{2_6,2_7,3_1,3_2} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2} )
 
 inherit distutils-r1
 

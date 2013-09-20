@@ -5,7 +5,7 @@
 EAPI=5
 
 # The selftests fail with pypy, and urlgrabber segfaults for me.
-PYTHON_COMPAT=( python{2_5,2_6,2_7,3_1,3_2,3_3} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 
 inherit distutils-r1
 
@@ -40,6 +40,11 @@ python_prepare_all() {
 	sed -e "/data_files=/d" -i setup.py || die
 
 	distutils-r1_python_prepare_all
+}
+
+python_compile() {
+	python_is_python3 || local -x CFLAGS="${CFLAGS} -fno-strict-aliasing"
+	distutils-r1_python_compile
 }
 
 python_test() {

@@ -26,6 +26,8 @@ RDEPEND=">=dev-libs/nspr-${NSPR_VER}
 	>=dev-db/sqlite-3.5
 	sys-libs/zlib"
 
+RESTRICT="test"
+
 S="${WORKDIR}/${P}/${PN}"
 
 src_setup() {

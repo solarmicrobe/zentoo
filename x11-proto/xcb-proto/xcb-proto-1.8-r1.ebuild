@@ -4,7 +4,7 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_5,2_6,2_7,3_1,3_2,3_3} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 inherit python-single-r1 xorg-2
 
 DESCRIPTION="X C-language Bindings protocol headers"

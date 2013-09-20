@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=5
-PYTHON_COMPAT=( python{2_5,2_6,2_7,3_1,3_2,3_3} pypy{1_9,2_0} )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} pypy2_0 )
 inherit python-r1
 
 DESCRIPTION="A virtual for the Python argparse module"
@@ -15,12 +15,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-setup_globals() {
-	local flag
-
-	RDEPEND="${PYTHON_DEPS}"
-	for flag in python_targets_python{2_5,2_6,3_1}; do
-		RDEPEND+=" ${flag}? ( dev-python/argparse[${flag}] )"
-	done
-}
-setup_globals
+RDEPEND="${PYTHON_DEPS}
+	$(python_gen_cond_dep \
+		"dev-python/argparse[$(python_gen_usedep python2_6)]" \
+		python2_6)"

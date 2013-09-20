@@ -126,12 +126,10 @@ EXPORT_FUNCTIONS pkg_setup pkg_preinst pkg_postinst src_install src_compile pkg_
 
 IUSE="kernel_linux"
 SLOT="0"
-if [[ -z ${VIRTUAL_MODUTILS} ]]; then
-	RDEPEND="kernel_linux? ( virtual/modutils )"
-	DEPEND="${RDEPEND}
-		sys-apps/sed
-		kernel_linux? ( virtual/linux-sources )"
-fi
+RDEPEND="kernel_linux? ( virtual/modutils )"
+DEPEND="${RDEPEND}
+	sys-apps/sed
+	kernel_linux? ( virtual/linux-sources )"
 
 # eclass utilities
 # ----------------------------------
