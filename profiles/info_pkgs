@@ -24,3 +24,4 @@ dev-util/pkgconfig
 # so this is not redundant
 sys-apps/baselayout
 sys-apps/openrc
+sys-apps/systemd
