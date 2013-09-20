@@ -28,6 +28,8 @@ sys-apps/gawk
 sys-apps/grep
 sys-apps/less
 sys-apps/net-tools
+# see bug #373219 why openrc is in here
+sys-apps/openrc
 sys-apps/sed
 sys-devel/binutils
 sys-devel/bison
