@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 # jruby → unneeded, this is part of the standard JRuby distribution, and
 # would just install a dummy.
@@ -10,40 +10,29 @@ USE_RUBY="ruby18 ruby19 ree18"
 
 RUBY_FAKEGEM_TASK_TEST="specs"
 
-RUBY_FAKEGEM_TASK_DOC="doc:rdoc"
+RUBY_FAKEGEM_TASK_DOC="doc:yard"
 RUBY_FAKEGEM_DOCDIR="doc"
-RUBY_FAKEGEM_EXTRADOC="History.txt README.rdoc"
+RUBY_FAKEGEM_EXTRADOC="README.md"
 
 inherit ruby-fakegem
 
 DESCRIPTION="Ruby extension for programmatically loading dynamic libraries"
 HOMEPAGE="http://wiki.github.com/ffi/ffi"
 
-SRC_URI="http://github.com/${PN}/${PN}/tarball/${PV} -> ${PN}-git-${PV}.tgz"
-RUBY_S="${PN}-${PN}-*"
+SRC_URI="http://github.com/${PN}/${PN}/archive/${PV}.tar.gz -> ${PN}-git-${PV}.tgz"
 
 IUSE=""
-LICENSE="BSD"
+LICENSE="LGPL-3"
 SLOT="0"
 KEYWORDS="amd64"
 
 RDEPEND="${RDEPEND} virtual/libffi"
 DEPEND="${DEPEND} virtual/libffi"
 
-ruby_add_bdepend "dev-ruby/rake-compiler dev-ruby/rdoc
+ruby_add_bdepend "dev-ruby/rake-compiler dev-ruby/yard
 	test? ( dev-ruby/rspec:2 )"
 
 ruby_add_rdepend "virtual/ruby-threads"
-
-each_ruby_prepare() {
-	case ${RUBY} in
-		*ruby19)
-			sed -i -e '1i Encoding.default_external = Encoding::UTF_8' tasks/setup.rb || die
-			;;
-		*)
-			;;
-	esac
-}
 
 each_ruby_compile() {
 	${RUBY} -S rake compile || die "compile failed"
