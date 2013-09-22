@@ -12,7 +12,7 @@ SRC_URI="http://poppler.freedesktop.org/${P}.tar.gz"
 
 LICENSE="GPL-2"
 KEYWORDS="amd64"
-SLOT="0/35"
+SLOT="0/37"
 IUSE="cairo cjk curl cxx debug doc +introspection +jpeg jpeg2k +lcms png qt4 tiff +utils"
 
 # No test data provided
@@ -31,7 +31,7 @@ COMMON_DEPEND="
 	jpeg? ( virtual/jpeg:0 )
 	jpeg2k? ( media-libs/openjpeg:0 )
 	lcms? ( media-libs/lcms:2 )
-	png? ( >=media-libs/libpng-1.4:0 )
+	png? ( media-libs/libpng:0= )
 	qt4? (
 		dev-qt/qtcore:4
 		dev-qt/qtgui:4
@@ -51,12 +51,6 @@ RDEPEND="${COMMON_DEPEND}
 "
 
 DOCS=(AUTHORS NEWS README README-XPDF TODO)
-
-PATCHES=(
-	"${FILESDIR}/${P}-nojpeg.patch"
-	"${FILESDIR}/${P}-interp.patch"
-	"${FILESDIR}/${P}-findgio.patch"
-)
 
 src_configure() {
 	# this is needed for multilib, see bug 459394

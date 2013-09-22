@@ -106,7 +106,7 @@ src_configure() {
 }
 
 src_compile() {
-	emake OTHERLDFLAGS="${LDFLAGS}"
+	emake OTHERLDFLAGS="${LDFLAGS}" sedscript all
 
 	if use doc ; then
 		einfo "Building HTML Documentation"

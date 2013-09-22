@@ -1,6 +1,5 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/eclass/git-r3.eclass,v 1.7 2013/09/19 09:42:32 mgorny Exp $
 
 # @ECLASS: git-r3.eclass
 # @MAINTAINER:

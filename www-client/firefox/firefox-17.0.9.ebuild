@@ -277,7 +277,13 @@ src_compile() {
 	else
 		CC="$(tc-getCC)" CXX="$(tc-getCXX)" LD="$(tc-getLD)" \
 		MOZ_MAKE_FLAGS="${MAKEOPTS}" \
-		emake -f client.mk || die "emake failed"
+		emake -f client.mk
+		if [ $? -ne 0 ]; then
+			ewarn "Build has failed, please see https://bugs.gentoo.org/show_bug.cgi?id=465728 for"
+			ewarn "possible solutions such as MAKEOPTS=-j1"
+			die
+		fi
+
 	fi
 
 }

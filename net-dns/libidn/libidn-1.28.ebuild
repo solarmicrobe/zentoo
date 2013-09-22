@@ -2,33 +2,35 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
-inherit elisp-common java-pkg-opt-2 mono
+EAPI=5
+
+inherit elisp-common java-pkg-opt-2 mono-env
 
 DESCRIPTION="Internationalized Domain Names (IDN) implementation"
 HOMEPAGE="http://www.gnu.org/software/libidn/"
 SRC_URI="mirror://gnu/libidn/${P}.tar.gz"
 
-LICENSE="GPL-2 GPL-3 LGPL-3"
+LICENSE="GPL-2 GPL-3 LGPL-3 java? ( Apache-2.0 )"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc emacs java mono nls static-libs"
 
 DOCS=( AUTHORS ChangeLog FAQ NEWS README THANKS TODO )
-
-COMMON_DEPEND="emacs? ( virtual/emacs )
-	mono? ( >=dev-lang/mono-0.95 )"
+COMMON_DEPEND="
+	emacs? ( virtual/emacs )
+	mono? ( >=dev-lang/mono-0.95 )
+"
 DEPEND="${COMMON_DEPEND}
 	nls? ( >=sys-devel/gettext-0.17 )
 	java? (
-		>=virtual/jdk-1.4
+		>=virtual/jdk-1.5
 		doc? ( dev-java/gjdoc )
-	)"
+	)
+"
 RDEPEND="${COMMON_DEPEND}
 	nls? ( virtual/libintl )
-	java? ( >=virtual/jre-1.4 )"
-
-SITEFILE=50${PN}-gentoo.el
+	java? ( >=virtual/jre-1.5 )
+"
 
 src_prepare() {
 	# bundled, with wrong bytecode
@@ -62,10 +64,10 @@ src_install() {
 
 	if use emacs; then
 		# *.el are installed by the build system
-		elisp-install ${PN} src/*.elc || die
-		elisp-site-file-install "${FILESDIR}/${SITEFILE}" || die
+		elisp-install ${PN} src/*.elc
+		elisp-site-file-install "${FILESDIR}/50${PN}-gentoo.el"
 	else
-		rm -rf "${ED}/usr/share/emacs"
+		rm -r "${ED}/usr/share/emacs" || die
 	fi
 
 	if use doc ; then
@@ -74,15 +76,14 @@ src_install() {
 
 	if use java ; then
 		java-pkg_newjar java/${P}.jar ${PN}.jar || die
-		rm -rf "${ED}"/usr/share/java || die
+		rm -r "${ED}"/usr/share/java || die
 
 		if use doc ; then
 			java-pkg_dojavadoc doc/java
 		fi
 	fi
-	if ! use static-libs; then
-		rm -f "${ED}"/usr/lib*/lib*.la
-	fi
+
+	prune_libtool_files
 }
 
 pkg_postinst() {

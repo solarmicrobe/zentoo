@@ -1,9 +1,9 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
-inherit flag-o-matic multilib toolchain-funcs eutils libtool
+EAPI=5
+inherit autotools flag-o-matic multilib toolchain-funcs eutils
 
 DESCRIPTION="Simple Direct Media Layer"
 HOMEPAGE="http://www.libsdl.org/"
@@ -58,7 +58,6 @@ pkg_setup() {
 		ewarn "Since you've chosen to use possibly unsafe CFLAGS,"
 		ewarn "don't bother filing libsdl-related bugs until trying to remerge"
 		ewarn "libsdl without the custom-cflags use flag in USE."
-		epause 10
 	fi
 }
 
@@ -66,9 +65,10 @@ src_prepare() {
 	epatch \
 		"${FILESDIR}"/${P}-sdl-config.patch \
 		"${FILESDIR}"/${P}-resizing.patch \
-		"${FILESDIR}"/${P}-joystick.patch
-
-	elibtoolize
+		"${FILESDIR}"/${P}-joystick.patch \
+		"${FILESDIR}"/${P}-gamma.patch \
+		"${FILESDIR}"/${P}-const-xdata32.patch
+	AT_M4DIR="/usr/share/aclocal acinclude" eautoreconf
 }
 
 src_configure() {
@@ -139,7 +139,7 @@ src_configure() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die "emake install failed"
+	emake DESTDIR="${D}" install
 	use static-libs || prune_libtool_files --all
 	dodoc BUGS CREDITS README README-SDL.txt README.HG TODO WhatsNew
 	dohtml -r ./

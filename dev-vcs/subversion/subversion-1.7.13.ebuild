@@ -20,7 +20,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="apache2 berkdb ctypes-python debug doc +dso extras gnome-keyring java kde nls perl python ruby sasl test vim-syntax +webdav-neon webdav-serf"
 
-COMMON_DEPEND=">=dev-db/sqlite-3.4[threadsafe(+)]
+COMMON_DEPEND=">=dev-db/sqlite-3.6.18[threadsafe(+)]
 	>=dev-libs/apr-1.3:1
 	>=dev-libs/apr-util-1.3:1
 	dev-libs/expat

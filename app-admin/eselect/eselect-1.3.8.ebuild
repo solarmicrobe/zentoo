@@ -10,7 +10,7 @@ DESCRIPTION="Gentoo's multi-purpose configuration and management tool"
 HOMEPAGE="http://wiki.gentoo.org/wiki/Project:Eselect"
 SRC_URI="mirror://gentoo/${P}.tar.xz"
 
-LICENSE="GPL-2+"
+LICENSE="GPL-2+ || ( GPL-2+ CC-BY-SA-2.5 )"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc emacs vim-syntax"

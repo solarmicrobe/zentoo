@@ -7,7 +7,7 @@ inherit autotools eutils libtool
 
 DESCRIPTION="A sophisticated ftp/sftp/http/https/torrent client and file transfer program"
 HOMEPAGE="http://lftp.yar.ru/"
-SRC_URI="ftp://ftp.yars.free.net/pub/source/${PN}/${P}.tar.xz"
+SRC_URI="http://${PN}.yar.ru/ftp/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
