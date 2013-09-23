@@ -50,7 +50,15 @@ linux-image_pkg_config() {
 	eend $?
 
 	# kernel command line
-	cmdline="rd.md=1 rd.lvm=1 rd.lvm.vg=vg init=/usr/lib/systemd/systemd"
+	if mdadm --detail $root_device &>/dev/null; then
+		cmdline="${cmdline} rd.md=1"
+	fi
+
+	if ! vgs 2>&1 | grep -q 'No volume groups'; then
+		cmdline="${cmdline} rd.lvm=1 rd.lvm.vg=vg"
+	fi
+
+	cmdline="${cmdline} init=/usr/lib/systemd/systemd"
 
 	# figure out the physical boot device
 	if mdadm --detail $root_device &>/dev/null; then
