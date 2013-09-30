@@ -20,3 +20,7 @@ net-ftp/lftp openssl
 
 # libvirt drivers and tools we support
 app-emulation/libvirt lvm lxc pcap
+
+# make default what should be default
+app-text/vim python ruby
+sys-apps/systemd python
