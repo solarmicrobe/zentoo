@@ -54,7 +54,7 @@ linux-image_pkg_config() {
 		cmdline="${cmdline} rd.md=1"
 	fi
 
-	if ! vgs 2>&1 | grep -q 'No volume groups'; then
+	if [[ "$(lvs)" != "" ]]; then
 		cmdline="${cmdline} rd.lvm=1 rd.lvm.vg=vg"
 	fi
 
