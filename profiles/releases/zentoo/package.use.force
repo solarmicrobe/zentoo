@@ -24,3 +24,6 @@ app-emulation/libvirt lvm lxc pcap
 # make default what should be default
 app-text/vim python ruby
 sys-apps/systemd python
+
+# prevent broken default use flags
+dev-lang/php truetype gd
