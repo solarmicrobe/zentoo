@@ -4,6 +4,7 @@ app-admin/chef-server
 app-admin/chef-server-api
 app-admin/chef-solr
 app-admin/ec2-ami-tools
+app-admin/ec2-api-tools
 app-arch/libarchive
 app-emulation/lxc
 app-misc/realpath

@@ -15,7 +15,6 @@ S=${WORKDIR}/${PN}-${PV}
 LICENSE="Amazon"
 SLOT="0"
 KEYWORDS="amd64"
-RESTRICT="mirror"
 
 CDEPEND="dev-java/bcprov:1.45
 	dev-java/commons-cli:1
