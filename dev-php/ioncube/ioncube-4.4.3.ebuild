@@ -14,7 +14,7 @@ inherit php-ext-source-r2
 
 DESCRIPTION="PHP extension for using memcached."
 HOMEPAGE="http://www.ioncube.com/loaders.php"
-SRC_URI="http://www.zentoo.org/distfiles/ioncube_loaders_lin_x86-64-${PV}.tar.bz2"
+SRC_URI="http://mirror.zenops.net/distfiles/ioncube_loaders_lin_x86-64-${PV}.tar.gz"
 
 LICENSE="ionCube-Loaders"
 SLOT="0"

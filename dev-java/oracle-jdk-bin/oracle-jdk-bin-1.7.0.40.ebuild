@@ -15,14 +15,14 @@ AT_AVAILABLE=( amd64 )
 # Sometimes some or all of the demos are missing, this is to not have to rewrite half
 # the ebuild when it happens.
 DEMOS_AVAILABLE=( amd64 )
-FX_VERSION="2_2_25"
+FX_VERSION="2_2_40"
 
 MY_PV="$(get_version_component_range 2)u$(get_version_component_range 4)"
 S_PV="$(replace_version_separator 3 '_')"
 
 AT_x86="jdk-${MY_PV}-linux-i586.tar.gz"
 AT_amd64="jdk-${MY_PV}-linux-x64.tar.gz"
-AT_arm="jdk-${MY_PV}-linux-arm-sfp.tar.gz"
+AT_arm="jdk-${MY_PV}-linux-arm-vfp-sflt.tar.gz jdk-${MY_PV}-linux-arm-vfp-hflt.tar.gz"
 AT_x86_solaris="jdk-${MY_PV}-solaris-i586.tar.gz"
 AT_x64_solaris="${AT_x86_solaris} jdk-${MY_PV}-solaris-x64.tar.gz"
 AT_sparc_solaris="jdk-${MY_PV}-solaris-sparc.tar.gz"
@@ -32,7 +32,7 @@ FXDEMOS_linux="javafx_samples-${FX_VERSION}-linux.zip"
 
 DEMOS_x86="${FXDEMOS_linux} jdk-${MY_PV}-linux-i586-demos.tar.gz"
 DEMOS_amd64="${FXDEMOS_linux} jdk-${MY_PV}-linux-x64-demos.tar.gz"
-DEMOS_arm="${FXDEMOS_linux} jdk-${MY_PV}-linux-arm-sfp-demos.tar.gz"
+DEMOS_arm="${FXDEMOS_linux} jdk-${MY_PV}-linux-arm-vfp-sflt-demos.tar.gz jdk-${MY_PV}-linux-arm-vfp-hflt-demos.tar.gz"
 DEMOS_x86_solaris="jdk-${MY_PV}-solaris-i586-demos.tar.gz"
 DEMOS_x64_solaris="${DEMOS_x86_solaris} jdk-${MY_PV}-solaris-x64-demos.tar.gz"
 DEMOS_sparc_solaris="jdk-${MY_PV}-solaris-sparc-demos.tar.gz"
@@ -116,6 +116,23 @@ pkg_nofetch() {
 	check_tarballs_available "${JDK_URI}" "${distfiles[@]}"
 
 	use jce && check_tarballs_available "${JCE_URI}" "${JCE_FILE}"
+}
+
+src_unpack() {
+	# Special case for ARM soft VS hard float.
+	if use arm ; then
+		if [[ ${CHOST} == *-hardfloat-* ]] ; then
+			unpack jdk-${MY_PV}-linux-arm-vfp-hflt.tar.gz
+			use examples && unpack jdk-${MY_PV}-linux-arm-vfp-hflt-demos.tar.gz
+		else
+			unpack jdk-${MY_PV}-linux-arm-vfp-sflt.tar.gz
+			use examples && unpack jdk-${MY_PV}-linux-arm-vfp-sflt-demos.tar.gz
+		fi
+		use examples && unpack javafx_samples-${FX_VERSION}-linux.zip
+		use jce && unpack ${JCE_FILE}
+	else
+		default
+	fi
 }
 
 src_prepare() {

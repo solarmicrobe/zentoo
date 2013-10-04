@@ -11,7 +11,6 @@ app-misc/realpath
 app-office/openerp
 dev-db/mysql
 dev-db/mysql-init-scripts
-dev-java/oracle-jdk-bin
 dev-python/pychart
 dev-python/pywebdav
 dev-python/suds
