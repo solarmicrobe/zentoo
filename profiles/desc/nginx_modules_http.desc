@@ -16,6 +16,7 @@ charset - This module can reencode data of one encoding into another.
 dav - This module adds the HTTP and WebDAV methods PUT, DELETE, MKCOL, COPY and MOVE.
 dav_ext - Add missing WebDAV methods PROPFIND & OPTIONS to the existing WebDAV module.
 degradation - Allows to return 204 or 444 code for some locations on low memory condition (reliable on FreeBSD only)
+echo - Brings "echo", "sleep", "time", "exec" and more shell-style goodies to Nginx config file.
 empty_gif - This module keeps a 1x1 transparent GIF in memory that can be served very quickly.
 fancyindex - This module makes possible the generation of file listings, like the built-in autoindex module does, but adding a touch of style.
 fastcgi - This module allows Nginx to interact with FastCGI processes and control what parameters are passed to the process.
