@@ -31,13 +31,13 @@ bootstrap your servers.
 
 Download Zentoo from the following locations:
 
-* [master](http://zentoo.org/downloads/amd64)
-* [next](http://next.zentoo.org/downloads/amd64)
+* [master](http://mirror.zenops.net/zentoo/amd64)
+* [next](http://mirror.zenops.net/zentoo-next/amd64)
 
 The Zentoo rsync and distfiles mirrors are:
 
-* `SYNC="rsync://rsync.zentoo.org/zentoo-portage" and SYNC="rsync://rsync.zentoo.org/zentoo-portage-next"`
-* `GENTOO_MIRRORS="http://www.zentoo.org"`
+* `SYNC="rsync://mirror.zenops.net/zentoo-portage" and SYNC="rsync://mirror.zenops.net/zentoo-portage-next"`
+* `GENTOO_MIRRORS="http://mirror.zenops.net/zentoo"`
 
 ## Contributing
 
