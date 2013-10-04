@@ -22,6 +22,7 @@ media-gfx/imagemagick
 media-libs/libjpeg-turbo
 sys-apps/newrelic-sysmond
 sys-block/megacli
+sys-block/tw_cli
 sys-boot/grub
 sys-process/htop
 virtual/editor
