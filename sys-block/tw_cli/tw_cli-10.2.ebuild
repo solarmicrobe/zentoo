@@ -11,7 +11,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 # stripping seems to break this sometimes
-RESTRICT="strip primaryuri"
+RESTRICT="strip"
 # binary packages
 DEPEND="app-arch/unzip"
 RDEPEND=""
