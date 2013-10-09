@@ -31,7 +31,7 @@ RDEPEND="${PYTHON_DEPS}
 	dev-python/docutils[${PYTHON_USEDEP}]
 	dev-python/feedparser[${PYTHON_USEDEP}]
 	dev-python/gdata[${PYTHON_USEDEP}]
-	dev-python/imaging[${PYTHON_USEDEP}]
+	virtual/python-imaging[${PYTHON_USEDEP}]
 	dev-python/jinja[${PYTHON_USEDEP}]
 	dev-python/lxml[${PYTHON_USEDEP}]
 	dev-python/mako[${PYTHON_USEDEP}]
