@@ -223,6 +223,12 @@ tc-export_build_env() {
 	: ${BUILD_CPPFLAGS:=}
 	: ${BUILD_LDFLAGS:=}
 	export BUILD_{C,CXX,CPP,LD}FLAGS
+
+	# Some packages use XXX_FOR_BUILD.
+	local v
+	for v in BUILD_{C,CXX,CPP,LD}FLAGS ; do
+		export ${v#BUILD_}_FOR_BUILD="${!v}"
+	done
 }
 
 # @FUNCTION: tc-env_build
