@@ -1,0 +1,91 @@
+diff --git a/plugins/guests/debian/cap/change_host_name.rb b/plugins/guests/debian/cap/change_host_name.rb
+index 2107ea9..24dbe02 100644
+--- a/plugins/guests/debian/cap/change_host_name.rb
++++ b/plugins/guests/debian/cap/change_host_name.rb
+@@ -3,29 +3,15 @@ module VagrantPlugins
+     module Cap
+       class ChangeHostName
+         def self.change_host_name(machine, name)
+-          machine.communicate.tap do |comm|
+-
+-            # Get the current hostname
+-            # if existing fqdn setup improperly, this returns just hostname
+-            old = ''
+-            comm.sudo "hostname -f" do |type, data|
+-             if type == :stdout
+-               old = data.chomp
+-             end
+-            end
+-
+-            # this works even if they're not both fqdn
+-            if old.split('.')[0] != name.split('.')[0]
+-
+-              comm.sudo("sed -i 's/.*$/#{name.split('.')[0]}/' /etc/hostname")
+-
+-              # hosts should resemble:
+-              # 127.0.1.1   host.fqdn.com host
+-              # First to set fqdn
+-              comm.sudo("sed -i 's@#{old}@#{name}@' /etc/hosts")
+-              # Second to set hostname
+-              comm.sudo("sed -i 's@#{old.split('.')[0]}@#{name.split('.')[0]}@' /etc/hosts")
++          name = name.split('.')
++          hostname = name.shift
++          domain = name.empty? ? "local" : name.join('.')
+ 
++          machine.communicate.tap do |comm|
++            if !comm.test("sudo hostname -f | grep '#{hostname}.#{domain}'")
++              comm.sudo("echo #{hostname} > /etc/hostname")
++              comm.sudo("echo '127.0.0.1 #{hostname}.#{domain} #{hostname} localhost' > /etc/hosts")
++              comm.sudo("echo '::1 #{hostname}.#{domain} #{hostname} localhost' >> /etc/hosts")
+               comm.sudo("hostname -F /etc/hostname")
+               comm.sudo("hostname --fqdn > /etc/mailname")
+               comm.sudo("ifdown -a; ifup -a; ifup eth0")
+diff --git a/plugins/guests/ubuntu/cap/change_host_name.rb b/plugins/guests/ubuntu/cap/change_host_name.rb
+index 6363ab7..3dd7e60 100644
+--- a/plugins/guests/ubuntu/cap/change_host_name.rb
++++ b/plugins/guests/ubuntu/cap/change_host_name.rb
+@@ -3,35 +3,16 @@ module VagrantPlugins
+     module Cap
+       class ChangeHostName
+         def self.change_host_name(machine, name)
+-          machine.communicate.tap do |comm|
+-
+-            # Get the current hostname
+-            # if existing fqdn setup improperly, this returns just hostname
+-            old = ''
+-            comm.sudo "hostname -f" do |type, data|
+-             if type == :stdout
+-               old = data.chomp
+-             end
+-            end
+-
+-            # this works even if they're not both fqdn
+-            if old.split('.')[0] != name.split('.')[0]
++          name = name.split('.')
++          hostname = name.shift
++          domain = name.empty? ? "local" : name.join('.')
+ 
+-              comm.sudo("sed -i 's/.*$/#{name.split('.')[0]}/' /etc/hostname")
+-
+-              # hosts should resemble:
+-              # 127.0.1.1   host.fqdn.com host
+-              # First to set fqdn
+-              comm.sudo("sed -i 's@#{old}@#{name}@' /etc/hosts")
+-              # Second to set hostname
+-              comm.sudo("sed -i 's@#{old.split('.')[0]}@#{name.split('.')[0]}@' /etc/hosts")
+-
+-              if comm.test("[ `lsb_release -c -s` = hardy ]")
+-                # hostname.sh returns 1, so I grep for the right name in /etc/hostname just to have a 0 exitcode
+-                comm.sudo("/etc/init.d/hostname.sh start; grep '#{name}' /etc/hostname")
+-              else
+-                comm.sudo("service hostname start")
+-              end
++          machine.communicate.tap do |comm|
++            if !comm.test("sudo hostname -f | grep '#{hostname}.#{domain}'")
++              comm.sudo("echo #{hostname} > /etc/hostname")
++              comm.sudo("echo '127.0.0.1 #{hostname}.#{domain} #{hostname} localhost' > /etc/hosts")
++              comm.sudo("echo '::1 #{hostname}.#{domain} #{hostname} localhost' >> /etc/hosts")
++              comm.sudo("service hostname start")
+               comm.sudo("hostname --fqdn > /etc/mailname")
+               comm.sudo("ifdown -a; ifup -a; ifup -a --allow=hotplug")
+             end
