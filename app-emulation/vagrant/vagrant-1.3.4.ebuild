@@ -50,7 +50,6 @@ all_ruby_prepare() {
 
 	# loosen dependencies
 	sed -e '/childprocess\|erubis\|log4r\|net-scp\|net-ssh/s/~>/>=/' \
-		-e '/json/s/, "< 1.8.0"//' \
 		-i ${PN}.gemspec || die
 
 	epatch "${FILESDIR}"/${PN}-1.2.1-no-warning.patch
