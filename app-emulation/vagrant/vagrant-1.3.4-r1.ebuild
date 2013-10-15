@@ -55,6 +55,7 @@ all_ruby_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.2.1-no-warning.patch
 	epatch "${FILESDIR}"/${PN}-1.2.2-rvm.patch
 	epatch "${FILESDIR}"/${PN}-1.3.4-hostname.patch
+	epatch "${FILESDIR}"/${PN}-1.3.4-rubygems2.patch
 }
 
 pkg_postinst() {
