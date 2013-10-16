@@ -6,7 +6,7 @@ EAPI=5
 
 if [[ ${PV} == "9999" ]]; then
 	EGIT_REPO_URI="git://roy.marples.name/${PN}.git"
-	inherit git-2
+	inherit git-r3
 else
 	MY_P="${P/_alpha/-alpha}"
 	MY_P="${MY_P/_beta/-beta}"
@@ -22,10 +22,11 @@ DESCRIPTION="A fully featured, yet light weight RFC2131 compliant DHCP client"
 HOMEPAGE="http://roy.marples.name/projects/dhcpcd/"
 LICENSE="BSD-2"
 SLOT="0"
-IUSE="elibc_glibc"
+IUSE="elibc_glibc ipv6 +udev"
 
-DEPEND=""
-RDEPEND=""
+COMMON_DEPEND="udev? ( virtual/udev )"
+DEPEND="${COMMON_DEPEND}"
+RDEPEND="${COMMON_DEPEND}"
 
 src_prepare()
 {
@@ -34,13 +35,17 @@ src_prepare()
 
 src_configure()
 {
-	local hooks="--with-hook=ntp.conf"
+	local dev hooks
+	use udev || dev="--without-dev --without-udev"
+	hooks="--with-hook=ntp.conf"
 	use elibc_glibc && hooks="${hooks} --with-hook=yp.conf"
 	econf \
 			--prefix="${EPREFIX}" \
 			--libexecdir="${EPREFIX}/lib/dhcpcd" \
 			--dbdir="${EPREFIX}/var/lib/dhcpcd" \
 		--localstatedir="${EPREFIX}/var" \
+		$(use_enable ipv6) \
+		${dev} \
 		${hooks}
 }
 
@@ -73,6 +78,11 @@ pkg_postinst()
 	elog "This behaviour can be controlled with the noipv4ll configuration"
 	elog "file option or the -L command line switch."
 	elog "See the dhcpcd and dhcpcd.conf man pages for more details."
+
+	elog
+	elog "Dhcpcd has duid enabled by default, and this may cause issues"
+	elog "with some dhcp servers. For more information, see"
+	elog "https://bugs.gentoo.org/show_bug.cgi?id=477356"
 
 	if ! has_version net-dns/bind-tools; then
 		elog
