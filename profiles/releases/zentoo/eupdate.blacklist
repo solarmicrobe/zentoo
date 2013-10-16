@@ -7,7 +7,6 @@ app-admin/ec2-ami-tools
 app-admin/ec2-api-tools
 app-arch/libarchive
 app-emulation/lxc
-app-misc/realpath
 app-office/openerp
 dev-db/mysql
 dev-db/mysql-init-scripts

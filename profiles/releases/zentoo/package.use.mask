@@ -50,7 +50,6 @@ app-text/ghostscript-gpl X
 dev-java/ant X
 dev-java/sun-jdk X
 dev-lang/R X
-dev-python/imaging X
 media-gfx/imagemagick X
 media-libs/giflib X
 media-libs/t1lib X

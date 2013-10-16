@@ -38,7 +38,7 @@ DEPEND="${CDEPEND}
 	doc? ( app-arch/unzip )
 	sparse? ( dev-lang/swig )"
 RDEPEND="${CDEPEND}
-	dev-python/imaging"
+	virtual/python-imaging"
 
 # buggy test suite - still true for 0.9.0
 #RESTRICT="test"
