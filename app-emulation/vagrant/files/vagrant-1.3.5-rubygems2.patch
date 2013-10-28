@@ -1,5 +1,5 @@
---- vagrant-1.3.4/plugins/commands/plugin/action/install_gem.rb
-+++ vagrant-1.3.4/plugins/commands/plugin/action/install_gem.rb
+--- vagrant-1.3.5/plugins/commands/plugin/action/install_gem.rb
++++ vagrant-1.3.5/plugins/commands/plugin/action/install_gem.rb
 @@ -1,6 +1,10 @@
  require "rubygems"
  require "rubygems/dependency_installer"
@@ -12,7 +12,7 @@
  
  require "log4r"
  
-@@ -26,8 +30,13 @@ module VagrantPlugins
+@@ -26,8 +30,13 @@
            if plugin_name =~ /\.gem$/
              # If we're installing from a gem file, determine the name
              # based on the spec in the file.
@@ -27,9 +27,9 @@
            end
  
            # Install the gem
---- vagrant-1.3.4/plugins/commands/plugin/action/prune_gems.rb
-+++ vagrant-1.3.4/plugins/commands/plugin/action/prune_gems.rb
-@@ -126,6 +126,10 @@ module VagrantPlugins
+--- vagrant-1.3.5/plugins/commands/plugin/action/prune_gems.rb
++++ vagrant-1.3.5/plugins/commands/plugin/action/prune_gems.rb
+@@ -126,6 +126,10 @@
  
            if prune_specs.length > 0
              env[:gem_helper].with_environment do
