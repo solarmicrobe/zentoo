@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/app-emulation/virtualbox-modules/virtualbox-modules-4.3.0.ebuild,v 1.1 2013/10/15 13:24:20 polynomial-c Exp $
 
 # XXX: the tarball here is just the kernel modules split out of the binary
 #      package that comes from virtualbox-bin
@@ -16,7 +16,7 @@ SRC_URI="http://dev.gentoo.org/~polynomial-c/virtualbox/${MY_P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE="pax_kernel"
 
 RDEPEND="!=app-emulation/virtualbox-9999"
@@ -51,9 +51,6 @@ src_install() {
 
 pkg_postinst() {
 	linux-mod_pkg_postinst
-	elog "Starting with the 3.x release new kernel modules were added,"
-	elog "be sure to load all the needed modules."
-	elog ""
 	elog "Please add \"vboxdrv\", \"vboxnetflt\" and \"vboxnetadp\" to:"
 	elog "/etc/conf.d/modules"
 }
