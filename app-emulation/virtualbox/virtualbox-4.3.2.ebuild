@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-emulation/virtualbox/virtualbox-4.3.0-r2.ebuild,v 1.1 2013/10/22 04:17:17 polynomial-c Exp $
+# $Header: $
 
 EAPI=5
 
@@ -17,9 +17,9 @@ S="${WORKDIR}/${MY_P}"
 DESCRIPTION="Family of powerful x86 virtualization products for enterprise as well as home use"
 HOMEPAGE="http://www.virtualbox.org/"
 
-KEYWORDS="amd64"
 LICENSE="GPL-2"
 SLOT="0"
+KEYWORDS="amd64"
 IUSE="+additions alsa doc extensions headless java multilib pam pulseaudio +opengl python +qt4 +sdk vboxwebsrv vnc"
 
 RDEPEND="!app-emulation/virtualbox-bin
@@ -272,12 +272,12 @@ src_install() {
 		newconfd "${FILESDIR}"/vboxwebsrv-confd vboxwebsrv
 	fi
 
-	local GCFILE="*gc"
+	local gcfiles="*gc"
 	if use amd64 && ! use multilib ; then
-		GCFILE=""
+		gcfiles=""
 	fi
 
-	for each in VBox{Manage,SVC,XPCOMIPCD,Tunctl,NetAdpCtl,NetDHCP,NetNAT,ExtPackHelperApp} *so *r0 ${GCFILE} ; do
+	for each in VBox{Manage,SVC,XPCOMIPCD,Tunctl,NetAdpCtl,NetDHCP,NetNAT,ExtPackHelperApp} *so *r0 ${gcfiles} ; do
 		doins $each
 		fowners root:vboxusers /usr/$(get_libdir)/${PN}/${each}
 		fperms 0750 /usr/$(get_libdir)/${PN}/${each}

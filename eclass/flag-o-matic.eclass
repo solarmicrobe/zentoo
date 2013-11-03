@@ -28,13 +28,13 @@ setup-allowed-flags() {
 	ALLOWED_FLAGS+=" -fbounds-checking -fno-strict-overflow"
 	ALLOWED_FLAGS+=" -fno-PIE -fno-pie -fno-unit-at-a-time"
 	ALLOWED_FLAGS+=" -g -g[0-9] -ggdb -ggdb[0-9] -gstabs -gstabs+"
-	ALLOWED_FLAGS+=" -fno-ident -fpermissive"
+	ALLOWED_FLAGS+=" -fno-ident -fpermissive -frecord-gcc-switches"
 	ALLOWED_FLAGS+=" -W* -w"
 
 	# allow a bunch of flags that negate features / control ABI
 	ALLOWED_FLAGS+=" -fno-stack-protector -fno-stack-protector-all \
 		-fno-strict-aliasing -fno-bounds-checking -fstrict-overflow \
-		-fno-omit-frame-pointer"
+		-fno-omit-frame-pointer -fno-builtin*"
 	ALLOWED_FLAGS+=" -mregparm -mno-app-regs -mapp-regs -mno-mmx -mno-sse \
 		-mno-sse2 -mno-sse3 -mno-ssse3 -mno-sse4 -mno-sse4.1 -mno-sse4.2 \
 		-mno-avx -mno-aes -mno-pclmul -mno-sse4a -mno-3dnow -mno-popcnt \

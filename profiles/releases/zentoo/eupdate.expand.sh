@@ -3,9 +3,8 @@
 case $1 in
 app-arch/xz-utils)                       echo "=$1-5.0.5-r1";;
 app-editors/vim*)                        echo "=$1-7.3.1214";;
-app-emulation/vagrant)                   echo "=$1-1.2.4";;
-app-emulation/virtualbox*)               echo "=$1-4.2.16";;
-app-misc/tmux)                           echo "=$1-1.8";;
+app-emulation/vagrant)                   echo "=$1-1.3.5";;
+app-emulation/virtualbox*)               echo "=$1-4.3.2";;
 app-text/docbook-sgml-dtd)               echo "=$1-3.0-r3"
                                          echo "=$1-3.1-r3"
                                          echo "=$1-4.0-r3"
@@ -100,7 +99,7 @@ sys-devel/bc)                            echo "=$1-1.06.95-r1";;
 sys-firmware/seabios)                    echo "=$1-1.7.2.1";;
 sys-fs/mdadm)                            echo "=$1-3.2.6-r1";;
 sys-kernel/dracut)                       echo "=$1-031-r1";;
-sys-kernel/gentoo-sources)               echo "=$1-3.10.12";;
+sys-kernel/gentoo-sources)               echo "=$1-3.10.17";;
 virtual/httpd-php)                       echo "=$1-5.3"
                                          echo "=$1-5.4-r1";;
 virtual/jdk)                             echo "=$1-1.7.0";;

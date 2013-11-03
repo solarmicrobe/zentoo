@@ -937,7 +937,7 @@ unipatch() {
 				     xz) PIPE_CMD="xz -dc";;
 				   lzma) PIPE_CMD="lzma -dc";;
 				    bz2) PIPE_CMD="bzip2 -dc";;
-				  patch) PIPE_CMD="cat";;
+				  patch*) PIPE_CMD="cat";;
 				   diff) PIPE_CMD="cat";;
 				 gz|Z|z) PIPE_CMD="gzip -dc";;
 				ZIP|zip) PIPE_CMD="unzip -p";;
