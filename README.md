@@ -10,7 +10,7 @@ and are supported by [ZenOps Chef](https://github.com/zenops/chef). Still
 package versions tend to be more up-to-date and new server-related packages
 have been added to the tree.
 
-Zentoo uses [*systemd*](http://www.freedesktop.org/wiki/Software/systemd/)
+Zentoo uses [systemd](http://www.freedesktop.org/wiki/Software/systemd/)
 exclusively. OpenRC is still installed for various helper scripts though. As
 soon as Gentoo has fixed [Bug
 373219](https://bugs.gentoo.org/show_bug.cgi?id=373219) we will remove OpenRC
