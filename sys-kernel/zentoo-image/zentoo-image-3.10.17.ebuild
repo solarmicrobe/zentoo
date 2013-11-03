@@ -9,7 +9,7 @@ inherit linux-image
 DESCRIPTION="Zentoo Kernel Image"
 HOMEPAGE="http://www.zentoo.org"
 
-BASE_URI="http://www.zentoo.org/downloads"
+BASE_URI="http://mirror.zenops.net/zentoo"
 SRC_URI="amd64? ( ${BASE_URI}/amd64/linux/linux-${PV}-gentoo-${PR}.tar.xz )"
 
 LICENSE="GPL-2"

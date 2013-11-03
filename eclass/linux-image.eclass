@@ -5,6 +5,8 @@
 # @MAINTAINER: hollow@gentoo.org
 # @BLURB: eclass used for installing prebuilt linux kernel images
 
+inherit linux-mod
+
 IUSE=""
 SLOT="${PV}"
 
