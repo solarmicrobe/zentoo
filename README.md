@@ -46,7 +46,7 @@ packages in the tree are always installable (stable).
 Zentoo tries very hard to stay lean and fast. After all, most packages in the
 Gentoo repository are not needed on servers. At the time of writing this the
 Zentoo repository contained only about 7% (1236) of Gentoos packages. As a
-result dependency calucation is very fast in Zentoo.
+result dependency calculation is very fast in Zentoo.
 
 To prevent unnecessary dependencies in the tree we extensively use the
 following profile files:
