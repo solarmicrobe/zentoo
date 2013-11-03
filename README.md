@@ -10,6 +10,17 @@ and are supported by [ZenOps Chef](https://github.com/zenops/chef). Still
 package versions tend to be more up-to-date and new server-related packages
 have been added to the tree.
 
+Zentoo uses [*systemd*](http://www.freedesktop.org/wiki/Software/systemd/)
+exclusively. OpenRC is still installed for various helper scripts though. As
+soon as Gentoo has fixed [Bug
+373219](https://bugs.gentoo.org/show_bug.cgi?id=373219) we will remove OpenRC
+support completely.
+
+Zentoo also provides a binary kernel image (`sys-kernel/zentoo-image`) with
+VirtualBox modules, a Dracut initramfs and a `pkg_config` action that detects
+and installs a boot loader, fstab and everything else that is neccesary to
+boot.
+
 ## Usage
 
 Zentoo provides stages and images that can be used in the same way as Gentoo.
