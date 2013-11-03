@@ -1,5 +1,6 @@
 *.log
 .promptignore
+cache/
 distfiles/
 eix.cache.*
 etc/
