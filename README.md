@@ -36,6 +36,9 @@ git clone --recursive https://github.com/zentoo/zentoo
 The repository contains various helper scripts in the `scripts` folder which
 are described below.
 
+Consult the [Gentoo Development Guide](http://devmanual.gentoo.org/) on how to
+create and maintain ebuilds.
+
 ### Keywording Policy
 
 Zentoo does not have a distinction between stable and unstable packages. All
