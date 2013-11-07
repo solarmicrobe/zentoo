@@ -4,6 +4,8 @@
 
 EAPI=5
 
+KV_FULL="${PV}-gentoo"
+
 inherit linux-image
 
 DESCRIPTION="Zentoo Kernel Image"

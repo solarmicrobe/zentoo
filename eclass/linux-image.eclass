@@ -5,8 +5,6 @@
 # @MAINTAINER: hollow@gentoo.org
 # @BLURB: eclass used for installing prebuilt linux kernel images
 
-inherit linux-mod
-
 IUSE=""
 SLOT="${PV}"
 
@@ -19,6 +17,12 @@ S=${WORKDIR}
 
 linux-image_src_install() {
 	mv "${S}"/* "${D}"/ || die
+}
+
+linux-image_pkg_postinst() {
+	ebegin "Updating module dependencies for ${KV_FULL}"
+	depmod -a -b "${ROOT}" ${KV_FULL}
+	eend $?
 }
 
 linux-image_pkg_config() {
@@ -89,8 +93,6 @@ linux-image_pkg_config() {
 		einfo "Using legacy grub-1 with MBR partition map"
 
 		# use latest kernel according to mtime
-		local KV=$(ls --sort=time /boot/kernel-* | head -n1 | sed 's:/boot/kernel-::')
-
 		emerge --nospinner -q -n sys-boot/grub:0
 
 		echo "default 0" > /boot/grub/grub.conf
@@ -109,8 +111,8 @@ linux-image_pkg_config() {
 
 			echo -e "\ntitle Gentoo Linux on ${device}" >> /boot/grub/grub.conf
 			echo "root (${grub_device},0)" >> /boot/grub/grub.conf
-			echo "kernel /boot/kernel-${KV} root=UUID=${root_uuid} ro ${cmdline}" >> /boot/grub/grub.conf
-			echo "initrd /boot/initramfs-${KV}.img" >> /boot/grub/grub.conf
+			echo "kernel /boot/kernel-${KV_FULL} root=UUID=${root_uuid} ro ${cmdline}" >> /boot/grub/grub.conf
+			echo "initrd /boot/initramfs-${KV_FULL}.img" >> /boot/grub/grub.conf
 
 			echo -e "root (${grub_device},0)\nsetup (${grub_device})\nquit" | /sbin/grub --batch --no-floppy
 		done
