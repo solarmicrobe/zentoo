@@ -11,11 +11,11 @@ JDK_URI="http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-
 JCE_URI="http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html"
 # This is a list of archs supported by this update.
 # Currently arm comes and goes.
-AT_AVAILABLE=( amd64 )
+AT_AVAILABLE=( amd64 arm x86 x64-solaris x86-solaris sparc-solaris sparc64-solaris )
 # Sometimes some or all of the demos are missing, this is to not have to rewrite half
 # the ebuild when it happens.
-DEMOS_AVAILABLE=( amd64 )
-FX_VERSION="2_2_40"
+DEMOS_AVAILABLE=( amd64 arm x86 x64-solaris x86-solaris sparc-solaris sparc64-solaris )
+FX_VERSION="2_2_45"
 
 MY_PV="$(get_version_component_range 2)u$(get_version_component_range 4)"
 S_PV="$(replace_version_separator 3 '_')"
@@ -59,7 +59,7 @@ SLOT="1.7"
 KEYWORDS="amd64"
 IUSE="+X alsa derby doc examples +fontconfig jce nsplugin pax_kernel source"
 
-RESTRICT="strip"
+RESTRICT="fetch strip"
 QA_PREBUILT="*"
 
 RDEPEND="
