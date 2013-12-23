@@ -27,6 +27,7 @@ IUSE=""
 RESTRICT="test"
 
 ruby_add_rdepend "
+	>=dev-ruby/chef-zero-1.7.2
 	>=dev-ruby/diff-lcs-1.2.4
 	>=dev-ruby/erubis-2.7
 	>=dev-ruby/highline-1.6.9
