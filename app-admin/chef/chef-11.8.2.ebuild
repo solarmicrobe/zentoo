@@ -26,20 +26,22 @@ IUSE=""
 # object to be replaced and subsequently fails other specs. Revisit this later.
 RESTRICT="test"
 
-ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
-	dev-ruby/erubis
+ruby_add_rdepend "
+	>=dev-ruby/diff-lcs-1.2.4
+	>=dev-ruby/erubis-2.7
 	>=dev-ruby/highline-1.6.9
 	>=dev-ruby/json-1.4.4
+	>=dev-ruby/mime-types-1.16
 	>=dev-ruby/mixlib-authentication-1.3.0
 	>=dev-ruby/mixlib-cli-1.3.0
-	>=dev-ruby/mixlib-config-1.1.2
+	>=dev-ruby/mixlib-config-2.0
 	>=dev-ruby/mixlib-log-1.3.0
-	dev-ruby/mixlib-shellout
+	>=dev-ruby/mixlib-shellout-1.2
 	>=dev-ruby/net-ssh-2.6
 	<dev-ruby/net-ssh-2.7
 	>=dev-ruby/net-ssh-multi-1.1
 	<dev-ruby/net-ssh-multi-1.2
-	>=dev-ruby/ohai-0.6.0
+	>=dev-ruby/ohai-6.0
 	>=dev-ruby/rest-client-1.0.4
 	<dev-ruby/rest-client-1.7
 	dev-ruby/ruby-shadow
@@ -48,9 +50,6 @@ ruby_add_rdepend ">=dev-ruby/bunny-0.6.0
 
 each_ruby_prepare() {
 	ruby_fakegem_metadata_gemspec ../metadata ${RUBY_FAKEGEM_GEMSPEC}
-
-	#epatch "${FILESDIR}"/rubygems-2.0.patch
-	#epatch "${FILESDIR}"/run_lock.patch
 
 	# json
 	sed -i -e 's/"<= 1.7.7", //' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."

@@ -61,6 +61,7 @@ dev-python/xlwt)                         echo "=$1-0.7.4-r1";;
 dev-ruby/activesupport)                  echo "=$1-3.2.13";;
 dev-ruby/amqp)                           echo "=$1-0.6.7-r1";;
 dev-ruby/builder)                        echo "=$1-3.0.4";;
+dev-ruby/diff-lcs)                       echo "=$1-1.2.5";;
 dev-ruby/eventmachine)                   echo "=$1-1.0.0";;
 dev-ruby/ffi)                            echo "=$1-1.4.0";;
 dev-ruby/i18n)                           echo "=$1-0.6.4";;
