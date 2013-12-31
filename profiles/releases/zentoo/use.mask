@@ -168,7 +168,6 @@ livecd
 llvm
 lm_sensors
 loop-aes
-lua
 lzo
 m17n-lib
 mad
@@ -249,6 +248,7 @@ qmail-spp
 qt3support
 qt4
 quicktime
+racket
 radius
 rdesktop
 recode

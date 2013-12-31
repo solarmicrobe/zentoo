@@ -947,6 +947,14 @@ make_desktop_entry() {
 	) || die "installing desktop file failed"
 }
 
+# @FUNCTION: _eutils_eprefix_init
+# @INTERNAL
+# @DESCRIPTION:
+# Initialized prefix variables for EAPI<3. 
+_eutils_eprefix_init() {
+	has "${EAPI:-0}" 0 1 2 && : ${ED:=${D}} ${EPREFIX:=} ${EROOT:=${ROOT}}
+}
+
 # @FUNCTION: validate_desktop_entries
 # @USAGE: [directories]
 # @MAINTAINER:
@@ -954,11 +962,12 @@ make_desktop_entry() {
 # @DESCRIPTION:
 # Validate desktop entries using desktop-file-utils
 validate_desktop_entries() {
-	if [[ -x /usr/bin/desktop-file-validate ]] ; then
+	_eutils_eprefix_init
+	if [[ -x "${EPREFIX}"/usr/bin/desktop-file-validate ]] ; then
 		einfo "Checking desktop entry validity"
 		local directories=""
 		for d in /usr/share/applications $@ ; do
-			[[ -d ${D}${d} ]] && directories="${directories} ${D}${d}"
+			[[ -d ${ED}${d} ]] && directories="${directories} ${ED}${d}"
 		done
 		if [[ -n ${directories} ]] ; then
 			for FILE in $(find ${directories} -name "*\.desktop" \
@@ -966,7 +975,7 @@ validate_desktop_entries() {
 			do
 				local temp=$(desktop-file-validate ${FILE} | grep -v "warning:" | \
 								sed -e "s|error: ||" -e "s|${FILE}:|--|g" )
-				[[ -n $temp ]] && elog ${temp/--/${FILE/${D}/}:}
+				[[ -n $temp ]] && elog ${temp/--/${FILE/${ED}/}:}
 			done
 		fi
 		echo ""
@@ -1226,6 +1235,7 @@ strip-linguas() {
 # solution, so instead you can call this from pkg_preinst.  See also the
 # preserve_old_lib_notify function.
 preserve_old_lib() {
+	_eutils_eprefix_init
 	if [[ ${EBUILD_PHASE} != "preinst" ]] ; then
 		eerror "preserve_old_lib() must be called from pkg_preinst() only"
 		die "Invalid preserve_old_lib() usage"
@@ -1237,11 +1247,11 @@ preserve_old_lib() {
 
 	local lib dir
 	for lib in "$@" ; do
-		[[ -e ${ROOT}/${lib} ]] || continue
+		[[ -e ${EROOT}/${lib} ]] || continue
 		dir=${lib%/*}
 		dodir ${dir} || die "dodir ${dir} failed"
-		cp "${ROOT}"/${lib} "${D}"/${lib} || die "cp ${lib} failed"
-		touch "${D}"/${lib}
+		cp "${EROOT}"/${lib} "${ED}"/${lib} || die "cp ${lib} failed"
+		touch "${ED}"/${lib}
 	done
 }
 
@@ -1258,9 +1268,11 @@ preserve_old_lib_notify() {
 	# let portage worry about it
 	has preserve-libs ${FEATURES} && return 0
 
+	_eutils_eprefix_init
+	
 	local lib notice=0
 	for lib in "$@" ; do
-		[[ -e ${ROOT}/${lib} ]] || continue
+		[[ -e ${EROOT}/${lib} ]] || continue
 		if [[ ${notice} -eq 0 ]] ; then
 			notice=1
 			ewarn "Old versions of installed libraries were detected on your system."
@@ -1296,6 +1308,7 @@ preserve_old_lib_notify() {
 # Remember that this function isn't terribly intelligent so order of optional
 # flags matter.
 built_with_use() {
+	_eutils_eprefix_init
 	local hidden="no"
 	if [[ $1 == "--hidden" ]] ; then
 		hidden="yes"
@@ -1319,8 +1332,8 @@ built_with_use() {
 	[[ -z ${PKG} ]] && die "Unable to resolve $1 to an installed package"
 	shift
 
-	local USEFILE=${ROOT}/var/db/pkg/${PKG}/USE
-	local IUSEFILE=${ROOT}/var/db/pkg/${PKG}/IUSE
+	local USEFILE=${EROOT}/var/db/pkg/${PKG}/USE
+	local IUSEFILE=${EROOT}/var/db/pkg/${PKG}/IUSE
 
 	# if the IUSE file doesn't exist, the read will error out, we need to handle
 	# this gracefully
@@ -1400,24 +1413,31 @@ epunt_cxx() {
 # first optionally setting LD_LIBRARY_PATH to the colon-delimited
 # libpaths followed by optionally changing directory to chdir.
 make_wrapper() {
+	_eutils_eprefix_init
 	local wrapper=$1 bin=$2 chdir=$3 libdir=$4 path=$5
 	local tmpwrapper=$(emktemp)
 
 	(
 	echo '#!/bin/sh'
-	[[ -n ${chdir} ]] && printf 'cd "%s"\n' "${chdir}"
+	[[ -n ${chdir} ]] && printf 'cd "%s"\n' "${EPREFIX}${chdir}"
 	if [[ -n ${libdir} ]] ; then
+		local var
+		if [[ ${CHOST} == *-darwin* ]] ; then
+			var=DYLD_LIBRARY_PATH
+		else
+			var=LD_LIBRARY_PATH
+		fi
 		cat <<-EOF
-			if [ "\${LD_LIBRARY_PATH+set}" = "set" ] ; then
-				export LD_LIBRARY_PATH="\${LD_LIBRARY_PATH}:${libdir}"
+			if [ "\${${var}+set}" = "set" ] ; then
+				export ${var}="\${${var}}:${EPREFIX}${libdir}"
 			else
-				export LD_LIBRARY_PATH="${libdir}"
+				export ${var}="${EPREFIX}${libdir}"
 			fi
 		EOF
 	fi
 	# We don't want to quote ${bin} so that people can pass complex
 	# things as ${bin} ... "./someprog --args"
-	printf 'exec %s "$@"\n' "${bin}"
+	printf 'exec %s "$@"\n' "${bin/#\//${EPREFIX}\/}"
 	) > "${tmpwrapper}"
 	chmod go+rx "${tmpwrapper}"
 
@@ -1528,6 +1548,7 @@ prune_libtool_files() {
 	debug-print-function ${FUNCNAME} "$@"
 
 	local removing_all removing_modules opt
+	_eutils_eprefix_init
 	for opt; do
 		case "${opt}" in
 			--all)
@@ -1637,7 +1658,7 @@ prune_libtool_files() {
 			einfo "Removing unnecessary ${f#${D%/}} (${reason})"
 			queue+=( "${f}" )
 		fi
-	done < <(find "${D}" -xtype f -name '*.la' -print0)
+	done < <(find "${ED}" -xtype f -name '*.la' -print0)
 
 	if [[ ${queue[@]} ]]; then
 		rm -f "${queue[@]}"

@@ -2,7 +2,7 @@
 
 case $1 in
 app-arch/xz-utils)                       echo "=$1-5.0.5-r1";;
-app-editors/vim*)                        echo "=$1-7.3.1214";;
+app-editors/vim*)                        echo "=$1-7.4.131";;
 app-emulation/vagrant)                   echo "=$1-1.3.5";;
 app-emulation/virtualbox*)               echo "=$1-4.3.2";;
 app-text/docbook-sgml-dtd)               echo "=$1-3.0-r3"

@@ -3,7 +3,7 @@
 
 # @ECLASS: versionator.eclass
 # @MAINTAINER:
-# Jonathan Callen <abcd@gentoo.org>
+# Jonathan Callen <jcallen@gentoo.org>
 # base-system@gentoo.org
 # @BLURB: functions which simplify manipulation of ${PV} and similar version strings
 # @DESCRIPTION:
