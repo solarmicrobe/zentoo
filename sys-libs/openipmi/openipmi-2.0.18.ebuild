@@ -1,8 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-inherit autotools python
+inherit eutils autotools python
 
 DESCRIPTION="Library interface to IPMI"
 HOMEPAGE="http://sourceforge.net/projects/openipmi/"
@@ -43,18 +43,22 @@ use_yesno() {
 
 src_unpack() {
 	unpack ${A}
+	cd "${S}"
+	# Bug #338499: The installed OpenIPMIpthread.pc depends on a non-existing
+	# pthread.pc. We patch it to link -lpthread directly instead.
+	epatch "${FILESDIR}/${PN}-2.0.16-pthreads.patch"
 	# Bug #290763: The buildsys tries to compile+optimize the py file during
 	# install, when the .so might not be been added yet. We just skip the files
 	# and use python_mod_optimize ourselves later instead.
 	sed -r -i \
 		-e '/INSTALL.*\.py[oc] /d' \
 		-e '/install-exec-local/s,OpenIPMI.pyc OpenIPMI.pyo,,g' \
-		"${S}"/swig/python/Makefile.{am,in}
+		swig/python/Makefile.{am,in}
 
 	# Bug #298250: parallel install fix.
 	sed -r -i \
 		-e '/^install-data-local:/s,$, install-exec-am,g' \
-		"${S}"/cmdlang/Makefile.{am,in}
+		cmdlang/Makefile.{am,in}
 
 	# We touch the .in and .am above because if we use the below, the Perl stuff
 	# is very fragile, and often fails to link.

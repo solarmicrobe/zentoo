@@ -101,6 +101,7 @@ sys-firmware/seabios)                    echo "=$1-1.7.2.1";;
 sys-fs/mdadm)                            echo "=$1-3.2.6-r1";;
 sys-kernel/dracut)                       echo "=$1-031-r1";;
 sys-kernel/gentoo-sources)               echo "=$1-3.10.17";;
+sys-libs/openipmi)                       echo "=$1-2.0.18";;
 virtual/httpd-php)                       echo "=$1-5.3"
                                          echo "=$1-5.4-r1";;
 virtual/jdk)                             echo "=$1-1.7.0";;
