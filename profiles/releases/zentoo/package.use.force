@@ -18,7 +18,7 @@ net-ftp/lftp openssl
 app-emulation/libvirt lvm lxc pcap
 
 # make default what should be default
-app-text/vim lua luajit python ruby
+app-editors/vim lua luajit python ruby
 sys-apps/systemd python
 
 # prevent broken default use flags
