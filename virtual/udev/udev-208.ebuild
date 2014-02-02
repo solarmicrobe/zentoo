@@ -16,7 +16,4 @@ KEYWORDS="amd64"
 IUSE="gudev introspection +kmod selinux static-libs"
 
 DEPEND=""
-RDEPEND="|| (
-	>=sys-apps/systemd-208:0/1[${MULTILIB_USEDEP},gudev?,introspection?,kmod?,selinux?,static-libs(-)?]
-	>=sys-apps/systemd-208:0/0[${MULTILIB_USEDEP},gudev?,introspection?,kmod?,selinux?,static-libs(-)?]
-)"
+RDEPEND=">=sys-apps/systemd-208[${MULTILIB_USEDEP},gudev?,introspection?,kmod?,selinux?]"
