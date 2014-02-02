@@ -22,5 +22,8 @@
 	<flag name='libzfs'>
 		Enable support for <pkg>sys-fs/zfs</pkg>
 	</flag>
+	<flag name='multislot'>
+		Allow GRUB1 and GRUB2 at the same time
+	</flag>
 </use>
 </pkgmetadata>
