@@ -14,7 +14,7 @@ SRC_URI="http://samba.org/ftp/${PN}/${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="compat python"
+IUSE="compat +python"
 
 RDEPEND="!!<sys-libs/talloc-2.0.5"
 DEPEND="${RDEPEND}

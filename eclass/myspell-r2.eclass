@@ -1,15 +1,13 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: aspell-dict.eclass
 # @MAINTAINER:
-# app-dicts@gentoo.org
+# maintainer-needed@gentoo.org
 # @AUTHOR:
 # Tomáš Chvátal <scarabeus@gentoo.org>
 # @BLURB: An eclass to ease the construction of ebuilds for myspell dicts
 # @DESCRIPTION:
-
-inherit base
 
 EXPORT_FUNCTIONS src_unpack src_install
 

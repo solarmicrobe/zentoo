@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -44,6 +44,7 @@ src_prepare() {
 
 src_configure() {
 	econf \
+		--disable-docs \
 		--with-ivykis=internal \
 		--with-libmongo-client=internal \
 		--sysconfdir=/etc/syslog-ng \
@@ -65,7 +66,7 @@ src_configure() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install
+	emake -j1 DESTDIR="${D}" install
 
 	dodoc AUTHORS ChangeLog NEWS contrib/syslog-ng.conf* contrib/syslog2ng \
 		"${FILESDIR}/${PV%.*}/syslog-ng.conf.gentoo.hardened" \

@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -27,7 +27,6 @@ RESTRICT="test"
 
 DEPEND="virtual/pkgconfig"
 RDEPEND=">=virtual/udev-180
-	sys-apps/openrc
 	!<sys-fs/udev-186"
 
 src_prepare()

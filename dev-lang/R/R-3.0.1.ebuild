@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -138,7 +138,7 @@ src_configure() {
 		--with-system-bzlib \
 		--with-system-pcre \
 		--with-system-xz \
-		--with-blas="$($(tc-getPKG_CONFIG) --libs blas)" \
+		--without-blas \
 		--docdir="${EPREFIX}/usr/share/doc/${PF}" \
 		rdocdir="${EPREFIX}/usr/share/doc/${PF}" \
 		$(use_enable nls) \

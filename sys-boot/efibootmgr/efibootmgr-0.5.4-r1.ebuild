@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ EAPI=5
 
 inherit flag-o-matic toolchain-funcs eutils
 
-DESCRIPTION="Interact with the EFI Boot Manager on IA-64 Systems"
+DESCRIPTION="Interact with the EFI Boot Manager"
 HOMEPAGE="http://developer.intel.com/technology/efi"
 SRC_URI="http://linux.dell.com/efibootmgr/${P}.tar.gz"
 
@@ -27,9 +27,12 @@ src_prepare() {
 	epatch "${FILESDIR}/${PN}-error-reporting.patch"
 }
 
-src_compile() {
+src_configure() {
 	strip-flags
 	tc-export CC
+}
+
+src_compile() {
 	emake EXTRA_CFLAGS="${CFLAGS}"
 }
 

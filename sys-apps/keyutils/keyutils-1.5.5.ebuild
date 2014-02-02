@@ -1,10 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="3"
 
-inherit multilib eutils toolchain-funcs
+inherit multilib eutils toolchain-funcs linux-info
 
 DESCRIPTION="Linux Key Management Utilities"
 HOMEPAGE="http://people.redhat.com/dhowells/keyutils/"
@@ -13,9 +13,17 @@ SRC_URI="http://people.redhat.com/dhowells/${PN}/${P}.tar.bz2"
 LICENSE="GPL-2 LGPL-2.1"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
+IUSE="test"
 
 DEPEND="!prefix? ( >=sys-kernel/linux-headers-2.6.11 )"
+
+pkg_setup() {
+	CONFIG_CHECK="~KEYS"
+	use test && CONFIG_CHECK="${CONFIG_CHECK} ~KEYS_DEBUG_PROC_KEYS"
+	ERROR_KEYS="You must have CONFIG_KEYS to use this package!"
+	ERROR_KEYS_DEBUG_PROC_KEYS="You must have CONFIG_KEYS_DEBUG_PROC_KEYS to run the package testsuite!"
+	linux-info_pkg_setup
+}
 
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.5.5-makefile-fixup.patch
@@ -43,6 +51,7 @@ src_prepare() {
 
 src_configure() {
 	tc-export CC
+	tc-export AR
 }
 
 src_test() {

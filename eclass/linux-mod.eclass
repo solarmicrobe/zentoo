@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: linux-mod.eclass
@@ -16,6 +16,11 @@
 
 # A Couple of env vars are available to effect usage of this eclass
 # These are as follows:
+
+# @ECLASS-VARIABLE: MODULES_OPTIONAL_USE
+# @DESCRIPTION:
+# A string containing the USE flag to use for making this eclass optional
+# The recommended non-empty value is 'modules'
 
 # @ECLASS-VARIABLE: KERNEL_DIR
 # @DESCRIPTION:
@@ -124,12 +129,14 @@
 inherit eutils linux-info multilib
 EXPORT_FUNCTIONS pkg_setup pkg_preinst pkg_postinst src_install src_compile pkg_postrm
 
-IUSE="kernel_linux"
+IUSE="kernel_linux ${MODULES_OPTIONAL_USE}"
 SLOT="0"
-RDEPEND="kernel_linux? ( virtual/modutils )"
+RDEPEND="${MODULES_OPTIONAL_USE}${MODULES_OPTIONAL_USE:+? (} kernel_linux? ( virtual/modutils ) ${MODULES_OPTIONAL_USE:+)}"
 DEPEND="${RDEPEND}
+    ${MODULES_OPTIONAL_USE}${MODULES_OPTIONAL_USE:+? (} 
 	sys-apps/sed
-	kernel_linux? ( virtual/linux-sources )"
+	kernel_linux? ( virtual/linux-sources )
+	${MODULES_OPTIONAL_USE:+)}"
 
 # eclass utilities
 # ----------------------------------
@@ -139,6 +146,7 @@ check_vermagic() {
 
 	local curr_gcc_ver=$(gcc -dumpversion)
 	local tmpfile old_chost old_gcc_ver result=0
+	[ -n "${MODULES_OPTIONAL_USE}" ] && use !${MODULES_OPTIONAL_USE} && return
 
 	tmpfile=`find "${KV_DIR}/" -iname "*.o.cmd" -exec grep usr/lib/gcc {} \; -quit`
 	tmpfile=${tmpfile//*usr/lib}
@@ -343,6 +351,7 @@ get-KERNEL_CC() {
 # At the end the documentation specified with MODULESD_<modulename>_DOCS is installed.
 generate_modulesd() {
 	debug-print-function ${FUNCNAME} $*
+	[ -n "${MODULES_OPTIONAL_USE}" ] && use !${MODULES_OPTIONAL_USE} && return
 
 	local 	currm_path currm currm_t t myIFS myVAR
 	local 	module_docs module_enabled module_aliases \
@@ -421,7 +430,7 @@ generate_modulesd() {
 
 			for t in ${module_modinfo}
 			do
-				myVAR="$(echo ${t#*:} | grep -e " [0-9][ =]" | sed "s:.*\([01][= ]\).*:\1:")"
+				myVAR="$(echo ${t#*:}  | grep -o "[^ ]*[0-9][ =][^ ]*" | tail -1  | grep -o "[0-9]")"
 				if [[ -n ${myVAR} ]]
 				then
 					module_opts="${module_opts} ${t%%:*}:${myVAR}"
@@ -541,6 +550,7 @@ find_module_params() {
 # in the kernel and sets the object extension KV_OBJ.
 linux-mod_pkg_setup() {
 	debug-print-function ${FUNCNAME} $*
+	[ -n "${MODULES_OPTIONAL_USE}" ] && use !${MODULES_OPTIONAL_USE} && return
 
 	local is_bin="${MERGE_TYPE}"
 
@@ -604,6 +614,7 @@ strip_modulenames() {
 # Look at the description of these variables for more details.
 linux-mod_src_compile() {
 	debug-print-function ${FUNCNAME} $*
+	[ -n "${MODULES_OPTIONAL_USE}" ] && use !${MODULES_OPTIONAL_USE} && return
 
 	local modulename libdir srcdir objdir i n myABI="${ABI}"
 	set_arch_to_kernel
@@ -669,6 +680,7 @@ linux-mod_src_compile() {
 # Look at the description of these variables for more details.
 linux-mod_src_install() {
 	debug-print-function ${FUNCNAME} $*
+	[ -n "${MODULES_OPTIONAL_USE}" ] && use !${MODULES_OPTIONAL_USE} && return
 
 	local modulename libdir srcdir objdir i n
 
@@ -699,6 +711,7 @@ linux-mod_src_install() {
 # It checks what to do after having merged the package.
 linux-mod_pkg_preinst() {
 	debug-print-function ${FUNCNAME} $*
+	[ -n "${MODULES_OPTIONAL_USE}" ] && use !${MODULES_OPTIONAL_USE} && return
 
 	[ -d "${D}lib/modules" ] && UPDATE_DEPMOD=true || UPDATE_DEPMOD=false
 	[ -d "${D}lib/modules" ] && UPDATE_MODULEDB=true || UPDATE_MODULEDB=false
@@ -710,6 +723,7 @@ linux-mod_pkg_preinst() {
 # database (if ${D}/lib/modules is created)"
 linux-mod_pkg_postinst() {
 	debug-print-function ${FUNCNAME} $*
+	[ -n "${MODULES_OPTIONAL_USE}" ] && use !${MODULES_OPTIONAL_USE} && return
 
 	${UPDATE_DEPMOD} && update_depmod;
 	${UPDATE_MODULEDB} && update_moduledb;
@@ -721,5 +735,6 @@ linux-mod_pkg_postinst() {
 # call /sbin/depmod because the modules are still installed.
 linux-mod_pkg_postrm() {
 	debug-print-function ${FUNCNAME} $*
+	[ -n "${MODULES_OPTIONAL_USE}" ] && use !${MODULES_OPTIONAL_USE} && return
 	remove_moduledb;
 }

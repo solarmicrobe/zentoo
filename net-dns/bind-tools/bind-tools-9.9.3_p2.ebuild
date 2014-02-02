@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -21,7 +21,7 @@ KEYWORDS="amd64"
 IUSE="doc gssapi idn ipv6 readline ssl urandom xml"
 # no PKCS11 currently as it requires OpenSSL to be patched, also see bug 409687
 
-DEPEND="ssl? ( dev-libs/openssl )
+DEPEND="ssl? ( dev-libs/openssl:0 )
 	xml? ( dev-libs/libxml2 )
 	idn? ( net-dns/idnkit )
 	gssapi? ( virtual/krb5 )

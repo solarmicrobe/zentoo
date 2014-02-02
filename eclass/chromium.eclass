@@ -30,7 +30,8 @@ chromium_suid_sandbox_check_kernel_config() {
 		# Bug #363987.
 		ERROR_PID_NS="PID_NS is required for sandbox to work"
 		ERROR_NET_NS="NET_NS is required for sandbox to work"
-		CONFIG_CHECK="~PID_NS ~NET_NS"
+		ERROR_SECCOMP_FILTER="SECCOMP_FILTER is required for sandbox to work"
+		CONFIG_CHECK="~PID_NS ~NET_NS ~SECCOMP_FILTER"
 		check_extra_config
 	fi
 }

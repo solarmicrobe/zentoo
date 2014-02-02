@@ -24,9 +24,9 @@ S=${WORKDIR}/nc6-${PV}
 DOCS=( AUTHORS BUGS README NEWS TODO CREDITS ChangeLog )
 
 src_prepare() {
-	epatch "${FILESDIR}/netcat6-1.0-unix-sockets.patch"
-	sed -i configure.ac -e 's|^AM_CONFIG_HEADER|AC_CONFIG_HEADERS|g' || die
-	eautoreconf
+	epatch "${FILESDIR}"/netcat6-1.0-unix-sockets.patch
+	epatch "${FILESDIR}"/${P}-automake-1.14.patch
+	AM_OPTS="--force-missing" eautoreconf
 }
 
 src_configure() {

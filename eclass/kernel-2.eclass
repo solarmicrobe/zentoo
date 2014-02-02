@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # Description: kernel.eclass rewrite for a clean base regarding the 2.6
@@ -79,7 +79,9 @@
 # If you do change them, there is a chance that we will not fix resulting bugs;
 # that of course does not mean we're not willing to help.
 
-inherit eutils toolchain-funcs versionator multilib
+PYTHON_COMPAT=( python{2_6,2_7} )
+
+inherit eutils toolchain-funcs versionator multilib python-any-r1
 EXPORT_FUNCTIONS pkg_setup src_unpack src_compile src_test src_install pkg_preinst pkg_postinst pkg_postrm
 
 # Added by Daniel Ostrow <dostrow@gentoo.org>
@@ -231,7 +233,7 @@ detect_version() {
 	if [[ ${#OKV_ARRAY[@]} -lt 3 ]]; then
 		KV_PATCH_ARR=(${KV_PATCH//\./ })
 
-		# at this point 031412, Linus is putting all 3.x kernels in a 
+		# at this point 031412, Linus is putting all 3.x kernels in a
 		# 3.x directory, may need to revisit when 4.x is released
 		KERNEL_BASE_URI="mirror://kernel/linux/kernel/v${KV_MAJOR}.x"
 
@@ -436,12 +438,16 @@ kernel_is_2_6() {
 
 # Capture the sources type and set DEPENDs
 if [[ ${ETYPE} == sources ]]; then
-	DEPEND="!build? ( sys-apps/sed
-					  >=sys-devel/binutils-2.11.90.0.31 )"
-	RDEPEND="!build? ( >=sys-libs/ncurses-5.2
-					   sys-devel/make 
-					   dev-lang/perl
-					   sys-devel/bc )"
+	DEPEND="!build? (
+		sys-apps/sed
+		>=sys-devel/binutils-2.11.90.0.31
+	)"
+	RDEPEND="!build? (
+		>=sys-libs/ncurses-5.2
+		sys-devel/make
+		dev-lang/perl
+		sys-devel/bc
+	)"
 	PDEPEND="!build? ( virtual/dev-manager )"
 
 	SLOT="${PVR}"
@@ -457,9 +463,12 @@ if [[ ${ETYPE} == sources ]]; then
 					K_DEBLOB_AVAILABLE=1
 		if [[ ${K_DEBLOB_AVAILABLE} == "1" ]] ; then
 			IUSE="${IUSE} deblob"
+
 			# Reflect that kernels contain firmware blobs unless otherwise
 			# stripped
 			LICENSE="${LICENSE} !deblob? ( freedist )"
+
+			DEPEND+=" deblob? ( ${PYTHON_DEPS} )"
 
 			if [[ -n KV_MINOR ]]; then
 				DEBLOB_PV="${KV_MAJOR}.${KV_MINOR}.${KV_PATCH}"
@@ -483,7 +492,6 @@ if [[ ${ETYPE} == sources ]]; then
 			DEBLOB_URI="${DEBLOB_HOMEPAGE}/${DEBLOB_URI_PATH}/${DEBLOB_A}"
 			HOMEPAGE="${HOMEPAGE} ${DEBLOB_HOMEPAGE}"
 
-			DEPEND+=" deblob? ( =dev-lang/python-2* )"
 			KERNEL_URI="${KERNEL_URI}
 				deblob? (
 					${DEBLOB_URI}
@@ -850,8 +858,7 @@ postinst_sources() {
 	KV_MINOR=$(get_version_component_range 2 ${OKV})
 	KV_PATCH=$(get_version_component_range 3 ${OKV})
 	if [[ "$(tc-arch)" = "sparc" ]]; then
-		if [[ ${KV_MAJOR} -ge 3 || ${KV_MAJOR}.${KV_MINOR}.${KV_PATCH} > 2.6.24 ]]
-		then
+		if [[ ${KV_MAJOR} -ge 3 || ${KV_MAJOR}.${KV_MINOR}.${KV_PATCH} > 2.6.24 ]] ; then
 			echo
 			elog "NOTE: Since 2.6.25 the kernel Makefile has changed in a way that"
 			elog "you now need to do"
@@ -937,7 +944,7 @@ unipatch() {
 				     xz) PIPE_CMD="xz -dc";;
 				   lzma) PIPE_CMD="lzma -dc";;
 				    bz2) PIPE_CMD="bzip2 -dc";;
-				  patch*) PIPE_CMD="cat";;
+				 patch*) PIPE_CMD="cat";;
 				   diff) PIPE_CMD="cat";;
 				 gz|Z|z) PIPE_CMD="gzip -dc";;
 				ZIP|zip) PIPE_CMD="unzip -p";;
@@ -983,9 +990,10 @@ unipatch() {
 
 			local j
 			for j in ${KPATCH_DIR}/*/50*_*.patch*; do
-				if [[ ! "${K_EXP_GENPATCHES_LIST}" == *"$(basename ${j})"* ]] ; then
-					UNIPATCH_DROP+=" $(basename ${j})"
-				fi
+				for k in ${K_EXP_GENPATCHES_LIST} ; do
+					[[ "$(basename ${j})" == ${k}* ]] && continue 2
+				done
+				UNIPATCH_DROP+=" $(basename ${j})"
 			done
 		fi
 	done
@@ -1203,8 +1211,7 @@ kernel-2_src_unpack() {
 	# fix a problem on ppc where TOUT writes to /usr/src/linux breaking sandbox
 	# only do this for kernel < 2.6.27 since this file does not exist in later
 	# kernels
-	if [[ -n ${KV_MINOR} &&  ${KV_MAJOR}.${KV_MINOR}.${KV_PATCH} < 2.6.27 ]]
-	then
+	if [[ -n ${KV_MINOR} &&  ${KV_MAJOR}.${KV_MINOR}.${KV_PATCH} < 2.6.27 ]] ; then
 		sed -i \
 			-e 's|TOUT      := .tmp_gas_check|TOUT  := $(T).tmp_gas_check|' \
 			"${S}"/arch/ppc/Makefile
@@ -1221,7 +1228,8 @@ kernel-2_src_compile() {
 
 	if [[ $K_DEBLOB_AVAILABLE == 1 ]] && use deblob ; then
 		echo ">>> Running deblob script ..."
-		EPYTHON="python2" sh "${T}/${DEBLOB_A}" --force || die "Deblob script failed to run!!!"
+		python_setup
+		sh "${T}/${DEBLOB_A}" --force || die "Deblob script failed to run!!!"
 	fi
 }
 

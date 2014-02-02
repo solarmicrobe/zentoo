@@ -10,7 +10,7 @@ SRC_URI=""
 
 LICENSE=""
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="-*"
 IUSE="embedded minimal static"
 
 DEPEND=""

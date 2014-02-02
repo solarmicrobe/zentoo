@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -83,7 +83,7 @@ MODULE_CRITICAL="
 	mime
 "
 
-inherit apache-2 systemd
+inherit apache-2 systemd toolchain-funcs
 
 DESCRIPTION="The Apache Web Server."
 HOMEPAGE="http://httpd.apache.org/"
@@ -107,8 +107,17 @@ RDEPEND="${RDEPEND}
 # init script fixup - should be rolled into next tarball #389965
 src_prepare() {
 	apache-2_src_prepare
-	sed -i -e 's/! test -f/test -f/' "${GENTOO_PATCHDIR}"/init/apache2.initd || die "Failed to fix init script"
+	pushd "${GENTOO_PATCHDIR}" &>/dev/null || die
+	epatch "${FILESDIR}"/gentoo-apache-2.2.23-initd_fixups.patch
+	popd &>/dev/null || die
 	cp "${FILESDIR}"/2.2.22-envvars-std.in "${S}"/support/envvars-std.in || die "Failed to apply LD_PRELOAD fix"
+}
+
+src_configure() {
+	# Brain dead check.
+	tc-is-cross-compiler && export ap_cv_void_ptr_lt_long="no"
+
+	apache-2_src_configure
 }
 
 src_install() {

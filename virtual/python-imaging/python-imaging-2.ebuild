@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,6 +14,6 @@ SRC_URI=""
 LICENSE=""
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="tk"
+IUSE="jpeg tk"
 
-RDEPEND="dev-python/pillow[tk?,${PYTHON_USEDEP}]"
+RDEPEND="dev-python/pillow[jpeg?,tk?,${PYTHON_USEDEP}]"

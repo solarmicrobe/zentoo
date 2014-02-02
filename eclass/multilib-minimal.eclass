@@ -29,13 +29,17 @@ case ${EAPI:-0} in
 esac
 
 
-inherit multilib-build
+inherit eutils multilib-build
 
 EXPORT_FUNCTIONS src_configure src_compile src_test src_install
 
 
 multilib-minimal_src_configure() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	multilib-minimal_abi_src_configure() {
+		debug-print-function ${FUNCNAME} "$@"
+
 		mkdir -p "${BUILD_DIR}" || die
 		pushd "${BUILD_DIR}" >/dev/null || die
 		if declare -f multilib_src_configure >/dev/null ; then
@@ -50,7 +54,11 @@ multilib-minimal_src_configure() {
 }
 
 multilib-minimal_src_compile() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	multilib-minimal_abi_src_compile() {
+		debug-print-function ${FUNCNAME} "$@"
+
 		pushd "${BUILD_DIR}" >/dev/null || die
 		if declare -f multilib_src_compile >/dev/null ; then
 			multilib_src_compile
@@ -64,7 +72,11 @@ multilib-minimal_src_compile() {
 }
 
 multilib-minimal_src_test() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	multilib-minimal_abi_src_test() {
+		debug-print-function ${FUNCNAME} "$@"
+
 		pushd "${BUILD_DIR}" >/dev/null || die
 		if declare -f multilib_src_test >/dev/null ; then
 			multilib_src_test
@@ -78,7 +90,11 @@ multilib-minimal_src_test() {
 }
 
 multilib-minimal_src_install() {
+	debug-print-function ${FUNCNAME} "$@"
+
 	multilib-minimal_abi_src_install() {
+		debug-print-function ${FUNCNAME} "$@"
+
 		pushd "${BUILD_DIR}" >/dev/null || die
 		if declare -f multilib_src_install >/dev/null ; then
 			multilib_src_install
@@ -103,18 +119,7 @@ multilib-minimal_src_install() {
 
 	if declare -f multilib_src_install_all >/dev/null ; then
 		multilib_src_install_all
-	fi
-
-	# this is synced with __eapi4_src_install
-	if ! declare -p DOCS &>/dev/null ; then
-		local d
-		for d in README* ChangeLog AUTHORS NEWS TODO CHANGES \
-				THANKS BUGS FAQ CREDITS CHANGELOG ; do
-			[[ -s "${d}" ]] && dodoc "${d}"
-		done
-	elif [[ $(declare -p DOCS) == "declare -a "* ]] ; then
-		dodoc "${DOCS[@]}"
 	else
-		dodoc ${DOCS}
+		einstalldocs
 	fi
 }

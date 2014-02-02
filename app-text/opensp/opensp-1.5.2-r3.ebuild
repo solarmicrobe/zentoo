@@ -40,7 +40,7 @@ src_configure() {
 	# Please note!  Opts are disabled.  If you know what you're doing
 	# feel free to remove this line.  It may cause problems with
 	# docbook-sgml-utils among other things.
-	ALLOWED_FLAGS="-O -O1 -O2 -pipe -g -march"
+	#ALLOWED_FLAGS="-O -O1 -O2 -pipe -g -march"
 	strip-flags
 
 	econf \

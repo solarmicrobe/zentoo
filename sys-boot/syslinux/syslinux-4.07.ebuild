@@ -47,6 +47,14 @@ src_unpack() {
 			-e 's|-Os||g' \
 			-e 's|CFLAGS[[:space:]]\+=|CFLAGS +=|g' \
 			|| die "sed custom-cflags failed"
+	else
+		QA_FLAGS_IGNORED="
+			/sbin/extlinux
+			/usr/bin/memdiskfind
+			/usr/bin/gethostip
+			/usr/bin/isohybrid
+			/usr/bin/syslinux
+			"
 	fi
 
 }

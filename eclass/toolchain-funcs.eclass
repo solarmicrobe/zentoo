@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: toolchain-funcs.eclass
@@ -367,7 +367,7 @@ ninj() { [[ ${type} == "kern" ]] && echo $1 || echo $2 ; }
 	ewarn "QA: Kernel version could not be determined, please inherit kernel-2 or linux-info"
 
 	case ${host} in
-		aarch64*)	ninj arm64 arm;;
+		aarch64*)	echo arm64;;
 		alpha*)		echo alpha;;
 		arm*)		echo arm;;
 		avr*)		ninj avr32 avr;;
@@ -474,6 +474,7 @@ tc-endian() {
 		m68*)		echo big;;
 		mips*l*)	echo little;;
 		mips*)		echo big;;
+		powerpc*le)	echo little;;
 		powerpc*)	echo big;;
 		s390*)		echo big;;
 		sh*b*)		echo big;;

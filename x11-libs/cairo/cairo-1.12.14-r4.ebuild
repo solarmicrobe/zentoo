@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -25,7 +25,8 @@ IUSE="X aqua debug directfb doc drm gallium gles2 +glib legacy-drivers opengl op
 # Test causes a circular depend on gtk+... since gtk+ needs cairo but test needs gtk+ so we need to block it
 RESTRICT="test"
 
-RDEPEND="media-libs/fontconfig
+RDEPEND="dev-libs/lzo
+	media-libs/fontconfig
 	media-libs/freetype:2
 	media-libs/libpng:0=
 	sys-libs/zlib

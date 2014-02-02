@@ -1,10 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 
-inherit autotools elisp-common eutils
+inherit autotools elisp-common eutils toolchain-funcs
 
 DESCRIPTION="Interactively examine a C program"
 HOMEPAGE="http://cscope.sourceforge.net/"
@@ -19,6 +19,7 @@ RDEPEND=">=sys-libs/ncurses-5.2
 	emacs? ( virtual/emacs )"
 DEPEND="${RDEPEND}
 	sys-devel/flex
+	virtual/pkgconfig
 	virtual/yacc"
 
 SITEFILE="50${PN}-gentoo.el"
@@ -29,7 +30,7 @@ src_prepare() {
 }
 
 src_compile() {
-	emake
+	emake CURSES_LIBS=$("$(tc-getPKG_CONFIG)" --libs ncurses)
 	if use emacs; then
 		cd "${S}"/contrib/xcscope || die
 		elisp-compile *.el || die

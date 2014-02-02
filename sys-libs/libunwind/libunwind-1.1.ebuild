@@ -4,7 +4,7 @@
 
 EAPI="5"
 
-inherit eutils
+inherit eutils libtool
 
 DESCRIPTION="Portable and efficient API to determine the call-chain of a program"
 HOMEPAGE="http://savannah.nongnu.org/projects/libunwind"
@@ -32,6 +32,7 @@ src_prepare() {
 	echo 'int main(){return 0;}' > tests/Ltest-dyn1.c
 
 	sed -i -e '/LIBLZMA/s:-lzma:-llzma:' configure{,.ac} || die #444050
+	elibtoolize
 }
 
 src_configure() {

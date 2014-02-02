@@ -17,6 +17,7 @@
 # for early testing of git-r3 and is to be set in make.conf.
 
 # (since we override src_unpack this doesn't hurt)
+_INHERITED_BY_GIT_2=1 \
 inherit git-r3
 
 # This eclass support all EAPIs

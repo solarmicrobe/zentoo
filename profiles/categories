@@ -30,7 +30,6 @@ dev-texlive
 dev-util
 dev-vcs
 gnome-base
-java-virtuals
 mail-client
 mail-filter
 mail-mta
@@ -60,7 +59,6 @@ sys-block
 sys-boot
 sys-cluster
 sys-devel
-sys-firmware
 sys-fs
 sys-kernel
 sys-libs

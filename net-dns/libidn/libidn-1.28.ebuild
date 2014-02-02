@@ -32,6 +32,11 @@ RDEPEND="${COMMON_DEPEND}
 	java? ( >=virtual/jre-1.5 )
 "
 
+pkg_setup() {
+	mono-env_pkg_setup
+	java-pkg-opt-2_pkg_setup
+}
+
 src_prepare() {
 	# bundled, with wrong bytecode
 	rm "${S}/java/${P}.jar" || die

@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -22,12 +22,11 @@ HOMEPAGE="http://www.gnu.org/software/automake/"
 LICENSE="GPL-2"
 # Use Gentoo versioning for slotting.
 SLOT="${PV:0:4}"
-# Testing.
 KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="dev-lang/perl
-	>=sys-devel/automake-wrapper-8
+	>=sys-devel/automake-wrapper-9
 	>=sys-devel/autoconf-2.62
 	sys-devel/gnuconfig"
 DEPEND="${RDEPEND}

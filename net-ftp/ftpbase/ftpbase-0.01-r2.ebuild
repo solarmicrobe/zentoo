@@ -45,5 +45,10 @@ src_install() {
 	# Ideally we would create the home directory here with a dodir.
 	# But we cannot until bug #9849 is solved - so we kludge in pkg_postinst()
 
-	newpamd "${FILESDIR}/ftp-pamd-include" ftp
+	cp "${FILESDIR}/ftp-pamd-include" "${T}" || die
+	if use elibc_FreeBSD; then
+		sed -i -e "/pam_listfile.so/s/^.*$/account  required  pam_ftpusers.so no_warn disallow/" \
+			"${T}"/ftp-pamd-include || die
+	fi
+	newpamd "${T}"/ftp-pamd-include ftp
 }

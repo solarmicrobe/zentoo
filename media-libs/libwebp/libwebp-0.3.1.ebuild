@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -34,7 +34,11 @@ src_prepare() {
 }
 
 multilib_src_configure() {
-	ac_cv_header_gif_lib_h=$(usex gif) \
+	# Only used for gif2webp binary wrt #486646
+	local build_gif2webp=$(usex gif)
+	multilib_build_binaries || build_gif2webp=no
+
+	ac_cv_header_gif_lib_h=${build_gif2webp} \
 	ac_cv_header_jpeglib_h=$(usex jpeg) \
 	ac_cv_header_png_h=$(usex png) \
 	ac_cv_header_GL_glut_h=$(usex opengl) \

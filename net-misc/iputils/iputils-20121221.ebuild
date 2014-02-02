@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -22,7 +22,7 @@ fi
 DESCRIPTION="Network monitoring tools including ping and ping6"
 HOMEPAGE="http://www.linuxfoundation.org/collaborate/workgroups/networking/iputils"
 
-LICENSE="BSD"
+LICENSE="BSD-4"
 SLOT="0"
 IUSE="caps doc gnutls idn ipv6 SECURITY_HAZARD ssl static"
 

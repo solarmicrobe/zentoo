@@ -27,7 +27,10 @@ src_prepare() {
 
 	# bug #411847
 	epatch "${FILESDIR}/${PN}-pc.patch"
+	# bug #493050
+	epatch "${FILESDIR}/${P}-automake-1.14.patch"
 
+	epatch_user
 	eautoreconf
 }
 

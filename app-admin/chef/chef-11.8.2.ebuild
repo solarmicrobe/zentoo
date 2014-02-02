@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -39,7 +39,6 @@ ruby_add_rdepend "
 	>=dev-ruby/mixlib-log-1.3.0
 	>=dev-ruby/mixlib-shellout-1.2
 	>=dev-ruby/net-ssh-2.6
-	<dev-ruby/net-ssh-2.7
 	>=dev-ruby/net-ssh-multi-1.1
 	<dev-ruby/net-ssh-multi-1.2
 	>=dev-ruby/ohai-6.0
@@ -54,6 +53,8 @@ each_ruby_prepare() {
 
 	# json
 	sed -i -e 's/"<= 1.7.7", //' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
+	# net-ssh
+	sed -i -e 's/"~> 2.6", /">= 2.6, /' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
 }
 
 all_ruby_install() {

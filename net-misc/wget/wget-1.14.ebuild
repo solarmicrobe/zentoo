@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -35,7 +35,8 @@ REQUIRED_USE="ntlm? ( !gnutls ssl ) gnutls? ( ssl )"
 DOCS=( AUTHORS MAILING-LIST NEWS README doc/sample.wgetrc )
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-1.13.4-openssl-pkg-config.patch
+	epatch "${FILESDIR}"/${PN}-1.13.4-openssl-pkg-config.patch \
+		"${FILESDIR}"/${P}-texi2pod.patch
 	eautoreconf
 }
 

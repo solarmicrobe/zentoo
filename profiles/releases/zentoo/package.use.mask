@@ -1,10 +1,8 @@
 # skip unnecessary dependencies
-app-admin/collectd collectd_plugins_gmond collectd_plugins_notify_desktop collectd_plugins_notify_email collectd_plugins_onewire collectd_plugins_oracle collectd_plugins_routeros collectd_plugins_tokyotyrant collectd_plugins_varnish collectd_plugins_vserver
-
+app-admin/collectd collectd_plugins_gmond collectd_plugins_notify_desktop collectd_plugins_notify_email collectd_plugins_onewire collectd_plugins_oracle collectd_plugins_routeros collectd_plugins_tokyotyrant collectd_plugins_varnish collectd_plugins_vserver collectd_plugins_libvirt
 app-admin/syslog-ng dbi json smtp sql
 app-backup/duplicity s3
 app-editors/joe xterm
-app-emulation/libvirt numa openvz xen virt-network firewalld qemu macvtap vepa
 app-emulation/qemu tls usbredir xen
 app-emulation/virtualbox vboxwebsrv
 app-text/texlive-core X xetex
@@ -17,32 +15,35 @@ dev-libs/gecode gist
 dev-libs/glib utils systemtap
 dev-libs/libnatspec python
 dev-libs/ppl lpsol
-dev-python/ipython smp
+dev-python/ipython smp octave matplotlib nbconvert
 dev-python/psycopg mxdatetime
 dev-vcs/subversion webdav-serf
 media-gfx/graphviz cairo
 media-gfx/imagemagick autotrace raw opencl
+media-libs/harfbuzz graphite
 media-libs/libsdl audio aalib
 media-libs/mesa xorg
 net-analyzer/mk-livestatus perl
 net-analyzer/nagios-plugins ups nagios-game nagios-ping
+net-analyzer/net-snmp netlink
 net-analyzer/rrdtool dbi
 net-analyzer/tcpdump smi
 net-dns/pdns opendbx sqlite
 net-fs/cifs-utils ads upcall
 net-fs/samba ads cluster debug ldb
 net-libs/libpcap canusb
+net-libs/libpcap netlink
 net-libs/zeromq pgm
 net-mail/dovecot lucene
 net-misc/curl metalink rtmp ssh
 sys-apps/openrc netifrc
 sys-apps/systemd http qrcode
-sys-firmware/ipxe iso
 sys-fs/btrfs-progs debug-utils
 sys-fs/lvm2 thin
 sys-fs/udev extras
 sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_bootchart
 sys-kernel/genkernel crypt
+x11-libs/libSM uuid
 
 # do not support X11 with these applications
 dev-java/ant X

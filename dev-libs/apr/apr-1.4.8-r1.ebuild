@@ -1,10 +1,10 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="4"
 
-inherit autotools eutils libtool multilib
+inherit autotools eutils libtool multilib toolchain-funcs
 
 DESCRIPTION="Apache Portable Runtime Library"
 HOMEPAGE="http://apr.apache.org/"
@@ -52,6 +52,9 @@ src_configure() {
 		export apr_cv_epoll_create1="no"
 		export apr_cv_sock_cloexec="no"
 	fi
+	if tc-is-cross-compiler; then
+		export apr_cv_tcp_nodelay_with_cork="yes"
+	fi
 
 	if use urandom; then
 		myconf+=" --with-devrandom=/dev/urandom"
@@ -61,9 +64,7 @@ src_configure() {
 		myconf+=" --with-devrandom=/dev/random"
 	fi
 
-	if [[ ${CHOST} == *-mint* ]] ; then
-		myconf+=" --disable-dso"
-	fi
+	tc-is-static-only && myconf+=" --disable-dso"
 
 	# shl_load does not search runpath, but hpux11 supports dlopen
 	[[ ${CHOST} == *-hpux11* ]] && myconf="${myconf} --enable-dso=dlfcn"

@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -10,7 +10,7 @@
 inherit eutils flag-o-matic toolchain-funcs multilib unpacker multiprocessing
 
 DESCRIPTION="sandbox'd LD_PRELOAD hack"
-HOMEPAGE="http://www.gentoo.org/"
+HOMEPAGE="http://www.gentoo.org/proj/en/portage/sandbox/"
 SRC_URI="mirror://gentoo/${P}.tar.xz
 	http://dev.gentoo.org/~vapier/dist/${P}.tar.xz"
 
@@ -52,6 +52,7 @@ src_unpack() {
 	epatch "${FILESDIR}"/${P}-desktop.patch #443672
 	epatch "${FILESDIR}"/${P}-open-nofollow.patch #413441
 	epatch "${FILESDIR}"/${P}-check-empty-paths-at.patch #346929
+	epatch "${FILESDIR}"/${P}-no-pch.patch #425524
 	epatch_user
 }
 

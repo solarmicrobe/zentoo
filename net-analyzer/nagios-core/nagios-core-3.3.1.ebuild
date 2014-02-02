@@ -1,8 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI=5
 
 inherit depend.apache eutils multilib toolchain-funcs user
 
@@ -77,16 +77,15 @@ src_configure() {
 		--datadir=/usr/share/nagios/htdocs \
 		--localstatedir=/var/nagios \
 		--sysconfdir=/etc/nagios \
-		--libexecdir=/usr/$(get_libdir)/nagios/plugins \
-		|| die "./configure failed"
+		--libexecdir=/usr/$(get_libdir)/nagios/plugins
 }
 
 src_compile() {
-	emake CC=$(tc-getCC) nagios || die "make failed"
+	emake CC=$(tc-getCC) nagios
 
 	if use web ; then
 		# Only compile the CGI's if "web" useflag is set.
-		emake CC=$(tc-getCC) DESTDIR="${D}" cgis || die
+		emake CC=$(tc-getCC) DESTDIR="${D}" cgis
 	fi
 }
 

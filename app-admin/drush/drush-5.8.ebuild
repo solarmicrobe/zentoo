@@ -15,7 +15,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="+examples"
 
-DEPEND="dev-lang/php[cli,simplexml]
+DEPEND="dev-lang/php[cli,ctype,simplexml]
 	dev-php/pear
 	dev-php/PEAR-Console_Table
 	dev-php/PEAR-Console_Getopt"

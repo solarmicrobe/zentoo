@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -41,8 +41,9 @@ src_prepare() {
 	local insert=()
 	use ppc && insert=( '#psc0:12345:respawn:/sbin/agetty 115200 ttyPSC0 linux' )
 	use arm && insert=( '#f0:12345:respawn:/sbin/agetty 9600 ttyFB0 vt100' )
+	use arm64 && insert=( 'f0:12345:respawn:/sbin/agetty 9600 ttyAMA0 vt100' )
 	use hppa && insert=( 'b0:12345:respawn:/sbin/agetty 9600 ttyB0 vt100' )
-	use s390 && insert=( 's0:12345:respawn:/sbin/agetty 38400 console' )
+	use s390 && insert=( 's0:12345:respawn:/sbin/agetty 38400 console dumb' )
 	if use ibm ; then
 		insert+=(
 			'#hvc0:2345:respawn:/sbin/agetty -L 9600 hvc0'

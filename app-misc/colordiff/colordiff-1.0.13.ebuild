@@ -15,12 +15,15 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="sys-apps/diffutils"
+RDEPEND="
+	dev-lang/perl
+	sys-apps/diffutils"
 
 src_prepare() {
 	# set proper etcdir for Gentoo Prefix
-	sed -i -e "s:'/etc:'@GENTOO_PORTAGE_EPREFIX@/etc:" "${S}/colordiff.pl" \
-		|| die "sed etcdir failed"
+	sed \
+		-e "s:'/etc:'@GENTOO_PORTAGE_EPREFIX@/etc:" \
+		-i "${S}/colordiff.pl" || die "sed etcdir failed"
 	eprefixify "${S}"/colordiff.pl
 }
 

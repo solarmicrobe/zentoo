@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -25,7 +25,8 @@ fi
 DESCRIPTION="utils for managing LZMA compressed files"
 HOMEPAGE="http://tukaani.org/xz/"
 
-LICENSE="LGPL-2.1"
+# See top-level COPYING file as it outlines the various pieces and their licenses.
+LICENSE="public-domain LGPL-2.1+ GPL-2+"
 SLOT="0"
 IUSE="nls static-libs +threads"
 
@@ -49,7 +50,7 @@ multilib_src_configure() {
 		$(use_enable nls) \
 		$(use_enable threads) \
 		$(use_enable static-libs static) \
-		$(multilib_is_native_abi || echo --disable-{xz,xzdec,lzmadec,lzmainfo,lzma-links,scripts})
+		$(multilib_build_binaries || echo --disable-{xz,xzdec,lzmadec,lzmainfo,lzma-links,scripts})
 }
 
 multilib_src_install() {

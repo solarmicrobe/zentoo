@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -22,7 +22,7 @@ SLOT="0"
 IUSE="atm berkdb +iptables ipv6 minimal"
 
 RDEPEND="!net-misc/arpd
-	iptables? ( >=net-firewall/iptables-1.4.5 )
+	iptables? ( >=net-firewall/iptables-1.4.16 )
 	!minimal? ( berkdb? ( sys-libs/db ) )
 	atm? ( net-dialup/linux-atm )"
 DEPEND="${RDEPEND}
@@ -44,6 +44,7 @@ src_prepare() {
 		-e "s:-O2:${CFLAGS} ${CPPFLAGS}:" \
 		-e "/^HOSTCC/s:=.*:= $(tc-getBUILD_CC):" \
 		-e "/^WFLAGS/s:-Werror::" \
+		-e "/^DBM_INCLUDE/s:=.*:=${T}:" \
 		Makefile || die
 
 	# build against system headers

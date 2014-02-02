@@ -38,7 +38,7 @@ RDEPEND=">=dev-lang/perl-5.6.1
 	java? ( >=virtual/jdk-1.2 )
 	odbc? ( dev-db/unixODBC )"
 DEPEND="${RDEPEND}
-	wxwidgets? ( x11-libs/wxGTK:2.8[opengl] virtual/glu )
+	wxwidgets? ( x11-libs/wxGTK:2.8[X,opengl] virtual/glu )
 	sctp? ( net-misc/lksctp-tools )
 	tk? ( dev-lang/tk )"
 
@@ -47,7 +47,6 @@ S="${WORKDIR}/${MY_P}"
 SITEFILE=50${PN}-gentoo.el
 
 pkg_setup() {
-	use wxwidgets && wxwidgets_pkg_setup
 	if use halfword ; then
 		use amd64 || die "halfword support is limited to amd64"
 	fi

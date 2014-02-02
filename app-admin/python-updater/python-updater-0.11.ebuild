@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -23,8 +23,7 @@ SLOT="0"
 IUSE=""
 
 DEPEND="$([[ "${PV}" == "9999" ]] && echo "sys-apps/help2man")"
-RDEPEND="dev-lang/python
-	|| ( >=sys-apps/portage-2.1.6 >=sys-apps/paludis-0.56.0 )"
+RDEPEND="|| ( >=sys-apps/portage-2.1.6 >=sys-apps/paludis-0.56.0 )"
 
 src_compile() {
 	if [[ "${PV}" == "9999" ]]; then

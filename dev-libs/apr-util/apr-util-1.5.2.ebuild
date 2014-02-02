@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -8,7 +8,7 @@ EAPI="4"
 # APR_PV="${PV}"
 APR_PV="1.4.6"
 
-inherit autotools db-use eutils libtool multilib
+inherit autotools db-use eutils libtool multilib toolchain-funcs
 
 DESCRIPTION="Apache Portable Runtime Utility Library"
 HOMEPAGE="http://apr.apache.org/"
@@ -46,7 +46,7 @@ src_prepare() {
 src_configure() {
 	local myconf
 
-	[[ ${CHOST} == *-mint* ]] && myconf="${myconf} --disable-util-dso"
+	tc-is-static-only && myconf+=" --disable-util-dso"
 
 	if use berkdb; then
 		local db_version

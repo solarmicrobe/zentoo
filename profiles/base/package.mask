@@ -1,14 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.mask,v 1.59 2013/08/23 18:13:25 swift Exp $
-
-# Diego Elio Pettenò <flameeyes@gentoo.org> (8 Feb 2011)
-#  on behalf of QA team <qa@gentoo.org
-#
-# Make sure uClibc is available as sys-libs/uclibc only on uclibc
-# profiles, as the "dynamic slot generation" is broken. The package is
-# still available on default profiles to be used with crossdev.
-sys-libs/uclibc
+# $Header: /var/cvsroot/gentoo-x86/profiles/base/package.mask,v 1.63 2014/02/01 06:58:15 vapier Exp $
 
 # Anthony G. Basile <blueness@gentoo.org> (15 Jun 2013)
 # Make sure sys-libs/musl is only available for musl profiles or
@@ -56,6 +48,7 @@ sec-policy/selinux-bind
 sec-policy/selinux-bitlbee
 sec-policy/selinux-bluetooth
 sec-policy/selinux-brctl
+sec-policy/selinux-cachefilesd
 sec-policy/selinux-calamaris
 sec-policy/selinux-canna
 sec-policy/selinux-ccs
@@ -143,6 +136,7 @@ sec-policy/selinux-logwatch
 sec-policy/selinux-lpd
 sec-policy/selinux-mailman
 sec-policy/selinux-makewhatis
+sec-policy/selinux-mandb
 sec-policy/selinux-mcelog
 sec-policy/selinux-memcached
 sec-policy/selinux-milter
@@ -200,6 +194,7 @@ sec-policy/selinux-radvd
 sec-policy/selinux-razor
 sec-policy/selinux-remotelogin
 sec-policy/selinux-rgmanager
+sec-policy/selinux-rngd
 sec-policy/selinux-roundup
 sec-policy/selinux-rpc
 sec-policy/selinux-rpcbind

@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,9 +14,10 @@ KEYWORDS="amd64"
 IUSE="userland_BSD"
 
 DEPEND=">=sys-apps/texinfo-4.3
-	sys-devel/autoconf-wrapper
 	=sys-devel/m4-1.4*
 	dev-lang/perl"
+RDEPEND="${DEPEND}
+	>=sys-devel/autoconf-wrapper-13"
 
 src_unpack() {
 	unpack ${A}

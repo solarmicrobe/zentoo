@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -11,7 +11,7 @@ HOMEPAGE="http://www.gnu.org/software/tar/"
 SRC_URI="mirror://gnu/tar/${P}.tar.bz2
 	mirror://gnu-alpha/tar/${P}.tar.bz2"
 
-LICENSE="GPL-3"
+LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="minimal nls static userland_GNU xattr"

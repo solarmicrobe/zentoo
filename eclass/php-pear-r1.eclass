@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: php-pear-r1.eclass
@@ -16,7 +16,7 @@
 
 inherit multilib
 
-EXPORT_FUNCTIONS src_install
+EXPORT_FUNCTIONS pkg_setup src_install
 
 DEPEND="dev-lang/php
 	 >=dev-php/pear-1.8.1"
@@ -43,11 +43,22 @@ fix_PEAR_PV() {
 [[ -z "${PEAR_PV}" ]] && fix_PEAR_PV
 
 PEAR_PN="${PHP_PEAR_PKG_NAME}-${PEAR_PV}"
+: ${PHP_PEAR_URI:=pear.php.net}
+: ${PHP_PEAR_CHANNEL:=${FILESDIR}/channel.xml}
 
-[[ -z "${SRC_URI}" ]] && SRC_URI="http://pear.php.net/get/${PEAR_PN}.tgz"
-[[ -z "${HOMEPAGE}" ]] && HOMEPAGE="http://pear.php.net/${PHP_PEAR_PKG_NAME}"
+[[ -z "${SRC_URI}" ]] && SRC_URI="http://${PHP_PEAR_URI}/get/${PEAR_PN}.tgz"
+[[ -z "${HOMEPAGE}" ]] && HOMEPAGE="http://${PHP_PEAR_URI}/${PHP_PEAR_PKG_NAME}"
 
 S="${WORKDIR}/${PEAR_PN}"
+
+# @FUNCTION: php-pear-lib-r1_pkg_setup
+# @DESCRIPTION:
+# Adds required PEAR channel if necessary
+php-pear-r1_pkg_setup() {
+	if [[ -f $PHP_PEAR_CHANNEL ]]; then
+		pear channel-add $PHP_PEAR_CHANNEL || einfo "Ignore any errors about existing channels"
+	fi
+}
 
 # @FUNCTION: php-pear-r1_src_install
 # @DESCRIPTION:

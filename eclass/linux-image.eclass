@@ -64,7 +64,7 @@ linux-image_pkg_config() {
 		cmdline="${cmdline} rd.lvm=1 rd.lvm.vg=vg"
 	fi
 
-	cmdline="${cmdline} init=/usr/lib/systemd/systemd"
+	cmdline="${cmdline} rd.auto=1 net.ifnames=0 init=/usr/lib/systemd/systemd"
 
 	# figure out the physical boot device
 	if mdadm --detail $root_device &>/dev/null; then
@@ -82,12 +82,12 @@ linux-image_pkg_config() {
 		emerge --nospinner -q -n sys-boot/grub:2
 
 		sed -i -e "/^GRUB_CMDLINE_LINUX=/s:=.*:=\"${cmdline}\":" /etc/default/grub
-		mkdir -p /boot/grub2
-		grub2-mkconfig -o /boot/grub2/grub.cfg
+		mkdir -p /boot/grub
+		grub-mkconfig -o /boot/grub/grub.cfg
 
 		for device in ${boot_devices}; do
 			einfo "Installing boot loader to ${device}"
-			grub2-install ${device}
+			grub-install ${device}
 		done
 	else
 		einfo "Using legacy grub-1 with MBR partition map"

@@ -21,7 +21,7 @@ ___ECLASS_ONCE_UNPACKER="recur -_+^+_- spank"
 # @DEFAULT_UNSET
 # @DESCRIPTION:
 # Utility to use to decompress bzip2 files.  Will dynamically pick between
-# `pbzip2` and `bzip2`.  Make sure your choice accepts the "-c" option.
+# `pbzip2` and `bzip2`.  Make sure your choice accepts the "-dc" options.
 # Note: this is meant for users to set, not ebuilds.
 
 # for internal use only (unpack_pdv and unpack_makeself)
@@ -73,9 +73,9 @@ unpack_banner() {
 # parameter.  Here is an example:
 #
 # @CODE
-# 	vapier@vapier 0 pdv_unpack # strings hldsupdatetool.bin | grep lseek
+# 	$ strings hldsupdatetool.bin | grep lseek
 # 	lseek
-# 	vapier@vapier 0 pdv_unpack # strace -elseek ./hldsupdatetool.bin
+# 	$ strace -elseek ./hldsupdatetool.bin
 # 	lseek(3, -4, SEEK_END)					= 2981250
 # @CODE
 #

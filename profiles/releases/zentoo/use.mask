@@ -110,6 +110,7 @@ gstreamer
 gtk
 gtk3
 gtkhtml
+gtkstyle
 guile
 handbook
 hardened
@@ -367,6 +368,7 @@ python_single_target_python3_3
 # ruby targets we don't support
 ruby_targets_jruby
 ruby_targets_ruby18
+ruby_targets_ruby21
 ruby_targets_rbx
 ruby_targets_ree18
 
