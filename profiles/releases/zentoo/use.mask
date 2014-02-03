@@ -255,6 +255,7 @@ rdesktop
 recode
 regression-test
 rpm
+samba
 sapdb
 savedconfig
 scanner

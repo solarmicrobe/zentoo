@@ -29,8 +29,6 @@ net-analyzer/net-snmp netlink
 net-analyzer/rrdtool dbi
 net-analyzer/tcpdump smi
 net-dns/pdns opendbx sqlite
-net-fs/cifs-utils ads upcall
-net-fs/samba ads cluster debug ldb
 net-libs/libpcap canusb
 net-libs/libpcap netlink
 net-libs/zeromq pgm
@@ -41,7 +39,7 @@ sys-apps/systemd http qrcode
 sys-fs/btrfs-progs debug-utils
 sys-fs/lvm2 thin
 sys-fs/udev extras
-sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_bootchart
+sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_bootchart dracut_modules_cifs
 sys-kernel/genkernel crypt
 x11-libs/libSM uuid
 

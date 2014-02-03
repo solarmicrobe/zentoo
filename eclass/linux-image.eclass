@@ -81,7 +81,7 @@ linux-image_pkg_config() {
 
 		emerge --nospinner -q -n sys-boot/grub:2
 
-		sed -i -e "/^GRUB_CMDLINE_LINUX=/s:=.*:=\"${cmdline}\":" /etc/default/grub
+		sed -i -e "/GRUB_CMDLINE_LINUX=/s:.*:GRUB_CMDLINE_LINUX=\"${cmdline}\":" /etc/default/grub
 		mkdir -p /boot/grub
 		grub-mkconfig -o /boot/grub/grub.cfg
 

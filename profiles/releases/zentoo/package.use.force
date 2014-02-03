@@ -26,3 +26,7 @@ dev-lang/R cairo
 dev-lang/php truetype gd
 x11-libs/cairo X
 x11-libs/gdk-pixbuf X
+
+# force default SAPIs
+dev-lang/php cli fpm
+app-admin/eselect-php fpm
