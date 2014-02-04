@@ -26,6 +26,8 @@ dev-lang/R cairo
 dev-lang/php truetype gd
 x11-libs/cairo X
 x11-libs/gdk-pixbuf X
+media-libs/libpng apng
+dev-lang/python sqlite
 
 # force default SAPIs
 dev-lang/php cli fpm
