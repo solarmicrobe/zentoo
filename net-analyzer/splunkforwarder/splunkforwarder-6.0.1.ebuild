@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-MY_BUILD="143156"
+MY_BUILD="189883"
 
 DESCRIPTION="The search engine for IT data"
 HOMEPAGE="http://www.splunk.com"
@@ -12,11 +12,11 @@ REL_URI="http://download.splunk.com/releases/${PV}/universalforwarder/linux"
 SRC_URI="amd64? ( ${REL_URI}/${P}-${MY_BUILD}-Linux-x86_64.tgz )"
 
 LICENSE="splunk-eula"
-SLOT="0"
+SLOT="6"
 KEYWORDS="-* amd64"
 IUSE=""
 
-DEPEND="!net-analyzer/splunkforwarder:6"
+DEPEND="!!net-analyzer/splunkforwarder:0"
 RDEPEND="!net-analyzer/splunk"
 
 S="${WORKDIR}"/${PN}

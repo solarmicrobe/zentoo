@@ -30,3 +30,6 @@ x11-libs/gdk-pixbuf X
 # force default SAPIs
 dev-lang/php cli fpm
 app-admin/eselect-php fpm
+
+# always build java/python support for protobuf
+dev-libs/protobuf java python
