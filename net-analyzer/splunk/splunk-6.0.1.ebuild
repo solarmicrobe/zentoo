@@ -13,7 +13,7 @@ SRC_URI="amd64? ( ${REL_URI}/${P}-${MY_BUILD}-Linux-x86_64.tgz )"
 
 LICENSE="splunk-eula"
 SLOT="6"
-KEYWORDS="-* amd64"
+KEYWORDS="-* ~amd64"
 IUSE=""
 
 DEPEND="!!net-analyzer/splunk:0"
