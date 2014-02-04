@@ -1,0 +1,18 @@
+# libvirt drivers and tools we support
+app-emulation/libvirt lvm lxc pcap
+
+# make default what should be default
+app-editors/vim lua luajit python ruby
+
+# prevent broken default use flags
+dev-lang/R cairo
+dev-lang/php truetype gd
+dev-lang/python sqlite
+media-libs/libpng apng
+net-ftp/lftp openssl
+x11-libs/cairo X
+x11-libs/gdk-pixbuf X
+
+# default SAPIs
+dev-lang/php cli fpm
+app-admin/eselect-php fpm

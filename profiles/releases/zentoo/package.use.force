@@ -10,28 +10,3 @@ sys-kernel/dracut device-mapper net dracut_modules_lvm dracut_modules_mdraid dra
 
 # force disable bindist on openssl
 dev-libs/openssl -bindist
-
-# force openssl on lftp
-net-ftp/lftp openssl
-
-# libvirt drivers and tools we support
-app-emulation/libvirt lvm lxc pcap
-
-# make default what should be default
-app-editors/vim lua luajit python ruby
-sys-apps/systemd python
-
-# prevent broken default use flags
-dev-lang/R cairo
-dev-lang/php truetype gd
-x11-libs/cairo X
-x11-libs/gdk-pixbuf X
-media-libs/libpng apng
-dev-lang/python sqlite
-
-# force default SAPIs
-dev-lang/php cli fpm
-app-admin/eselect-php fpm
-
-# always build java/python support for protobuf
-dev-libs/protobuf java python
