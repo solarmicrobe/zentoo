@@ -24,11 +24,11 @@ IUSE="contrib debug kernel_linux kernel_FreeBSD kernel_Darwin perl static-libs"
 COLLECTD_IMPOSSIBLE_PLUGINS="aquaero mic netapp pinba sigrok xmms"
 
 # Plugins that still need some work
-COLLECTD_UNTESTED_PLUGINS="amqp apple_sensors genericjmx ipvs lpar modbus redis
+COLLECTD_UNTESTED_PLUGINS="apple_sensors genericjmx ipvs lpar modbus redis
 	tape write_redis zfs_arc"
 
 # Plugins that have been (compile) tested and can be enabled via COLLECTD_PLUGINS
-COLLECTD_TESTED_PLUGINS="aggregation apache apcups ascent battery bind cgroups
+COLLECTD_TESTED_PLUGINS="aggregation amqp apache apcups ascent battery bind cgroups
 	conntrack contextswitch cpu cpufreq csv curl curl_json curl_xml dbi df disk dns
 	email entropy ethstat exec filecount fscache gmond hddtemp interface ipmi
 	iptables irq java libvirt load logfile lvm madwifi match_empty_counter
@@ -57,6 +57,7 @@ COMMON_DEPEND="
 	sys-devel/libtool
 	perl?					( dev-lang/perl[ithreads] ( || ( sys-devel/libperl[ithreads] >=sys-devel/libperl-5.10 ) ) )
 	collectd_plugins_apache?		( net-misc/curl )
+	collectd_plugins_amqp?			( net-libs/rabbitmq-c )
 	collectd_plugins_ascent?		( net-misc/curl dev-libs/libxml2 )
 	collectd_plugins_bind?			( dev-libs/libxml2 )
 	collectd_plugins_curl?			( net-misc/curl )

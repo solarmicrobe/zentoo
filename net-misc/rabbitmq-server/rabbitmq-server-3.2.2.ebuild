@@ -26,6 +26,7 @@ DEPEND="${RDEPEND}
 	app-text/xmlto
 	dev-libs/libxslt
 	dev-python/simplejson
+	app-admin/rabbitmqadmin
 "
 
 pkg_setup() {
