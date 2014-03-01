@@ -50,7 +50,6 @@ net-misc
 net-nds
 net-print
 net-proxy
-net-zope
 perl-core
 sci-libs
 sys-apps
