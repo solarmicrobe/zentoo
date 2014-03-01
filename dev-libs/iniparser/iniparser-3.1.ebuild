@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -20,7 +20,7 @@ DEPEND="doc? ( app-doc/doxygen )
 		sys-devel/libtool"
 RDEPEND=""
 
-# the tests are rather examples than tests, no point in running them
+# the tests are rather examples than tests, no point in running  them
 RESTRICT="test"
 
 S="${WORKDIR}/${PN}"

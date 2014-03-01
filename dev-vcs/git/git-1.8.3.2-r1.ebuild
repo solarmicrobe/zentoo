@@ -84,9 +84,8 @@ DEPEND="${CDEPEND}
 		sys-apps/texinfo
 		app-text/xmlto
 	)
-	test? (
-		app-crypt/gnupg
-	)"
+	nls? ( sys-devel/gettext )
+	test? (	app-crypt/gnupg	)"
 
 # Live ebuild builds man pages and HTML docs, additionally
 if [[ ${PV} == *9999 ]]; then

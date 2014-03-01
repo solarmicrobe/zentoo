@@ -2,6 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
+#Some important notes about detecting libnet version 
+#http://dev.gentoo.org/~zlogene/perl-libnet-mantainer-notes   
+
 DESCRIPTION="Virtual for ${PN#perl-}"
 HOMEPAGE=""
 SRC_URI=""

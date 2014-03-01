@@ -1,8 +1,8 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=2
+EAPI=5
 inherit eutils confutils flag-o-matic
 
 KEYWORDS="amd64"
@@ -85,11 +85,11 @@ src_configure() {
 		--with-uploadscript \
 		--with-virtualhosts \
 		--enable-largefile \
-		${my_conf} || die "econf failed"
+		${my_conf}
 }
 
 src_install() {
-	emake DESTDIR="${D}" install || die "emake install failed"
+	emake DESTDIR="${D}" install
 
 	dodoc AUTHORS CONTACT ChangeLog FAQ HISTORY INSTALL README* NEWS
 

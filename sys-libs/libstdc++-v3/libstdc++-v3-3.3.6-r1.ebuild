@@ -119,6 +119,9 @@ SLOT="5"
 KEYWORDS="amd64"
 IUSE="multilib nls"
 
+DEPEND="sys-devel/bison"
+RDEPEND=""
+
 S=${WORKDIR}/gcc-${PV}
 
 src_unpack() {

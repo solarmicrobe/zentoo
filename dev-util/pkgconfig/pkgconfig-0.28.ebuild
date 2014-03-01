@@ -21,7 +21,7 @@ HOMEPAGE="http://pkgconfig.freedesktop.org/wiki/"
 
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="elibc_FreeBSD hardened internal-glib"
+IUSE="elibc_FreeBSD elibc_glibc hardened internal-glib"
 
 RDEPEND="!internal-glib? ( >=dev-libs/glib-2.30 )
 	!dev-util/pkgconf[pkg-config]
@@ -48,6 +48,15 @@ src_configure() {
 
 	if use internal-glib; then
 		myconf+=' --with-internal-glib'
+		# non-glibc platforms use GNU libiconv, but configure needs to
+		# know about that not to get confused when it finds something
+		# outside the prefix too
+		if use prefix && use !elibc_glibc ; then
+			myconf+=" --with-libiconv=gnu"
+			# add the libdir for libtool, otherwise it'll make love with system
+			# installed libiconv
+			append-ldflags "-L${EPREFIX}/usr/$(get_libdir)"
+		fi
 	else
 		if ! has_version dev-util/pkgconfig; then
 			export GLIB_CFLAGS="-I${EPREFIX}/usr/include/glib-2.0 -I${EPREFIX}/usr/$(get_libdir)/glib-2.0/include"

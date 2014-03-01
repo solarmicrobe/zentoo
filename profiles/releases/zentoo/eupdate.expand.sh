@@ -61,7 +61,7 @@ virtual/httpd-php)                       echo "=$1-5.3"
                                          echo "=$1-5.4-r1";;
 
 # kernel
-sys-kernel/gentoo-sources)               echo "=$1-3.10.28";;
+sys-kernel/gentoo-sources)               echo "=$1-3.10.32";;
 sys-kernel/linux-headers)                echo "=$1-3.10";;
 
 # virtualbox
@@ -86,8 +86,7 @@ sys-devel/bc)                            echo "=$1-1.06.95-r1";;
 sys-libs/openipmi)                       echo "=$1-2.0.18";;
 virtual/jdk)                             echo "=$1-1.7.0";;
 virtual/jre)                             echo "=$1-1.7.0";;
-virtual/jpeg)                            echo "=$1-0";;
-
-
+virtual/jpeg)                            echo "=$1-0-r2";;
+sys-fs/ncdu)                             echo "=$1-1.10";;
 *)                                       echo $1;;
 esac

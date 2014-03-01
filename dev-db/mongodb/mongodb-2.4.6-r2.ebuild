@@ -1,11 +1,11 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
 SCONS_MIN_VERSION="1.2.0"
 CHECKREQS_DISK_BUILD="2400M"
-CHECKREQS_DISK_USR="2400M"
+CHECKREQS_DISK_USR="512M"
 
 inherit eutils flag-o-matic multilib pax-utils scons-utils systemd user versionator check-reqs
 

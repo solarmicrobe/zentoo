@@ -10,7 +10,6 @@ dev-ruby/ohai
 dev-ruby/rubygems
 mail-mta/postfix
 media-gfx/imagemagick
-media-libs/libjpeg-turbo
 sys-apps/newrelic-sysmond
 sys-block/megacli
 sys-block/tw_cli

@@ -26,7 +26,7 @@ RDEPEND="
 	glib? ( dev-libs/glib:2 )
 	graphite? ( media-gfx/graphite2:= )
 	icu? ( dev-libs/icu:= )
-	introspection? ( >=dev-libs/gobject-introspection-1.32 )
+	introspection? ( >=dev-libs/gobject-introspection-1.34 )
 	truetype? ( media-libs/freetype:2= )
 "
 DEPEND="${RDEPEND}
@@ -36,7 +36,7 @@ DEPEND="${RDEPEND}
 # eautoreconf requires gobject-introspection-common
 # ragel needed if regenerating *.hh files from *.rl
 [[ ${PV} = 9999 ]] && DEPEND="${DEPEND}
-	>=dev-libs/gobject-introspection-common-1.32
+	>=dev-libs/gobject-introspection-common-1.34
 	dev-util/ragel
 "
 

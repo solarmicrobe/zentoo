@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -8,8 +8,8 @@ DESCRIPTION="A collection of tools that operate on patch files"
 HOMEPAGE="http://cyberelk.net/tim/patchutils/"
 SRC_URI="http://cyberelk.net/tim/data/patchutils/stable/${P}.tar.bz2"
 
-SLOT="0"
 LICENSE="GPL-2"
+SLOT="0"
 KEYWORDS="amd64"
 IUSE="test"
 

@@ -440,6 +440,13 @@ apache-2_src_prepare() {
 apache-2_src_configure() {
 	tc-export PKG_CONFIG
 
+	# Sanity check in case people have bad mounts/TPE settings. #500928
+	if ! "${T}"/pcre-config --help >/dev/null ; then
+		eerror "Could not execute ${T}/pcre-config; do you have bad mount"
+		eerror "permissions in ${T} or have TPE turned on in your kernel?"
+		die "check your runtime settings #500928"
+	fi
+
 	# Instead of filtering --as-needed (bug #128505), append --no-as-needed
 	# Thanks to Harald van Dijk
 	append-ldflags $(no-as-needed)

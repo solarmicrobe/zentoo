@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -31,7 +31,8 @@ src_prepare() {
 	echo 'int main(){return 0;}' > tests/Gtest-dyn1.c
 	echo 'int main(){return 0;}' > tests/Ltest-dyn1.c
 
-	sed -i -e '/LIBLZMA/s:-lzma:-llzma:' configure{,.ac} || die #444050
+	sed -i -e '/LIBLZMA/s:-lzma:-llzma:' configure{.ac,} || die #444050
+	epatch "${FILESDIR}"/${P}-lzma.patch #444050
 	elibtoolize
 }
 

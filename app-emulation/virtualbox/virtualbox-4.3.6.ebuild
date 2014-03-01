@@ -178,11 +178,13 @@ src_prepare() {
 	epatch_user
 
 	# fix location of ifconfig binary (bug #455902)
-	local ifcfg="$(type -p ifconfig)"
-	if [ "${ifcfg}" != "/sbin/ifconfig" ] ; then
-		sed "/VBOXADPCTL_IFCONFIG_PATH/s@/sbin/ifconfig@${ifcfg}@" \
-			-i "${S}"/src/apps/adpctl/VBoxNetAdpCtl.cpp \
-			|| die
+	local target_file="src/apps/adpctl/VBoxNetAdpCtl.cpp"
+	local define_string="VBOXADPCTL_IFCONFIG_PATH"
+	local vbox_ifcfg="$(grep "^#define ${define_string}" ${target_file} | sed 's@.*"\([[:alpha:]/]\+\)".*@\1@')" #'
+	local sys_ifcfg="$(type -p ifconfig)"
+	if [ -n "${vbox_ifcfg}" ] && [ "${ifcfg}" != "${vbox_ifcfg}" ] ; then
+		sed "/${define_string}/s@${vbox_ifcfg}@${sys_ifcfg}@" \
+			-i "${S}/${target_file}" || die
 	fi
 }
 

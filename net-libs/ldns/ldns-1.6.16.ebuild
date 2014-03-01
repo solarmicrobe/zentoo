@@ -39,7 +39,7 @@ src_configure() {
 		$(use_enable gost) \
 		$(use_enable ssl sha2) \
 		$(use_enable static-libs static) \
-		$(use_with ssl) \
+		$(use_with ssl ssl "${EPREFIX}"/usr) \
 		$(use_with python pyldns) \
 		$(use_with python pyldnsx) \
 		--without-drill \

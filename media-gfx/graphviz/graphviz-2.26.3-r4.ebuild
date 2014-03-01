@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -26,7 +26,7 @@ RDEPEND="
 	>=media-libs/freetype-2.1.10
 	>=media-libs/gd-2.0.28[fontconfig,jpeg,png,truetype,zlib]
 	>=media-libs/libpng-1.4
-	virtual/jpeg
+	virtual/jpeg:0
 	virtual/libiconv
 	cairo?	(
 		x11-libs/libXaw

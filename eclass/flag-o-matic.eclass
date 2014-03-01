@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: flag-o-matic.eclass
@@ -29,6 +29,7 @@ setup-allowed-flags() {
 	ALLOWED_FLAGS+=" -fno-PIE -fno-pie -fno-unit-at-a-time"
 	ALLOWED_FLAGS+=" -g -g[0-9] -ggdb -ggdb[0-9] -gstabs -gstabs+"
 	ALLOWED_FLAGS+=" -fno-ident -fpermissive -frecord-gcc-switches"
+	ALLOWED_FLAGS+=" -fdiagnostics*"
 	ALLOWED_FLAGS+=" -W* -w"
 
 	# allow a bunch of flags that negate features / control ABI
@@ -53,6 +54,10 @@ setup-allowed-flags() {
 	ALLOWED_FLAGS+=" -mno-fsgsbase -mno-rdrnd -mno-f16c -mno-bmi -mno-tbm"
 	# 4.7
 	ALLOWED_FLAGS+=" -mno-avx2 -mno-bmi2 -mno-fma -mno-lzcnt"
+	# 4.8
+	ALLOWED_FLAGS+=" -mno-fxsr -mno-rtm -mno-xsave -mno-xsaveopt"
+	# 4.9
+	ALLOWED_FLAGS+=" -mno-avx512cd -mno-avx512er -mno-avx512f -mno-avx512pf -mno-sha"
 
 	# CPPFLAGS and LDFLAGS
 	ALLOWED_FLAGS+=" -I* -L* -R* -Wl,*"

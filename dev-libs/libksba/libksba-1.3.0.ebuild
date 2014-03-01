@@ -4,6 +4,8 @@
 
 EAPI="4"
 
+# so we won't need to autreconf yet another g10 package
+AUTOTOOLS_IN_SOURCE_BUILD=1
 inherit autotools-utils
 
 DESCRIPTION="X.509 and CMS (PKCS#7) library"
