@@ -3,6 +3,7 @@ app-admin/collectd collectd_plugins_gmond collectd_plugins_notify_desktop collec
 app-admin/syslog-ng dbi json smtp sql
 app-backup/duplicity s3
 app-editors/joe xterm
+app-emulation/docker aufs
 app-emulation/qemu tls usbredir xen
 app-emulation/virtualbox vboxwebsrv
 app-text/texlive-core X xetex
@@ -37,7 +38,6 @@ net-misc/curl metalink rtmp ssh
 sys-apps/openrc netifrc
 sys-apps/systemd http qrcode
 sys-fs/btrfs-progs debug-utils
-sys-fs/lvm2 thin
 sys-fs/udev extras
 sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_bootchart dracut_modules_cifs
 sys-kernel/genkernel crypt
