@@ -34,10 +34,10 @@ ruby_add_rdepend "
 	>=dev-ruby/json-1.4.4
 	>=dev-ruby/mime-types-1.16
 	>=dev-ruby/mixlib-authentication-1.3.0
-	>=dev-ruby/mixlib-cli-1.3.0
+	>=dev-ruby/mixlib-cli-1.4.0
 	>=dev-ruby/mixlib-config-2.0
 	>=dev-ruby/mixlib-log-1.3.0
-	>=dev-ruby/mixlib-shellout-1.2
+	>=dev-ruby/mixlib-shellout-1.3
 	>=dev-ruby/net-ssh-2.6
 	>=dev-ruby/net-ssh-multi-1.1
 	<dev-ruby/net-ssh-multi-1.2
@@ -52,7 +52,7 @@ each_ruby_prepare() {
 	ruby_fakegem_metadata_gemspec ../metadata ${RUBY_FAKEGEM_GEMSPEC}
 
 	# json
-	sed -i -e 's/"<= 1.7.7", //' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
+	sed -i -e 's/"<= 1.8.1", //' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
 	# net-ssh
 	sed -i -e 's/"~> 2.6", /">= 2.6, /' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
 }
