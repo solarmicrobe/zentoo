@@ -21,7 +21,7 @@ IUSE="crypt debug python static-libs"
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 RDEPEND=">=dev-libs/libxml2-2.8.0:2
-	crypt?  ( >=dev-libs/libgcrypt-1.1.42:= )
+	crypt?  ( >=dev-libs/libgcrypt-1.1.42:0= )
 	python? (
 		${PYTHON_DEPS}
 		dev-libs/libxml2:2[python,${PYTHON_USEDEP}] )"

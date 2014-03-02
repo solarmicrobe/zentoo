@@ -32,7 +32,7 @@ REQUIRED_USE="cxx? ( sasl )"
 # openssl is needed to generate lanman-passwords required by samba
 RDEPEND="icu? ( dev-libs/icu )
 	ssl? ( !gnutls? ( dev-libs/openssl )
-		gnutls? ( net-libs/gnutls dev-libs/libgcrypt ) )
+		gnutls? ( net-libs/gnutls dev-libs/libgcrypt:0 ) )
 	sasl? ( dev-libs/cyrus-sasl )
 	!minimal? (
 		sys-devel/libtool

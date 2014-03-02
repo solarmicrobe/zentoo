@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -16,7 +16,7 @@ KEYWORDS="amd64"
 IUSE="gcrypt static-libs test zlib"
 
 DEPEND="!gcrypt? ( dev-libs/openssl )
-	gcrypt? ( dev-libs/libgcrypt )
+	gcrypt? ( dev-libs/libgcrypt:0 )
 	zlib? ( sys-libs/zlib )"
 RDEPEND="${DEPEND}"
 

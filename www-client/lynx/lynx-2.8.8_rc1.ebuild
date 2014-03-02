@@ -33,7 +33,7 @@ RDEPEND="sys-libs/ncurses[unicode?]
 	ssl? (
 		!gnutls? ( >=dev-libs/openssl-0.9.8 )
 		gnutls? (
-			dev-libs/libgcrypt
+			dev-libs/libgcrypt:0
 			>=net-libs/gnutls-2.6.4
 		)
 	)

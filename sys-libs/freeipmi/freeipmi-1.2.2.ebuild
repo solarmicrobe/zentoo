@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -19,7 +19,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="debug"
 
-RDEPEND="dev-libs/libgcrypt"
+RDEPEND="dev-libs/libgcrypt:0"
 DEPEND="${RDEPEND}
 		virtual/os-headers"
 RDEPEND="${RDEPEND}

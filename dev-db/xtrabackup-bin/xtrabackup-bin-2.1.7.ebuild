@@ -29,7 +29,7 @@ IUSE=""
 
 DEPEND=""
 RDEPEND="dev-libs/libaio
-	dev-libs/libgcrypt
+	dev-libs/libgcrypt:0
 	dev-libs/libgpg-error"
 
 if use amd64; then

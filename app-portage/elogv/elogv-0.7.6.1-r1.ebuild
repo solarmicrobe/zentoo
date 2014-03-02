@@ -1,38 +1,42 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="3"
-PYTHON_DEPEND="2"
-PYTHON_USE_WITH="ncurses"
+EAPI=5
 
-inherit distutils eutils
+PYTHON_COMPAT=( python2_6 python2_7 )
+PYTHON_REQ_USE="ncurses"
+inherit distutils-r1 prefix
 
 DESCRIPTION="Curses based utility to parse the contents of elogs created by Portage"
-HOMEPAGE="http://gechi-overlay.sourceforge.net/?page=elogv"
-SRC_URI="mirror://sourceforge/gechi-overlay/${P}.tar.bz2"
+HOMEPAGE="https://github.com/gentoo/elogv"
+SRC_URI="https://github.com/gentoo/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
+IUSE="linguas_de linguas_es linguas_it linguas_pl"
 
-DEPEND=""
-RDEPEND=""
-
-pkg_setup() {
-	python_set_active_version 2
-	python_pkg_setup
-}
+DOCS=( README )
 
 src_install() {
-	distutils_src_install
-	dodoc README ChangeLog ChangeLog.old || die
+	distutils-r1_src_install
+
+	# unset LINGUAS => install all languages
+	# empty LINGUAS => install none
+	local i
+	if [[ -n "${LINGUAS+x}" ]] ; then
+		for i in $(ls "${ED}"/usr/share/locale/) ; do
+			if ! has ${i} ${LINGUAS} ; then
+				rm -rf "${ED}"/usr/share/{locale,man}/${i}
+			fi
+		done
+	fi
 }
 
 pkg_postinst() {
-	distutils_pkg_postinst
-
+	elog "Optional dependencies:"
+	elog "  dev-python/pyliblzma (for xz compressed elog files)"
 	elog
 	elog "In order to use this software, you need to activate"
 	elog "Portage's elog features.  Required is"

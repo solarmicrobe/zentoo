@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -19,10 +19,10 @@ IUSE="+24bpp gcrypt gnutls ipv6 +jpeg +png ssl static-libs test threads +zlib"
 REQUIRED_USE="png? ( zlib )"
 
 DEPEND="
-	gcrypt? ( dev-libs/libgcrypt )
+	gcrypt? ( dev-libs/libgcrypt:0 )
 	gnutls? (
 		net-libs/gnutls
-		dev-libs/libgcrypt
+		dev-libs/libgcrypt:0
 	)
 	!gnutls? (
 		ssl? ( dev-libs/openssl )

@@ -20,7 +20,7 @@ RDEPEND=">=dev-libs/libtasn1-0.3.4
 	<dev-libs/libtasn1-3
 	guile? ( >=dev-scheme/guile-1.8[networking] )
 	nettle? ( >=dev-libs/nettle-2.1[gmp] )
-	!nettle? ( >=dev-libs/libgcrypt-1.4.0 )
+	!nettle? ( >=dev-libs/libgcrypt-1.4.0:0 )
 	nls? ( virtual/libintl )
 	pkcs11? ( >=app-crypt/p11-kit-0.11 )
 	zlib? ( >=sys-libs/zlib-1.2.3.1 )

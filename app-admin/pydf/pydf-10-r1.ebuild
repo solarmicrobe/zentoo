@@ -1,12 +1,12 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-PYTHON_DEPEND="*"
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 
-inherit python
+inherit python-r1
 
 DESCRIPTION="Enhanced df with colors"
 HOMEPAGE="http://kassiopeia.juls.savba.sk/~garabik/software/pydf/"
@@ -17,12 +17,17 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+
+DEPEND="${PYTHON_DEPS}"
+RDEPEND="${DEPEND}"
+
 src_prepare() {
 	sed -i -e "s:/etc/pydfrc:${EPREFIX}/etc/pydfrc:" pydf || die
 }
 
 src_install() {
-	dobin pydf
+	python_foreach_impl python_doscript pydf
 	insinto /etc
 	doins pydfrc
 	doman pydf.1

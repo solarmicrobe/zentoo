@@ -24,7 +24,7 @@ REQUIRED_USE="^^ ( ${CRYPTO_BACKENDS//+/} )
 LIB_DEPEND="dev-libs/libgpg-error[static-libs(+)]
 	dev-libs/popt[static-libs(+)]
 	sys-apps/util-linux[static-libs(+)]
-	gcrypt? ( dev-libs/libgcrypt[static-libs(+)] )
+	gcrypt? ( dev-libs/libgcrypt:0[static-libs(+)] )
 	nettle? ( >=dev-libs/nettle-2.4[static-libs(+)] )
 	openssl? ( dev-libs/openssl[static-libs(+)] )
 	sys-fs/lvm2[static-libs(+)]

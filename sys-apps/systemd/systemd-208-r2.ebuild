@@ -30,7 +30,7 @@ COMMON_DEPEND=">=sys-apps/dbus-1.6.8-r1
 	acl? ( sys-apps/acl )
 	audit? ( >=sys-process/audit-2 )
 	cryptsetup? ( >=sys-fs/cryptsetup-1.6 )
-	gcrypt? ( >=dev-libs/libgcrypt-1.4.5 )
+	gcrypt? ( >=dev-libs/libgcrypt-1.4.5:0 )
 	gudev? ( >=dev-libs/glib-2[${MULTILIB_USEDEP}] )
 	http? ( net-libs/libmicrohttpd )
 	introspection? ( >=dev-libs/gobject-introspection-1.31.1 )
