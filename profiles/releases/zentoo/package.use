@@ -13,6 +13,7 @@ dev-python/numpy lapack
 media-libs/libpng apng
 net-ftp/lftp openssl
 sys-libs/zlib minizip
+www-servers/uwsgi python
 x11-libs/cairo X
 x11-libs/gdk-pixbuf X
 x11-libs/pango X
