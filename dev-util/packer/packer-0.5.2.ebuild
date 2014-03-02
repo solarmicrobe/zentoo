@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-emulation/docker/docker-0.6.5.ebuild,v 1.1 2013/10/31 20:47:50 gregkh Exp $
+# $Header: $
 
 EAPI=5
 
@@ -9,7 +9,6 @@ HOMEPAGE="http://www.packer.io"
 SRC_URI=""
 
 EGIT_REPO_URI="git://github.com/mitchellh/packer.git"
-#EGIT_COMMIT="v${PV}"
 EGIT_COMMIT="v${PV}"
 
 inherit git-2 eutils
@@ -35,14 +34,15 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/packer-0.3.10-portcount.patch
+	export GOPATH="${WORKDIR}/gopath"
+	export PATH="${GOPATH}/bin:${PATH}"
+	go get github.com/mitchellh/gox || die
 }
 
 src_compile() {
-	export GOPATH="${WORKDIR}/gopath"
 	emake || die
 }
 
 src_install() {
-	dobin "${S}"/bin/packer*
+	dobin "${GOPATH}"/bin/packer*
 }
