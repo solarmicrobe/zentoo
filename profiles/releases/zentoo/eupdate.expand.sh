@@ -88,5 +88,6 @@ virtual/jdk)                             echo "=$1-1.7.0";;
 virtual/jre)                             echo "=$1-1.7.0";;
 virtual/jpeg)                            echo "=$1-0-r2";;
 sys-fs/ncdu)                             echo "=$1-1.10";;
+sys-block/btrace)                        echo "=$1-1.0.3";;
 *)                                       echo $1;;
 esac
