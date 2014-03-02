@@ -8,8 +8,10 @@ app-editors/vim lua luajit python ruby
 dev-lang/R cairo
 dev-lang/php truetype gd
 dev-lang/python sqlite
+dev-python/numpy lapack
 media-libs/libpng apng
 net-ftp/lftp openssl
+sys-libs/zlib minizip
 x11-libs/cairo X
 x11-libs/gdk-pixbuf X
 
