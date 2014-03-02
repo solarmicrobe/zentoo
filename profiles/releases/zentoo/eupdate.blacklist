@@ -21,4 +21,3 @@ virtual/jre
 virtual/linux-sources
 virtual/mta
 virtual/mysql
-www-servers/spawn-fcgi

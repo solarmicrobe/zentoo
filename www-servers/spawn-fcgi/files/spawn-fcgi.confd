@@ -1,18 +1,20 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/www-servers/spawn-fcgi/files/spawn-fcgi.confd,v 1.6 2009/09/28 08:38:02 bangert Exp $
 
 # DO NOT MODIFY THIS FILE DIRECTLY! CREATE A COPY AND MODIFY THAT INSTEAD!
 
 # The FCGI process can be made available through a filesystem socket or
 # through a inet socket. One and only one of the two types must be choosen.
+# Default is the inet socket.
 
-# The filename/user/group/mode of the unix socket.  Leave empty to use an IP
-# socket.
-#
-#FCGI_SOCKET=/var/run/spawn-fcgi/myapp.sock
-#FCGI_SOCKET_USER=nobody
-#FCGI_SOCKET_GROUP=nobody
-#FCGI_SOCKET_MODE=0660
+# The filename specified by
+# FCGI_SOCKET will be suffixed with a number for each child process, for
+# example, fcgi.socket-1. 
+# Leave empty to use an IP socket (default). See below. Enabling this, 
+# disables the IP socket.
+# 
+FCGI_SOCKET=
 
 # When using FCGI_PORT, connections will only be accepted from the following
 # address. The default is 127.0.0.1. Use 0.0.0.0 to bind to all addresses.
@@ -23,13 +25,14 @@ FCGI_ADDRESS=127.0.0.1
 # by the first child process. If this is set to 1234 then subsequent child
 # processes will use 1235, 1236, etc.
 #
-#FCGI_PORT=1234
+FCGI_PORT=1234
 
 # The path to your FastCGI application. These sometimes carry the .fcgi
 # extension but not always. For PHP, you should usually point this to
 # /usr/bin/php-cgi.
 #
 #FCGI_PROGRAM=/usr/bin/php-cgi
+FCGI_PROGRAM=
 
 # The number of child processes to spawn. The default is 1.
 #
@@ -40,10 +43,10 @@ FCGI_CHILDREN=1
 #
 FCGI_CHROOT=
 
-# If you want to run your application from a specific directory specify
+# If you want to run your application from a specific directiory specify
 # it here. Leave this blank otherwise.
 #
-FCGI_DIR=
+FCGI_CHDIR=
 
 # The user and group to run your application as. If you do not specify these,
 # the application will be run as root:root.
