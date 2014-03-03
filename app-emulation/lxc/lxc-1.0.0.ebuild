@@ -7,8 +7,8 @@ EAPI="4"
 inherit autotools eutils linux-info versionator flag-o-matic
 
 DESCRIPTION="Linux Containers userspace utilities"
-HOMEPAGE="http://lxc.sourceforge.net/"
-SRC_URI="http://lxc.sourceforge.net/download/${PN}/${P}.tar.gz"
+HOMEPAGE="http://linuxcontainers.org/"
+SRC_URI="http://linuxcontainers.org/downloads/${P}.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
