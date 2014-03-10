@@ -7,7 +7,7 @@ EAPI=5
 FORTRAN_NEEDED=fortran
 MY_P=${PN}-${PV/_p/-patch}
 
-inherit autotools eutils fortran-2 flag-o-matic toolchain-funcs multilib
+inherit autotools eutils flag-o-matic toolchain-funcs multilib
 
 DESCRIPTION="General purpose library and file format for storing scientific data"
 HOMEPAGE="http://www.hdfgroup.org/HDF5/"
