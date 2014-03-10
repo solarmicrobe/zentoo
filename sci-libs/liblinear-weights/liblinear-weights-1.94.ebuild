@@ -34,6 +34,7 @@ src_unpack() {
 src_compile() {
 	pushd "${S}"
 	make || die "make failed"
+	chmod +x train
 	popd
 }
 
