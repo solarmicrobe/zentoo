@@ -33,10 +33,10 @@ DEPEND="${RDEPEND}
 
 pkg_setup() {
 	tc-export CXX CC AR # workaround for bug 285148
-	if use fortran; then
-		use fortran2003 && FORTRAN_STANDARD=2003
-		fortran-2_pkg_setup
-	fi
+	#if use fortran; then
+	#	use fortran2003 && FORTRAN_STANDARD=2003
+	#	fortran-2_pkg_setup
+	#fi
 	if use mpi; then
 		if has_version 'sci-libs/hdf5[-mpi]'; then
 			ewarn "Installing hdf5 with mpi enabled with a previous hdf5 with mpi disabled may fail."
