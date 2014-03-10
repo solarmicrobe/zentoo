@@ -25,7 +25,7 @@ DEPEND="dev-python/mysql-python
 "
 RDEPEND="${DEPEND}"
 S="${WORKDIR}/${MY_P}"
-INSTALL_DIR=/opt/${MY_PN}/bin
+INSTALL_DIR="/opt/${MY_PN}"
 
 src_unpack() {
 	unpack ${A}
@@ -38,8 +38,8 @@ src_compile() {
 }
 
 src_install() {
-	dodir "${INSTALL_DIR}"
-	mv "${S}"/train "${INSTALL_DIR}" || die "install failed"
+	dodir "${INSTALL_DIR}/bin" || die "can't dodir"
+	mv "${S}"/train "${INSTALL_DIR}/bin" || die "install failed"
 
 	cat > 99${MY_PN} <<-EOF
 		PATH=${INSTALL_DIR}
