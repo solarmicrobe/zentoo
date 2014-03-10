@@ -45,8 +45,8 @@ src_install() {
 	fperms +x "${INSTALL_DIR}/bin/train" || die
 
 	cat > 99${MY_PN} <<-EOF
-		PATH=${INSTALL_DIR}
-		ROOTPATH=${INSTALL_DIR}
+		PATH=${INSTALL_DIR}/bin
+		ROOTPATH=${INSTALL_DIR}/bin
 	EOF
 	doenvd 99${MY_PN} || die "doenvd failed"
 }
