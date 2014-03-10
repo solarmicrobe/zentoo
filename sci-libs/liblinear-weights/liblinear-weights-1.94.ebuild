@@ -27,6 +27,10 @@ RDEPEND="${DEPEND}"
 S="${WORKDIR}/${MY_P}"
 INSTALL_DIR=/opt/${MY_PN}/bin
 
+src_unpack() {
+	unpack ${A}
+}
+
 src_compile() {
 	pushd "${S}"
 	make || die "make failed"

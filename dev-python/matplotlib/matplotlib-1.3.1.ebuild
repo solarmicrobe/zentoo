@@ -112,7 +112,7 @@ python_prepare_all() {
 		-e '/tol/s:32:35:g' \
 		-i lib/matplotlib/tests/test_mathtext.py || die
 
-	if use gtk || use gtk3; then
+	if use gtk; then
 		export XDG_RUNTIME_DIR="${T}/runtime-dir"
 		mkdir "${XDG_RUNTIME_DIR}" || die
 		chmod 0700 "${XDG_RUNTIME_DIR}" || die
