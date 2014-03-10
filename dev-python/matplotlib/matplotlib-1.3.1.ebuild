@@ -139,7 +139,6 @@ python_configure() {
 		dateutil = False
 		[gui_support]
 		agg = True
-		$(use_setup pyside)
 		$(use_setup qt4)
 		$(use_setup tk)
 	EOF
