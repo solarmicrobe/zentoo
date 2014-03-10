@@ -58,9 +58,4 @@ python_install_all() {
 		insinto /usr/share/doc/${PF}
 		doins -r examples
 	fi
-
-	if use contrib; then
-		insinto /usr/share/${PF}
-		doins -r contrib
-	fi
-}
+	}
