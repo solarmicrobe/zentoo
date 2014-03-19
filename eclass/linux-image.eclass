@@ -27,7 +27,7 @@ linux-image_pkg_postinst() {
 
 linux-image_pkg_config() {
 	# use UUID for rootfs in fstab
-	root_device=$(grep ' / ' /proc/mounts | grep -v ^rootfs | grep -v ^aufs | grep -v ^/dev/root | awk '{ print $1 }')
+	root_device=$(grep ' / ' /proc/mounts | grep -v ^rootfs | grep -v ^aufs | grep -v ^/dev/root | grep -v tmpfs | awk '{ print $1 }')
 	root_uuid=$(blkid -s UUID -o value ${root_device})
 
 	# sometimes blkid does not work :-(
