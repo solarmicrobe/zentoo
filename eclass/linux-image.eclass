@@ -74,9 +74,8 @@ linux-image_pkg_config() {
 	fi
 
 	# support old MBR systems too :-(
-	#if partx -s -o SCHEME $(echo ${boot_devices} | awk '{print $1}') | grep -q gpt; then
-	einfo "`echo ${boot_devices}`"
-	if fdisk -l `echo ${boot_devices} | awk '{print $1}'` 2>&1 | tail -1 | grep -iq gpt; then
+	if partx -s -o SCHEME $(echo ${boot_devices} | awk '{print $1}') | grep -q gpt; then
+
 		einfo "Using grub-2 with GPT partition map"
 
 		emerge --nospinner -q -n sys-boot/grub:2
