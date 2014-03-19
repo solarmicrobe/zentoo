@@ -75,6 +75,7 @@ linux-image_pkg_config() {
 
 	# support old MBR systems too :-(
 	partx -s -o SCHEME $(echo ${boot_devices} | awk '{print $1}') | grep -q gpt
+	echo partx -s -o SCHEME $(echo ${boot_devices} | awk '{print $1}') | grep -q gpt
 
 	if [[ $? -eq 0 ]]; then
 		einfo "Using grub-2 with GPT partition map"
