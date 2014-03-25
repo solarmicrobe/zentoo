@@ -1,4 +1,4 @@
-# Copyright 1999-2009 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -13,11 +13,12 @@ SRC_URI="amd64? ( ${REL_URI}/${P}-${MY_BUILD}-Linux-x86_64.tgz )"
 
 LICENSE="splunk-eula"
 SLOT="6"
-KEYWORDS="-* ~amd64"
+KEYWORDS="-* amd64"
 IUSE=""
 
-DEPEND="!!net-analyzer/splunkforwarder:0"
-RDEPEND="!net-analyzer/splunk"
+DEPEND=""
+RDEPEND="!net-analyzer/splunk
+	!net-analyzer/splunkforwarder:0"
 
 S="${WORKDIR}"/${PN}
 
