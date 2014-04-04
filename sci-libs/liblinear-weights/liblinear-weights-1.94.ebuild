@@ -42,6 +42,7 @@ src_install() {
 	dodir "${INSTALL_DIR}"/bin || die "can't create ${INSTALL_DIR}/bin"
 	insinto "${INSTALL_DIR}/bin" || die "install failed"
 	doins "${S}"/train || die "install failed"
+	doins "${S}"/predict || die "install failed"
 	fperms +x "${INSTALL_DIR}/bin/train" || die
 
 	cat > 99${MY_PN} <<-EOF
