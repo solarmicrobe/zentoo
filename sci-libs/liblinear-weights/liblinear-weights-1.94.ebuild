@@ -44,6 +44,7 @@ src_install() {
 	doins "${S}"/train || die "install failed"
 	doins "${S}"/predict || die "install failed"
 	fperms +x "${INSTALL_DIR}/bin/train" || die
+	fperms +x "${INSTALL_DIR}/bin/predict" || die
 
 	cat > 99${MY_PN} <<-EOF
 		PATH=${INSTALL_DIR}/bin
