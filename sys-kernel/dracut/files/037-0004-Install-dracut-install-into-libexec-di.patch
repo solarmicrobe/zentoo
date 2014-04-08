@@ -1,7 +1,7 @@
-From bf3d75a2ebf4ad80313d7ced8478f21d9a96f87b Mon Sep 17 00:00:00 2001
+From c379589cc5cdd0c4e9e559b9edde44410416d2fb Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Amadeusz=20=C5=BBo=C5=82nowski?= <aidecoe@aidecoe.name>
 Date: Wed, 2 Oct 2013 22:40:43 +0200
-Subject: [PATCH 5/5] Install dracut-install into libexec dir instead of lib
+Subject: [PATCH 4/4] Install dracut-install into libexec dir instead of lib
  dir
 
 dracut-install script is the only thing ABI specific atm.
@@ -50,10 +50,10 @@ index 19b5e1f..d2ffc2c 100755
  
  {
 diff --git a/dracut-functions.sh b/dracut-functions.sh
-index 86a69a8..e8ec335 100755
+index 6281fa0..e2b1a7a 100755
 --- a/dracut-functions.sh
 +++ b/dracut-functions.sh
-@@ -695,6 +695,10 @@ if ! [[ $DRACUT_INSTALL ]]; then
+@@ -740,6 +740,10 @@ if ! [[ $DRACUT_INSTALL ]]; then
      DRACUT_INSTALL=$(find_binary dracut-install)
  fi
  
@@ -65,7 +65,7 @@ index 86a69a8..e8ec335 100755
      DRACUT_INSTALL=$dracutbasedir/dracut-install
  fi
 diff --git a/dracut.sh b/dracut.sh
-index 9657230..08335d0 100755
+index b1141de..6cf80b4 100755
 --- a/dracut.sh
 +++ b/dracut.sh
 @@ -27,6 +27,7 @@
@@ -77,5 +77,5 @@ index 9657230..08335d0 100755
  dracutbasedir="$pkglibdir"
  
 -- 
-1.8.5.5
+1.9.0
 
