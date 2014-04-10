@@ -19,6 +19,5 @@ ruby_add_rdepend "
 	>=dev-ruby/hashie-2.0
 	dev-ruby/json
 	>=dev-ruby/mixlib-log-1.3
-	<dev-ruby/moneta-0.7.0
 	dev-ruby/rack
 "

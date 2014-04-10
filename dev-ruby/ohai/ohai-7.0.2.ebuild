@@ -25,20 +25,13 @@ RESTRICT="test"
 
 ruby_add_rdepend "
 	dev-ruby/ipaddress
+	>=dev-ruby/mime-types-1.16
 	dev-ruby/mixlib-cli
-	dev-ruby/mixlib-config
+	>=dev-ruby/mixlib-config-2.0
 	dev-ruby/mixlib-log
-	dev-ruby/mixlib-shellout
-	dev-ruby/systemu
+	>=dev-ruby/mixlib-shellout-1.2
+	>=dev-ruby/systemu-2.5.2
 	dev-ruby/yajl-ruby"
-
-each_ruby_install() {
-	each_fakegem_install
-
-	ruby_fakegem_newins \
-		"${FILESDIR}"/lxc_virtualization.rb \
-		lib/ohai/plugins/linux/lxc_virtualization.rb
-}
 
 all_ruby_install() {
 	all_fakegem_install

@@ -27,7 +27,7 @@ IUSE=""
 RESTRICT="test"
 
 ruby_add_rdepend "
-	>=dev-ruby/chef-zero-1.7.2
+	>=dev-ruby/chef-zero-2.0.2
 	>=dev-ruby/diff-lcs-1.2.4
 	>=dev-ruby/erubis-2.7
 	>=dev-ruby/highline-1.6.9
@@ -37,11 +37,11 @@ ruby_add_rdepend "
 	>=dev-ruby/mixlib-cli-1.4.0
 	>=dev-ruby/mixlib-config-2.0
 	>=dev-ruby/mixlib-log-1.3.0
-	>=dev-ruby/mixlib-shellout-1.3
+	>=dev-ruby/mixlib-shellout-1.4
 	>=dev-ruby/net-ssh-2.6
 	>=dev-ruby/net-ssh-multi-1.1
 	<dev-ruby/net-ssh-multi-1.2
-	>=dev-ruby/ohai-6.0
+	>=dev-ruby/ohai-7.0
 	>=dev-ruby/rest-client-1.0.4
 	<dev-ruby/rest-client-1.7
 	dev-ruby/ruby-shadow
