@@ -264,6 +264,7 @@ scanner
 sctp
 sdl
 seamonkey
+seccomp
 selinux
 semantic-desktop
 serial
