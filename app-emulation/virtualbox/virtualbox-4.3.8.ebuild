@@ -19,7 +19,7 @@ HOMEPAGE="http://www.virtualbox.org/"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64"
+KEYWORDS=" amd64"
 IUSE="+additions alsa doc extensions headless java pam pulseaudio +opengl python +qt4 +sdk vboxwebsrv vnc"
 
 RDEPEND="!app-emulation/virtualbox-bin
@@ -73,7 +73,7 @@ DEPEND="${RDEPEND}
 	vboxwebsrv? ( <net-libs/gsoap-2.8.13 )
 	${PYTHON_DEPS}"
 PDEPEND="additions? ( ~app-emulation/virtualbox-additions-${PV} )
-	extensions? ( =app-emulation/virtualbox-extpack-oracle-${PV}* )"
+	extensions? ( ~app-emulation/virtualbox-extpack-oracle-${PV} )"
 
 QA_TEXTRELS_x86="usr/lib/virtualbox-ose/VBoxGuestPropSvc.so
 	usr/lib/virtualbox/VBoxSDL.so

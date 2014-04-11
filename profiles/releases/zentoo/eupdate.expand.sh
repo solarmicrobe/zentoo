@@ -66,9 +66,7 @@ sys-kernel/gentoo-sources)               echo "=$1-3.10.36";;
 sys-kernel/linux-headers)                echo "=$1-3.10";;
 
 # virtualbox
-app-emulation/virtualbox-extpack-oracle) echo "=$1-4.3.10.93012";;
-app-emulation/virtualbox-additions)      echo "=$1-4.3.10-r1";;
-app-emulation/virtualbox*)               echo "=$1-4.3.10";;
+app-emulation/virtualbox*)               echo "=$1-4.3.8";;
 dev-util/kbuild)                         echo "=$1-0.1.9998_pre20131130";;
 
 # just because we support firefox for headless testing
@@ -101,5 +99,9 @@ dev-ruby/rake-compiler)                  echo "=$1-0.9.2";;
 dev-ruby/yard)                           echo "=$1-0.8.7.3-r1";;
 dev-ruby/erubis)                         echo "=$1-2.7.0-r1";;
 dev-ruby/log4r)                          echo "=$1-1.1.10-r1";;
+app-emulation/virtualbox)                echo "=$1-4.3.8";;
+app-emulation/virtualbox-additions)      echo "=$1-4.3.8";;
+app-emulation/virtualbox-extpack-oracle) echo "=$1-4.3.8";;
+app-emulation/virtualbox-modules)        echo "=$1-4.3.8";;
 *)                                       echo $1;;
 esac
