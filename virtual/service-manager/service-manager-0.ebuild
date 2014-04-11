@@ -11,14 +11,5 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="kernel_linux prefix"
 
-RDEPEND="
-	prefix? ( >=sys-apps/baselayout-prefix-2.2 )
-	!prefix? (
-		|| (
-		sys-apps/openrc
-		kernel_linux? ( || (
-			sys-apps/systemd
-			sys-process/runit
-			virtual/daemontools
-	) ) ) )"
+RDEPEND="sys-apps/systemd"
 DEPEND=""

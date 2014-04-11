@@ -19,12 +19,12 @@ sys-devel/autoconf
 sys-devel/automake
 sys-devel/libtool
 sys-apps/baselayout
-sys-apps/makedev
 sys-apps/coreutils
 sys-apps/diffutils
 sys-apps/file
 sys-apps/findutils
 sys-apps/gawk
+sys-apps/gentoo-functions
 sys-apps/grep
 sys-apps/less
 sys-apps/net-tools

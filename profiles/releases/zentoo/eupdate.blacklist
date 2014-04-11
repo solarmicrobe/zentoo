@@ -21,3 +21,4 @@ virtual/jre
 virtual/linux-sources
 virtual/mta
 virtual/mysql
+virtual/service-manager
