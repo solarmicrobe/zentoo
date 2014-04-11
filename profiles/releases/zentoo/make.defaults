@@ -22,8 +22,5 @@ VIDEO_CARDS=""
 # default GRUB2 modules
 GRUB_PLATFORMS="efi-64 pc"
 
-# systemd bootstrap support
-BOOTSTRAP_USE="${BOOTSTRAP_USE} udev"
-
 # default collectd plugins
 COLLECTD_PLUGINS="df aggregation cgroups conntrack contextswitch cpu curl curl_json curl_xml disk dns entropy exec filecount hddtemp interface ipmi iptables irq java load logfile memory network numa ping processes protocols python swap table tail tcpconns unixsock uptime users vmem"
