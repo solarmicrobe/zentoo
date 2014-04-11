@@ -51,7 +51,7 @@ src_prepare()
 
 src_compile()
 {
-	export GOROOT_FINAL=/usr/lib/go
+	export GOROOT_FINAL="${EPREFIX}"/usr/lib/go
 	export GOROOT="$(pwd)"
 	export GOBIN="${GOROOT}/bin"
 	if [[ $CTARGET = armv5* ]]
@@ -126,8 +126,8 @@ pkg_postinst()
 	# linker are also checked - so we need to fix them too.
 	ebegin "fixing timestamps to avoid unnecessary rebuilds"
 	tref="usr/lib/go/pkg/*/runtime.a"
-	find "${ROOT}"usr/lib/go -type f \
-		-exec touch -r "${ROOT}"${tref} {} \;
+	find "${EROOT}"usr/lib/go -type f \
+		-exec touch -r "${EROOT}"${tref} {} \;
 	eend $?
 
 	if [[ ${PV} != 9999 && -n ${REPLACING_VERSIONS} &&

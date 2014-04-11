@@ -19,6 +19,7 @@ dev-libs/ppl lpsol
 dev-python/ipython smp octave matplotlib nbconvert
 dev-python/psycopg mxdatetime
 dev-vcs/subversion webdav-serf
+gnome-base/librsvg tools
 media-gfx/graphviz cairo
 media-gfx/imagemagick autotrace raw opencl
 media-libs/harfbuzz graphite
@@ -36,7 +37,7 @@ net-libs/zeromq pgm
 net-mail/dovecot lucene
 net-misc/curl metalink rtmp ssh
 sys-apps/openrc netifrc
-sys-apps/systemd http qrcode
+sys-apps/systemd http qrcode ssl
 sys-fs/btrfs-progs debug-utils
 sys-fs/udev extras
 sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_bootchart dracut_modules_cifs

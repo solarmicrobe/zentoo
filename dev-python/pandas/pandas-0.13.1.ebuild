@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-python/pandas/pandas-0.13.1.ebuild,v 1.1 2014/02/21 12:04:19 jlec Exp $
+# $Header: $
 
 EAPI=5
 
@@ -15,10 +15,12 @@ SRC_URI="mirror://pypi/${PN:0:1}/${PN}/${P}.tar.gz"
 SLOT="0"
 LICENSE="BSD"
 KEYWORDS="amd64"
-IUSE="doc examples test"
+IUSE="doc examples excel html test R"
 
 REQUIRED_USE="
+	excel? ( !python_targets_python3_2 )
 	doc? ( !python_targets_python3_2 )
+	R? ( !python_targets_python3_2 )
 "
 
 CDEPEND="
@@ -52,7 +54,19 @@ RDEPEND="${CDEPEND}
 	dev-python/pytables[${PYTHON_USEDEP}]
 	dev-python/pytz[${PYTHON_USEDEP}]
 	sci-libs/scipy[${PYTHON_USEDEP}]
-"	
+	excel? (
+		>=dev-python/openpyxl-1.6.1[${PYTHON_USEDEP}]
+		dev-python/xlrd[$(python_gen_usedep 'python2*')]
+		dev-python/xlwt[$(python_gen_usedep 'python2*')]
+	)
+	html? (
+		dev-python/beautifulsoup:4[${PYTHON_USEDEP}]
+		|| (
+			dev-python/lxml[${PYTHON_USEDEP}]
+			dev-python/html5lib[${PYTHON_USEDEP}] )
+	)
+	R? ( dev-python/rpy[$(python_gen_usedep 'python2_7')] )"
+
 PATCHES=(
 	"${FILESDIR}"/${P}-backport-test-fix.patch
 )

@@ -17,12 +17,10 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="sqlite"
 
-DEPEND=">=dev-libs/elfutils-0.142
+RDEPEND=">=dev-libs/elfutils-0.142
 	sys-libs/libcap
 	sqlite? ( dev-db/sqlite:3 )"
-RDEPEND="${DEPEND}
-	virtual/linux-sources"
-DEPEND="${DEPEND}
+DEPEND="${RDEPEND}
 	>=sys-devel/gettext-0.18.2"
 
 CONFIG_CHECK="~KPROBES ~RELAY ~DEBUG_FS"

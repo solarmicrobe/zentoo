@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: readme.gentoo
@@ -98,7 +98,7 @@ readme.gentoo_print_elog() {
 		echo -e "${README_GENTOO_DOC_VALUE}" | while read -r ELINE; do elog "${ELINE}"; done
 		elog ""
 		elog "(Note: Above message is only printed the first time package is"
-		elog "installed. Please look at /usr/share/doc/${PF}/README.gentoo*"
+		elog "installed. Please look at ${EPREFIX}/usr/share/doc/${PF}/README.gentoo*"
 		elog "for future reference)"
 	fi
 }

@@ -75,8 +75,7 @@ fi
 JAVA_ANT_E_DEPEND="${JAVA_ANT_E_DEPEND}
 	   ${ANT_TASKS_DEPEND}
 	   ${JAVA_PKG_PORTAGE_DEP}
-	   >=dev-java/javatoolkit-0.3.0-r2
-	   >=dev-lang/python-2.4"
+	   >=dev-java/javatoolkit-0.3.0-r2"
 
 # this eclass must be inherited after java-pkg-2 or java-pkg-opt-2
 # if it's java-pkg-opt-2, ant dependencies are pulled based on USE flag
@@ -428,6 +427,9 @@ java-ant_rewrite-classpath() {
 # The file to rewrite defaults to build.xml when not specified.
 java-ant_remove-taskdefs() {
 	debug-print-function ${FUNCNAME} $*
+
+	die "${FUNCNAME} has been banned, see bug #479838."
+
 	local task_name
 	if [[ "${1}" == --name ]]; then
 		task_name="${2}"

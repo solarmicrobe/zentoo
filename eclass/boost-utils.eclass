@@ -1,7 +1,9 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 if [[ ! ${_BOOST_ECLASS} ]]; then
+
+# @DEAD
 
 # @ECLASS: boost-utils.eclass
 # @MAINTAINER:

@@ -47,6 +47,8 @@ src_prepare() {
 		-e "s:have_check=[a-z]*:have_check=$(usex test):g" || die
 
 	epatch "${FILESDIR}"/${PN}-3.1-zfs.patch
+	epatch "${FILESDIR}"/${PN}-3.1-readline.patch
+
 	eautoreconf
 }
 

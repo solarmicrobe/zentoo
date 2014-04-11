@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=5
-PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} pypy2_0 )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} pypy pypy2_0 )
 
 inherit distutils-r1
 
@@ -20,7 +20,7 @@ SLOT="4"
 KEYWORDS="amd64"
 # new html5 awaits keywording of html5lib in Bug 471002
 IUSE="doc test"
-# pending Bug 471002; html5? ( dev-python/html5lib[$(python_gen_usedep 'python{2_6,2_7}' pypy2_0)] )
+# pending Bug 471002; html5? ( dev-python/html5lib[$(python_gen_usedep 'python{2_6,2_7}' pypy pypy2_0)] )
 
 RDEPEND=""
 DEPEND="${RDEPEND}

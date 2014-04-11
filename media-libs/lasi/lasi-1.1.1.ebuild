@@ -30,6 +30,7 @@ S=${WORKDIR}/${MY_P}
 PATCHES=(
 	"${FILESDIR}"/${PN}-1.1.0-cmake.patch
 	"${FILESDIR}"/${PN}-1.1.0-pkgconfig.patch
+	"${FILESDIR}"/${PN}-1.1.1-freetype251.patch
 	)
 
 src_prepare() {

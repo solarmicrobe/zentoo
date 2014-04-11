@@ -177,6 +177,7 @@ matrox
 migemo
 mikmod
 milter
+mkl
 mktemp
 mms
 modplug
@@ -217,6 +218,7 @@ offensive
 ofx
 old-linux
 openal
+opencl
 openct
 openexr
 opengl
@@ -570,6 +572,7 @@ video_cards_i128
 video_cards_i740
 video_cards_i915
 video_cards_i965
+video_cards_ilo
 video_cards_impact
 video_cards_intel
 video_cards_mach64

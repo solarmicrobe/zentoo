@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: python-r1
@@ -84,7 +84,7 @@ fi
 #
 # Example:
 # @CODE
-# PYTHON_COMPAT_OVERRIDE='pypy2_0 python3_3' emerge -1v dev-python/foo
+# PYTHON_COMPAT_OVERRIDE='pypy python3_3' emerge -1v dev-python/foo
 # @CODE
 
 # @ECLASS-VARIABLE: PYTHON_REQ_USE
@@ -289,6 +289,8 @@ python_gen_usedep() {
 		done
 	done
 
+	[[ ${matches[@]} ]] || die "No supported implementations match python_gen_usedep patterns: ${@}"
+
 	local out=${matches[@]}
 	echo ${out// /,}
 }
@@ -439,6 +441,10 @@ _python_check_USE_PYTHON() {
 							fi
 							py2=${impl/_/.}
 							;;
+						python3_4)
+							debug-print "${FUNCNAME}: python3.4 found, not using eselect"
+							return 1
+							;;
 						python3_*)
 							if [[ ${py3+1} ]]; then
 								debug-print "${FUNCNAME}: -> more than one py3: ${py3} ${impl}"
@@ -503,6 +509,7 @@ _python_check_USE_PYTHON() {
 				fi
 			fi
 
+
 			if [[ ${py3+1} ]]; then
 				local sel_py3=$(eselect python show --python3)
 
@@ -545,14 +552,15 @@ _python_check_USE_PYTHON() {
 
 			local abi
 			case "${impl}" in
+				pypy|python3_4)
+					# unsupported in python.eclass
+					continue
+					;;
 				python*)
 					abi=${impl#python}
 					;;
 				jython*)
 					abi=${impl#jython}-jython
-					;;
-				pypy*)
-					abi=2.7-pypy-${impl#pypy}
 					;;
 				*)
 					die "Unexpected Python implementation: ${impl}"

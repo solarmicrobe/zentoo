@@ -49,6 +49,7 @@ REQUIRED_USE="
 
 src_prepare() {
 	epatch "${FILESDIR}/libvpx-1.3.0-dash.patch"
+	epatch "${FILESDIR}/libvpx-1.3.0-sparc-configure.patch" # 501010
 }
 
 multilib_src_configure() {

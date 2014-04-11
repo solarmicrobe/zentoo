@@ -6,7 +6,7 @@ EAPI=5
 
 PHP_EXT_NAME="mongo"
 
-USE_PHP="php5-3 php5-4"
+USE_PHP="php5-5 php5-4"
 
 inherit php-ext-pecl-r2
 

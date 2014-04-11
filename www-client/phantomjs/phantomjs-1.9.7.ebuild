@@ -15,7 +15,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="examples"
 
-RDEPEND="dev-libs/icu
+RDEPEND="dev-libs/icu:=
 	dev-libs/openssl
 	media-libs/fontconfig
 	media-libs/freetype"

@@ -4,7 +4,7 @@
 
 EAPI=2
 
-USE_RUBY="ruby18 ruby19 ree18"
+USE_RUBY="ruby19"
 
 RUBY_FAKEGEM_EXTRADOC="CHANGELOG.md README.md"
 

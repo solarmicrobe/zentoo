@@ -1,9 +1,9 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
-USE_RUBY="ruby18 ruby19 ree18"
+USE_RUBY="ruby19"
 
 RUBY_FAKEGEM_DOCDIR="doc"
 RUBY_FAKEGEM_EXTRADOC="CHANGELOG.rdoc README.rdoc"
@@ -23,7 +23,6 @@ SLOT="2"
 KEYWORDS="amd64"
 IUSE=""
 
-ruby_add_bdepend "test? ( virtual/ruby-test-unit )"
 ruby_add_rdepend ">=dev-ruby/net-ssh-2.1.4
 	>=dev-ruby/net-ssh-gateway-0.99.0"
 

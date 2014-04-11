@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -8,9 +8,9 @@ MY_PN=acpica-unix
 MY_P=${MY_PN}-${PV}
 MY_TESTS_P=${MY_PN/ca/tests}-${PV}
 DESCRIPTION="Intel ACPI Source Language (ASL) compiler"
-HOMEPAGE="http://www.intel.com/technology/iapc/acpi/"
-SRC_URI="http://www.acpica.org/download/${MY_P}.tar.gz
-	test? ( http://www.acpica.org/download/${MY_TESTS_P}.tar.gz )"
+HOMEPAGE="https://www.acpica.org/downloads/"
+SRC_URI="http://www.acpica.org/sites/acpica/files/${MY_P}.tar.gz
+	test? ( http://www.acpica.org/sites/acpica/files/${MY_TESTS_P}.tar.gz )"
 
 LICENSE="iASL"
 SLOT="0"

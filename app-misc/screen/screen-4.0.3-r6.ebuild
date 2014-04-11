@@ -89,6 +89,9 @@ src_prepare() {
 	# Allow usernames up to 32 chars
 	epatch "${FILESDIR}"/${PV}-extend-d_termname-ng2.patch
 
+	# support CPPFLAGS
+	epatch "${FILESDIR}"/${P}-cppflags.patch
+
 	sed \
 		-e 's:termlib:tinfo:g' \
 		-i configure.in || die
@@ -98,12 +101,12 @@ src_prepare() {
 }
 
 src_configure() {
-	append-flags "-DMAXWIN=${MAX_SCREEN_WINDOWS:-100}"
+	append-cppflags "-DMAXWIN=${MAX_SCREEN_WINDOWS:-100}"
 
 	[[ ${CHOST} == *-solaris* ]] && append-libs -lsocket -lnsl
 
-	use nethack || append-flags "-DNONETHACK"
-	use debug && append-flags "-DDEBUG"
+	use nethack || append-cppflags "-DNONETHACK"
+	use debug && append-cppflags "-DDEBUG"
 
 	econf \
 		--with-socket-dir="${EPREFIX}/var/run/screen" \
@@ -151,7 +154,10 @@ src_install() {
 }
 
 pkg_postinst() {
-	elog "Some dangerous key bindings have been removed or changed to more safe values."
-	elog "We enable some xterm hacks in our default screenrc, which might break some"
-	elog "applications. Please check /etc/screenrc for information on these changes."
+	if [[ -z ${REPLACING_VERSIONS} ]]
+	then
+		elog "Some dangerous key bindings have been removed or changed to more safe values."
+		elog "We enable some xterm hacks in our default screenrc, which might break some"
+		elog "applications. Please check /etc/screenrc for information on these changes."
+	fi
 }

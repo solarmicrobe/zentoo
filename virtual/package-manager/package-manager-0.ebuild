@@ -2,16 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-DESCRIPTION="Virtual for the package manager"
-HOMEPAGE=""
-SRC_URI=""
+EAPI=5
 
-LICENSE=""
+DESCRIPTION="Virtual for the package manager"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
-DEPEND=""
 RDEPEND="|| ( sys-apps/portage
 		sys-apps/paludis
 		sys-apps/pkgcore )"

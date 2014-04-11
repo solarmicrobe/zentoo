@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: python-any-r1
@@ -229,10 +229,7 @@ _python_EPYTHON_supported() {
 	local i=${EPYTHON/./_}
 
 	case "${i}" in
-		python*|jython*)
-			;;
-		pypy-c*)
-			i=${i/-c/}
+		python*|jython*|pypy*)
 			;;
 		*)
 			ewarn "Invalid EPYTHON: ${EPYTHON}"

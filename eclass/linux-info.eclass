@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: linux-info.eclass
@@ -448,7 +448,7 @@ get_version() {
 	then
 		if [ -z "${get_version_warning_done}" ]; then
 			get_version_warning_done=1
-			qeerror "Unable to find kernel sources at ${KERNEL_DIR}"
+			qewarn "Unable to find kernel sources at ${KERNEL_DIR}"
 			#qeinfo "This package requires Linux sources."
 			if [ "${KERNEL_DIR}" == "/usr/src/linux" ] ; then
 				qeinfo "Please make sure that ${KERNEL_DIR} points at your running kernel, "

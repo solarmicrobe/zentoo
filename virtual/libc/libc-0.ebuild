@@ -2,18 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=1
+EAPI=5
 
 DESCRIPTION="Virtual for the C library"
-HOMEPAGE=""
-SRC_URI=""
-
-LICENSE=""
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
-DEPEND=""
 # explicitly depend on SLOT 2.2 of glibc, because it sets
 # a different SLOT for cross-compiling
 RDEPEND="!prefix? (

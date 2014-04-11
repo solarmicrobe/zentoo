@@ -110,20 +110,23 @@ src_install() {
 
 pkg_postinst() {
 	if use openrc; then
-		if [[ -L ${ROOT}etc/runlevels/boot/static-nodes ]]; then
+		if [[ -L ${ROOT%/}/etc/runlevels/boot/static-nodes ]]; then
 			ewarn "Removing old conflicting static-nodes init script from the boot runlevel"
-			rm -f "${ROOT}"etc/runlevels/boot/static-nodes
+			rm -f "${ROOT%/}"/etc/runlevels/boot/static-nodes
 		fi
 
 		# Add kmod to the runlevel automatically if this is the first install of this package.
 		if [[ -z ${REPLACING_VERSIONS} ]]; then
-			if [[ -x ${ROOT}etc/init.d/kmod-static-nodes && -d ${ROOT}etc/runlevels/sysinit ]]; then
-				ln -s /etc/init.d/kmod-static-nodes "${ROOT}"/etc/runlevels/sysinit/kmod-static-nodes
+			if [[ ! -d ${ROOT%/}/etc/runlevels/sysinit ]]; then
+				mkdir -p "${ROOT%/}"/etc/runlevels/sysinit
+			fi
+			if [[ -x ${ROOT%/}/etc/init.d/kmod-static-nodes ]]; then
+				ln -s /etc/init.d/kmod-static-nodes "${ROOT%/}"/etc/runlevels/sysinit/kmod-static-nodes
 			fi
 		fi
 
-		if [[ -e ${ROOT}etc/runlevels/sysinit ]]; then
-			if [[ ! -e ${ROOT}etc/runlevels/sysinit/kmod-static-nodes ]]; then
+		if [[ -e ${ROOT%/}/etc/runlevels/sysinit ]]; then
+			if [[ ! -e ${ROOT%/}/etc/runlevels/sysinit/kmod-static-nodes ]]; then
 				ewarn
 				ewarn "You need to add kmod-static-nodes to the sysinit runlevel for"
 				ewarn "kernel modules to have required static nodes!"
