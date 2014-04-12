@@ -31,8 +31,7 @@ net-analyzer/net-snmp netlink
 net-analyzer/rrdtool dbi
 net-analyzer/tcpdump smi
 net-dns/pdns opendbx sqlite
-net-libs/libpcap canusb
-net-libs/libpcap netlink
+net-libs/libpcap canusb netlink
 net-libs/zeromq pgm
 net-mail/dovecot lucene
 net-misc/curl metalink rtmp ssh
@@ -41,7 +40,6 @@ sys-apps/systemd http qrcode ssl
 sys-fs/btrfs-progs debug-utils
 sys-fs/udev extras
 sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_bootchart dracut_modules_cifs
-sys-kernel/genkernel crypt
 www-servers/uwsgi uwsgi_plugins_rsyslog uwsgi_plugins_alarm_xmpp uwsgi_plugins_rrdtool
 x11-libs/libSM uuid
 
