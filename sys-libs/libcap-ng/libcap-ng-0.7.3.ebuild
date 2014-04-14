@@ -1,13 +1,14 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-SUPPORT_PYTHON_ABIS="1"
-RESTRICT_PYTHON_ABIS="*-jython *-pypy-*"
+AUTOTOOLS_AUTORECONF=1
+AUTOTOOLS_PRUNE_LIBTOOL_FILES=all
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3} )
 
-inherit autotools flag-o-matic python
+inherit autotools-utils flag-o-matic python-r1
 
 DESCRIPTION="POSIX 1003.1e capabilities"
 HOMEPAGE="http://people.redhat.com/sgrubb/libcap-ng/"
@@ -18,50 +19,50 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="python static-libs"
 
-RDEPEND="python? ( dev-lang/python )"
+RDEPEND="python? ( ${PYTHON_DEPS} )"
 DEPEND="${RDEPEND}
 	sys-kernel/linux-headers
 	python? ( >=dev-lang/swig-2 )"
 
-PYTHON_CFLAGS=("2.* + -fno-strict-aliasing")
-
-pkg_setup() {
-	use python && python_pkg_setup
-}
-
 src_prepare() {
-	# Disable byte-compilation of Python modules.
-	>py-compile
-
-	# Python bindings are built/tested/installed manually.
-	sed -i -e "/^SUBDIRS/s/ python//" bindings/Makefile.am || die
 	sed -i -e 's:AM_CONFIG_HEADER:AC_CONFIG_HEADERS:' configure.ac || die
 
-	eautoreconf
+	autotools-utils_src_prepare
 
 	use sparc && replace-flags -O? -O0
 }
 
 src_configure() {
-	econf \
-		$(use_enable static-libs static) \
-		$(use_with python)
+	local myeconfargs=(
+		--without-python
+	)
+
+	# set up the library build
+	autotools-utils_src_configure
+
+	if use python; then
+		python_parallel_foreach_impl \
+			autotools-utils_src_configure --with-python
+	fi
 }
 
 src_compile() {
-	default
+	autotools-utils_src_compile
 
 	if use python; then
-		python_copy_sources bindings/python
+		python_compile() {
+			local CFLAGS=${CFLAGS}
 
-		building() {
-			emake \
-				CFLAGS="${CFLAGS}" \
-				PYTHON_VERSION="$(python_get_version)" \
-				pyexecdir="$(python_get_sitedir)" \
-				pythondir="$(python_get_sitedir)"
+			python_is_python3 || CFLAGS+=" -fno-strict-aliasing"
+
+			emake "${@}" \
+				-C "${BUILD_DIR}"/bindings/python
 		}
-		python_execute_function -s --source-dir bindings/python building
+
+		# help build system find the right objects
+		python_foreach_impl python_compile \
+			VPATH="${BUILD_DIR}"/bindings/python \
+			LIBS="${BUILD_DIR}"/src/libcap-ng.la
 	fi
 }
 
@@ -71,45 +72,21 @@ src_test() {
 		return
 	fi
 
-	default
+	autotools-utils_src_test
 
 	if use python; then
-		testing() {
-			emake \
-				PYTHON_VERSION="$(python_get_version)" \
-				pyexecdir="$(python_get_sitedir)" \
-				pythondir="$(python_get_sitedir)" \
-				TESTS_ENVIRONMENT="PYTHONPATH=..:../.libs" \
-				check
-		}
-		python_execute_function -s --source-dir bindings/python testing
+		python_foreach_impl \
+			autotools-utils_src_compile -C bindings/python check \
+			VPATH="${BUILD_DIR}"/bindings/python:"${S}"/bindings/python/test
 	fi
 }
 
 src_install() {
-	default
+	autotools-utils_src_install
 
 	if use python; then
-		installation() {
-			emake \
-				DESTDIR="${D}" \
-				PYTHON_VERSION="$(python_get_version)" \
-				pyexecdir="$(python_get_sitedir)" \
-				pythondir="$(python_get_sitedir)" \
-				install
-		}
-		python_execute_function -s --source-dir bindings/python installation
-
-		python_clean_installation_image
+		python_foreach_impl \
+			autotools-utils_src_install -C bindings/python \
+			VPATH="${BUILD_DIR}"/bindings/python
 	fi
-
-	rm -f "${ED}"/usr/lib*/${PN}.la
-}
-
-pkg_postinst() {
-	use python && python_mod_optimize capng.py
-}
-
-pkg_postrm() {
-	use python && python_mod_cleanup capng.py
 }
