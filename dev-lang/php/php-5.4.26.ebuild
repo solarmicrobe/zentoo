@@ -313,6 +313,9 @@ src_prepare() {
 			|| die "Failed to fix heimdal crypt library reference"
 	fi
 
+	# https://bugs.gentoo.org/show_bug.cgi?id=502516
+	epatch "${FILESDIR}"/libsystemd.patch
+
 	#Add user patches #357637
 	epatch_user
 
