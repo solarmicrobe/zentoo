@@ -203,6 +203,8 @@ neXt
 netboot
 netcdf
 networkmanager
+nfsidmap
+nfsv4
 nis
 nntp
 nocd
@@ -375,6 +377,9 @@ ruby_targets_ruby18
 ruby_targets_ruby21
 ruby_targets_rbx
 ruby_targets_ree18
+
+# uwsgi plugins
+uwsgi_plugins_router_spnego
 
 # unsupported linguas
 linguas_af

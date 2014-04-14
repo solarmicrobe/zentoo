@@ -35,6 +35,7 @@ net-libs/libpcap canusb netlink
 net-libs/zeromq pgm
 net-mail/dovecot lucene
 net-misc/curl metalink rtmp ssh
+sys-apps/acl nfs
 sys-apps/openrc netifrc
 sys-apps/systemd http qrcode ssl
 sys-fs/btrfs-progs debug-utils
