@@ -155,6 +155,7 @@ lash
 latex
 lcms
 ldirectord
+ldns
 libcaca
 libedit
 libgda
