@@ -12,9 +12,9 @@ SRC_URI=""
 LICENSE=""
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="elibc_glibc elibc_uclibc elibc_musl"
+IUSE="elibc_glibc elibc_uclibc elibc_musl elibc_mintlib"
 DEPEND=""
 
 # - Don't put elibc_glibc? ( sys-libs/glibc ) to avoid circular deps between
 # that and gcc
-RDEPEND="!elibc_glibc? ( !elibc_uclibc? ( !elibc_musl? ( dev-libs/libiconv[${MULTILIB_USEDEP}] ) ) )"
+RDEPEND="!elibc_glibc? ( !elibc_uclibc? ( !elibc_musl? ( !elibc_mintlib? ( dev-libs/libiconv[${MULTILIB_USEDEP}] ) ) ) )"

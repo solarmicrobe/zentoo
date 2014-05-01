@@ -18,7 +18,7 @@ SRC_URI="http://download.virtualbox.org/virtualbox/${MY_PV}/${MY_P}.vbox-extpack
 
 LICENSE="PUEL"
 SLOT="0"
-KEYWORDS=" amd64"
+KEYWORDS="amd64"
 IUSE=""
 RESTRICT="mirror strip"
 

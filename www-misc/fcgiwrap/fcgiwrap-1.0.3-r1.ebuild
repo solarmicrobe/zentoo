@@ -17,7 +17,7 @@ IUSE=""
 if [[ ${PV} == *9999* ]]; then
 	EGIT_REPO_URI="git://github.com/gnosek/${PN}.git"
 
-	KEYWORDS=""
+	KEYWORDS="amd64"
 else
 	MY_REV="58ec209"
 	#SRC_URI="http://download.github.com/gnosek-${P}-4-g${MY_REV}.tar.gz"

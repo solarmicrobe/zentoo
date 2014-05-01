@@ -33,7 +33,7 @@ RDEPEND="ldap? ( net-nds/openldap )
 		)
 		curl_ssl_openssl? ( dev-libs/openssl[static-libs?] )
 		curl_ssl_nss? ( dev-libs/nss app-misc/ca-certificates )
-		curl_ssl_polarssl? ( net-libs/polarssl app-misc/ca-certificates )
+		curl_ssl_polarssl? ( net-libs/polarssl:= app-misc/ca-certificates )
 	)
 	idn? ( net-dns/libidn[static-libs?] )
 	adns? ( net-dns/c-ares )
@@ -84,7 +84,8 @@ src_prepare() {
 	epatch \
 		"${FILESDIR}"/${PN}-7.30.0-prefix.patch \
 		"${FILESDIR}"/${PN}-respect-cflags-3.patch \
-		"${FILESDIR}"/${PN}-fix-gnutls-nettle.patch
+		"${FILESDIR}"/${PN}-fix-gnutls-nettle.patch \
+		"${FILESDIR}"/${P}-hostcheck.patch #507494
 
 	sed -i '/LD_LIBRARY_PATH=/d' configure.ac || die #382241
 

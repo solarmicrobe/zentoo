@@ -44,7 +44,6 @@ src_prepare() {
 }
 
 src_configure() {
-	[[ ${CHOST} == *-mint* ]] && append-cppflags -D_GNU_SOURCE
 	econf \
 		--with-match-limit-recursion=$(usex recursion-limit 8192 MATCH_LIMIT) \
 		$(use_enable bzip2 pcregrep-libbz2) \

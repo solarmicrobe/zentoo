@@ -12,7 +12,7 @@ HOMEPAGE="https://github.com/alanxz/rabbitmq-c"
 if [[ ${PV} == *9999* ]]; then
 	inherit git-2
 	EGIT_REPO_URI="git://github.com/alanxz/rabbitmq-c.git"
-	KEYWORDS="amd64"
+	KEYWORDS="-* amd64"
 else
 	SRC_URI="https://github.com/alanxz/rabbitmq-c/archive/${PN}-v${PV}.zip"
 	KEYWORDS="amd64"

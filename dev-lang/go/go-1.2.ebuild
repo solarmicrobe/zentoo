@@ -14,7 +14,7 @@ if [[ ${PV} = 9999 ]]; then
 else
 	SRC_URI="http://go.googlecode.com/files/go${PV}.src.tar.gz"
 	# Upstream only supports go on amd64, arm and x86 architectures.
-	KEYWORDS="amd64"
+	KEYWORDS="-* amd64"
 fi
 
 DESCRIPTION="A concurrent garbage collected and typesafe programming language"

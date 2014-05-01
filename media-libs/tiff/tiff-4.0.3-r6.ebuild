@@ -54,7 +54,7 @@ multilib_src_configure() {
 		--with-docdir="${EPREFIX}"/usr/share/doc/${PF}
 
 	# remove useless subdirs
-	if ! multilib_build_binaries ; then
+	if ! multilib_is_native_abi ; then
 		sed -i \
 			-e 's/ tools//' \
 			-e 's/ contrib//' \
@@ -65,7 +65,7 @@ multilib_src_configure() {
 }
 
 multilib_src_test() {
-	if ! multilib_build_binaries ; then
+	if ! multilib_is_native_abi ; then
 		cd tools
 		emake
 		cd "${BUILD_DIR}"

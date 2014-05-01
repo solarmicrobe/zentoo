@@ -72,7 +72,7 @@ multilib_src_install() {
 		popd >/dev/null
 	fi
 
-	if multilib_build_binaries ; then
+	if multilib_is_native_abi ; then
 		# libgeom in /lib and ifconfig in /sbin require libexpat on FreeBSD since
 		# we stripped the libbsdxml copy starting from freebsd-lib-8.2-r1
 		use elibc_FreeBSD && gen_usr_ldscript -a expat

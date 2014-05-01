@@ -39,11 +39,6 @@ each_ruby_prepare() {
 	case ${RUBY} in
 		*jruby)
 			;;
-		*ruby18)
-			sed -i -e '/test_norule_y/,/end/ s:^:#:' \
-				-e '/test_unterm_y/,/end/ s:^:#:' test/test_racc_command.rb || die
-			${RUBY} -Cext/racc extconf.rb || die
-			;;
 		*)
 			${RUBY} -Cext/racc extconf.rb || die
 			;;

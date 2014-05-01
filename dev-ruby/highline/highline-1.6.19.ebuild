@@ -4,14 +4,14 @@
 
 EAPI=5
 
-USE_RUBY="ruby18 ruby19 jruby"
+USE_RUBY="ruby19 jruby"
 
 RUBY_FAKEGEM_EXTRADOC="CHANGELOG README.rdoc TODO"
 RUBY_FAKEGEM_DOCDIR="doc/html"
 
 inherit ruby-fakegem
 
-DESCRIPTION="Highline is a high-level command-line IO library for ruby."
+DESCRIPTION="Highline is a high-level command-line IO library for ruby"
 HOMEPAGE="http://highline.rubyforge.org/"
 
 IUSE=""

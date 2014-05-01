@@ -11,7 +11,7 @@ SRC_URI="http://www.valgrind.org/downloads/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64"
+KEYWORDS="-* amd64"
 IUSE="mpi"
 
 DEPEND="mpi? ( virtual/mpi )"

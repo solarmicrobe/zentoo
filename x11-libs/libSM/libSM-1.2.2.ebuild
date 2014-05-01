@@ -8,7 +8,7 @@ XORG_DOC=doc
 XORG_MULTILIB=yes
 inherit xorg-2
 
-DESCRIPTION="X.Org SM library"
+DESCRIPTION="X.Org Session Management library"
 
 KEYWORDS="amd64"
 IUSE="doc ipv6 +uuid"

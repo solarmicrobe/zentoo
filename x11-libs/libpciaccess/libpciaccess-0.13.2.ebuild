@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -25,15 +25,11 @@ pkg_setup() {
 	)
 }
 
-src_install() {
-	xorg-2_src_install
+multilib_src_install() {
+	default
 
-	if ! use minimal; then
-		scanpci_install() {
-			${BASH} "${BUILD_DIR}/libtool" --mode=install "$(type -P install)" -c "${BUILD_DIR}/scanpci/scanpci" "${ED}"/usr/bin || die
-		}
-
+	if multilib_is_native_abi; then
 		dodir /usr/bin
-		multilib_foreach_abi scanpci_install
+		${BASH} "${BUILD_DIR}/libtool" --mode=install "$(type -P install)" -c scanpci/scanpci "${ED}"/usr/bin || die
 	fi
 }

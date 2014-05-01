@@ -25,7 +25,7 @@ RDEPEND="${RDEPEND}
 	dev-db/postgresql-base"
 DEPEND="${DEPEND}
 	dev-db/postgresql-base
-	test? ( dev-db/postgresql-server )"
+	test? ( dev-db/postgresql-server dev-db/postgresql-base[threads] )"
 
 ruby_add_bdepend "
 	doc? (

@@ -19,8 +19,7 @@ DEPEND="crypt? ( >=dev-libs/libmcrypt-2.5.1-r4 )
 	!minimal? ( tcpd? ( sys-apps/tcp-wrappers ) )"
 
 RDEPEND="${DEPEND}
-	!minimal? ( || ( net-analyzer/icinga net-analyzer/nagios ) )
-	sys-apps/openrc"
+	!minimal? ( || ( net-analyzer/icinga net-analyzer/nagios ) )"
 
 pkg_setup() {
 	if ! use minimal; then

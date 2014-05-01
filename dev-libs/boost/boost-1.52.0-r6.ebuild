@@ -60,6 +60,19 @@ ${python_configuration}
 __EOF__
 }
 
+pkg_setup() {
+	# Bail out on unsupported build configuration, bug #456792
+	if [[ -f "${EROOT}etc/site-config.jam" ]]; then
+		grep -q gentoorelease "${EROOT}etc/site-config.jam" && grep -q gentoodebug "${EROOT}etc/site-config.jam" ||
+		(
+			eerror "You are using custom ${EROOT}etc/site-config.jam without defined gentoorelease/gentoodebug targets."
+			eerror "Boost can not be built in such configuration."
+			eerror "Please, either remove this file or add targets from ${EROOT}usr/share/boost-build/site-config.jam to it."
+			die
+		)
+	fi
+}
+
 src_prepare() {
 	epatch \
 		"${FILESDIR}/${PN}-1.48.0-mpi_python3.patch" \

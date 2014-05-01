@@ -71,7 +71,7 @@ multilib_src_install() {
 	done
 	use static-libs && dolib.a libbz2.a
 
-	if multilib_build_binaries ; then
+	if multilib_is_native_abi ; then
 		gen_usr_ldscript -a bz2
 
 		dobin bzip2recover

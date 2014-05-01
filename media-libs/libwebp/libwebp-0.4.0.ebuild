@@ -39,7 +39,7 @@ src_prepare() {
 multilib_src_configure() {
 	# Only used for gif2webp binary wrt #486646
 	local build_gif2webp=$(usex gif)
-	multilib_build_binaries || build_gif2webp=no
+	multilib_is_native_abi || build_gif2webp=no
 
 	ac_cv_header_gif_lib_h=${build_gif2webp} \
 	ac_cv_header_jpeglib_h=$(usex jpeg) \

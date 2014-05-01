@@ -4,7 +4,7 @@
 
 EAPI="5"
 
-PYTHON_COMPAT=( python2_6 python2_7 python3_2 python3_3 )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4} )
 PYTHON_REQ_USE="threads"
 
 inherit apache-module eutils python-single-r1

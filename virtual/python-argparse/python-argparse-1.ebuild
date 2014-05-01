@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=5
-PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4} pypy pypy2_0 )
+PYTHON_COMPAT=( python{2_6,2_7,3_2,3_3,3_4} pypy )
 inherit python-r1
 
 DESCRIPTION="A virtual for the Python argparse module"
@@ -16,6 +16,4 @@ KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="${PYTHON_DEPS}
-	$(python_gen_cond_dep \
-		"dev-python/argparse[$(python_gen_usedep python2_6)]" \
-		python2_6)"
+	$(python_gen_cond_dep 'dev-python/argparse[${PYTHON_USEDEP}]' python2_6)"

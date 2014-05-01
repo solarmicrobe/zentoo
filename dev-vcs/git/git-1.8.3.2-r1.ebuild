@@ -35,7 +35,7 @@ if [[ ${PV} != *9999 ]]; then
 	KEYWORDS="amd64"
 else
 	SRC_URI=""
-	KEYWORDS=""
+	KEYWORDS="amd64"
 fi
 
 LICENSE="GPL-2"

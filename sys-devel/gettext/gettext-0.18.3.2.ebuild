@@ -72,7 +72,7 @@ multilib_src_configure() {
 	tc-is-cross-compiler && export gl_cv_func_working_acl_get_file=yes
 
 	local ECONF_SOURCE=${S}
-	if ! multilib_build_binaries ; then
+	if ! multilib_is_native_abi ; then
 		# for non-native ABIs, we build runtime only
 		ECONF_SOURCE+=/gettext-runtime
 	else
@@ -103,7 +103,7 @@ multilib_src_configure() {
 multilib_src_install() {
 	default
 
-	if multilib_build_binaries ; then
+	if multilib_is_native_abi ; then
 		dosym msgfmt /usr/bin/gmsgfmt #43435
 		dobin gettext-tools/misc/gettextize
 

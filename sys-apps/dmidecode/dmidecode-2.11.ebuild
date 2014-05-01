@@ -12,7 +12,7 @@ SRC_URI="http://savannah.nongnu.org/download/${PN}/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64"
+KEYWORDS="-* amd64"
 IUSE="selinux"
 
 DEPEND="selinux? ( sec-policy/selinux-dmidecode )"

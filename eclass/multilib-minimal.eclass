@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: multilib-minimal.eclass
@@ -107,11 +107,9 @@ multilib-minimal_src_install() {
 				emake DESTDIR="${D}" install
 			fi
 		fi
-		# Do multilib magic only when >1 ABI is used.
-		if [[ ${#MULTIBUILD_VARIANTS[@]} -gt 1 ]]; then
-			multilib_prepare_wrappers
-			multilib_check_headers
-		fi
+
+		multilib_prepare_wrappers
+		multilib_check_headers
 		popd >/dev/null || die
 	}
 	multilib_foreach_abi multilib-minimal_abi_src_install

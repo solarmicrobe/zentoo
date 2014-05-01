@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=2
-USE_RUBY="ruby18 ruby19 ruby20 jruby"
+USE_RUBY="ruby19 ruby20 jruby"
 
 inherit ruby-ng
 
@@ -16,8 +16,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-RDEPEND="ruby_targets_ruby18? ( dev-ruby/ffi[ruby_targets_ruby18] )
-	ruby_targets_ruby19? ( dev-ruby/ffi[ruby_targets_ruby19] )
+RDEPEND="ruby_targets_ruby19? ( dev-ruby/ffi[ruby_targets_ruby19] )
 	ruby_targets_ruby20? ( dev-ruby/ffi[ruby_targets_ruby20] )
 	ruby_targets_jruby? ( dev-java/jruby )"
 DEPEND=""

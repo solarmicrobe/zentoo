@@ -39,7 +39,7 @@ src_prepare() {
 multilib_src_configure() {
 	local myconf
 	# enable Python only on final ABI
-	if multilib_build_binaries; then
+	if multilib_is_native_abi; then
 		myconf="$(use_enable python)"
 	else
 		myconf="--disable-python"
@@ -62,7 +62,7 @@ multilib_src_configure() {
 multilib_src_compile() {
 	emake
 
-	if multilib_build_binaries && use doc; then
+	if multilib_is_native_abi && use doc; then
 		emake doc
 		fgrep -Zrl "${S}" doc/doxygen/html | \
 			xargs -0 sed -i -e "s:${S}::"
@@ -71,7 +71,7 @@ multilib_src_compile() {
 
 multilib_src_install() {
 	emake DESTDIR="${D}" install
-	if multilib_build_binaries && use doc; then
+	if multilib_is_native_abi && use doc; then
 		dohtml -r doc/doxygen/html/.
 	fi
 }

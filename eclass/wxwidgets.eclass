@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS:			wxwidgets.eclass
@@ -58,7 +58,7 @@ inherit eutils multilib
 # inheriting.
 if [[ -z ${WX_CONFIG} ]]; then
 	if [[ -n ${WX_GTK_VER} ]]; then
-		for wxtoolkit in gtk2 base; do
+		for wxtoolkit in mac gtk2 base; do
 			# newer versions don't have a seperate debug profile
 			for wxdebug in xxx release- debug-; do
 				wxconf="${wxtoolkit}-unicode-${wxdebug/xxx/}${WX_GTK_VER}"
@@ -108,7 +108,9 @@ need-wxwidgets() {
 	esac
 
 	# wxbase is provided by both gtk2 and base installations
-	if has_version "x11-libs/wxGTK:${WX_GTK_VER}[X]"; then
+	if has_version "x11-libs/wxGTK:${WX_GTK_VER}[aqua]"; then
+		wxtoolkit="mac"
+	elif has_version "x11-libs/wxGTK:${WX_GTK_VER}[X]"; then
 		wxtoolkit="gtk2"
 	else
 		wxtoolkit="base"

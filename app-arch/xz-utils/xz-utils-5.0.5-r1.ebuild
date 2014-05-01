@@ -50,7 +50,7 @@ multilib_src_configure() {
 		$(use_enable nls) \
 		$(use_enable threads) \
 		$(use_enable static-libs static) \
-		$(multilib_build_binaries || echo --disable-{xz,xzdec,lzmadec,lzmainfo,lzma-links,scripts})
+		$(multilib_is_native_abi || echo --disable-{xz,xzdec,lzmadec,lzmainfo,lzma-links,scripts})
 }
 
 multilib_src_install() {

@@ -195,6 +195,7 @@ src_install() {
 		done
 		popd > /dev/null
 	fi
+	docompress -x /usr/share/doc/${PF}/NEWS.rds
 }
 
 pkg_postinst() {
