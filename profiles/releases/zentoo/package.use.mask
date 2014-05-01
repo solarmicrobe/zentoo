@@ -21,7 +21,6 @@ dev-python/psycopg mxdatetime
 dev-util/boost-build python
 dev-vcs/subversion webdav-serf
 gnome-base/librsvg tools
-media-gfx/graphviz cairo
 media-gfx/imagemagick autotrace raw opencl
 media-libs/harfbuzz graphite
 media-libs/libsdl audio aalib
