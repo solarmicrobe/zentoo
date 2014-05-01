@@ -73,11 +73,11 @@ DEPEND="${COMMON_DEPEND}
 	>=sys-devel/binutils-2.23.1
 	>=sys-devel/gcc-4.6
 	>=sys-kernel/linux-headers-${MINKV}
+	>=sys-apps/dbus-1.6.8-r1:0
 	ia64? ( >=sys-kernel/linux-headers-3.9 )
 	virtual/pkgconfig
 	doc? ( >=dev-util/gtk-doc-1.18 )
-	python? ( dev-python/lxml[${PYTHON_USEDEP}] )
-	test? ( >=sys-apps/dbus-1.6.8-r1:0 )"
+	python? ( dev-python/lxml[${PYTHON_USEDEP}] )"
 
 src_prepare() {
 	local PATCHES=(
