@@ -91,6 +91,7 @@ src_configure() {
 		--with-config=kernel
 		--with-linux="${KV_DIR}"
 		--with-linux-obj="${KV_OUT_DIR}"
+		--with-spl="${EPREFIX}/usr/src/spl-${PV}"
 		$(use_enable debug)
 	)
 	autotools-utils_src_configure

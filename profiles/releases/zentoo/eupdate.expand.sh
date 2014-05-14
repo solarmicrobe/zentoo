@@ -77,7 +77,7 @@ virtual/jdk)                             echo "=$1-1.7.0";;
 virtual/jre)                             echo "=$1-1.7.0";;
 
 # kernel
-sys-kernel/gentoo-sources)               echo "=$1-3.10.36";;
+sys-kernel/gentoo-sources)               echo "=$1-3.10.40";;
 sys-kernel/linux-headers)                echo "=$1-3.10";;
 
 # virtualbox
