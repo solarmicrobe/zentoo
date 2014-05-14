@@ -25,7 +25,6 @@ media-gfx/imagemagick autotrace raw opencl
 media-libs/harfbuzz graphite
 media-libs/libsdl audio aalib
 media-libs/mesa xorg
-net-analyzer/mk-livestatus perl
 net-analyzer/nagios-plugins ups nagios-game nagios-ping
 net-analyzer/net-snmp netlink
 net-analyzer/nmap lua zenmap
@@ -43,6 +42,24 @@ sys-fs/udev extras
 sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_bootchart dracut_modules_cifs
 www-servers/uwsgi uwsgi_plugins_rsyslog uwsgi_plugins_alarm_xmpp uwsgi_plugins_rrdtool
 x11-libs/libSM uuid
+
+# do not allow perl cruft for these packages
+app-admin/collectd perl collectd_plugins_perl
+app-admin/sudo ldap
+app-arch/cabextract extra-tools
+app-editors/vim perl
+dev-db/postgresql-server perl
+dev-lang/R perl
+dev-libs/ossp-uuid perl
+dev-vcs/git perl
+media-gfx/imagemagick perl
+net-analyzer/mk-livestatus perl
+net-analyzer/rrdtool perl
+net-libs/liboping perl
+net-nds/openldap perl
+sys-apps/util-linux perl
+www-servers/nginx nginx_modules_http_perl
+www-servers/uwsgi perl
 
 # do not support X11 with these applications
 dev-java/ant X
