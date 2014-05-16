@@ -60,7 +60,7 @@ linux-image_pkg_config() {
 		cmdline="${cmdline} rd.md=1"
 	fi
 
-	if [[ "$(lvs)" != "" ]]; then
+	if [[ "$(lvs 2>/dev/null)" != "" ]]; then
 		cmdline="${cmdline} rd.lvm=1 rd.lvm.vg=vg"
 	fi
 
