@@ -1,6 +1,5 @@
 app-admin/chef
 app-arch/libarchive
-app-emulation/lxc
 app-office/openerp
 dev-db/mysql
 dev-db/mysql-init-scripts

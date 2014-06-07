@@ -475,7 +475,7 @@ distutils-r1_python_install() {
 	debug-print "${FUNCNAME}: [${EPYTHON}] flags: ${flags}"
 
 	# enable compilation for the install phase.
-	local -x PYTHONDONTWRITEBYTECODE
+	local -x PYTHONDONTWRITEBYTECODE=
 
 	# python likes to compile any module it sees, which triggers sandbox
 	# failures if some packages haven't compiled their modules yet.
@@ -536,6 +536,9 @@ distutils-r1_python_install() {
 
 	if [[ -d ${root}$(python_get_sitedir)/tests ]]; then
 		die "Package installs 'tests' package, file collisions likely."
+	fi
+	if [[ -d ${root}/usr/$(get_libdir)/pypy/share ]]; then
+		die "Package installs 'share' in PyPy prefix, see bug #465546."
 	fi
 
 	if [[ ! ${DISTUTILS_SINGLE_IMPL} ]]; then
