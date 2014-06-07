@@ -35,7 +35,7 @@ DEPEND="
 RDEPEND="${DEPEND}"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-fix-send-subvol-492776.patch
+	epatch "${FILESDIR}/${P}-arg_strtou64.patch"
 	epatch_user
 }
 
