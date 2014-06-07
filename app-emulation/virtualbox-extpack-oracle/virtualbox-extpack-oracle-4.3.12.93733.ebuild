@@ -4,13 +4,19 @@
 
 EAPI=5
 
-inherit eutils multilib
+inherit eutils multilib versionator
 
-MY_BUILD=92456
+MAIN_PV="$(get_version_component_range 1-3)"
+if [[ ${PV} = *_beta* ]] || [[ ${PV} = *_rc* ]] ; then
+	MY_PV="${MAIN_PV}_$(get_version_componen_range 5)"
+	MY_PV="${MY_PV/beta/BETA}"
+	MY_PV="${MY_PV/rc/RC}"
+else
+	MY_PV="${MAIN_PV}"
+fi
+VBOX_BUILD_ID="$(get_version_component_range 4)"
 MY_PN="Oracle_VM_VirtualBox_Extension_Pack"
-MY_PV="${PV/beta/BETA}"
-MY_PV="${MY_PV/rc/RC}"
-MY_P="${MY_PN}-${MY_PV}-${MY_BUILD}"
+MY_P="${MY_PN}-${MY_PV}-${VBOX_BUILD_ID}"
 
 DESCRIPTION="PUEL extensions for VirtualBox"
 HOMEPAGE="http://www.virtualbox.org/"
@@ -22,7 +28,7 @@ KEYWORDS="amd64"
 IUSE=""
 RESTRICT="mirror strip"
 
-RDEPEND="~app-emulation/virtualbox-${PV}"
+RDEPEND="~app-emulation/virtualbox-${MAIN_PV}"
 
 S="${WORKDIR}"
 

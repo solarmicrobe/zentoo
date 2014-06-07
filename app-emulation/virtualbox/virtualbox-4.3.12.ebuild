@@ -11,7 +11,7 @@ MY_PV="${PV/beta/BETA}"
 MY_PV="${MY_PV/rc/RC}"
 MY_P=VirtualBox-${MY_PV}
 SRC_URI="http://download.virtualbox.org/virtualbox/${MY_PV}/${MY_P}.tar.bz2
-	http://dev.gentoo.org/~polynomial-c/${PN}/patchsets/${PN}-4.3.4-patches-01.tar.xz"
+	http://dev.gentoo.org/~polynomial-c/${PN}/patchsets/${PN}-4.3.12-patches-01.tar.xz"
 S="${WORKDIR}/${MY_P}"
 
 DESCRIPTION="Family of powerful x86 virtualization products for enterprise as well as home use"
@@ -70,10 +70,10 @@ DEPEND="${RDEPEND}
 	alsa? ( >=media-libs/alsa-lib-1.0.13 )
 	!headless? ( x11-libs/libXinerama )
 	pulseaudio? ( media-sound/pulseaudio )
-	vboxwebsrv? ( <net-libs/gsoap-2.8.13 )
+	vboxwebsrv? ( net-libs/gsoap[-gnutls] )
 	${PYTHON_DEPS}"
 PDEPEND="additions? ( ~app-emulation/virtualbox-additions-${PV} )
-	extensions? ( ~app-emulation/virtualbox-extpack-oracle-${PV} )"
+	extensions? ( =app-emulation/virtualbox-extpack-oracle-${PV}* )"
 
 QA_TEXTRELS_x86="usr/lib/virtualbox-ose/VBoxGuestPropSvc.so
 	usr/lib/virtualbox/VBoxSDL.so
@@ -281,9 +281,8 @@ src_install() {
 	fperms 4750 /usr/$(get_libdir)/${PN}/VBoxNetDHCP
 	fperms 4750 /usr/$(get_libdir)/${PN}/VBoxNetNAT
 
-	# VBoxSVC needs to be pax-marked (bug #403453)
+	# VBoxSVC and VBoxManage need to be pax-marked (bug #403453)
 	pax-mark -m "${D}"/usr/$(get_libdir)/${PN}/VBoxSVC || die
-
 	pax-mark -m "${D}"/usr/$(get_libdir)/${PN}/VBoxManage || die
 
 	if ! use headless ; then

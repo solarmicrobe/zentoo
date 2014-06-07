@@ -77,11 +77,12 @@ virtual/jdk)                             echo "=$1-1.7.0";;
 virtual/jre)                             echo "=$1-1.7.0";;
 
 # kernel
-sys-kernel/gentoo-sources)               echo "=$1-3.10.40";;
-sys-kernel/linux-headers)                echo "=$1-3.10";;
+sys-kernel/gentoo-sources)               echo "=$1-3.12.21-r1";;
+sys-kernel/linux-headers)                echo "=$1-3.12";;
 
 # virtualbox
-app-emulation/virtualbox*)               echo "=$1-4.3.8";;
+app-emulation/virtualbox-extpack-oracle) echo "=$1-4.3.12.93733";;
+app-emulation/virtualbox*)               echo "=$1-4.3.12";;
 dev-util/kbuild)                         echo "=$1-0.1.9998_pre20131130";;
 
 # just because we support firefox for headless testing
