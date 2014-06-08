@@ -51,7 +51,6 @@ app-editors/vim perl
 dev-db/postgresql-server perl
 dev-lang/R perl
 dev-libs/ossp-uuid perl
-dev-vcs/git perl
 media-gfx/imagemagick perl
 net-analyzer/mk-livestatus perl
 net-analyzer/rrdtool perl
