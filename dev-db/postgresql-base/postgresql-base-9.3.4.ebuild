@@ -4,7 +4,7 @@
 
 EAPI="5"
 
-PYTHON_COMPAT=( python{2_{5,6,7},3_{1,2,3}} )
+PYTHON_COMPAT=( python{2_{6,7},3_{2,3,4}} )
 WANT_AUTOMAKE="none"
 
 inherit autotools eutils flag-o-matic multilib prefix python-single-r1 versionator
@@ -13,12 +13,12 @@ KEYWORDS="amd64"
 
 SLOT="$(get_version_component_range 1-2)"
 S="${WORKDIR}/postgresql-${PV}"
+SRC_URI="mirror://postgresql/source/v${PV}/postgresql-${PV}.tar.bz2
+		 http://dev.gentoo.org/~titanofold/postgresql-patches-${SLOT}-r1.tbz2"
 
+LICENSE="POSTGRESQL"
 DESCRIPTION="PostgreSQL libraries and clients"
 HOMEPAGE="http://www.postgresql.org/"
-SRC_URI="mirror://postgresql/source/v${PV}/postgresql-${PV}.tar.bz2
-		 http://dev.gentoo.org/~titanofold/postgresql-patches-9.1-r2.tbz2"
-LICENSE="POSTGRESQL"
 
 # No tests to be done for clients and libraries
 RESTRICT="test"
@@ -69,7 +69,8 @@ pkg_setup() {
 src_prepare() {
 	epatch "${WORKDIR}/autoconf.patch" \
 		"${WORKDIR}/base.patch" \
-		"${WORKDIR}/bool.patch"
+		"${WORKDIR}/bool.patch" \
+		"${WORKDIR}/run-dir.patch"
 
 	eprefixify src/include/pg_config_manual.h
 
@@ -123,7 +124,7 @@ src_configure() {
 }
 
 src_compile() {
-	emake -j1
+	emake
 
 	cd "${S}/contrib"
 	emake
@@ -160,10 +161,6 @@ pkg_postinst() {
 
 	elog "If you need a global psqlrc-file, you can place it in:"
 	elog "    ${EROOT%/}/etc/postgresql-${SLOT}/"
-	einfo
-	einfo "If this is your first install of PostgreSQL, you 'll want to:"
-	einfo "    source /etc/profile"
-	einfo "In your open terminal sessions."
 }
 
 pkg_postrm() {

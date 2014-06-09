@@ -98,7 +98,8 @@ virtual/libiconv)                        echo "=$1-0-r1";;
 
 app-editors/vim*)                        echo "=$1-7.4.155";;
 app-text/asciidoc)                       echo "=$1-8.6.8-r1";;
-dev-db/postgresql-*)                     echo "=$1-9.1.12";;
+dev-db/postgresql-server)                echo "=$1-9.3.4-r1";;
+dev-db/postgresql-*)                     echo "=$1-9.3.4";;
 dev-lang/yasm)                           echo "=$1-1.2.0-r1";;
 dev-libs/zziplib)                        echo "=$1-0.13.62";;
 dev-util/systemtap)                      echo "=$1-2.4-r1";;
