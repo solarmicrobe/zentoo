@@ -10,6 +10,7 @@
 	</maintainer>
 	<use>
 		<flag name='collectd_plugins_aggregation'>Build the aggregation plugin (aggregate multiplte values into a single value)</flag>
+		<flag name='collectd_plugins_amqp'>Build the RabbitMQ write plugin</flag>
 		<flag name='collectd_plugins_apache'>Build the apache input plugin (transferred bytes, handled requests, detailed scoreboard statistics)</flag>
 		<flag name='collectd_plugins_apcups'>Build the apcups input plugin (UPS charge, load, input/output/battery voltage, etc.)</flag>
 		<flag name='collectd_plugins_ascent'>Build the ascent input plugin (statistics about a free server for World of Warcraft)</flag>
