@@ -41,7 +41,7 @@ ruby_add_rdepend "
 	>=dev-ruby/net-ssh-2.6
 	>=dev-ruby/net-ssh-multi-1.1
 	<dev-ruby/net-ssh-multi-1.2
-	>=dev-ruby/ohai-7.0
+	>=dev-ruby/ohai-7.0.4
 	>=dev-ruby/rest-client-1.0.4
 	<dev-ruby/rest-client-1.7
 	dev-ruby/ruby-shadow
