@@ -5,6 +5,7 @@ Before=network.target
 
 [Service]
 ExecStart=/sbin/dhcpcd -q --nobackground
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
