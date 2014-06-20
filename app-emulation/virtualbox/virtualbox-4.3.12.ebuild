@@ -119,7 +119,6 @@ REQUIRED_USE="
 "
 
 pkg_setup() {
-	enewgroup vboxusers
 	if ! use headless && ! use qt4 ; then
 		einfo "No USE=\"qt4\" selected, this build will not include"
 		einfo "any Qt frontend."
@@ -176,6 +175,8 @@ src_prepare() {
 	epatch "${WORKDIR}/patches"
 
 	epatch_user
+
+	enewgroup vboxusers
 }
 
 src_configure() {
