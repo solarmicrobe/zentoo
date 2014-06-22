@@ -1,10 +1,10 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-db/mysql/mysql-5.5.1_alpha_pre2.ebuild,v 1.8 2010/04/01 20:41:21 robbat2 Exp $
+# $Header: $
 
-EAPI="4"
+EAPI="5"
 
-MY_EXTRAS_VER="20130606-1725Z"
+MY_EXTRAS_VER="live"
 MY_PV="${PV//_alpha_pre/-m}"
 MY_PV="${MY_PV//_/-}"
 
@@ -19,7 +19,7 @@ IUSE="$IUSE"
 EGIT_REPO_URI="git://git.overlays.gentoo.org/proj/mysql-extras.git"
 
 # REMEMBER: also update eclass/mysql*.eclass before committing!
-KEYWORDS="-*"
+KEYWORDS=" amd64"
 
 # When MY_EXTRAS is bumped, the index should be revised to exclude these.
 EPATCH_EXCLUDE=''
@@ -32,7 +32,7 @@ RDEPEND="${RDEPEND}"
 # and create your own mysql-extras tarball, looking at 000_index.txt
 
 # Official test instructions:
-# USE='berkdb -cluster embedded extraengine perl ssl community' \
+# USE='-cluster embedded extraengine perl ssl static-libs community' \
 # FEATURES='test userpriv -usersandbox' \
 # ebuild mysql-X.X.XX.ebuild \
 # digest clean package
@@ -67,33 +67,43 @@ src_test() {
 		# create directories because mysqladmin might right out of order
 		mkdir -p "${S}"/mysql-test/var-tests{,/log}
 
+		# create symlink for the tests to find mysql_tzinfo_to_sql
+		ln -s "${CMAKE_BUILD_DIR}/sql/mysql_tzinfo_to_sql" "${S}/sql/"
+
 		# These are failing in MySQL 5.5 for now and are believed to be
 		# false positives:
 		#
 		# main.information_schema, binlog.binlog_statement_insert_delayed,
-		# main.mysqld--help-notwin
+		# main.mysqld--help-notwin, funcs_1.is_triggers funcs_1.is_tables_mysql,
+		# funcs_1.is_columns_mysql, binlog.binlog_mysqlbinlog_filter,
+		# perfschema.binlog_edge_mix, perfschema.binlog_edge_stmt,
+		# mysqld--help-notwin
 		# fails due to USE=-latin1 / utf8 default
 		#
 		# main.mysql_client_test:
 		# segfaults at random under Portage only, suspect resource limits.
 		#
-		# sys_vars.plugin_dir_basic
-		# fails because PLUGIN_DIR is set to MYSQL_LIBDIR64/plugin
-		# instead of MYSQL_LIBDIR/plugin
+		# main.mysql_tzinfo_to_sql_symlink
+		# fails due to missing mysql_test/std_data/zoneinfo/GMT file from archive
 		#
-		# main.flush_read_lock_kill
-		# fails because of unknown system variable 'DEBUG_SYNC'
 		for t in main.mysql_client_test \
 			binlog.binlog_statement_insert_delayed main.information_schema \
-			main.mysqld--help-notwin; do
+			main.mysqld--help-notwinfuncs_1.is_triggers funcs_1.is_tables_mysql \
+			funcs_1.is_columns_mysql binlog.binlog_mysqlbinlog_filter \
+			perfschema.binlog_edge_mix perfschema.binlog_edge_stmt \
+			mysqld--help-notwin main.mysql_tzinfo_to_sql_symlink; do
 				mysql-v2_disable_test  "$t" "False positives in Gentoo"
 		done
 
 		# Run mysql tests
 		pushd "${TESTDIR}"
 
+		# Set file limits higher so tests run
+		ulimit -n 3000
+
 		# run mysql-test tests
-		perl mysql-test-run.pl --force --vardir="${S}/mysql-test/var-tests"
+		perl mysql-test-run.pl --force --vardir="${S}/mysql-test/var-tests" \
+			--suite-timeout=5000
 		retstatus_tests=$?
 		[[ $retstatus_tests -eq 0 ]] || eerror "tests failed"
 		has usersandbox $FEATURES && eerror "Some tests may fail with FEATURES=usersandbox"
@@ -112,8 +122,6 @@ src_test() {
 		[[ -z "$failures" ]] || die "Test failures: $failures"
 		einfo "Tests successfully completed"
 
-		# Need to clean up slightly
-		find "${TESTDIR}" -type s -delete
 	else
 
 		einfo "Skipping server tests due to minimal build."

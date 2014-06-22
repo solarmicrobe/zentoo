@@ -1,5 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: $
 
 # @ECLASS: mysql-cmake.eclass
 # @MAINTAINER:
@@ -7,6 +8,7 @@
 #	- MySQL Team <mysql-bugs@gentoo.org>
 #	- Robin H. Johnson <robbat2@gentoo.org>
 #	- Jorge Manuel B. S. Vicetto <jmbsvicetto@gentoo.org>
+#	- Brian Evans <grknight@gentoo.org>
 # @BLURB: This eclass provides the support for cmake based mysql releases
 # @DESCRIPTION:
 # The mysql-cmake.eclass provides the support to build the mysql
@@ -145,7 +147,6 @@ configure_cmake_standard() {
 		$(cmake-utils_use_with embedded EMBEDDED_SERVER)
 		$(cmake-utils_use_with profiling)
 		$(cmake-utils_use_enable systemtap DTRACE)
-		$(cmake-utils_use_enable static-libs STATIC_LIBS)
 	)
 
 	if use static; then
@@ -188,7 +189,6 @@ configure_cmake_standard() {
 
 		if mysql_version_is_at_least 10.0.5 ; then
 			# CassandraSE needs Apache Thrift which is not in portage
-			# TODO: Add use and deps for Connect SE external deps
 			mycmakeargs+=(
 				-DWITHOUT_CASSANDRA=1 -DWITH_CASSANDRA=0
 				$(mysql-cmake_use_plugin extraengine SEQUENCE)
@@ -251,7 +251,7 @@ mysql-cmake_src_prepare() {
 
 	rm -f "scripts/mysqlbug"
 	if use jemalloc && ! ( [[ ${PN} == "mariadb" ]] && mysql_version_is_at_least "5.5.33" ); then
-		echo "TARGET_LINK_LIBRARIES(mysqld jemalloc)" >> "${S}/sql/CMakeLists.txt"
+		echo "TARGET_LINK_LIBRARIES(mysqld jemalloc)" >> "${S}/sql/CMakeLists.txt" || die
 	fi
 
 	if use tcmalloc; then
@@ -301,36 +301,28 @@ mysql-cmake_src_configure() {
 		-DINSTALL_SUPPORTFILESDIR=${EPREFIX}/usr/share/mysql
 		-DWITH_COMMENT="Gentoo Linux ${PF}"
 		$(cmake-utils_use_with test UNIT_TESTS)
-		-DWITH_READLINE=0
 		-DWITH_LIBEDIT=0
 		-DWITH_ZLIB=system
 		-DWITHOUT_LIBWRAP=1
 		-DENABLED_LOCAL_INFILE=1
+		$(cmake-utils_use_enable static-libs STATIC_LIBS)
+		-DWITH_SSL=$(usex ssl system bundled)
 	)
 
 	if [[ ${PN} == "mysql" || ${PN} == "percona-server" ]] && mysql_version_is_at_least "5.6.12" ; then
 		mycmakeargs+=( -DWITH_EDITLINE=system )
-	fi
-
-	if use ssl; then
-		mycmakeargs+=( -DWITH_SSL=system )
 	else
-		mycmakeargs+=( -DWITH_SSL=bundled )
+		mycmakeargs+=(
+			-DWITH_READLINE=$(usex bindist 1 0)
+			-DNOT_FOR_DISTRIBUTION=$(usex bindist 0 1)
+			$(usex bindist -DHAVE_BFD_H=0 '')
+		)
 	fi
 
-	# Bug 412851
-	# MariaDB requires this flag to compile with GPLv3 readline linked
-	# Adds a warning about redistribution to configure
 	if [[ ${PN} == "mariadb" || ${PN} == "mariadb-galera" ]] ; then
-		mycmakeargs+=( -DNOT_FOR_DISTRIBUTION=1 )
-	fi
-
-	if [[ ${PN} == "mariadb" || ${PN} == "mariadb-galera" ]]; then
-		if use jemalloc ; then
-			mycmakeargs+=( -DWITH_JEMALLOC="system" )
-		else
-			mycmakeargs+=( -DWITH_JEMALLOC=no )
-		fi
+		mycmakeargs+=(
+			-DWITH_JEMALLOC=$(usex jemalloc system)
+		)
 		mysql_version_is_at_least "10.0.9" && mycmakeargs+=( -DWITH_PCRE=system )
 	fi
 
@@ -414,15 +406,15 @@ mysql-cmake_src_install() {
 	esac
 	einfo "Building default my.cnf (${mysql_mycnf_version})"
 	insinto "${MY_SYSCONFDIR#${EPREFIX}}"
-	doins scripts/mysqlaccess.conf
+	doins "${S}"/scripts/mysqlaccess.conf
 	mycnf_src="my.cnf-${mysql_mycnf_version}"
 	sed -e "s!@DATADIR@!${MY_DATADIR}!g" \
 		"${FILESDIR}/${mycnf_src}" \
-		> "${TMPDIR}/my.cnf.ok"
+		> "${TMPDIR}/my.cnf.ok" || die
 	if use latin1 ; then
 		sed -i \
 			-e "/character-set/s|utf8|latin1|g" \
-			"${TMPDIR}/my.cnf.ok"
+			"${TMPDIR}/my.cnf.ok" || die
 	fi
 	eprefixify "${TMPDIR}/my.cnf.ok"
 	newins "${TMPDIR}/my.cnf.ok" my.cnf
@@ -467,4 +459,15 @@ mysql-cmake_src_install() {
 	#Remove mytop if perl is not selected
 	[[ ${PN} == "mariadb" || ${PN} == "mariadb-galera" ]] && ! use perl \
 	&& rm -f "${ED}/usr/bin/mytop"
+
+	# Percona has decided to rename libmysqlclient to libperconaserverclient
+	# Use a symlink to preserve linkages for those who don't use mysql_config
+	if [[ ${PN} == "percona-server" ]] && mysql_version_is_at_least "5.5.36" ; then
+		dosym libperconaserverclient.so /usr/$(get_libdir)/libmysqlclient.so
+		dosym libperconaserverclient.so /usr/$(get_libdir)/libmysqlclient_r.so
+		if use static-libs ; then
+			dosym libperconaserverclient.a /usr/$(get_libdir)/libmysqlclient.a
+			dosym libperconaserverclient.a /usr/$(get_libdir)/libmysqlclient_r.a
+		fi
+	fi
 }

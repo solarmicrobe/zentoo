@@ -1,5 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Header: $
 
 # @ECLASS: mysql-v2.eclass
 # @MAINTAINER:
@@ -7,6 +8,7 @@
 #	- MySQL Team <mysql-bugs@gentoo.org>
 #	- Robin H. Johnson <robbat2@gentoo.org>
 #	- Jorge Manuel B. S. Vicetto <jmbsvicetto@gentoo.org>
+#	- Brian Evans <grknight@gentoo.org>
 # @BLURB: This eclass provides most of the functions for mysql ebuilds
 # @DESCRIPTION:
 # The mysql-v2.eclass is the base eclass to build the mysql and
@@ -174,10 +176,11 @@ if [[ ${MY_EXTRAS_VER} != "live" && ${MY_EXTRAS_VER} != "none" ]]; then
 		mirror://gentoo/mysql-extras-${MY_EXTRAS_VER}.tar.bz2
 		http://g3nt8.org/patches/mysql-extras-${MY_EXTRAS_VER}.tar.bz2
 		http://dev.gentoo.org/~robbat2/distfiles/mysql-extras-${MY_EXTRAS_VER}.tar.bz2
-		http://dev.gentoo.org/~jmbsvicetto/distfiles/mysql-extras-${MY_EXTRAS_VER}.tar.bz2"
+		http://dev.gentoo.org/~jmbsvicetto/distfiles/mysql-extras-${MY_EXTRAS_VER}.tar.bz2
+		http://dev.gentoo.org/~grknight/distfiles/mysql-extras-${MY_EXTRAS_VER}.tar.bz2"
 fi
 
-DESCRIPTION="A fast, multi-threaded, multi-user SQL database server."
+DESCRIPTION="A fast, multi-threaded, multi-user SQL database server"
 HOMEPAGE="http://www.mysql.com/"
 if [[ ${PN} == "mariadb" ]]; then
 	HOMEPAGE="http://mariadb.org/"
@@ -189,7 +192,7 @@ if [[ ${PN} == "mariadb-galera" ]]; then
 fi
 if [[ ${PN} == "percona-server" ]]; then
 	HOMEPAGE="http://www.percona.com/software/percona-server"
-	DESCRIPTION="An enhanced, drop-in replacement fro MySQL from the Percona team"
+	DESCRIPTION="An enhanced, drop-in replacement for MySQL from the Percona team"
 fi
 LICENSE="GPL-2"
 SLOT="0"
@@ -205,6 +208,11 @@ esac
 
 # Common IUSE
 IUSE="${IUSE} latin1 extraengine cluster max-idx-128 +community profiling"
+
+if [[ ${PN} == "mariadb" || ${PN} == "mariadb-galera" ]] && \
+	mysql_version_is_at_least "5.5" || mysql_check_version_range "5.5.37 to 5.6.11.99" ; then
+	IUSE="bindist ${IUSE}"
+fi
 
 if [[ ${PN} == "mariadb" || ${PN} == "mariadb-galera" ]]; then
 	mysql_check_version_range "5.1.38 to 5.3.99" && IUSE="${IUSE} libevent"
@@ -255,13 +263,16 @@ DEPEND="
 if [[ ${PN} == "mysql" || ${PN} == "percona-server" ]] && mysql_version_is_at_least "5.6.12" ; then
 	DEPEND="${DEPEND} dev-libs/libedit"
 else
-	DEPEND="${DEPEND} >=sys-libs/readline-4.1"
+	if mysql_version_is_at_least "5.5" ; then
+		DEPEND="${DEPEND} !bindist? ( >=sys-libs/readline-4.1 )"
+	else
+		DEPEND="${DEPEND} >=sys-libs/readline-4.1"
+	fi
 fi
 
 if [[ ${PN} == "mariadb" || ${PN} == "mariadb-galera" ]] ; then
 	mysql_check_version_range "5.1.38 to 5.3.99" && DEPEND="${DEPEND} libevent? ( >=dev-libs/libevent-1.4 )"
 	mysql_version_is_at_least "5.2" && DEPEND="${DEPEND} oqgraph? ( >=dev-libs/boost-1.40.0 )"
-	mysql_version_is_at_least "5.2.5" && DEPEND="${DEPEND} sphinx? ( app-misc/sphinx )"
 	mysql_version_is_at_least "5.2.10" && DEPEND="${DEPEND} !minimal? ( pam? ( virtual/pam ) )"
 	# Bug 441700 MariaDB >=5.3 include custom mytop
 	mysql_version_is_at_least "5.3" && DEPEND="${DEPEND} perl? ( !dev-db/mytop )"
@@ -273,8 +284,7 @@ if [[ ${PN} == "mariadb" || ${PN} == "mariadb-galera" ]] ; then
 	fi
 	mysql_version_is_at_least "10.0.7" && DEPEND="${DEPEND} oqgraph? ( dev-libs/judy )"
 	if mysql_version_is_at_least "10.0.9" ; then
-		use embedded && DEPEND="${DEPEND} >=dev-libs/libpcre-8.35[static-libs]" || \
-			DEPEND="${DEPEND} >=dev-libs/libpcre-8.35"
+		DEPEND="${DEPEND} >=dev-libs/libpcre-8.35"
 	fi
 fi
 
@@ -699,9 +709,6 @@ mysql-v2_pkg_config() {
 	local pwd2="b"
 	local maxtry=15
 
-	if [ -z "${MYSQL_ROOT_PASSWORD}" ]; then
-		MYSQL_ROOT_PASSWORD="$(mysql-v2_getoptval 'client mysql' password)"
-	fi
 	MYSQL_TMPDIR="$(mysql-v2_getoptval mysqld tmpdir)"
 	# These are dir+prefix
 	MYSQL_RELAY_LOG="$(mysql-v2_getoptval mysqld relay-log)"
@@ -733,23 +740,6 @@ mysql-v2_pkg_config() {
 	# localhost. Also causes weird failures.
 	[[ "${HOSTNAME}" == "localhost" ]] && die "Your machine must NOT be named localhost"
 
-	if [ -z "${MYSQL_ROOT_PASSWORD}" ]; then
-
-		einfo "Please provide a password for the mysql 'root' user now, in the"
-		einfo "MYSQL_ROOT_PASSWORD env var or through the /root/.my.cnf file."
-		ewarn "Avoid [\"'\\_%] characters in the password"
-		read -rsp "    >" pwd1 ; echo
-
-		einfo "Retype the password"
-		read -rsp "    >" pwd2 ; echo
-
-		if [[ "x$pwd1" != "x$pwd2" ]] ; then
-			die "Passwords are not the same"
-		fi
-		MYSQL_ROOT_PASSWORD="${pwd1}"
-		unset pwd1 pwd2
-	fi
-
 	local options="--log-warnings=0"
 	local sqltmp="$(emktemp)"
 
@@ -763,7 +753,7 @@ mysql-v2_pkg_config() {
 	helpfile="${TMPDIR}/mysqld-help"
 	${EROOT}/usr/sbin/mysqld --verbose --help >"${helpfile}" 2>/dev/null
 	for opt in grant-tables host-cache name-resolve networking slave-start \
-		federated innodb ssl log-bin relay-log slow-query-log external-locking \
+		federated ssl log-bin relay-log slow-query-log external-locking \
 		ndbcluster log-slave-updates \
 		; do
 		optexp="--(skip-)?${opt}" optfull="--loose-skip-${opt}"
@@ -779,11 +769,27 @@ mysql-v2_pkg_config() {
 	use prefix && [[ -f "${MY_SYSCONFDIR}/my.cnf" ]] \
 		&& options="${options} '--defaults-file=${MY_SYSCONFDIR}/my.cnf'"
 
+	# MySQL 5.6+ needs InnoDB
+	if [[ ${PN} == "mysql" || ${PN} == "percona-server" ]] ; then
+		mysql_version_is_at_least "5.6" || options="${options} --loose-skip-innodb"
+	fi
+
+	einfo "Creating the mysql database and setting proper"
+	einfo "permissions on it ..."
+
+	# Now that /var/run is a tmpfs mount point, we need to ensure it exists before using it
+	PID_DIR="${EROOT}/var/run/mysqld"
+	if [[ ! -d "${PID_DIR}" ]]; then
+		mkdir -p "${PID_DIR}" || die "Could not create pid directory"
+		chown mysql:mysql "${PID_DIR}" || die "Could not set ownership on pid directory"
+		chmod 755 "${PID_DIR}" || die "Could not set permissions on pid directory"
+	fi
+
 	pushd "${TMPDIR}" &>/dev/null
 	#cmd="'${EROOT}/usr/share/mysql/scripts/mysql_install_db' '--basedir=${EPREFIX}/usr' ${options}"
 	cmd=${EROOT}usr/share/mysql/scripts/mysql_install_db
 	[[ -f ${cmd} ]] || cmd=${EROOT}usr/bin/mysql_install_db
-	cmd="'$cmd' '--basedir=${EPREFIX}/usr' ${options}"
+	cmd="'$cmd' '--basedir=${EPREFIX}/usr' ${options} '--datadir=${EROOT}/${MY_DATADIR}' '--tmpdir=${EROOT}/${MYSQL_TMPDIR}'"
 	einfo "Command: $cmd"
 	eval $cmd \
 		>"${TMPDIR}"/mysql_install_db.log 2>&1
@@ -805,17 +811,6 @@ mysql-v2_pkg_config() {
 		cat "${help_tables}" >> "${sqltmp}"
 	fi
 
-	einfo "Creating the mysql database and setting proper"
-	einfo "permissions on it ..."
-
-	# Now that /var/run is a tmpfs mount point, we need to ensure it exists before using it
-	PID_DIR="${EROOT}/var/run/mysqld"
-	if [[ ! -d "${PID_DIR}" ]]; then
-		mkdir "${PID_DIR}"
-		chown mysql:mysql "${PID_DIR}"
-		chmod 755 "${PID_DIR}"
-	fi
-
 	local socket="${EROOT}/var/run/mysqld/mysqld${RANDOM}.sock"
 	local pidfile="${EROOT}/var/run/mysqld/mysqld${RANDOM}.pid"
 	local mysqld="${EROOT}/usr/sbin/mysqld \
@@ -823,12 +818,13 @@ mysql-v2_pkg_config() {
 		--user=mysql \
 		--log-warnings=0 \
 		--basedir=${EROOT}/usr \
-		--datadir=${ROOT}/${MY_DATADIR} \
+		--datadir=${EROOT}/${MY_DATADIR} \
 		--max_allowed_packet=8M \
 		--net_buffer_length=16K \
 		--default-storage-engine=MyISAM \
 		--socket=${socket} \
-		--pid-file=${pidfile}"
+		--pid-file=${pidfile}
+		--tmpdir=${EROOT}/${MYSQL_TMPDIR}"
 	#einfo "About to start mysqld: ${mysqld}"
 	ebegin "Starting mysqld"
 	einfo "Command ${mysqld}"
@@ -845,21 +841,11 @@ mysql-v2_pkg_config() {
 		die "Completely failed to start up mysqld with: ${mysqld}"
 	fi
 
-	ebegin "Setting root password"
-	# Do this from memory, as we don't want clear text passwords in temp files
-	local sql="UPDATE mysql.user SET Password = PASSWORD('${MYSQL_ROOT_PASSWORD}') WHERE USER='root'"
-	"${EROOT}/usr/bin/mysql" \
-		--socket=${socket} \
-		-hlocalhost \
-		-e "${sql}"
-	eend $?
-
 	ebegin "Loading \"zoneinfo\", this step may require a few seconds ..."
 	"${EROOT}/usr/bin/mysql" \
 		--socket=${socket} \
 		-hlocalhost \
 		-uroot \
-		--password="${MYSQL_ROOT_PASSWORD}" \
 		mysql < "${sqltmp}"
 	rc=$?
 	eend $?
