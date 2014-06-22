@@ -73,8 +73,10 @@ virtual/httpd-php)                       echo "=$1-5.3"
 dev-java/oracle-jdk-bin)                 echo "=$1-1.7.0.55"
                                          echo "=$1-1.8.0.5";;
 dev-java/javatoolkit)                    echo "=$1-0.3.0-r9";;
-virtual/jdk)                             echo "=$1-1.7.0";;
-virtual/jre)                             echo "=$1-1.7.0";;
+virtual/jdk)                             echo "=$1-1.7.0"
+                                         echo "=$1-1.8.0";;
+virtual/jre)                             echo "=$1-1.7.0"
+                                         echo "=$1-1.8.0";;
 
 # kernel
 sys-kernel/gentoo-sources)               echo "=$1-3.12.21-r1";;

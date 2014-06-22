@@ -5,11 +5,13 @@
 EAPI="5"
 
 DESCRIPTION="Virtual for Java Runtime Environment (JRE)"
-SLOT="1.7"
+SLOT="1.8"
+# TODO: Temporarily dropped ~sparc-solaris and ~x86-solaris as oracle-jre-bin
+#       no longer provides them. Also temporarily dropped ~ia64.
 KEYWORDS="amd64"
 
 RDEPEND="|| (
-		=virtual/jdk-1.7.0*
-		=dev-java/oracle-jre-bin-1.7.0*
+		=virtual/jdk-1.8.0*
+		=dev-java/oracle-jre-bin-1.8.0*
 	)"
 DEPEND=""

@@ -21,8 +21,6 @@ sys-fs/zfs
 sys-fs/zfs-kmod
 sys-process/htop
 virtual/editor
-virtual/jdk
-virtual/jre
 virtual/linux-sources
 virtual/mta
 virtual/mysql
