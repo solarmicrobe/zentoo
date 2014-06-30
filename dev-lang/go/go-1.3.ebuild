@@ -12,7 +12,7 @@ if [[ ${PV} = 9999 ]]; then
 	EHG_REPO_URI="https://go.googlecode.com/hg"
 	inherit mercurial
 else
-	SRC_URI="http://go.googlecode.com/files/go${PV}.src.tar.gz"
+	SRC_URI="https://storage.googleapis.com/golang/go${PV}.src.tar.gz"
 	# Upstream only supports go on amd64, arm and x86 architectures.
 	KEYWORDS="-* amd64"
 fi
@@ -44,7 +44,7 @@ fi
 src_prepare()
 {
 	if [[ ${PV} != 9999 ]]; then
-		epatch "${FILESDIR}"/${P}-no-Werror.patch
+		epatch "${FILESDIR}"/${PN}-1.2-no-Werror.patch
 	fi
 	epatch_user
 }
