@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/app-admin/collectd/collectd-5.4.1.ebuild,v 1.2 2014/06/30 19:17:49 swift Exp $
 
 EAPI="5"
 
@@ -16,7 +16,7 @@ SRC_URI="${HOMEPAGE}/files/${P}.tar.bz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="contrib debug kernel_linux kernel_FreeBSD kernel_Darwin perl static-libs"
+IUSE="contrib debug kernel_linux kernel_FreeBSD kernel_Darwin perl selinux static-libs"
 
 # The plugin lists have to follow here since they extend IUSE
 
@@ -24,11 +24,11 @@ IUSE="contrib debug kernel_linux kernel_FreeBSD kernel_Darwin perl static-libs"
 COLLECTD_IMPOSSIBLE_PLUGINS="aquaero mic netapp pinba sigrok xmms"
 
 # Plugins that still need some work
-COLLECTD_UNTESTED_PLUGINS="apple_sensors genericjmx ipvs lpar modbus redis
+COLLECTD_UNTESTED_PLUGINS="amqp apple_sensors genericjmx ipvs lpar modbus redis
 	tape write_redis zfs_arc"
 
 # Plugins that have been (compile) tested and can be enabled via COLLECTD_PLUGINS
-COLLECTD_TESTED_PLUGINS="amqp aggregation apache apcups ascent battery bind cgroups
+COLLECTD_TESTED_PLUGINS="aggregation apache apcups ascent battery bind cgroups
 	conntrack contextswitch cpu cpufreq csv curl curl_json curl_xml dbi df disk dns
 	email entropy ethstat exec filecount fscache gmond hddtemp interface ipmi
 	iptables irq java libvirt load logfile lvm madwifi match_empty_counter
@@ -56,6 +56,7 @@ COMMON_DEPEND="
 	dev-libs/libgcrypt:0
 	sys-devel/libtool
 	perl?					( dev-lang/perl[ithreads] ( || ( sys-devel/libperl[ithreads] >=sys-devel/libperl-5.10 ) ) )
+	selinux?						( sec-policy/selinux-collectd )
 	collectd_plugins_apache?		( net-misc/curl )
 	collectd_plugins_ascent?		( net-misc/curl dev-libs/libxml2 )
 	collectd_plugins_bind?			( dev-libs/libxml2 )
@@ -92,7 +93,6 @@ COMMON_DEPEND="
 	collectd_plugins_varnish?		( www-servers/varnish )
 	collectd_plugins_write_http?		( net-misc/curl )
 	collectd_plugins_write_mongodb?		( dev-libs/mongo-c-driver )
-	collectd_plugins_amqp?		( net-libs/rabbitmq-c )
 
 	kernel_FreeBSD? (
 		collectd_plugins_disk?		( sys-libs/libstatgrab )
@@ -113,10 +113,8 @@ RDEPEND="${COMMON_DEPEND}
 	collectd_plugins_syslog?		( virtual/logger )"
 
 PATCHES=(
-	"${FILESDIR}/${PN}-4.10.2"-{libocci,nohal}.patch
+	"${FILESDIR}/${PN}-5.4.1"-{nohal,libocci,libperl,lt}.patch
 	"${FILESDIR}/${PN}-4.10.3"-werror.patch
-	"${FILESDIR}/${PN}-5.1.0"-libperl.patch
-	"${FILESDIR}/${PN}-5.1.1"-lt.patch
 )
 
 # @FUNCTION: collectd_plugin_kernel_linux
@@ -361,7 +359,7 @@ pkg_postinst() {
 
 	echo
 	elog "collectd is now started as unprivileged user by default."
-	elog "You may want to recheck the configuration."
+	elog "You may want to revisit the configuration."
 	elog
 
 	if use collectd_plugins_email; then

@@ -1,19 +1,19 @@
-diff --git a/Makefile.am b/Makefile.am
+diff --git Makefile.am Makefile.am
 index 5267123..a7e0d0c 100644
---- a/Makefile.am
-+++ b/Makefile.am
+--- Makefile.am
++++ Makefile.am
 @@ -1,6 +1,4 @@
 -ACLOCAL_AMFLAGS = -I libltdl/m4
 -
 -SUBDIRS = libltdl src bindings .
 +SUBDIRS = src bindings .
- 
+
  INCLUDES = $(LTDLINCL)
- 
-diff --git a/configure.in b/configure.in
-index eff8d61..a22a561 100644
---- a/configure.in
-+++ b/configure.in
+
+diff --git configure.ac configure.ac
+index eaa464e..d652d46 100644
+--- configure.ac
++++ configure.ac
 @@ -7,7 +7,6 @@ AC_CONFIG_AUX_DIR([libltdl/config])
  m4_ifdef([LT_PACKAGE_VERSION],
  	# libtool >= 2.2
