@@ -18,7 +18,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-DEPEND="dev-libs/openssl"
+DEPEND="dev-libs/openssl
+	dev-lang/lua"
 RDEPEND="${DEPEND}"
 
 src_prepare() {
