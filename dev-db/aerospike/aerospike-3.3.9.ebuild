@@ -11,7 +11,7 @@ HOMEPAGE="https://github.com/aerospike/aerospike-server"
 
 EGIT_REPO_URI="https://github.com/aerospike/aerospike-server.git"
 EGIT_HAS_SUBMODULES=1
-EGIT_COMMIT="${PV}"
+EGIT_COMMIT="${PV}-1"
 
 LICENSE="AGPL-3"
 SLOT="0"
