@@ -78,7 +78,7 @@ esac
 
 if [[ ! ${_DISTUTILS_R1} ]]; then
 
-inherit eutils
+inherit eutils toolchain-funcs
 
 if [[ ! ${DISTUTILS_SINGLE_IMPL} ]]; then
 	inherit multiprocessing python-r1
@@ -595,6 +595,19 @@ distutils-r1_run_phase() {
 		mkdir -p "${TMPDIR}" "${HOME}" || die
 	fi
 
+	# Set up build environment, bug #513664.
+	local -x AR=${AR} CC=${CC} CPP=${CPP} CXX=${CXX}
+	tc-export AR CC CPP CXX
+
+	# How to build Python modules in different worlds...
+	local ldopts
+	case "${CHOST}" in
+		*-darwin*) ldopts='-bundle -undefined dynamic_lookup';;
+		*) ldopts='-shared';;
+	esac
+
+	local -x LDSHARED="${CC} ${ldopts}" LDCXXSHARED="${CXX} ${ldopts}"
+
 	"${@}"
 
 	if [[ ${DISTUTILS_IN_SOURCE_BUILD} && ! ${DISTUTILS_SINGLE_IMPL} ]]
@@ -676,6 +689,8 @@ distutils-r1_src_prepare() {
 }
 
 distutils-r1_src_configure() {
+	python_export_utf8_locale
+
 	if declare -f python_configure >/dev/null; then
 		_distutils-r1_run_foreach_impl python_configure
 	fi
