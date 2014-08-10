@@ -16,7 +16,7 @@ SRC_URI="http://www.aerospike.com/artifacts/aerospike-amc-community/${AMC_PV}/ae
 
 EGIT_REPO_URI="https://github.com/aerospike/aerospike-server.git"
 EGIT_HAS_SUBMODULES=1
-EGIT_COMMIT="${PV}-1"
+EGIT_COMMIT="${PV}"
 
 LICENSE="AGPL-3"
 SLOT="0"
