@@ -6,7 +6,7 @@ EAPI=4
 
 DESCRIPTION="MySQLTuner is a high-performance MySQL tuning script"
 HOMEPAGE="http://www.mysqltuner.com"
-SRC_URI="https://github.com/rackerhacker/MySQLTuner-perl/tarball/05813a1faa447fe16c2a7efdab9b22c3bcbc5485 -> ${P}.tar.gz"
+SRC_URI="https://github.com/major/MySQLTuner-perl/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -18,10 +18,10 @@ RDEPEND=">=dev-lang/perl-5.6
 	virtual/perl-Getopt-Long
 	>=virtual/mysql-3.23"
 
-S="${WORKDIR}"/rackerhacker-MySQLTuner-perl-05813a1
+S="${WORKDIR}"/MySQLTuner-perl-${PV}
 
 src_install() {
 	mv "${PN}".pl "${PN}"
 	dobin "${PN}"
-	dodoc README
+	dodoc README.md
 }
