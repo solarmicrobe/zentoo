@@ -87,9 +87,6 @@ app-emulation/virtualbox-extpack-oracle) echo "=$1-4.3.12.93733";;
 app-emulation/virtualbox*)               echo "=$1-4.3.12";;
 dev-util/kbuild)                         echo "=$1-0.1.9998_pre20131130";;
 
-# just because we support firefox for headless testing
-x11-libs/gtk+)                           echo "=$1-2.24.23";;
-
 app-editors/vim*)                        echo "=$1-7.4.155";;
 app-text/asciidoc)                       echo "=$1-8.6.8-r1";;
 dev-db/postgresql-server)                echo "=$1-9.3.4-r1";;
