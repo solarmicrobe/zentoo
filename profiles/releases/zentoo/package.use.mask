@@ -16,12 +16,13 @@ dev-libs/gecode gist
 dev-libs/glib utils systemtap
 dev-libs/libnatspec python
 dev-libs/ppl lpsol
-dev-python/ipython smp octave matplotlib nbconvert
+dev-python/ipython smp octave matplotlib nbconvert notebook
 dev-python/psycopg mxdatetime
 dev-util/boost-build python
+dev-vcs/bzr curl
 dev-vcs/subversion webdav-serf
 gnome-base/librsvg tools
-media-gfx/imagemagick autotrace raw opencl
+media-gfx/imagemagick autotrace fftw raw opencl
 media-libs/harfbuzz graphite
 media-libs/libsdl audio aalib
 media-libs/mesa xorg
@@ -40,6 +41,7 @@ sys-apps/systemd http qrcode ssl
 sys-fs/btrfs-progs debug-utils
 sys-fs/udev extras
 sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_bootchart dracut_modules_cifs
+www-servers/tornado curl
 www-servers/uwsgi uwsgi_plugins_rsyslog uwsgi_plugins_alarm_xmpp uwsgi_plugins_rrdtool
 x11-libs/libSM uuid
 

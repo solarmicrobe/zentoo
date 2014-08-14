@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
-<pkgmetadata>
-	<longdescription lang="en">
-		The package includes the source code in C/C++. A README file with detailed explanation is provided. For MS Windows users, there is a subdirectory in the zip file containing binary executable files.
-	</longdescription>
-</pkgmetadata>

@@ -4,7 +4,7 @@
 
 EAPI="2"
 
-inherit eutils java-utils-2 user autotools
+inherit eutils java-utils-2 user
 
 DESCRIPTION="ZooKeeper is a high-performance coordination service for distributed applications."
 HOMEPAGE="http://zookeeper.apache.org/"

@@ -4,7 +4,6 @@ dev-lang/R cairo
 dev-lang/php truetype gd
 dev-lang/python sqlite
 dev-libs/libxml2 python
-dev-python/numpy lapack
 media-libs/libpng apng
 net-ftp/lftp openssl
 sys-libs/zlib minizip

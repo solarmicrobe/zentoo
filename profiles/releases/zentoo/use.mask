@@ -278,6 +278,8 @@ slp
 smartcard
 smbkrb5passwd
 sndfile
+socks
+socks5
 solid
 sound
 source

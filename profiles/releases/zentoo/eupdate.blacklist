@@ -16,7 +16,6 @@ sys-boot/grub
 sys-fs/udev-init-scripts
 sys-fs/zfs
 sys-fs/zfs-kmod
-sys-process/htop
 virtual/editor
 virtual/linux-sources
 virtual/mta
