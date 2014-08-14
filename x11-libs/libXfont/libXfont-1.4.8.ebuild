@@ -17,7 +17,7 @@ RDEPEND="x11-libs/xtrans
 	truetype? ( >=media-libs/freetype-2 )
 	bzip2? ( app-arch/bzip2 )
 	x11-proto/xproto
-	x11-proto/fontsproto"
+	<x11-proto/fontsproto-2.1.3"
 DEPEND="${RDEPEND}"
 
 src_configure() {

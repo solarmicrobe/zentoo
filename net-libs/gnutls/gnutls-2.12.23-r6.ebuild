@@ -17,7 +17,6 @@ KEYWORDS="amd64"
 IUSE="bindist +cxx doc examples guile lzo +nettle nls pkcs11 static-libs test zlib"
 
 RDEPEND=">=dev-libs/libtasn1-0.3.4
-	<dev-libs/libtasn1-3
 	guile? ( >=dev-scheme/guile-1.8[networking] )
 	nettle? ( >=dev-libs/nettle-2.1[gmp] )
 	!nettle? ( >=dev-libs/libgcrypt-1.4.0:0 )
@@ -55,11 +54,16 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-2.12.20-AF_UNIX.patch
 	epatch "${FILESDIR}"/${PN}-2.12.20-libadd.patch
 	epatch "${FILESDIR}"/${PN}-2.12.20-guile-parallelmake.patch
-	epatch "${FILESDIR}"/${PN}-2.12.23-CVE-2013-2116.patch
-	epatch "${FILESDIR}"/${PN}-2.12.23-hppa.patch
-	epatch "${FILESDIR}"/${PN}-2.12.23-CVE-2014-0092.patch
-	epatch "${FILESDIR}"/${PN}-2.12.23-CVE-2014-1959.patch
+	epatch "${FILESDIR}"/${P}-hppa.patch
 	epatch "${FILESDIR}"/${P}-gl-tests-getaddrinfo-skip-if-no-network.patch
+	epatch "${FILESDIR}"/${P}-gdoc-perl-5.18.patch
+	epatch "${FILESDIR}"/${P}-CVE-2013-2116.patch
+	epatch "${FILESDIR}"/${P}-CVE-2014-0092.patch
+	epatch "${FILESDIR}"/${P}-CVE-2014-1959.patch
+	epatch "${FILESDIR}"/${P}-CVE-2014-3466.patch
+	epatch "${FILESDIR}"/${P}-CVE-2014-3467.patch
+	epatch "${FILESDIR}"/${P}-CVE-2014-3468.patch
+	epatch "${FILESDIR}"/${P}-CVE-2014-3469.patch
 
 	# support user patches
 	epatch_user

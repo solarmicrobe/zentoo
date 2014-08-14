@@ -1,5 +1,4 @@
 app-admin/chef
-app-arch/libarchive
 app-emulation/virtualbox
 app-office/openerp
 dev-db/mysql
@@ -9,7 +8,6 @@ dev-ruby/mixlib-shellout
 dev-ruby/ohai
 dev-ruby/rubygems
 mail-mta/postfix
-media-gfx/imagemagick
 net-dns/pdns
 sys-apps/newrelic-sysmond
 sys-apps/openrc

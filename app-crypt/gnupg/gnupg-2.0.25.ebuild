@@ -18,7 +18,7 @@ IUSE="adns bzip2 doc ldap nls mta readline static selinux smartcard usb"
 
 COMMON_DEPEND_LIBS="
 	>=dev-libs/libassuan-2
-	>=dev-libs/libgcrypt-1.4:0
+	>=dev-libs/libgcrypt-1.4:0=
 	>=dev-libs/libgpg-error-1.11
 	>=dev-libs/libksba-1.0.7
 	>=dev-libs/pth-1.3.7
@@ -36,8 +36,8 @@ DEPEND="${COMMON_DEPEND_LIBS}
 	${COMMON_DEPEND_BINS}
 	static? (
 		>=dev-libs/libassuan-2[static-libs]
-		>=dev-libs/libgcrypt-1.4:0[static-libs]
-		>=dev-libs/libgpg-error-1.7[static-libs]
+		>=dev-libs/libgcrypt-1.4:0=[static-libs]
+		>=dev-libs/libgpg-error-1.11[static-libs]
 		>=dev-libs/libksba-1.0.7[static-libs]
 		>=dev-libs/pth-1.3.7[static-libs]
 		>=net-misc/curl-7.10[static-libs]
