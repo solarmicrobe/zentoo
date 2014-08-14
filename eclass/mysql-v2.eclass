@@ -1,6 +1,5 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
 # @ECLASS: mysql-v2.eclass
 # @MAINTAINER:
@@ -45,7 +44,7 @@ MYSQL_EXTRAS=""
 # @DESCRIPTION:
 # The version of the MYSQL_EXTRAS repo to use to build mysql
 # Use "none" to disable it's use
-[[ ${MY_EXTRAS_VER} == "live" ]] && MYSQL_EXTRAS="git-2"
+[[ ${MY_EXTRAS_VER} == "live" ]] && MYSQL_EXTRAS="git-r3"
 
 inherit eutils flag-o-matic gnuconfig ${MYSQL_EXTRAS} ${BUILD_INHERIT} mysql_fx versionator toolchain-funcs user
 
@@ -70,9 +69,9 @@ S="${WORKDIR}/mysql"
 
 [[ ${MY_EXTRAS_VER} == "latest" ]] && MY_EXTRAS_VER="20090228-0714Z"
 if [[ ${MY_EXTRAS_VER} == "live" ]]; then
-	EGIT_PROJECT=mysql-extras
 	EGIT_REPO_URI="git://git.overlays.gentoo.org/proj/mysql-extras.git"
-	RESTRICT="userpriv"
+	EGIT_CHECKOUT_DIR=${WORKDIR}/mysql-extras
+	EGIT_CLONE_TYPE=shallow
 fi
 
 # @ECLASS-VARIABLE: MYSQL_PV_MAJOR
@@ -83,10 +82,18 @@ fi
 MYSQL_PV_MAJOR="$(get_version_component_range 1-2 ${PV})"
 
 # Cluster is a special case...
-if [[ "${PN}" == "mysql-cluster" ]]; then
-	case $PV in
+if [[ ${PN} == "mysql-cluster" ]]; then
+	case ${PV} in
 		6.1*|7.0*|7.1*) MYSQL_PV_MAJOR=5.1 ;;
-		7.2*|7.3*) MYSQL_PV_MAJOR=5.5 ;;
+		7.2*) MYSQL_PV_MAJOR=5.5 ;;
+		7.3*) MYSQL_PV_MAJOR=5.6 ;;
+	esac
+fi
+
+# MariaDB has left the numbering schema but keeping compatibility
+if [[ ${PN} == "mariadb" || ${PN} == "mariadb-galera" ]]; then
+	case ${PV} in
+		10.0*|10.1*) MYSQL_PV_MAJOR="5.6" ;;
 	esac
 fi
 
@@ -163,6 +170,7 @@ if [[ -z ${SERVER_URI} ]]; then
 		MIRROR_PV=$(get_version_component_range 1-2 ${PV})
 		# Recently upstream switched to an archive site, and not on mirrors
 		SERVER_URI="http://downloads.mysql.com/archives/${URI_FILE}-${MIRROR_PV}/${URI_A}
+					https://downloads.skysql.com/files/${URI_FILE}-${MIRROR_PV}/${URI_A}
 					mirror://mysql/Downloads/${URI_DIR}-${PV%.*}/${URI_A}"
 	fi
 fi
@@ -209,8 +217,15 @@ esac
 # Common IUSE
 IUSE="${IUSE} latin1 extraengine cluster max-idx-128 +community profiling"
 
+# This probably could be simplified, but the syntax would have to be just right
 if [[ ${PN} == "mariadb" || ${PN} == "mariadb-galera" ]] && \
-	mysql_version_is_at_least "5.5" || mysql_check_version_range "5.5.37 to 5.6.11.99" ; then
+	mysql_version_is_at_least "5.5" ; then
+	IUSE="bindist ${IUSE}"
+elif [[ ${PN} == "mysql" || ${PN} == "percona-server" ]] && \
+	mysql_check_version_range "5.5.37 to 5.6.11.99" ; then
+	IUSE="bindist ${IUSE}"
+elif [[ ${PN} == "mysql-cluster" ]] && \
+	mysql_check_version_range "7.2 to 7.2.99.99"  ; then
 	IUSE="bindist ${IUSE}"
 fi
 
@@ -260,7 +275,11 @@ DEPEND="
 #	!dev-db/mariadb-native-client[mysqlcompat]
 
 # dev-db/mysql-5.6.12+ only works with dev-libs/libedit
-if [[ ${PN} == "mysql" || ${PN} == "percona-server" ]] && mysql_version_is_at_least "5.6.12" ; then
+# This probably could be simplified
+if [[ ${PN} == "mysql" || ${PN} == "percona-server" ]] && \
+	mysql_version_is_at_least "5.6.12" ; then
+	DEPEND="${DEPEND} dev-libs/libedit"
+elif [[ ${PN} == "mysql-cluster" ]] && mysql_version_is_at_least "7.3"; then
 	DEPEND="${DEPEND} dev-libs/libedit"
 else
 	if mysql_version_is_at_least "5.5" ; then
@@ -505,7 +524,7 @@ mysql-v2_src_unpack() {
 
 	unpack ${A}
 	# Grab the patches
-	[[ "${MY_EXTRAS_VER}" == "live" ]] && S="${WORKDIR}/mysql-extras" git-2_src_unpack
+	[[ "${MY_EXTRAS_VER}" == "live" ]] && S="${WORKDIR}/mysql-extras" git-r3_src_unpack
 
 	mv -f "${WORKDIR}/${MY_SOURCEDIR}" "${S}"
 }
@@ -668,7 +687,7 @@ mysql-v2_pkg_config() {
 	local old_MY_DATADIR="${MY_DATADIR}"
 	local old_HOME="${HOME}"
 	# my_print_defaults needs to read stuff in $HOME/.my.cnf
-	export HOME=/root
+	export HOME=${EPREFIX}/root
 
 	# Make sure the vars are correctly initialized
 	mysql_init_vars
@@ -709,6 +728,9 @@ mysql-v2_pkg_config() {
 	local pwd2="b"
 	local maxtry=15
 
+	if [ -z "${MYSQL_ROOT_PASSWORD}" ]; then
+		MYSQL_ROOT_PASSWORD="$(mysql-v2_getoptval 'client mysql' password)"
+	fi
 	MYSQL_TMPDIR="$(mysql-v2_getoptval mysqld tmpdir)"
 	# These are dir+prefix
 	MYSQL_RELAY_LOG="$(mysql-v2_getoptval mysqld relay-log)"
@@ -716,13 +738,13 @@ mysql-v2_pkg_config() {
 	MYSQL_LOG_BIN="$(mysql-v2_getoptval mysqld log-bin)"
 	MYSQL_LOG_BIN=${MYSQL_LOG_BIN%/*}
 
-	if [[ ! -d "${EROOT}"/$MYSQL_TMPDIR ]]; then
+	if [[ ! -d "${ROOT}"/$MYSQL_TMPDIR ]]; then
 		einfo "Creating MySQL tmpdir $MYSQL_TMPDIR"
-		install -d -m 770 -o mysql -g mysql "${EROOT}"/$MYSQL_TMPDIR
+		install -d -m 770 -o mysql -g mysql "${ROOT}"/$MYSQL_TMPDIR
 	fi
-	if [[ ! -d "${EROOT}"/$MYSQL_LOG_BIN ]]; then
+	if [[ ! -d "${ROOT}"/$MYSQL_LOG_BIN ]]; then
 		einfo "Creating MySQL log-bin directory $MYSQL_LOG_BIN"
-		install -d -m 770 -o mysql -g mysql "${EROOT}"/$MYSQL_LOG_BIN
+		install -d -m 770 -o mysql -g mysql "${ROOT}"/$MYSQL_LOG_BIN
 	fi
 	if [[ ! -d "${EROOT}"/$MYSQL_RELAY_LOG ]]; then
 		einfo "Creating MySQL relay-log directory $MYSQL_RELAY_LOG"
@@ -740,8 +762,29 @@ mysql-v2_pkg_config() {
 	# localhost. Also causes weird failures.
 	[[ "${HOSTNAME}" == "localhost" ]] && die "Your machine must NOT be named localhost"
 
-	local options="--log-warnings=0"
+	if [ -z "${MYSQL_ROOT_PASSWORD}" ]; then
+
+		einfo "Please provide a password for the mysql 'root' user now, in the"
+		einfo "MYSQL_ROOT_PASSWORD env var or through the ${HOME}/.my.cnf file."
+		ewarn "Avoid [\"'\\_%] characters in the password"
+		read -rsp "    >" pwd1 ; echo
+
+		einfo "Retype the password"
+		read -rsp "    >" pwd2 ; echo
+
+		if [[ "x$pwd1" != "x$pwd2" ]] ; then
+			die "Passwords are not the same"
+		fi
+		MYSQL_ROOT_PASSWORD="${pwd1}"
+		unset pwd1 pwd2
+	fi
+
+	local options
 	local sqltmp="$(emktemp)"
+
+	# Fix bug 446200. Don't reference host my.cnf, needs to come first,
+	# see http://bugs.mysql.com/bug.php?id=31312
+	use prefix && options="${options} --defaults-file=${MY_SYSCONFDIR}/my.cnf"
 
 	local help_tables="${ROOT}${MY_SHAREDSTATEDIR}/fill_help_tables.sql"
 	[[ -r "${help_tables}" ]] \
@@ -765,10 +808,6 @@ mysql-v2_pkg_config() {
 
 	use prefix || options="${options} --user=mysql"
 
-	# Fix bug 446200. Don't reference host my.cnf
-	use prefix && [[ -f "${MY_SYSCONFDIR}/my.cnf" ]] \
-		&& options="${options} '--defaults-file=${MY_SYSCONFDIR}/my.cnf'"
-
 	# MySQL 5.6+ needs InnoDB
 	if [[ ${PN} == "mysql" || ${PN} == "percona-server" ]] ; then
 		mysql_version_is_at_least "5.6" || options="${options} --loose-skip-innodb"
@@ -789,7 +828,7 @@ mysql-v2_pkg_config() {
 	#cmd="'${EROOT}/usr/share/mysql/scripts/mysql_install_db' '--basedir=${EPREFIX}/usr' ${options}"
 	cmd=${EROOT}usr/share/mysql/scripts/mysql_install_db
 	[[ -f ${cmd} ]] || cmd=${EROOT}usr/bin/mysql_install_db
-	cmd="'$cmd' '--basedir=${EPREFIX}/usr' ${options} '--datadir=${EROOT}/${MY_DATADIR}' '--tmpdir=${EROOT}/${MYSQL_TMPDIR}'"
+	cmd="'$cmd' '--basedir=${EPREFIX}/usr' ${options} '--datadir=${ROOT}/${MY_DATADIR}' '--tmpdir=${ROOT}/${MYSQL_TMPDIR}'"
 	einfo "Command: $cmd"
 	eval $cmd \
 		>"${TMPDIR}"/mysql_install_db.log 2>&1
@@ -815,16 +854,16 @@ mysql-v2_pkg_config() {
 	local pidfile="${EROOT}/var/run/mysqld/mysqld${RANDOM}.pid"
 	local mysqld="${EROOT}/usr/sbin/mysqld \
 		${options} \
-		--user=mysql \
+		$(use prefix || echo --user=mysql) \
 		--log-warnings=0 \
 		--basedir=${EROOT}/usr \
-		--datadir=${EROOT}/${MY_DATADIR} \
+		--datadir=${ROOT}/${MY_DATADIR} \
 		--max_allowed_packet=8M \
 		--net_buffer_length=16K \
 		--default-storage-engine=MyISAM \
 		--socket=${socket} \
 		--pid-file=${pidfile}
-		--tmpdir=${EROOT}/${MYSQL_TMPDIR}"
+		--tmpdir=${ROOT}/${MYSQL_TMPDIR}"
 	#einfo "About to start mysqld: ${mysqld}"
 	ebegin "Starting mysqld"
 	einfo "Command ${mysqld}"
@@ -841,11 +880,21 @@ mysql-v2_pkg_config() {
 		die "Completely failed to start up mysqld with: ${mysqld}"
 	fi
 
+	ebegin "Setting root password"
+	# Do this from memory, as we don't want clear text passwords in temp files
+	local sql="UPDATE mysql.user SET Password = PASSWORD('${MYSQL_ROOT_PASSWORD}') WHERE USER='root'"
+	"${EROOT}/usr/bin/mysql" \
+		--socket=${socket} \
+		-hlocalhost \
+		-e "${sql}"
+	eend $?
+
 	ebegin "Loading \"zoneinfo\", this step may require a few seconds ..."
 	"${EROOT}/usr/bin/mysql" \
 		--socket=${socket} \
 		-hlocalhost \
 		-uroot \
+		--password="${MYSQL_ROOT_PASSWORD}" \
 		mysql < "${sqltmp}"
 	rc=$?
 	eend $?

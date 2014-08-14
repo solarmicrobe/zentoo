@@ -4,7 +4,7 @@
 
 EAPI="5"
 
-MY_EXTRAS_VER="live"
+MY_EXTRAS_VER="20140801-1950Z"
 MY_PV="${PV//_alpha_pre/-m}"
 MY_PV="${MY_PV//_/-}"
 
@@ -19,7 +19,7 @@ IUSE="$IUSE"
 EGIT_REPO_URI="git://git.overlays.gentoo.org/proj/mysql-extras.git"
 
 # REMEMBER: also update eclass/mysql*.eclass before committing!
-KEYWORDS=" amd64"
+KEYWORDS="amd64"
 
 # When MY_EXTRAS is bumped, the index should be revised to exclude these.
 EPATCH_EXCLUDE=''
@@ -70,14 +70,15 @@ src_test() {
 		# create symlink for the tests to find mysql_tzinfo_to_sql
 		ln -s "${CMAKE_BUILD_DIR}/sql/mysql_tzinfo_to_sql" "${S}/sql/"
 
-		# These are failing in MySQL 5.5 for now and are believed to be
+		# These are failing in MySQL 5.5/5.6 for now and are believed to be
 		# false positives:
 		#
 		# main.information_schema, binlog.binlog_statement_insert_delayed,
 		# main.mysqld--help-notwin, funcs_1.is_triggers funcs_1.is_tables_mysql,
 		# funcs_1.is_columns_mysql, binlog.binlog_mysqlbinlog_filter,
 		# perfschema.binlog_edge_mix, perfschema.binlog_edge_stmt,
-		# mysqld--help-notwin
+		# mysqld--help-notwin, funcs_1.is_triggers, funcs_1.is_tables_mysql, funcs_1.is_columns_mysql
+		# perfschema.binlog_edge_stmt, perfschema.binlog_edge_mix, binlog.binlog_mysqlbinlog_filter
 		# fails due to USE=-latin1 / utf8 default
 		#
 		# main.mysql_client_test:
@@ -86,12 +87,24 @@ src_test() {
 		# main.mysql_tzinfo_to_sql_symlink
 		# fails due to missing mysql_test/std_data/zoneinfo/GMT file from archive
 		#
-		for t in main.mysql_client_test \
-			binlog.binlog_statement_insert_delayed main.information_schema \
-			main.mysqld--help-notwinfuncs_1.is_triggers funcs_1.is_tables_mysql \
-			funcs_1.is_columns_mysql binlog.binlog_mysqlbinlog_filter \
-			perfschema.binlog_edge_mix perfschema.binlog_edge_stmt \
-			mysqld--help-notwin main.mysql_tzinfo_to_sql_symlink; do
+		# rpl.rpl_plugin_load
+		# fails due to included file not listed in expected result
+		# appears to be poor planning
+		for t in \
+			binlog.binlog_mysqlbinlog_filter \
+			binlog.binlog_statement_insert_delayed \
+			funcs_1.is_columns_mysql \
+			funcs_1.is_tables_mysql \
+			funcs_1.is_triggers \
+			main.information_schema \
+			main.mysql_client_test \
+			main.mysqld--help-notwinfuncs_1.is_triggers \
+			main.mysql_tzinfo_to_sql_symlink \
+			mysqld--help-notwin \
+			perfschema.binlog_edge_mix \
+			perfschema.binlog_edge_stmt \
+			rpl.rpl_plugin_load \
+		; do
 				mysql-v2_disable_test  "$t" "False positives in Gentoo"
 		done
 
@@ -103,7 +116,7 @@ src_test() {
 
 		# run mysql-test tests
 		perl mysql-test-run.pl --force --vardir="${S}/mysql-test/var-tests" \
-			--suite-timeout=5000
+			--suite-timeout=5000 --parallel=auto
 		retstatus_tests=$?
 		[[ $retstatus_tests -eq 0 ]] || eerror "tests failed"
 		has usersandbox $FEATURES && eerror "Some tests may fail with FEATURES=usersandbox"

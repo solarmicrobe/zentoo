@@ -1,7 +1,6 @@
 app-admin/chef
 app-emulation/virtualbox
 app-office/openerp
-dev-db/mysql
 dev-db/mysql-init-scripts
 dev-ruby/mixlib-config
 dev-ruby/mixlib-shellout
@@ -21,6 +20,5 @@ sys-process/htop
 virtual/editor
 virtual/linux-sources
 virtual/mta
-virtual/mysql
 virtual/service-manager
 virtual/udev
