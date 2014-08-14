@@ -20,18 +20,20 @@ IUSE="X +adobe-cff auto-hinter bindist bzip2 debug doc fontforge harfbuzz
 	infinality png static-libs utils"
 REQUIRED_USE="harfbuzz? ( auto-hinter )"
 
-DEPEND="sys-libs/zlib[${MULTILIB_USEDEP}]
-	bzip2? ( app-arch/bzip2[${MULTILIB_USEDEP}] )
-	harfbuzz? ( media-libs/harfbuzz[truetype,${MULTILIB_USEDEP}] )
-	png? ( media-libs/libpng[${MULTILIB_USEDEP}] )
+CDEPEND=">=sys-libs/zlib-1.2.8-r1[${MULTILIB_USEDEP}]
+	bzip2? ( >=app-arch/bzip2-1.0.6-r4[${MULTILIB_USEDEP}] )
+	harfbuzz? ( >=media-libs/harfbuzz-0.9.12[truetype,${MULTILIB_USEDEP}] )
+	png? ( >=media-libs/libpng-1.2.51[${MULTILIB_USEDEP}] )
 	utils? (
 		X? (
-			x11-libs/libX11[${MULTILIB_USEDEP}]
-			x11-libs/libXau[${MULTILIB_USEDEP}]
-			x11-libs/libXdmcp[${MULTILIB_USEDEP}]
+			>=x11-libs/libX11-1.6.2[${MULTILIB_USEDEP}]
+			>=x11-libs/libXau-1.0.7-r1[${MULTILIB_USEDEP}]
+			>=x11-libs/libXdmcp-1.1.1-r1[${MULTILIB_USEDEP}]
 		)
 	)"
-RDEPEND="${DEPEND}
+DEPEND="${CDEPEND}
+	virtual/pkgconfig"
+RDEPEND="${CDEPEND}
 	infinality? ( media-libs/fontconfig-infinality )
 	abi_x86_32? ( utils? ( !app-emulation/emul-linux-x86-xlibs[-abi_x86_32(-)] ) )"
 

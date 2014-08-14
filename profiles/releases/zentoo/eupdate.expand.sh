@@ -90,14 +90,6 @@ dev-util/kbuild)                         echo "=$1-0.1.9998_pre20131130";;
 # just because we support firefox for headless testing
 x11-libs/gtk+)                           echo "=$1-2.24.23";;
 
-# multilib
-app-arch/bzip2)                          echo "=$1-1.0.6-r6";;
-dev-libs/libffi)                         echo "=$1-3.0.13-r1";;
-media-libs/freetype)                     echo "=$1-2.5.3-r1";;
-sys-apps/attr)                           echo "=$1-2.4.47-r1";;
-virtual/libffi)                          echo "=$1-3.0.13-r1";;
-virtual/libiconv)                        echo "=$1-0-r1";;
-
 app-editors/vim*)                        echo "=$1-7.4.155";;
 app-text/asciidoc)                       echo "=$1-8.6.8-r1";;
 dev-db/postgresql-server)                echo "=$1-9.3.4-r1";;

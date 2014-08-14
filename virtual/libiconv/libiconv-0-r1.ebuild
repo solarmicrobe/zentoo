@@ -17,4 +17,4 @@ DEPEND=""
 
 # - Don't put elibc_glibc? ( sys-libs/glibc ) to avoid circular deps between
 # that and gcc
-RDEPEND="!elibc_glibc? ( !elibc_uclibc? ( !elibc_musl? ( !elibc_mintlib? ( dev-libs/libiconv[${MULTILIB_USEDEP}] ) ) ) )"
+RDEPEND="!elibc_glibc? ( !elibc_uclibc? ( !elibc_musl? ( !elibc_mintlib? ( >=dev-libs/libiconv-1.14-r1[${MULTILIB_USEDEP}] ) ) ) )"
