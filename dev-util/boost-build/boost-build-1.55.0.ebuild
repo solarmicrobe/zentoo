@@ -1,15 +1,15 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="5"
 PYTHON_DEPEND="python? 2"
 
-inherit eutils flag-o-matic python toolchain-funcs versionator
+inherit eutils flag-o-matic multilib python toolchain-funcs versionator
 
 MY_PV=$(replace_all_version_separators _)
 
-DESCRIPTION="A system for large project software construction, which is simple to use and powerful."
+DESCRIPTION="A system for large project software construction, which is simple to use and powerful"
 HOMEPAGE="http://www.boost.org/doc/tools/build/index.html"
 SRC_URI="mirror://sourceforge/boost/boost_${MY_PV}.tar.bz2"
 
@@ -40,16 +40,19 @@ src_unpack() {
 
 src_prepare() {
 	epatch \
-		"${FILESDIR}/${PN}-1.48.0-support_dots_in_python-buildid.patch" \
 		"${FILESDIR}/${PN}-1.48.0-disable_python_rpath.patch" \
 		"${FILESDIR}/${PN}-1.50.0-respect-c_ld-flags.patch" \
-		"${FILESDIR}/${PN}-1.50.0-fix-test.patch" \
 		"${FILESDIR}/${PN}-1.49.0-darwin-gentoo-toolchain.patch" \
-		"${FILESDIR}/${PN}-1.52.0-darwin-no-python-framework.patch"
+		"${FILESDIR}/${PN}-1.52.0-darwin-no-python-framework.patch" \
+		"${FILESDIR}/${PN}-1.54.0-fix-test.patch" \
+		"${FILESDIR}/${PN}-1.54.0-support_dots_in_python-buildid.patch"
 
 	# Remove stripping option
+	# Fix python components build on multilib systems, bug #496446
 	cd "${S}/engine"
-	sed -i -e 's|-s\b||' \
+	sed -i \
+		-e 's|-s\b||' \
+		-e "/libpython/s/lib ]/$(get_libdir) ]/" \
 		build.jam || die "sed failed"
 
 	# Force regeneration
