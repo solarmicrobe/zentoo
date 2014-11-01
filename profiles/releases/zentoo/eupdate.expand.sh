@@ -79,7 +79,7 @@ virtual/jre)                             echo "=$1-1.7.0"
                                          echo "=$1-1.8.0";;
 
 # kernel
-sys-kernel/gentoo-sources)               echo "=$1-3.12.21-r1";;
+sys-kernel/gentoo-sources)               echo "=$1-3.12.29";;
 sys-kernel/linux-headers)                echo "=$1-3.12";;
 
 # virtualbox
@@ -101,7 +101,6 @@ sys-apps/systemd)                        echo "=$1-212-r2";;
 sys-block/btrace)                        echo "=$1-1.0.3";;
 sys-devel/bc)                            echo "=$1-1.06.95-r1";;
 sys-fs/ncdu)                             echo "=$1-1.10";;
-sys-kernel/gentoo-sources)               echo "=$1-3.10.36";;
 virtual/jpeg)                            echo "=$1-0-r2";;
 sys-libs/libcap-ng)                      echo "=$1-0.7.4";;
 *)                                       echo $1;;
