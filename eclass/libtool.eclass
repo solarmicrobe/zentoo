@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: libtool.eclass
@@ -13,8 +13,8 @@
 # generated libtool files.  We do not run the libtoolize program because that
 # requires a regeneration of the main autotool files in order to work properly.
 
-if [[ ${___ECLASS_ONCE_LIBTOOL} != "recur -_+^+_- spank" ]] ; then
-___ECLASS_ONCE_LIBTOOL="recur -_+^+_- spank"
+if [[ -z ${_LIBTOOL_ECLASS} ]]; then
+_LIBTOOL_ECLASS=1
 
 # If an overlay has eclass overrides, but doesn't actually override the
 # libtool.eclass, we'll have ECLASSDIR pointing to the active overlay's
@@ -42,8 +42,8 @@ ELT_try_and_apply_patch() {
 	local disp="${src} patch"
 	local log="${T}/elibtool.log"
 
-	if [[ -z ${__ELT_NOTED_TMP} ]] ; then
-		__ELT_NOTED_TMP=true
+	if [[ -z ${_ELT_NOTED_TMP} ]] ; then
+		_ELT_NOTED_TMP=true
 		printf 'temp patch: %s\n' "${patch}" > "${log}"
 	fi
 	printf '\nTrying %s\n' "${disp}" >> "${log}"
@@ -190,7 +190,7 @@ elibtoolize() {
 	[[ ${do_uclibc} == "yes" ]] && elt_patches+=" uclibc-conf uclibc-ltconf"
 
 	case ${CHOST} in
-		*-aix*)     elt_patches+=" hardcode aixrtl aix-noundef" ;; #213277
+		*-aix*)     elt_patches+=" hardcode aixrtl" ;; #213277
 		*-darwin*)  elt_patches+=" darwin-ltconf darwin-ltmain darwin-conf" ;;
 		*-solaris*) elt_patches+=" sol2-conf sol2-ltmain" ;;
 		*-freebsd*) elt_patches+=" fbsd-conf fbsd-ltconf" ;;

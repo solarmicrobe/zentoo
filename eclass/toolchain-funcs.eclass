@@ -12,8 +12,8 @@
 # in such a way that you can rely on the function always returning
 # something sane.
 
-if [[ ${___ECLASS_ONCE_TOOLCHAIN_FUNCS} != "recur -_+^+_- spank" ]] ; then
-___ECLASS_ONCE_TOOLCHAIN_FUNCS="recur -_+^+_- spank"
+if [[ -z ${_TOOLCHAIN_FUNCS_ECLASS} ]]; then
+_TOOLCHAIN_FUNCS_ECLASS=1
 
 inherit multilib
 

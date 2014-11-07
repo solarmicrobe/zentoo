@@ -81,7 +81,7 @@ multilib_src_compile() {
 		ebegin "Trying to generate tuned data"
 		./tune/tuneup | tee gmp.mparam.h.new
 		if eend $(( 0 + ${PIPESTATUS[*]/#/+} )) ; then
-			mv gmp-mparam.h.new gmp-mparam.h
+			mv gmp.mparam.h.new gmp-mparam.h || die
 			emake clean
 			emake
 		fi
