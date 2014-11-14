@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: versionator.eclass
@@ -25,8 +25,8 @@
 #     version_is_at_least             want      have
 #  which may be buggy, so use with caution.
 
-if [[ ${___ECLASS_ONCE_VERSIONATOR} != "recur -_+^+_- spank" ]] ; then
-___ECLASS_ONCE_VERSIONATOR="recur -_+^+_- spank"
+if [[ -z ${_VERSIONATOR_ECLASS} ]]; then
+_VERSIONATOR_ECLASS=1
 
 inherit eutils
 

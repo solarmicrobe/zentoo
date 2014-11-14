@@ -4,12 +4,12 @@
 
 EAPI="5"
 
-PYTHON_COMPAT=( python{2_{6,7},3_{2,3}} )
+PYTHON_COMPAT=( python{2_{6,7},3_{2,3,4}} )
 WANT_AUTOMAKE="none"
 
 inherit autotools eutils flag-o-matic multilib prefix python-single-r1 versionator
 
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 
 MY_PV=${PV/_/}
 SLOT="$(get_version_component_range 1-2)"

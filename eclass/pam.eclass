@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License, v2 or later
 #
 
@@ -12,8 +12,8 @@
 # This eclass contains functions to install pamd configuration files and
 # pam modules.
 
-if [[ ${___ECLASS_ONCE_PAM} != "recur -_+^+_- spank" ]] ; then
-___ECLASS_ONCE_PAM="recur -_+^+_- spank"
+if [[ -z ${_PAM_ECLASS} ]]; then
+_PAM_ECLASS=1
 
 inherit flag-o-matic multilib
 

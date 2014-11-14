@@ -6,14 +6,14 @@ EAPI="5"
 
 RESTRICT="test"
 
-PYTHON_COMPAT=( python{2_{6,7},3_{2,3}} )
+PYTHON_COMPAT=( python{2_{6,7},3_{2,3,4}} )
 WANT_AUTOMAKE="none"
 
 RESTRICT="test"
 
 inherit autotools eutils flag-o-matic multilib pam prefix python-single-r1 systemd user versionator
 
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 
 MY_PV=${PV/_/}
 SLOT="$(get_version_component_range 1-2)"
