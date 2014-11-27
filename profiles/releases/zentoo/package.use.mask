@@ -1,7 +1,6 @@
 # skip unnecessary dependencies
 app-admin/collectd collectd_plugins_gmond collectd_plugins_notify_desktop collectd_plugins_notify_email collectd_plugins_onewire collectd_plugins_oracle collectd_plugins_routeros collectd_plugins_tokyotyrant collectd_plugins_varnish collectd_plugins_vserver collectd_plugins_libvirt collectd_plugins_ipmi collectd_plugins_nut
 app-admin/syslog-ng dbi json smtp sql
-app-backup/duplicity s3
 app-editors/joe xterm
 app-emulation/docker aufs
 app-emulation/qemu tls usbredir xen
