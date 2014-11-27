@@ -10,3 +10,6 @@ sys-kernel/dracut device-mapper net dracut_modules_lvm dracut_modules_mdraid dra
 
 # force disable bindist on openssl
 dev-libs/openssl -bindist
+
+# we almost always want to use S3 for backup
+app-backup/duplicity s3
