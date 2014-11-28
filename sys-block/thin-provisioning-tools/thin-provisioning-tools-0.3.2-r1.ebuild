@@ -3,12 +3,13 @@
 # $Header: $
 
 EAPI=5
-inherit autotools
+inherit autotools eutils
 
-DESCRIPTION="A suite of tools for thin provisioning on Linux."
-HOMEPAGE="https://github.com/jthornber/thin-provisioning-tools"
+DESCRIPTION="A suite of tools for thin provisioning on Linux"
+HOMEPAGE="http://github.com/jthornber/thin-provisioning-tools"
 EXT=.tar.gz
-SRC_URI="http://github.com/jthornber/${PN}/archive/v${PV}${EXT} -> ${P}${EXT}"
+BASE_A=${P}${EXT}
+SRC_URI="http://github.com/jthornber/${PN}/archive/v${PV}${EXT} -> ${BASE_A}"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -27,6 +28,8 @@ DEPEND="${RDEPEND}
 	dev-libs/boost"
 
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-Remove-ambiguity-between-boost-uint64_t-and-uint64_t.patch
+	epatch_user
 	eautoreconf
 }
 
