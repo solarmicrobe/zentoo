@@ -17,7 +17,7 @@ HOMEPAGE="http://wiki.opscode.com/display/chef/Ohai"
 SRC_URI="https://github.com/opscode/${PN}/archive/${PV}.tar.gz -> ${P}.tgz"
 
 LICENSE="Apache-2.0"
-SLOT="$(get_version_component_range 1-2)"
+SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
