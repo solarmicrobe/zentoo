@@ -37,32 +37,6 @@ RDEPEND="${COMMON_DEPEND}
 AT_M4DIR="config"
 AUTOTOOLS_IN_SOURCE_BUILD="1"
 
-pkg_setup() {
-	linux-info_pkg_setup
-	CONFIG_CHECK="
-		!DEBUG_LOCK_ALLOC
-		!GRKERNSEC_HIDESYM
-		MODULES
-		KALLSYMS
-		!PAX_KERNEXEC_PLUGIN_METHOD_OR
-		ZLIB_DEFLATE
-		ZLIB_INFLATE
-	"
-
-	use debug && CONFIG_CHECK="${CONFIG_CHECK}
-		FRAME_POINTER
-		DEBUG_INFO
-		!DEBUG_INFO_REDUCED
-	"
-
-	kernel_is ge 2 6 26 || die "Linux 2.6.26 or newer required"
-
-	[ ${PV} != "9999" ] && \
-		{ kernel_is le 3 16 || die "Linux 3.16 is the latest supported version."; }
-
-	check_extra_config
-}
-
 src_prepare() {
 	# Workaround for hard coded path
 	sed -i "s|/sbin/lsmod|/bin/lsmod|" "${S}/scripts/check.sh" || \
