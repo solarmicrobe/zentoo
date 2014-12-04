@@ -698,30 +698,28 @@ check_extra_config() {
 		fi
 	done
 
-	if [[ ${config_required} == 0 ]]; then
-		# In the case where we don't require a .config, we can now bail out
-		# if the user has no .config as there is nothing to do. Otherwise
-		# code later will cause a failure due to missing .config.
-		if ! linux_config_exists; then
-			ewarn "Unable to check for the following kernel config options due"
-			ewarn "to absence of any configured kernel sources or compiled"
-			ewarn "config:"
-			for config in ${CONFIG_CHECK}; do
-				local_error="ERROR_${config#\~}"
+	# In the case where we don't require a .config, we can now bail out
+	# if the user has no .config as there is nothing to do. Otherwise
+	# code later will cause a failure due to missing .config.
+	if ! linux_config_exists; then
+		ewarn "Unable to check for the following kernel config options due"
+		ewarn "to absence of any configured kernel sources or compiled"
+		ewarn "config:"
+		for config in ${CONFIG_CHECK}; do
+			local_error="ERROR_${config#\~}"
+			msg="${!local_error}"
+			if [[ "x${msg}" == "x" ]]; then
+				local_error="WARNING_${config#\~}"
 				msg="${!local_error}"
-				if [[ "x${msg}" == "x" ]]; then
-					local_error="WARNING_${config#\~}"
-					msg="${!local_error}"
-				fi
-				ewarn " - ${config#\~}${msg:+ - }${msg}"
-			done
-			ewarn "You're on your own to make sure they are set if needed."
-			export LINUX_CONFIG_EXISTS_DONE="${old_LINUX_CONFIG_EXISTS_DONE}"
-			return 0
-		fi
-	else
-		require_configured_kernel
+			fi
+			ewarn " - ${config#\~}${msg:+ - }${msg}"
+		done
+		ewarn "You're on your own to make sure they are set if needed."
+		export LINUX_CONFIG_EXISTS_DONE="${old_LINUX_CONFIG_EXISTS_DONE}"
+		return 0
 	fi
+
+	require_configured_kernel
 
 	einfo "Checking for suitable kernel configuration options..."
 
