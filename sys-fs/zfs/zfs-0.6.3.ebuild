@@ -43,7 +43,6 @@ DEPEND="${COMMON_DEPEND}
 
 RDEPEND="${COMMON_DEPEND}
 	!=sys-apps/grep-2.13*
-	!kernel-builtin? ( =sys-fs/zfs-kmod-${PV}* )
 	!sys-fs/zfs-fuse
 	!prefix? ( virtual/udev )
 	test-suite? (
