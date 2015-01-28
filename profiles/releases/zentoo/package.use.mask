@@ -53,7 +53,7 @@ x11-libs/libSM uuid
 app-admin/sudo ldap
 app-arch/cabextract extra-tools
 app-editors/vim perl
-dev-db/postgresql-server perl
+dev-db/postgresql perl
 dev-lang/R perl
 dev-libs/ossp-uuid perl
 media-gfx/imagemagick perl
