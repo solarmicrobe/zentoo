@@ -17,7 +17,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
-DEPEND="dev-db/postgresql-base"
+DEPEND="dev-db/postgresql"
 RDEPEND="${DEPEND}"
 
 src_compile() {
