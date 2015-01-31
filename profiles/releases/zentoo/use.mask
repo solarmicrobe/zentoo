@@ -369,12 +369,6 @@ curl_ssl_gnutls
 curl_ssl_nss
 curl_ssl_polarssl
 
-# php version we don't support
-php_targets_php5-2
-php_targets_php5-3
-php_targets_php5-4
-php_targets_php5-6
-
 # python versions we don't support
 python_targets_python2_5
 python_targets_python2_6
