@@ -11,7 +11,7 @@ SRC_URI=""
 LICENSE=""
 SLOT="${PV}"
 KEYWORDS="amd64"
-IUSE="kerberos ldap server threads"
+IUSE="kerberos ldap +server threads"
 
 DEPEND="
 	|| (
