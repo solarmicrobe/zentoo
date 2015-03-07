@@ -1,14 +1,12 @@
 # skip unnecessary dependencies
-app-arch/dpkg nls
 app-admin/sysstat cron
+app-arch/dpkg nls
 app-editors/joe xterm
 app-emulation/docker aufs
 app-emulation/qemu tls usbredir xen
 app-emulation/virtualbox vboxwebsrv
-app-text/texlive-core X xetex
+app-text/texlive-core xetex
 dev-java/ant testutil
-dev-java/icedtea X alsa systemtap pax_kernel webstart
-dev-java/icedtea-bin X alsa systemtap pax_kernel webstart
 dev-lang/ghc ghcbootstrap
 dev-lang/php sqlite
 dev-libs/gecode gist
@@ -23,6 +21,7 @@ dev-vcs/bzr curl
 dev-vcs/git cgi
 dev-vcs/subversion webdav-serf
 gnome-base/librsvg tools
+media-gfx/graphviz devil gts
 media-gfx/imagemagick autotrace fftw raw opencl
 media-libs/harfbuzz graphite
 media-libs/libsdl audio aalib
@@ -47,7 +46,6 @@ sys-fs/udev extras
 sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_bootchart dracut_modules_cifs
 www-servers/tornado curl
 www-servers/uwsgi uwsgi_plugins_rsyslog uwsgi_plugins_alarm_xmpp uwsgi_plugins_rrdtool uwsgi_plugins_rados
-x11-libs/libSM uuid
 
 # do not allow perl cruft for these packages
 app-admin/sudo ldap
@@ -65,16 +63,6 @@ sys-apps/util-linux perl
 www-servers/nginx nginx_modules_http_perl nginx_modules_http_security
 www-servers/uwsgi perl
 
-# do not support X11 with these applications
-dev-java/ant X
-dev-lang/R X
-media-gfx/graphviz X devil gts
-media-libs/t1lib X
-net-analyzer/net-snmp X
-sys-apps/groff X
-
-# only support headless X11
-x11-base/xorg-server xorg
 
 # do not depend on python-3.3
 sys-apps/portage xattr

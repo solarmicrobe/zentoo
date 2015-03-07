@@ -1,4 +1,5 @@
 3dfx
+X
 Xaw3d
 a52
 accessibility
@@ -237,6 +238,7 @@ opengl
 openldap
 openntpd
 openrc
+openvg
 oracle
 osc
 oscar
