@@ -2,16 +2,16 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 USE_RUBY="ruby22"
 
 RUBY_FAKEGEM_RECIPE_TEST="rspec"
 
-RUBY_FAKEGEM_TASK_DOC="redocs"
+RUBY_FAKEGEM_TASK_DOC="docs"
 RUBY_FAKEGEM_DOCDIR="doc"
 RUBY_FAKEGEM_EXTRADOC="ChangeLog Contributors.rdoc README.rdoc History.rdoc"
 
-inherit ruby-fakegem
+inherit multilib ruby-fakegem
 
 DESCRIPTION="Ruby extension library providing an API to PostgreSQL"
 HOMEPAGE="http://bitbucket.org/ged/ruby-pg/"
@@ -49,8 +49,8 @@ each_ruby_configure() {
 }
 
 each_ruby_compile() {
-	emake -C ext CFLAGS="${CFLAGS} -fPIC" archflag="${LDFLAGS}"
-	cp ext/*.so lib || die
+	emake V=1 -C ext CFLAGS="${CFLAGS} -fPIC" archflag="${LDFLAGS}"
+	cp ext/*$(get_libname) lib || die
 }
 
 each_ruby_test() {
