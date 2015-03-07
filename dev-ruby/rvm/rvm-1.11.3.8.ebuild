@@ -4,12 +4,7 @@
 
 EAPI=4
 
-USE_RUBY="ruby19"
-
-RUBY_FAKEGEM_TASK_DOC=""
-RUBY_FAKEGEM_TASK_TEST=""
-
-RUBY_FAKEGEM_EXTRADOC="README.md"
+USE_RUBY="ruby22"
 
 inherit ruby-fakegem
 

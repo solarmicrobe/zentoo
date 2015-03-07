@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -95,6 +95,7 @@ src_install() {
 	if ! use web ; then
 		sed -i -e 's/cd $(SRC_CGI) && $(MAKE) $@/# line removed due missing web use flag/' \
 			-e 's/cd $(SRC_HTM) && $(MAKE) $@/# line removed due missing web use flag/' \
+			-e 's/$(MAKE) install-exfoliation/# line removed due missing web use flag/' \
 			Makefile
 	fi
 
@@ -103,7 +104,9 @@ src_install() {
 	emake DESTDIR="${D}" install
 	emake DESTDIR="${D}" install-config
 	emake DESTDIR="${D}" install-commandmode
-	emake DESTDIR="${D}" install-classicui
+	if use web; then
+		emake DESTDIR="${D}" install-classicui
+	fi
 
 	newinitd "${FILESDIR}"/nagios3 nagios
 	newconfd "${FILESDIR}"/conf.d nagios

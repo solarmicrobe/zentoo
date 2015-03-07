@@ -39,6 +39,7 @@ cddb
 cdinstall
 cdparanoia
 cdr
+cgmanager
 chasen
 cjk
 clang
@@ -50,6 +51,7 @@ cups
 custom-cflags
 d3d
 darcs
+dane
 db2
 dbase
 dbmaker
@@ -255,6 +257,7 @@ plotutils
 polarssl
 policykit
 portaudio
+ppc-aix
 ppds
 prefix
 prelude
@@ -390,6 +393,8 @@ python_single_target_python3_4
 # ruby targets we don't support
 ruby_targets_jruby
 ruby_targets_ruby18
+ruby_targets_ruby19
+ruby_targets_ruby20
 ruby_targets_ruby21
 ruby_targets_rbx
 ruby_targets_ree18

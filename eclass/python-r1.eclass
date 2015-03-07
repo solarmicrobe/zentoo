@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: python-r1
@@ -207,22 +207,14 @@ _python_set_globals() {
 	# 3) use whichever python-exec slot installed in EAPI 5. For EAPI 4,
 	# just fix :2 since := deps are not supported.
 	if [[ ${_PYTHON_WANT_PYTHON_EXEC2} == 0 ]]; then
-		PYTHON_DEPS+="dev-lang/python-exec:0[${PYTHON_USEDEP}]"
+		die "python-exec:0 is no longer supported, please fix your ebuild to work with python-exec:2"
 	elif [[ ${EAPI} != 4 ]]; then
-		PYTHON_DEPS+="dev-lang/python-exec:=[${PYTHON_USEDEP}]"
+		PYTHON_DEPS+=">=dev-lang/python-exec-2:=[${PYTHON_USEDEP}]"
 	else
 		PYTHON_DEPS+="dev-lang/python-exec:2[${PYTHON_USEDEP}]"
 	fi
 }
 _python_set_globals
-
-# @ECLASS-VARIABLE: DISTUTILS_JOBS
-# @DEFAULT_UNSET
-# @DESCRIPTION:
-# The number of parallel jobs to run for distutils-r1 parallel builds.
-# If unset, the job-count in ${MAKEOPTS} will be used.
-#
-# This variable is intended to be set in make.conf.
 
 # @FUNCTION: _python_validate_useflags
 # @INTERNAL
@@ -254,8 +246,8 @@ _python_validate_useflags() {
 # are both in PYTHON_COMPAT and match any of the patterns passed
 # as parameters to the function.
 #
-# Remember to escape or quote the patterns to premature evaluation as a file
-# name glob.
+# Remember to escape or quote the patterns to prevent shell filename
+# expansion.
 #
 # When all implementations are requested, please use ${PYTHON_USEDEP}
 # instead. Please also remember to set an appropriate REQUIRED_USE
@@ -659,6 +651,7 @@ _python_obtain_impls() {
 
 	_python_validate_useflags
 	_python_check_USE_PYTHON
+	_python_check_EAPI
 
 	MULTIBUILD_VARIANTS=()
 
@@ -724,29 +717,76 @@ python_foreach_impl() {
 # For each command being run, EPYTHON, PYTHON and BUILD_DIR are set
 # locally, and the former two are exported to the command environment.
 #
-# Multiple invocations of the command will be run in parallel, up to
-# DISTUTILS_JOBS (defaulting to '-j' option argument from MAKEOPTS).
+# This command used to be the parallel variant of python_foreach_impl.
+# However, the parallel run support has been removed to simplify
+# the eclasses and make them more predictable and therefore it is now
+# only a deprecated alias to python_foreach_impl.
 python_parallel_foreach_impl() {
 	debug-print-function ${FUNCNAME} "${@}"
 
-	local MULTIBUILD_JOBS=${MULTIBUILD_JOBS:-${DISTUTILS_JOBS}}
+	if [[ ! ${_PYTHON_PARALLEL_WARNED} ]]; then
+		eqawarn "python_parallel_foreach_impl() is no longer meaningful. All runs"
+		eqawarn "are non-parallel now. Please replace the call with python_foreach_impl."
+
+		_PYTHON_PARALLEL_WARNED=1
+	fi
+
 	local MULTIBUILD_VARIANTS
 	_python_obtain_impls
-	multibuild_parallel_foreach_variant _python_multibuild_wrapper "${@}"
+	multibuild_foreach_variant _python_multibuild_wrapper "${@}"
 }
 
 # @FUNCTION: python_setup
+# @USAGE: [<impl-pattern>...]
 # @DESCRIPTION:
-# Find the best (most preferred) Python implementation enabled
-# and set the Python build environment up for it.
+# Find the best (most preferred) Python implementation that is enabled
+# and matches at least one of the patterns passed (or '*' if no patterns
+# passed). Set the Python build environment up for that implementation.
 #
 # This function needs to be used when Python is being called outside
 # of python_foreach_impl calls (e.g. for shared processes like doc
 # building). python_foreach_impl sets up the build environment itself.
+#
+# If the specific commands support only a subset of Python
+# implementations, patterns need to be passed to restrict the allowed
+# implementations.
+#
+# Example:
+# @CODE
+# DEPEND="doc? ( dev-python/epydoc[$(python_gen_usedep 'python2*')] )"
+#
+# src_compile() {
+#   #...
+#   if use doc; then
+#     python_setup 'python2*'
+#     make doc
+#   fi
+# }
+# @CODE
 python_setup() {
 	debug-print-function ${FUNCNAME} "${@}"
 
-	python_export_best
+	local best_impl patterns=( "${@-*}" )
+	_python_try_impl() {
+		local pattern
+		for pattern in "${patterns[@]}"; do
+			if [[ ${EPYTHON} == ${pattern} ]]; then
+				best_impl=${EPYTHON}
+			fi
+		done
+	}
+	python_foreach_impl _python_try_impl
+
+	if [[ ! ${best_impl} ]]; then
+		eerror "${FUNCNAME}: none of the enabled implementation matched the patterns."
+		eerror "  patterns: ${@-'(*)'}"
+		eerror "Likely a REQUIRED_USE constraint (possibly USE-conditional) is missing."
+		eerror "  suggested: || ( \$(python_gen_useflags ${@}) )"
+		eerror "(remember to quote all the patterns with '')"
+		die "${FUNCNAME}: no enabled implementation satisfy requirements"
+	fi
+
+	python_export "${best_impl}" EPYTHON PYTHON
 	python_wrapper_setup
 }
 
@@ -758,6 +798,9 @@ python_setup() {
 # EPYTHON & PYTHON will be exported.
 python_export_best() {
 	debug-print-function ${FUNCNAME} "${@}"
+
+	eqawarn "python_export_best() is deprecated. Please use python_setup instead,"
+	eqawarn "combined with python_export if necessary."
 
 	[[ ${#} -gt 0 ]] || set -- EPYTHON PYTHON
 
@@ -788,26 +831,16 @@ python_replicate_script() {
 	_python_replicate_script() {
 		local _PYTHON_FIX_SHEBANG_QUIET=1
 
-		if _python_want_python_exec2; then
-			local PYTHON_SCRIPTDIR
-			python_export PYTHON_SCRIPTDIR
+		local PYTHON_SCRIPTDIR
+		python_export PYTHON_SCRIPTDIR
 
-			(
-				exeinto "${PYTHON_SCRIPTDIR#${EPREFIX}}"
-				doexe "${files[@]}"
-			)
+		(
+			exeinto "${PYTHON_SCRIPTDIR#${EPREFIX}}"
+			doexe "${files[@]}"
+		)
 
-			python_fix_shebang -q \
-				"${files[@]/*\//${D%/}/${PYTHON_SCRIPTDIR}/}"
-		else
-			local f
-			for f in "${files[@]}"; do
-				cp -p "${f}" "${f}-${EPYTHON}" || die
-			done
-
-			python_fix_shebang -q \
-				"${files[@]/%/-${EPYTHON}}"
-		fi
+		python_fix_shebang -q \
+			"${files[@]/*\//${D%/}/${PYTHON_SCRIPTDIR}/}"
 	}
 
 	local files=( "${@}" )
@@ -816,7 +849,7 @@ python_replicate_script() {
 	# install the wrappers
 	local f
 	for f; do
-		_python_ln_rel "${ED%/}$(_python_get_wrapper_path)" "${f}" || die
+		_python_ln_rel "${ED%/}/usr/lib/python-exec/python-exec2" "${f}" || die
 	done
 }
 

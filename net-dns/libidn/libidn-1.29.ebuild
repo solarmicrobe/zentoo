@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -66,6 +66,11 @@ multilib_src_compile() {
 	if multilib_is_native_abi && use emacs; then
 		elisp-compile "${S}"/src/*.el || die
 	fi
+}
+
+multilib_src_test() {
+	# only run libidn specific tests and not gnulib tests (bug #539356)
+	emake -C tests check
 }
 
 multilib_src_install() {

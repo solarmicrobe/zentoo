@@ -52,7 +52,7 @@ src_install() {
 		ChangeLog ChangeLog.0 ChangeLog.1 ChangeLog.2
 
 	local f
-	for f in "${D}"/usr/share/info/*.info* ; do
+	for f in "${ED}"/usr/share/info/*.info* ; do
 		mv "${f}" "${f/.info/-${SLOT}.info}" || die
 	done
 }

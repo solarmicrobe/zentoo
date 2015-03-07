@@ -42,9 +42,9 @@ python_compile() {
 	# Note that the tests usually do it for us. However, I don't want
 	# to trust USE=test really running all the tests, especially
 	# with FEATURES=test-fail-continue.
-	cd "${BUILD_DIR}"/lib || die
-	"${PYTHON}" -m sphinx.pycode.__init__ \
-		|| die "Grammar generation failed."
+	pushd "${BUILD_DIR}"/lib > /dev/null || die
+	"${PYTHON}" -m sphinx.pycode.__init__ || die "Grammar generation failed."
+	popd > /dev/null || die
 }
 
 python_compile_all() {

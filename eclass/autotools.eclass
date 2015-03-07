@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: autotools.eclass
@@ -55,7 +55,7 @@ inherit libtool
 # Do NOT change this variable in your ebuilds!
 # If you want to force a newer minor version, you can specify the correct
 # WANT value by using a colon:  <PV>:<WANT_AUTOMAKE>
-_LATEST_AUTOMAKE=( 1.13:1.13 1.14:1.14 )
+_LATEST_AUTOMAKE=( 1.13:1.13 1.15:1.15 )
 
 _automake_atom="sys-devel/automake"
 _autoconf_atom="sys-devel/autoconf"
@@ -221,7 +221,11 @@ eautoreconf() {
 	done
 	${rerun_aclocal} && eaclocal
 
-	eautoconf
+	if [[ ${WANT_AUTOCONF} = 2.1 ]] ; then
+		eautoconf
+	else
+		eautoconf --force
+	fi
 	eautoheader
 	[[ ${AT_NOEAUTOMAKE} != "yes" ]] && FROM_EAUTORECONF="yes" eautomake ${AM_OPTS}
 

@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: qt4-build.eclass
@@ -32,7 +32,7 @@ case ${PV} in
 	*)
 		QT4_BUILD_TYPE="release"
 		MY_P=qt-everywhere-opensource-src-${PV/_/-}
-		SRC_URI="http://download.qt-project.org/archive/qt/${PV%.*}/${PV}/${MY_P}.tar.gz"
+		SRC_URI="http://download.qt.io/archive/qt/${PV%.*}/${PV}/${MY_P}.tar.gz"
 		S=${WORKDIR}/${MY_P}
 		;;
 esac
@@ -324,7 +324,7 @@ qt4-build_src_configure() {
 		sparc|sparc-*|sparc64-*)  conf+=" -arch sparc" ;;
 		x86-macos)		  conf+=" -arch x86" ;;
 		x86|x86-*)		  conf+=" -arch i386" ;;
-		alpha|arm|ia64|mips|s390) conf+=" -arch $(tc-arch)" ;;
+		alpha|arm|arm64|ia64|mips|s390) conf+=" -arch $(tc-arch)" ;;
 		hppa|sh)		  conf+=" -arch generic" ;;
 		*) die "$(tc-arch) is unsupported by this eclass. Please file a bug." ;;
 	esac

@@ -3,18 +3,12 @@
 # $Header: $
 
 EAPI=5
-USE_RUBY="ruby19 ruby20 ruby21"
-
-RUBY_FAKEGEM_TASK_DOC=""
-RUBY_FAKEGEM_RECIPE_TEST="rspec"
-
-RUBY_FAKEGEM_EXTRADOC="CHANGELOG.md README.rdoc"
+USE_RUBY="ruby22"
 
 inherit ruby-fakegem
 
 DESCRIPTION="Mixin for creating command line applications"
 HOMEPAGE="http://github.com/opscode/mixlib-cli"
-SRC_URI="https://github.com/opscode/${PN}/archive/${PV}.tar.gz -> ${P}.tgz"
 
 LICENSE="Apache-2.0"
 SLOT="0"

@@ -4,7 +4,7 @@
 
 EAPI=4
 
-USE_RUBY="ruby19 ruby20"
+USE_RUBY="ruby22"
 
 RUBY_FAKEGEM_RECIPE_DOC="rdoc"
 RUBY_FAKEGEM_TASK_DOC="docs"

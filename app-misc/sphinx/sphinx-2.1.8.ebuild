@@ -18,7 +18,7 @@ KEYWORDS="amd64"
 IUSE="debug id64 mysql odbc postgres stemmer syslog test xml"
 
 RDEPEND="mysql? ( virtual/mysql )
-	postgres? ( virtual/postgresql )
+	postgres? ( dev-db/postgresql )
 	odbc? ( dev-db/unixODBC )
 	stemmer? ( dev-libs/snowball-stemmer )
 	xml? ( dev-libs/expat )

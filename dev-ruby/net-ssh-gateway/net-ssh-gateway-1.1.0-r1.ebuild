@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=4
-USE_RUBY="ruby19"
+USE_RUBY="ruby22"
 
 RUBY_FAKEGEM_RECIPE_DOC="rdoc"
 

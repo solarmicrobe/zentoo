@@ -8,6 +8,4 @@ DESCRIPTION="Virtual for Java Development Kit (JDK)"
 SLOT="1.7"
 KEYWORDS="amd64"
 
-RDEPEND="|| (
-		=dev-java/oracle-jdk-bin-1.7.0*
-	)"
+RDEPEND="=dev-java/oracle-jdk-bin-1.7.0*"

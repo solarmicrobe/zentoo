@@ -5,7 +5,7 @@
 EAPI=4
 
 # ruby20, ruby21 → fails tests
-USE_RUBY="ruby19"
+USE_RUBY="ruby22"
 
 inherit ruby-fakegem
 

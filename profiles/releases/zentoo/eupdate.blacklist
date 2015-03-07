@@ -1,4 +1,5 @@
 app-admin/chef
+dev-db/mysql
 dev-db/mysql-init-scripts
 net-dns/pdns
 sys-apps/newrelic-sysmond

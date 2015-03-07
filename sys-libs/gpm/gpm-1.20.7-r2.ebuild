@@ -25,6 +25,7 @@ RDEPEND=">=sys-libs/ncurses-5.9-r3[${MULTILIB_USEDEP}]
 	)"
 DEPEND=">=sys-libs/ncurses-5.9-r3[${MULTILIB_USEDEP}]
 	app-arch/xz-utils
+	sys-apps/texinfo
 	virtual/yacc"
 
 src_prepare() {

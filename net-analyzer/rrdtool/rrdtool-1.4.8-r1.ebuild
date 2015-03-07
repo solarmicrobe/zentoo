@@ -133,8 +133,6 @@ src_install() {
 		perl_delete_packlist
 	fi
 
-	use python && distutils-r1_src_install
-
 	dodoc CHANGES CONTRIBUTORS NEWS README THREADS TODO
 
 	find "${ED}"usr -name '*.la' -exec rm -f {} +
@@ -144,6 +142,8 @@ src_install() {
 
 	newconfd "${FILESDIR}"/rrdcached.confd rrdcached
 	newinitd "${FILESDIR}"/rrdcached.init rrdcached
+
+	use python && distutils-r1_src_install
 }
 
 pkg_postinst() {

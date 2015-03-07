@@ -14,12 +14,13 @@ KEYWORDS="amd64"
 IUSE="networking +regex discouraged +deprecated emacs nls debug-freelist debug-malloc debug +threads"
 RESTRICT="!regex? ( test )"
 
-DEPEND="
+RDEPEND="
 	>=dev-libs/gmp-4.1
 	>=sys-devel/libtool-1.5.6
 	sys-devel/gettext
 	emacs? ( virtual/emacs )"
-RDEPEND="${DEPEND}"
+DEPEND="${RDEPEND}
+	sys-apps/texinfo"
 
 # Guile seems to contain some slotting support, /usr/share/guile/ is slotted,
 # but there are lots of collisions. Most in /usr/share/libguile. Therefore

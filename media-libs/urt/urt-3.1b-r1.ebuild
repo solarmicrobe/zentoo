@@ -36,6 +36,7 @@ src_unpack() {
 	epatch "${FILESDIR}"/${P}-tempfile.patch
 	epatch "${FILESDIR}"/${P}-build-fixes.patch
 	epatch "${FILESDIR}/${P}-make.patch"
+	epatch "${FILESDIR}"/${P}-solaris.patch
 
 	# punt bogus manpage #109511
 	rm -f man/man1/template.1

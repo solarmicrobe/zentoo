@@ -4,6 +4,8 @@
 
 EAPI=4
 
+inherit eutils
+
 DESCRIPTION="Paging program that displays, one windowful at a time, the contents of a file"
 HOMEPAGE="ftp://space.mit.edu/pub/davis/most"
 SRC_URI="ftp://space.mit.edu/pub/davis/${PN}/${P}.tar.bz2"
@@ -17,6 +19,8 @@ RDEPEND=">=sys-libs/slang-2.1.3"
 DEPEND="${RDEPEND}"
 
 src_prepare() {
+	epatch "${FILESDIR}"/${PN}-5.0.0a-no-explicit-termcap.patch
+	epatch "${FILESDIR}"/${PN}-5.0.0a-donot-hardcode-path.patch
 	sed -i -e 's:$(INSTALL) -s:$(INSTALL):' src/Makefile.in || die
 }
 

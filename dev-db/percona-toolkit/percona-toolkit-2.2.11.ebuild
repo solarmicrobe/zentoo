@@ -8,7 +8,7 @@ inherit eutils perl-app perl-module toolchain-funcs
 
 DESCRIPTION="essential command-line utilities for MySQL"
 HOMEPAGE="http://www.percona.com/software/percona-toolkit/"
-SRC_URI="http://www.percona.com/downloads/${PN}/${PV}/tarball/${P}.tar.gz"
+SRC_URI="http://www.percona.com/downloads/${PN}/${PV}/${P}.tar.gz"
 
 LICENSE="|| ( GPL-2 Artistic )"
 SLOT="0"
