@@ -10,7 +10,7 @@ RUBY_FAKEGEM_TASK_TEST="spec"
 
 RUBY_FAKEGEM_EXTRADOC="README.md"
 
-RUBY_FAKEGEM_GEMSPEC=${RUBY_FAKEGEM_NAME}.gemspec
+RUBY_FAKEGEM_GEMSPEC=${PN}.gemspec
 
 inherit ruby-fakegem user
 
@@ -41,12 +41,16 @@ ruby_add_rdepend "
 	<dev-ruby/net-ssh-multi-1.2
 	>=dev-ruby/ohai-8.0
 	>=dev-ruby/plist-3.1.0
+	dev-ruby/ruby-shadow
+	dev-ruby/open4
 "
 
 each_ruby_prepare() {
 	ruby_fakegem_metadata_gemspec ../metadata ${RUBY_FAKEGEM_GEMSPEC}
-
-	# net-ssh
+	sed -i -e '/pry/d' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
+	sed -i -e '/rspec/d' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
+	sed -i -e '/serverspec/d' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
+	sed -i -e '/specinfra/d' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
 	sed -i -e 's/"~> 2.6", /">= 2.6, /' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
 }
 
