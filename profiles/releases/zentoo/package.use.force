@@ -15,4 +15,4 @@ dev-libs/openssl -bindist
 app-backup/duplicity s3
 
 # enable more features
-sys-apps/systemd elfutils lz4
+sys-apps/systemd elfutils lz4 sysv-utils
