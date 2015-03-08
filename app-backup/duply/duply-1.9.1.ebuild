@@ -24,5 +24,4 @@ src_install() {
 	dobin ${PN}
 	./${PN} txt2man > ${PN}.1 || die
 	doman ${PN}.1
-	readme.gentoo_create_doc
 }
