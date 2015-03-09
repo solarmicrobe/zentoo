@@ -4,8 +4,6 @@
 
 EAPI=5
 
-inherit readme.gentoo
-
 DESCRIPTION="A shell frontend for duplicity"
 HOMEPAGE="http://duply.net"
 SRC_URI="mirror://sourceforge/ftplicity/${PN}_${PV}.tgz"
