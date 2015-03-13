@@ -4,11 +4,11 @@
 
 EAPI=5
 
-MY_BUILD="237341"
+MY_BUILD="255606"
 
 DESCRIPTION="The search engine for IT data"
 HOMEPAGE="http://www.splunk.com"
-REL_URI="http://download.splunk.com/releases/${PV}/splunk/linux"
+REL_URI="http://download.splunk.com/products/splunk/releases/${PV}/splunk/linux"
 SRC_URI="amd64? ( ${REL_URI}/${P}-${MY_BUILD}-Linux-x86_64.tgz )"
 
 LICENSE="splunk-eula"
@@ -20,6 +20,10 @@ DEPEND="!!net-analyzer/splunk:0"
 RDEPEND="!net-analyzer/splunkforwarder"
 
 S="${WORKDIR}"/${PN}
+
+pkg_setup() {
+	kernel_is ge 2 6 0 || die "Linux 2.6+ required"
+}
 
 src_install() {
 	dodir /opt
