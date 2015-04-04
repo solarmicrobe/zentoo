@@ -9,7 +9,7 @@ inherit autotools git-2
 DESCRIPTION="IRQ balancing daemon"
 HOMEPAGE="https://github.com/vaesoo/irqd"
 EGIT_REPO_URI="https://github.com/vaesoo/irqd.git"
-EGIT_COMMIT="598bbf5685e9d15fd3ea7ab40b8026df858d70b8"
+EGIT_COMMIT="a21b45758212f27fb46c60ff526d26135e5eeed0"
 
 LICENSE="GPL-2"
 SLOT="0"
