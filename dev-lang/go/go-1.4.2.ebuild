@@ -41,7 +41,8 @@ fi
 src_prepare()
 {
 	if [[ ${PV} != 9999 ]]; then
-		epatch "${FILESDIR}"/${PN}-1.2-no-Werror.patch
+		sed -i -e 's#"-Werror",##g' src/cmd/dist/build.c ||
+			die "sed failed"
 	fi
 	epatch_user
 }
@@ -105,7 +106,7 @@ pkg_postinst()
 
 	if [[ ${PV} != 9999 && -n ${REPLACING_VERSIONS} &&
 		${REPLACING_VERSIONS} != ${PV} ]]; then
-		elog "Release notes are located at http://golang.org/doc/go${PV}"
+		elog "Release notes are located at http://golang.org/doc/go1.4"
 	fi
 
 	if $had_support_files; then
