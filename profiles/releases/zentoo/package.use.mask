@@ -39,6 +39,7 @@ net-libs/libpcap canusb netlink
 net-libs/zeromq pgm
 net-mail/dovecot lucene
 net-misc/curl metalink rtmp ssh
+net-misc/openssh ldns skey ssh1
 sys-apps/acl nfs
 sys-apps/help2man nls
 sys-apps/systemd http qrcode ssl terminal xkb

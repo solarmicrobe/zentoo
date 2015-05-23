@@ -15,7 +15,7 @@ https://bugzilla.mindrot.org/show_bug.cgi?id=928
 +
  static ssh_gssapi_client gssapi_client =
      { GSS_C_EMPTY_BUFFER, GSS_C_EMPTY_BUFFER,
-     GSS_C_NO_CREDENTIAL, NULL, {NULL, NULL, NULL}};
+     GSS_C_NO_CREDENTIAL, NULL, {NULL, NULL, NULL, NULL}};
 @@ -77,25 +80,32 @@ ssh_gssapi_acquire_cred(Gssctxt *ctx)
  	char lname[NI_MAXHOST];
  	gss_OID_set oidset;
@@ -85,14 +85,14 @@ https://bugzilla.mindrot.org/show_bug.cgi?id=928
  	if (options->kbd_interactive_authentication == -1)
 @@ -277,7 +280,8 @@ typedef enum {
  	sBanner, sUseDNS, sHostbasedAuthentication,
- 	sHostbasedUsesNameFromPacketOnly, sClientAliveInterval,
- 	sClientAliveCountMax, sAuthorizedKeysFile,
+ 	sHostbasedUsesNameFromPacketOnly, sHostbasedAcceptedKeyTypes,
+ 	sClientAliveInterval, sClientAliveCountMax, sAuthorizedKeysFile,
 -	sGssAuthentication, sGssCleanupCreds, sAcceptEnv, sPermitTunnel,
 +	sGssAuthentication, sGssCleanupCreds, sGssStrictAcceptor,
 +	sAcceptEnv, sPermitTunnel,
  	sMatch, sPermitOpen, sForceCommand, sChrootDirectory,
  	sUsePrivilegeSeparation, sAllowAgentForwarding,
- 	sZeroKnowledgePasswordAuthentication, sHostCertificate,
+ 	sHostCertificate,
 @@ -327,9 +331,11 @@ static struct {
  #ifdef GSSAPI
  	{ "gssapiauthentication", sGssAuthentication, SSHCFG_ALL },
@@ -122,7 +122,7 @@ https://bugzilla.mindrot.org/show_bug.cgi?id=928
  						 * authenticated with Kerberos. */
  	int     gss_authentication;	/* If true, permit GSSAPI authentication */
  	int     gss_cleanup_creds;	/* If true, destroy cred cache on logout */
-+	int 	gss_strict_acceptor;	/* If true, restrict the GSSAPI acceptor name */
++	int     gss_strict_acceptor;	/* If true, restrict the GSSAPI acceptor name */
  	int     password_authentication;	/* If true, permit password
  						 * authentication. */
  	int     kbd_interactive_authentication;	/* If true, permit */
@@ -134,8 +134,8 @@ https://bugzilla.mindrot.org/show_bug.cgi?id=928
  #GSSAPICleanupCredentials yes
 +#GSSAPIStrictAcceptorCheck yes
  
- # Set this to 'yes' to enable PAM authentication, account processing, 
- # and session processing. If this is enabled, PAM authentication will 
+ # Set this to 'yes' to enable PAM authentication, account processing,
+ # and session processing. If this is enabled, PAM authentication will
 --- a/sshd_config.5
 +++ b/sshd_config.5
 @@ -386,6 +386,21 @@ on logout.
@@ -157,6 +157,6 @@ https://bugzilla.mindrot.org/show_bug.cgi?id=928
 +This facility is provided to assist with operation on multi homed machines.
 +The default is
 +.Dq yes .
- .It Cm HostbasedAuthentication
- Specifies whether rhosts or /etc/hosts.equiv authentication together
- with successful public key client host authentication is allowed
+ .It Cm HostbasedAcceptedKeyTypes
+ Specifies the key types that will be accepted for hostbased authentication
+ as a comma-separated pattern list.
