@@ -49,8 +49,8 @@ virtual/jre)                             echo "=$1-1.7.0"
                                          echo "=$1-1.8.0";;
 
 # kernel
-sys-kernel/gentoo-sources)               echo "=$1-3.14.34";;
-sys-kernel/linux-headers)                echo "=$1-3.14";;
+sys-kernel/gentoo-sources)               echo "=$1-4.0.5";;
+sys-kernel/linux-headers)                echo "=$1-4.0";;
 
 # virtualbox
 app-emulation/virtualbox-extpack-oracle) echo "=$1-4.3.24.98716";;

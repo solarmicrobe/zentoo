@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -12,8 +12,7 @@ if [[ ${PV} == "9999" ]] ; then
 	EGIT_REPO_URI="https://github.com/zfsonlinux/${PN}.git"
 else
 	inherit eutils versionator
-	SRC_URI="https://github.com/zfsonlinux/${PN}/archive/${P}.tar.gz
-		http://dev.gentoo.org/~ryao/dist/${P}-patches-${PR}.tar.xz"
+	SRC_URI="https://github.com/zfsonlinux/${PN}/archive/${P}.tar.gz"
 	S="${WORKDIR}/${PN}-${P}"
 	KEYWORDS="amd64"
 fi
@@ -46,7 +45,6 @@ pkg_setup() {
 		KALLSYMS
 		!PAX_KERNEXEC_PLUGIN_METHOD_OR
 		!PAX_SIZE_OVERFLOW
-		!PAX_RANDKSTACK
 		ZLIB_DEFLATE
 		ZLIB_INFLATE
 	"
@@ -57,10 +55,10 @@ pkg_setup() {
 		!DEBUG_INFO_REDUCED
 	"
 
-	kernel_is ge 2 6 26 || die "Linux 2.6.26 or newer required"
+	kernel_is ge 2 6 32 || die "Linux 2.6.32 or newer required"
 
 	[ ${PV} != "9999" ] && \
-		{ kernel_is le 3 17 || die "Linux 3.17 is the latest supported version."; }
+		{ kernel_is le 4 20 || die "Linux 4.0 is the latest supported version."; }
 
 	check_extra_config
 }
@@ -69,14 +67,6 @@ src_prepare() {
 	# Workaround for hard coded path
 	sed -i "s|/sbin/lsmod|/bin/lsmod|" "${S}/scripts/check.sh" || \
 		die "Cannot patch check.sh"
-
-	if [ ${PV} != "9999" ]
-	then
-		# Apply patch set
-		EPATCH_SUFFIX="patch" \
-		EPATCH_FORCE="yes" \
-		epatch "${WORKDIR}/${P}-patches"
-	fi
 
 	# splat is unnecessary unless we are debugging
 	use debug || sed -e 's/^subdir-m += splat$//' -i "${S}/module/Makefile.in"
@@ -100,7 +90,6 @@ src_configure() {
 		--with-linux="${KV_DIR}"
 		--with-linux-obj="${KV_OUT_DIR}"
 		$(use_enable debug)
-		$(use_enable debug-log)
 	)
 	autotools-utils_src_configure
 }
