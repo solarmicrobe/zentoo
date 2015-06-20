@@ -55,7 +55,7 @@ inherit libtool
 # Do NOT change this variable in your ebuilds!
 # If you want to force a newer minor version, you can specify the correct
 # WANT value by using a colon:  <PV>:<WANT_AUTOMAKE>
-_LATEST_AUTOMAKE=( 1.13:1.13 1.15:1.15 )
+_LATEST_AUTOMAKE=( 1.14.1:1.14 1.15:1.15 )
 
 _automake_atom="sys-devel/automake"
 _autoconf_atom="sys-devel/autoconf"
@@ -335,7 +335,7 @@ eautoconf() {
 		echo
 		die "No configure.{ac,in} present!"
 	fi
-	if [[ -e configure.in ]] ; then
+	if [[ ${WANT_AUTOCONF} != "2.1" && -e configure.in ]] ; then
 		eqawarn "This package has a configure.in file which has long been deprecated.  Please"
 		eqawarn "update it to use configure.ac instead as newer versions of autotools will die"
 		eqawarn "when it finds this file.  See https://bugs.gentoo.org/426262 for details."
@@ -590,6 +590,17 @@ _autotools_m4dir_include() {
 	echo ${include_opts}
 }
 autotools_m4dir_include()    { _autotools_m4dir_include ${AT_M4DIR} ; }
-autotools_m4sysdir_include() { _autotools_m4dir_include $(eval echo ${AT_SYS_M4DIR}) ; }
+autotools_m4sysdir_include() {
+	# First try to use the paths the system integrator has set up.
+	local paths=( $(eval echo ${AT_SYS_M4DIR}) )
+
+	if [[ ${#paths[@]} -eq 0 && -n ${SYSROOT} ]] ; then
+		# If they didn't give us anything, then default to the SYSROOT.
+		# This helps when cross-compiling.
+		local path="${SYSROOT}/usr/share/aclocal"
+		[[ -d ${path} ]] && paths+=( "${path}" )
+	fi
+	_autotools_m4dir_include "${paths[@]}"
+}
 
 fi

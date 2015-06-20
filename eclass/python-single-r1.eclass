@@ -34,8 +34,28 @@ case "${EAPI:-0}" in
 	0|1|2|3)
 		die "Unsupported EAPI=${EAPI:-0} (too old) for ${ECLASS}"
 		;;
-	4|5)
-		# EAPI=4 is required for USE default deps on USE_EXPAND flags
+	4)
+		# EAPI=4 is only allowed on legacy packages
+		if [[ ${CATEGORY}/${P} == app-arch/threadzip-1.2 ]]; then
+			:
+		elif [[ ${CATEGORY}/${P} == media-libs/lv2-1.8.0 ]]; then
+			:
+		elif [[ ${CATEGORY}/${P} == media-libs/lv2-1.10.0 ]]; then
+			:
+		elif [[ ${CATEGORY}/${P} == sys-apps/paludis-1* ]]; then
+			:
+		elif [[ ${CATEGORY}/${P} == sys-apps/paludis-2.[02].0 ]]; then
+			:
+		elif [[ ${CATEGORY}/${P} == sys-apps/util-linux-2.2[456]* ]]; then
+			:
+		elif [[ ${CATEGORY}/${P} == */gdb-7.[78]* ]]; then
+			:
+		else
+			die "Unsupported EAPI=${EAPI:-4} (too old, allowed only on restricted set of packages) for ${ECLASS}"
+		fi
+		;;
+	5)
+		# EAPI=5 is required for sane USE_EXPAND dependencies
 		;;
 	*)
 		die "Unsupported EAPI=${EAPI} (unknown) for ${ECLASS}"
@@ -377,8 +397,6 @@ python_gen_cond_dep() {
 # the Python build environment up for it.
 python_setup() {
 	debug-print-function ${FUNCNAME} "${@}"
-
-	_python_check_EAPI
 
 	unset EPYTHON
 

@@ -9,6 +9,9 @@
 # @BLURB: Common functions for qmake-based packages.
 # @DESCRIPTION:
 # Utility eclass providing wrapper functions for Qt4 and Qt5 qmake.
+#
+# This eclass does not set any metadata variables nor export any phase
+# functions. It can be inherited safely.
 
 if [[ -z ${_QMAKE_UTILS_ECLASS} ]]; then
 _QMAKE_UTILS_ECLASS=1
@@ -19,6 +22,8 @@ inherit eutils multilib toolchain-funcs
 # @DESCRIPTION:
 # Echoes the directory where Qt4 binaries are installed.
 qt4_get_bindir() {
+	has "${EAPI:-0}" 0 1 2 && use !prefix && EPREFIX=
+
 	local qtbindir=${EPREFIX}/usr/$(get_libdir)/qt4/bin
 	if [[ -d ${qtbindir} ]]; then
 		echo ${qtbindir}
@@ -27,11 +32,45 @@ qt4_get_bindir() {
 	fi
 }
 
+# @FUNCTION: qt4_get_headerdir
+# @DESCRIPTION:
+# Echoes the directory where Qt4 headers are installed.
+# Does not take EPREFIX into account.
+qt4_get_headerdir() {
+	echo /usr/include/qt4
+}
+
+# @FUNCTION: qt4_get_mkspecsdir
+# @DESCRIPTION:
+# Echoes the directory where Qt4 mkspecs are installed.
+# Does not take EPREFIX into account.
+qt4_get_mkspecsdir() {
+	echo /usr/share/qt4/mkspecs
+}
+
 # @FUNCTION: qt5_get_bindir
 # @DESCRIPTION:
 # Echoes the directory where Qt5 binaries are installed.
 qt5_get_bindir() {
+	has "${EAPI:-0}" 0 1 2 && use !prefix && EPREFIX=
+
 	echo ${EPREFIX}/usr/$(get_libdir)/qt5/bin
+}
+
+# @FUNCTION: qt5_get_headerdir
+# @DESCRIPTION:
+# Echoes the directory where Qt5 headers are installed.
+# Does not take EPREFIX into account.
+qt5_get_headerdir() {
+	echo /usr/include/qt5
+}
+
+# @FUNCTION: qt5_get_mkspecsdir
+# @DESCRIPTION:
+# Echoes the directory where Qt5 mkspecs are installed.
+# Does not take EPREFIX into account.
+qt5_get_mkspecsdir() {
+	echo /usr/$(get_libdir)/qt5/mkspecs
 }
 
 # @FUNCTION: qmake-utils_find_pro_file
@@ -101,14 +140,13 @@ eqmake4() {
 
 	local qmake_args=("$@")
 
-	# check if project file was passed as a first argument
-	# if not, then search for it
+	# Check if the project file name was passed as first argument. If not, look for candidates.
 	local regexp='.*\.pro'
 	if ! [[ ${1} =~ ${regexp} ]]; then
 		local project_file=$(qmake-utils_find_pro_file)
 		if [[ -z ${project_file} ]]; then
 			echo
-			eerror "No project files found in '${PWD}'!"
+			eerror "No project files found in '${PWD}'"
 			eerror "This shouldn't happen - please send a bug report to https://bugs.gentoo.org/"
 			echo
 			die "eqmake4 failed"
@@ -116,13 +154,12 @@ eqmake4() {
 		qmake_args+=("${project_file}")
 	fi
 
-	# make sure CONFIG variable is correctly set
-	# for both release and debug builds
-	local config_add="release"
-	local config_remove="debug"
-	if has debug ${IUSE} && use debug; then
-		config_add="debug"
-		config_remove="release"
+	# Make sure the CONFIG variable is correctly set for both release and debug builds.
+	local config_add=release
+	local config_remove=debug
+	if use_if_iuse debug; then
+		config_add=debug
+		config_remove=release
 	fi
 
 	local awkscript='BEGIN {
@@ -200,7 +237,6 @@ eqmake4() {
 		QMAKE_LIBDIR_OPENGL="${EPREFIX}"/usr/$(get_libdir) \
 		"${qmake_args[@]}"
 
-	# was qmake successful?
 	if ! eend $? ; then
 		echo
 		eerror "Running qmake has failed! (see above for details)"
@@ -222,8 +258,6 @@ eqmake4() {
 # specified inside the top-level project file.
 eqmake5() {
 	debug-print-function ${FUNCNAME} "$@"
-
-	has "${EAPI:-0}" 0 1 2 && use !prefix && EPREFIX=
 
 	ebegin "Running qmake"
 
@@ -250,7 +284,6 @@ eqmake5() {
 		QMAKE_LFLAGS_DEBUG= \
 		"$@"
 
-	# was qmake successful?
 	if ! eend $? ; then
 		echo
 		eerror "Running qmake has failed! (see above for details)"

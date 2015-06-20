@@ -1126,22 +1126,6 @@ python_export_utf8_locale() {
 	return 0
 }
 
-# @FUNCTION: _python_check_EAPI
-# @INTERNAL
-# @DESCRIPTION:
-# Check whether the ebuild is not using deprecated EAPI 4. Output
-# a QA warning if it does.
-_python_check_EAPI() {
-	if [[ ${EAPI} == 4 && ! ${_PYTHON_WARNED_EAPI} ]]; then
-		eqawarn "This package is still using EAPI=4. This results in package"
-		eqawarn "dependencies violating PMS and causing issues for package managers."
-		eqawarn "For this reason, using EAPI=4 in new Python packages will be banned"
-		eqawarn "on 2015-03-20 (2 years and 6 months after approving EAPI 5)."
-
-		_PYTHON_WARNED_EAPI=1
-	fi
-}
-
 # -- python.eclass functions --
 
 _python_check_dead_variables() {

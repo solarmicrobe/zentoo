@@ -113,6 +113,8 @@ perl-module_src_configure() {
 	[[ ${SRC_PREP} = yes ]] && return 0
 	SRC_PREP="yes"
 
+	perl_check_env
+
 	perl_set_version
 
 	[[ -z ${pm_echovar} ]] && export PERL_MM_USE_DEFAULT=1
@@ -126,13 +128,25 @@ perl-module_src_configure() {
 	fi
 
 	if [[ ( ${PREFER_BUILDPL} == yes || ! -f Makefile.PL ) && -f Build.PL ]] ; then
-		einfo "Using Module::Build"
-		if [[ ${DEPEND} != *virtual/perl-Module-Build* && ${PN} != Module-Build ]] ; then
-			eqawarn "QA Notice: The ebuild uses Module::Build but doesn't depend on it."
-			eqawarn "           Add virtual/perl-Module-Build to DEPEND!"
-			if [[ -n ${PERLQAFATAL} ]]; then
-				eerror "Bailing out due to PERLQAFATAL=1";
-				die;
+		if grep -q '\(use\|require\)\s*Module::Build::Tiny' Build.PL ; then
+			einfo "Using Module::Build::Tiny"
+			if [[ ${DEPEND} != *dev-perl/Module-Build-Tiny* && ${PN} != Module-Build-Tiny ]]; then
+				eqawarn "QA Notice: The ebuild uses Module::Build::Tiny but doesn't depend on it."
+				eqawarn " Add dev-perl/Module-Build-Tiny to DEPEND!"
+				if [[ -n ${PERLQAFATAL} ]]; then
+					eerror "Bailing out due to PERLQAFATAL=1";
+					die
+				fi
+			fi
+		else
+			einfo "Using Module::Build"
+			if [[ ${DEPEND} != *virtual/perl-Module-Build* && ${DEPEND} != *dev-perl/Module-Build* && ${PN} != Module-Build ]] ; then
+				eqawarn "QA Notice: The ebuild uses Module::Build but doesn't depend on it."
+				eqawarn " Add dev-perl/Module-Build to DEPEND!"
+				if [[ -n ${PERLQAFATAL} ]]; then
+					eerror "Bailing out due to PERLQAFATAL=1";
+					die
+				fi
 			fi
 		fi
 		set -- \
@@ -160,21 +174,6 @@ perl-module_src_configure() {
 		einfo "No Make or Build file detected..."
 		return
 	fi
-}
-
-# @FUNCTION: perl-module_src_prep
-# @USAGE: perl-module_src_prep
-# @DESCRIPTION:
-# Configure the ebuild sources (bis).
-#
-# This function is still around for historical reasons 
-# and will be soon deprecated.
-#
-# Please use the function above instead, perl-module_src_configure().
-perl-module_src_prep() {
-	debug-print-function $FUNCNAME "$@"
-	ewarn "perl-modules.eclass: perl-module_src_prep is deprecated and will be removed. Please use perl-module_src_configure instead."
-	perl-module_src_configure
 }
 
 # @FUNCTION: perl-module_src_compile
@@ -256,23 +255,22 @@ perl-module_src_install() {
 
 	local f
 
-	if [[ -z ${mytargets} ]] ; then
+	if [[ -f Build ]]; then
+		mytargets="${mytargets:-install}"
+		mbparams="${mbparams:---pure}"
+		einfo "./Build ${mytargets} ${mbparams}"
+		./Build ${mytargets} ${mbparams} \
+			|| die "./Build ${mytargets} ${mbparams} failed"
+	elif [[ -f Makefile ]]; then
 		case "${CATEGORY}" in
 			dev-perl|perl-core) mytargets="pure_install" ;;
 			*)                  mytargets="install" ;;
 		esac
-	fi
-
-	if [[ $(declare -p myinst 2>&-) != "declare -a myinst="* ]]; then
-		local myinst_local=(${myinst})
-	else
-		local myinst_local=("${myinst[@]}")
-	fi
-
-	if [[ -f Build ]] ; then
-		./Build ${mytargets} \
-			|| die "./Build ${mytargets} failed"
-	elif [[ -f Makefile ]] ; then
+		if [[ $(declare -p myinst 2>&-) != "declare -a myinst="* ]]; then
+			local myinst_local=(${myinst})
+		else
+			local myinst_local=("${myinst[@]}")
+		fi
 		emake "${myinst_local[@]}" ${mytargets} \
 			|| die "emake ${myinst_local[@]} ${mytargets} failed"
 	fi
@@ -287,28 +285,6 @@ perl-module_src_install() {
 	done
 
 	perl_link_duallife_scripts
-}
-
-# @FUNCTION: perl-module_pkg_setup
-# @USAGE: perl-module_pkg_setup
-# @DESCRIPTION:
-# This function was to be called during the pkg_setup() phase.
-# Deprecated, to be removed. Where it is called, place a call to perl_set_version instead.
-perl-module_pkg_setup() {
-	debug-print-function $FUNCNAME "$@"
-	ewarn "perl-modules.eclass: perl-module_pkg_setup is deprecated and will be removed. Please use perl_set_version instead."
-	perl_set_version
-}
-
-# @FUNCTION: perl-module_pkg_preinst
-# @USAGE: perl-module_pkg_preinst
-# @DESCRIPTION:
-# This function was to be called during the pkg_preinst() phase.
-# Deprecated, to be removed. Where it is called, place a call to perl_set_version instead.
-perl-module_pkg_preinst() {
-	debug-print-function $FUNCNAME "$@"
-	ewarn "perl-modules.eclass: perl-module_pkg_preinst is deprecated and will be removed. Please use perl_set_version instead."
-	perl_set_version
 }
 
 # @FUNCTION: perl-module_pkg_postinst
@@ -326,16 +302,6 @@ perl-module_pkg_postinst() {
 		return 0
 	fi
 	perl_link_duallife_scripts
-}
-
-# @FUNCTION: perl-module_pkg_prerm
-# @USAGE: perl-module_pkg_prerm
-# @DESCRIPTION:
-# This function was to be called during the pkg_prerm() phase.
-# It does not do anything. Deprecated, to be removed.
-perl-module_pkg_prerm() {
-	debug-print-function $FUNCNAME "$@"
-	ewarn "perl-module.eclass: perl-module_pkg_prerm does not do anything and will be removed. Please remove the call."
 }
 
 # @FUNCTION: perl-module_pkg_postrm
@@ -381,18 +347,6 @@ perl_set_version() {
 	VENDOR_ARCH=${installvendorarch}
 }
 
-# @FUNCTION: perlinfo
-# @USAGE: perlinfo
-# @DESCRIPTION:
-# This function is deprecated.
-# 
-# Please use the function above instead, perl_set_version().
-perlinfo() {
-	debug-print-function $FUNCNAME "$@"
-	ewarn "perl-modules.eclass: perlinfo is deprecated and will be removed. Please use perl_set_version instead."
-	perl_set_version
-}
-
 # @FUNCTION: perl_delete_localpod
 # @USAGE: perl_delete_localpod
 # @DESCRIPTION:
@@ -404,18 +358,6 @@ perl_delete_localpod() {
 
 	find "${D}" -type f -name perllocal.pod -delete
 	find "${D}" -depth -mindepth 1 -type d -empty -delete
-}
-
-# @FUNCTION: fixlocalpod
-# @USAGE: fixlocalpod
-# @DESCRIPTION:
-# This function is deprecated. 
-#
-# Please use the function above instead, perl_delete_localpod().
-fixlocalpod() {
-	debug-print-function $FUNCNAME "$@"
-	ewarn "perl-modules.eclass: fixlocalpod is deprecated and will be removed. Please use perl_delete_localpod instead."
-	perl_delete_localpod
 }
 
 # @FUNCTION: perl_fix_osx_extra
@@ -551,4 +493,54 @@ perl_link_duallife_scripts() {
 		done
 		popd > /dev/null
 	fi
+}
+
+# @FUNCTION: perl_check_env
+# @USAGE: perl_check_env
+# @DESCRIPTION:
+# Checks a blacklist of known-suspect ENV values that can be accidentally set by users
+# doing personal perl work, which may accidentally leak into portage and break the
+# system perl installaton.
+# Dies if any of the suspect fields are found, and tell the user what needs to be unset.
+# There's a workaround, but you'll have to read the code for it.
+perl_check_env() {
+	local errored value;
+
+	for i in PERL_MM_OPT PERL5LIB PERL5OPT PERL_MB_OPT PERL_CORE PERLPREFIX; do
+		# Next unless match
+		[ -v $i ] || continue;
+
+		# Warn only once, and warn only when one of the bad values are set.
+		# record failure here.
+		if [ ${errored:-0} == 0 ]; then
+			if [ -n "${I_KNOW_WHAT_I_AM_DOING}" ]; then
+				elog "perl-module.eclass: Suspicious environment values found.";
+			else
+				eerror "perl-module.eclass: Suspicious environment values found.";
+			fi
+		fi
+		errored=1
+
+		# Read ENV Value
+		eval "value=\$$i";
+
+		# Print ENV name/value pair
+		if [ -n "${I_KNOW_WHAT_I_AM_DOING}" ]; then
+			elog "    $i=\"$value\"";
+		else
+			eerror "    $i=\"$value\"";
+		fi
+	done
+
+	# Return if there were no failures
+	[ ${errored:-0} == 0 ] && return;
+
+	# Return if user knows what they're doing
+	if [ -n "${I_KNOW_WHAT_I_AM_DOING}" ]; then
+		elog "Continuing anyway, seems you know what you're doing."
+		return
+	fi
+
+	eerror "Your environment settings may lead to undefined behavior and/or build failures."
+	die "Please fix your environment ( ~/.bashrc, package.env, ... ), see above for details."
 }

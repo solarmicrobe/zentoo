@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: python.eclass
@@ -259,7 +259,7 @@ _python_parse_PYTHON_DEPEND() {
 }
 
 if _python_implementation; then
-	DEPEND=">=app-admin/eselect-python-20091230"
+	DEPEND=">=app-eselect/eselect-python-20091230"
 	RDEPEND="${DEPEND}"
 	PDEPEND="app-admin/python-updater"
 fi
