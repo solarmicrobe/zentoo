@@ -16,6 +16,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
+RDEPEND="dev-ruby/rubygems[ruby_targets_ruby22]"
+
 pkg_setup() { :; }
 src_unpack() { :; }
 src_prepare() { :; }
