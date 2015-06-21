@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -19,7 +19,7 @@ SLOT="3.0"
 KEYWORDS="amd64"
 IUSE=""
 
-DEPEND="|| ( app-admin/eselect-java app-admin/eselect-maven )"
+DEPEND="|| ( app-eselect/eselect-java app-eselect/eselect-maven )"
 RDEPEND=">=virtual/jdk-1.5
 	${DEPEND}"
 

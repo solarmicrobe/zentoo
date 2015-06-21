@@ -1,12 +1,15 @@
 # skip unnecessary dependencies
+app-admin/logrotate cron
 app-admin/sysstat cron
 app-arch/dpkg nls
+app-doc/doxygen doxysearch
 app-editors/joe xterm
 app-emulation/docker aufs
 app-emulation/qemu tls usbredir xen
-app-emulation/virtualbox vboxwebsrv
+app-emulation/virtualbox vboxwebsrv java
 app-text/docbook-xsl-stylesheets ruby
 app-text/texlive-core xetex
+dev-db/sqlite tools
 dev-java/ant testutil
 dev-lang/ghc ghcbootstrap
 dev-lang/php sqlite
@@ -19,9 +22,10 @@ dev-python/ipython smp octave matplotlib nbconvert notebook
 dev-python/psycopg mxdatetime
 dev-ruby/rubygems server
 dev-util/boost-build python
+dev-util/cmake system-jsoncpp
 dev-vcs/bzr curl
 dev-vcs/git cgi
-dev-vcs/subversion webdav-serf
+dev-vcs/subversion webdav-serf ruby ctypes-python
 gnome-base/librsvg tools
 media-gfx/graphviz devil gts
 media-gfx/imagemagick autotrace fftw raw opencl
@@ -35,6 +39,7 @@ net-analyzer/rrdtool dbi perl ruby
 net-analyzer/tcpdump smi
 net-dns/pdns opendbx sqlite
 net-ftp/lftp verify-file
+net-ftp/pure-ftpd sysquota
 net-libs/libpcap canusb netlink
 net-libs/zeromq pgm
 net-mail/dovecot lucene
@@ -42,7 +47,7 @@ net-misc/curl metalink rtmp ssh
 net-misc/openssh ldns skey ssh1
 sys-apps/acl nfs
 sys-apps/help2man nls
-sys-apps/systemd http qrcode ssl terminal xkb
+sys-apps/systemd http qrcode ssl terminal xkb gnuefi appamor terminal cryptsetup
 sys-devel/gcc graphite
 sys-fs/btrfs-progs debug-utils
 sys-fs/udev extras
@@ -68,9 +73,6 @@ www-servers/uwsgi perl
 
 # do not depend on python-3.3
 sys-apps/portage xattr
-
-# skip ruby18
-dev-vcs/subversion ruby
 
 # force disable bindist on openssl
 dev-libs/openssl bindist

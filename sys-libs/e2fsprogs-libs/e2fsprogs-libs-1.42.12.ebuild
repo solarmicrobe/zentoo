@@ -9,7 +9,7 @@ case ${PV} in
 *)      UP_PV=${PV} ;;
 esac
 
-inherit autotools toolchain-funcs eutils multilib-minimal
+inherit toolchain-funcs eutils multilib-minimal
 
 DESCRIPTION="e2fsprogs libraries (common error and subsystem)"
 HOMEPAGE="http://e2fsprogs.sourceforge.net/"
@@ -35,10 +35,7 @@ S=${WORKDIR}/${P%_pre*}
 src_prepare() {
 	printf 'all:\n%%:;@:\n' > doc/Makefile.in # don't bother with docs #305613
 	epatch "${FILESDIR}"/${PN}-1.42.9-no-quota.patch
-	epatch "${FILESDIR}"/${PN}-1.42.10-fix-build-cflags.patch
-	# Not everyone has gettext installed (like USE=-nls).
-	echo 'm4_ifndef([AM_GNU_GETTEXT],[m4_define([AM_GNU_GETTEXT])])' >> acinclude.m4
-	eautoreconf
+	epatch "${FILESDIR}"/${PN}-1.42.10-fix-build-cflags.patch #516854
 }
 
 multilib_src_configure() {

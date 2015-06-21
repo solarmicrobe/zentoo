@@ -23,6 +23,7 @@ RDEPEND="
 "
 DEPEND="
 	${RDEPEND}
+	sys-devel/autoconf
 	virtual/pkgconfig
 "
 

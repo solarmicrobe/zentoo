@@ -15,12 +15,6 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="acl -cvs doc emacs git java nls +cxx ncurses openmp static-libs elibc_glibc elibc_musl"
 
-if [[ ${PV} =~ _rc ]] ; then
-	SRC_URI="mirror://gnu-alpha/${PN}/${P/_/-}.tar.xz"
-	KEYWORDS="amd64"
-	S="${WORKDIR}/${P/_/-}"
-fi
-
 # only runtime goes multilib
 DEPEND=">=virtual/libiconv-0-r1[${MULTILIB_USEDEP}]
 	dev-libs/libxml2
@@ -144,14 +138,5 @@ multilib_src_install_all() {
 }
 
 pkg_preinst() {
-	# older gettext's sometimes installed libintl ...
-	# need to keep the linked version or the system
-	# could die (things like sed link against it :/)
-	preserve_old_lib /{,usr/}$(get_libdir)/libintl$(get_libname 7)
-
 	java-pkg-opt-2_pkg_preinst
-}
-
-pkg_postinst() {
-	preserve_old_lib_notify /{,usr/}$(get_libdir)/libintl$(get_libname 7)
 }

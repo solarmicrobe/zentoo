@@ -43,9 +43,7 @@ src_compile() {
 }
 
 src_install() {
-	fperms +x gtkdoc-rebase
-	exeinto /usr/bin/
-	doexe gtkdoc-rebase
+	dobin gtkdoc-rebase
 
 	insinto /usr/share/aclocal
 	doins gtk-doc.m4

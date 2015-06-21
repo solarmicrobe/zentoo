@@ -16,10 +16,4 @@ KEYWORDS="amd64"
 IUSE="embedded minimal static static-libs"
 
 DEPEND=""
-RDEPEND="|| (
-	=dev-db/mariadb-10.0*[embedded=,minimal=,static=,static-libs=,${MULTILIB_USEDEP}]
-	=dev-db/mysql-${PV}*[embedded=,minimal=,static=,static-libs=,${MULTILIB_USEDEP}]
-	=dev-db/percona-server-${PV}*[embedded=,minimal=,static=,static-libs=,${MULTILIB_USEDEP}]
-	=dev-db/mariadb-galera-10.0*[embedded=,minimal=,static=,static-libs=,${MULTILIB_USEDEP}]
-	=dev-db/mysql-cluster-7.3*[embedded=,minimal=,static=,static-libs=,${MULTILIB_USEDEP}]
-)"
+RDEPEND="=dev-db/mysql-${PV}*"

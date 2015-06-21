@@ -17,4 +17,6 @@ RDEPEND="
 	|| ( =dev-lang/perl-5.20* ~perl-core/${PN#perl-}-${PV} )
 	!<perl-core/${PN#perl-}-${PV}
 	!>perl-core/${PN#perl-}-${PV}-r999
+	>=virtual/perl-Compress-Raw-Zlib-${PV}
+	>=virtual/perl-Compress-Raw-Bzip2-${PV}
 "

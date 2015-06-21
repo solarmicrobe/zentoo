@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -109,7 +109,7 @@ do_filter_flags() {
 	strip-flags
 }
 
-PATCH_VER="1.8"
+PATCH_VER="1.9"
 
 DESCRIPTION="Compatibility package for running binaries linked against a pre gcc 3.4 libstdc++"
 HOMEPAGE="http://gcc.gnu.org/libstdc++/"
@@ -121,7 +121,7 @@ SLOT="5"
 KEYWORDS="amd64"
 IUSE="multilib nls"
 
-DEPEND="<sys-devel/bison-3"
+DEPEND="sys-devel/bison"
 RDEPEND=""
 
 S=${WORKDIR}/gcc-${PV}

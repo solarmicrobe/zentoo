@@ -10,5 +10,8 @@ SLOT="1.8"
 #       no longer provides them. Also temporarily dropped ~ia64.
 KEYWORDS="amd64"
 
-RDEPEND="=virtual/jdk-1.8.0*"
+RDEPEND="|| (
+		=virtual/jdk-1.8.0*
+		=dev-java/oracle-jre-bin-1.8.0*
+	)"
 DEPEND=""

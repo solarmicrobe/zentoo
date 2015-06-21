@@ -28,7 +28,7 @@ DEPEND="${RDEPEND}
 		=app-text/docbook-sgml-dtd-3.1*
 		app-text/docbook-sgml-utils[jadetex]
 	)"
-PDEPEND="!x86-winnt? ( app-admin/eselect-fontconfig )
+PDEPEND="!x86-winnt? ( app-eselect/eselect-fontconfig )
 	virtual/ttf-fonts"
 
 PATCHES=(

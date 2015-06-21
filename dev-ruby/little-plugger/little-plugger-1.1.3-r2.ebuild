@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -24,7 +24,7 @@ KEYWORDS="amd64"
 
 all_ruby_prepare() {
 	# Remove default metadata because it confused jruby.
-	rm ../metadata || die
+	rm -f ../metadata || die
 
 	epatch "${FILESDIR}"/${P}-ruby20-spec.patch
 }

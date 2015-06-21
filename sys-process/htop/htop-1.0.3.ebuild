@@ -1,10 +1,10 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_6,2_7} )
+PYTHON_COMPAT=( python2_7 )
 
 AUTOTOOLS_AUTORECONF=true
 
@@ -21,6 +21,7 @@ IUSE="kernel_FreeBSD kernel_linux oom openvz unicode vserver"
 
 RDEPEND="sys-libs/ncurses[unicode?]"
 DEPEND="${RDEPEND}
+	${PYTHON_DEPS}
 	virtual/pkgconfig"
 
 DOCS=( ChangeLog README )

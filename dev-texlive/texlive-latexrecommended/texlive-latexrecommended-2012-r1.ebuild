@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -28,6 +28,7 @@ DEPEND=">=dev-texlive/texlive-latex-2012
 !dev-tex/xkeyval
 !dev-tex/memoir
 !dev-tex/listings
+!dev-tex/mh
 !<dev-texlive/texlive-latexextra-2011
 !=app-text/texlive-core-2007*
 !<dev-texlive/texlive-xetex-2011

@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -24,7 +24,7 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="amd64"
 
-DEPEND=">=virtual/jdk-1.5
+DEPEND="|| ( >=virtual/jdk-1.5 dev-java/gcj-jdk )
 	!dev-java/ant-tasks
 	!dev-java/ant-optional"
 RDEPEND="${DEPEND}"

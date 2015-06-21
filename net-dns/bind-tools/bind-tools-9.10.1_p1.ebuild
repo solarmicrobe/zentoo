@@ -70,6 +70,7 @@ src_configure() {
 		--without-libjson \
 		$(use_enable ipv6) \
 		$(use_with idn) \
+		$(usex idn --with-idnlib=-lidnkit '') \
 		$(use_with ssl openssl "${EPREFIX}"/usr) \
 		$(use_with xml libxml2) \
 		$(use_with gssapi) \

@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit eutils multilib-minimal toolchain-funcs
+inherit eutils multilib-minimal toolchain-funcs flag-o-matic
 
 DESCRIPTION="Asynchronous input/output library that uses the kernels native interface"
 HOMEPAGE="https://git.fedorahosted.org/cgit/libaio.git/  http://lse.sourceforge.net/io/aio.html"
@@ -35,6 +35,16 @@ src_prepare() {
 	sed -i "${sed_args[@]}" src/Makefile Makefile || die
 
 	multilib_copy_sources
+}
+
+multilib_src_configure() {
+	if use arm ; then
+		# When building for thumb, we can't allow frame pointers.
+		# http://crbug.com/464517
+		if $(tc-getCPP) ${CFLAGS} ${CPPFLAGS} - <<<$'#ifndef __thumb__\n#error\n#endif' >&/dev/null ; then
+			append-flags -fomit-frame-pointer
+		fi
+	fi
 }
 
 _emake() {

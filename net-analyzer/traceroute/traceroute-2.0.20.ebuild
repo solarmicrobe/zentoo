@@ -15,7 +15,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="static"
 
-RDEPEND="!<net-misc/iputils-20121221-r1"
+RDEPEND="!<net-misc/iputils-20121221-r1
+	!net-misc/iputils[traceroute]"
 
 src_compile() {
 	use static && append-ldflags -static

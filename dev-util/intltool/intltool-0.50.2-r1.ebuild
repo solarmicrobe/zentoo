@@ -24,7 +24,7 @@ RDEPEND="${DEPEND}
 DOCS=( AUTHORS ChangeLog NEWS README TODO doc/I18N-HOWTO )
 
 src_prepare() {
-	# Use plain localedir to install mo files to, rather than trying to 
+	# Use plain localedir to install mo files to, rather than trying to
 	# guess one, bug #432848#c11
 	epatch "${FILESDIR}/${P}-localedir-fix.patch"
 
