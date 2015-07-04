@@ -18,18 +18,21 @@ dev-libs/glib utils systemtap
 dev-libs/libnatspec python
 dev-libs/ossp-uuid php
 dev-libs/ppl lpsol
+dev-libs/protobuf java
 dev-python/ipython smp octave matplotlib nbconvert notebook
 dev-python/psycopg mxdatetime
 dev-ruby/rubygems server
 dev-util/boost-build python
 dev-util/cmake system-jsoncpp
+dev-util/oprofile java
 dev-vcs/bzr curl
 dev-vcs/git cgi
-dev-vcs/subversion webdav-serf ruby ctypes-python
+dev-vcs/subversion webdav-serf ruby ctypes-python java
 gnome-base/librsvg tools
-media-gfx/graphviz devil gts
+media-gfx/graphviz devil gts java
 media-gfx/imagemagick autotrace fftw raw opencl
 media-libs/harfbuzz graphite
+media-libs/libjpeg-turbo java
 media-libs/libsdl audio aalib
 media-libs/mesa xorg
 net-analyzer/nagios-plugins ups nagios-game nagios-ping snmp jabber
@@ -37,6 +40,7 @@ net-analyzer/net-snmp netlink
 net-analyzer/nmap lua zenmap
 net-analyzer/rrdtool dbi perl ruby
 net-analyzer/tcpdump smi
+net-dns/libidn java
 net-dns/pdns opendbx sqlite
 net-ftp/lftp verify-file
 net-ftp/pure-ftpd sysquota
@@ -49,9 +53,11 @@ sys-apps/acl nfs
 sys-apps/help2man nls
 sys-apps/systemd http qrcode ssl terminal xkb gnuefi appamor terminal cryptsetup
 sys-devel/gcc graphite
+sys-devel/gettext java
 sys-fs/btrfs-progs debug-utils
 sys-fs/udev extras
 sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_bootchart dracut_modules_cifs
+sys-libs/db java
 www-servers/tornado curl
 www-servers/uwsgi uwsgi_plugins_rsyslog uwsgi_plugins_alarm_xmpp uwsgi_plugins_rrdtool uwsgi_plugins_rados
 
