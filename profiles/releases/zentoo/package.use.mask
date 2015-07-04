@@ -77,3 +77,6 @@ sys-apps/portage xattr
 # force disable bindist on openssl
 dev-libs/openssl bindist
 net-misc/openssh bindist
+
+# enable support for kernel-builtin
+sys-fs/zfs -kernel-builtin

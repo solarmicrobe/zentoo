@@ -16,3 +16,6 @@ app-backup/duplicity s3
 
 # enable more features
 sys-apps/systemd elfutils lz4 sysv-utils
+
+# included in sys-kernel/zentoo-image
+sys-fs/zfs kernel-builtin
