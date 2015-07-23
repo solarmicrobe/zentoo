@@ -80,6 +80,9 @@ SRC_URI="mirror://gentoo/${PN}-${TARBALL_PV}.tar.bz2
 python_prepare_all() {
 	distutils-r1_python_prepare_all
 
+	# be quiet!
+	sed -i -e '1022,+3d' pym/portage/dbapi/bintree.py || die
+
 	if ! use ipc ; then
 		einfo "Disabling ipc..."
 		sed -e "s:_enable_ipc_daemon = True:_enable_ipc_daemon = False:" \
