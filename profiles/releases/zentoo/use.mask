@@ -650,3 +650,6 @@ video_cards_virtualbox
 video_cards_vmware
 video_cards_voodoo
 video_cards_xgi
+
+# support PHP 5.3 for now
+-php_targets_php5-3
