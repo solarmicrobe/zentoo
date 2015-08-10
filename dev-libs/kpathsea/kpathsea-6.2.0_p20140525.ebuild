@@ -1,12 +1,12 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit texlive-common eutils libtool
+inherit texlive-common eutils libtool prefix
 
-TEXMFD_VERSION="4"
+TEXMFD_VERSION="6"
 
 DESCRIPTION="Library implementing generic path searching, configuration, and TeX-specific file searching"
 HOMEPAGE="http://tug.org/texlive/"
@@ -14,17 +14,17 @@ SRC_URI="mirror://gentoo/texlive-${PV#*_p}-source.tar.xz
 	mirror://gentoo/${PN}-texmf.d-${TEXMFD_VERSION}.tar.xz"
 
 LICENSE="GPL-2"
-SLOT="0"
+SLOT="0/${PV%_p*}"
 KEYWORDS="amd64"
 IUSE="doc source static-libs"
 
-DEPEND="!<app-text/texlive-core-2010
+DEPEND="!<app-text/texlive-core-2013
 	!app-text/ptex"
 RDEPEND="${DEPEND}"
 
 S=${WORKDIR}/texlive-${PV#*_p}-source/texk/${PN}
 
-TL_VERSION=2012
+TL_VERSION=2014
 EXTRA_TL_MODULES="kpathsea"
 EXTRA_TL_DOC_MODULES="kpathsea.doc"
 
@@ -38,9 +38,13 @@ for i in ${EXTRA_TL_DOC_MODULES} ; do
 done
 SRC_URI="${SRC_URI} ) "
 
+TEXMF_PATH=/usr/share/texmf-dist
+
 src_prepare() {
 	cd "${WORKDIR}/texlive-${PV#*_p}-source"
 	S="${WORKDIR}/texlive-${PV#*_p}-source" elibtoolize #sane .so versionning on gfbsd
+	cp "${FILESDIR}/texmf-update-r1" "${S}"/texmf-update
+	eprefixify "${S}"/texmf-update
 }
 
 src_configure() {
@@ -57,11 +61,11 @@ src_configure() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" web2cdir="${EPREFIX}/usr/share/texmf/web2c" install
+	emake DESTDIR="${D}" web2cdir="${EPREFIX}/usr/share/texmf-dist/web2c" install
 	find "${D}" -name '*.la' -delete
 
 	dodir /usr/share # just in case
-	cp -pR "${WORKDIR}"/texmf "${ED}/usr/share/" || die "failed to install texmf trees"
+	cp -pR "${WORKDIR}"/texmf-dist "${ED}/usr/share/" || die "failed to install texmf trees"
 	if use source ; then
 		cp -pR "${WORKDIR}"/tlpkg "${ED}/usr/share/" || die "failed to install tlpkg files"
 	fi
@@ -89,10 +93,12 @@ src_install() {
 	dosym /etc/texmf/web2c/fmtutil.cnf ${TEXMF_PATH}/web2c/fmtutil.cnf
 	dosym /etc/texmf/web2c/texmf.cnf ${TEXMF_PATH}/web2c/texmf.cnf
 
+	newsbin "${S}/texmf-update" texmf-update
+
 	# Keep it as that's where the formats will go
 	keepdir /var/lib/texmf
 
-	dodoc BUGS ChangeLog NEWS PROJECTS README
+	dodoc ChangeLog NEWS PROJECTS README
 }
 
 pkg_postinst() {

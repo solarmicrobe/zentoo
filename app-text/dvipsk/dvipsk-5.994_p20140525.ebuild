@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,14 +6,14 @@ EAPI=4
 
 #TL_UPSTREAM_PATCHLEVEL="1"
 
-inherit texlive-common eutils
+inherit texlive-common eutils flag-o-matic toolchain-funcs
 
 DESCRIPTION="DVI-to-PostScript translator"
 HOMEPAGE="http://tug.org/texlive/"
 SRC_URI="mirror://gentoo/texlive-${PV#*_p}-source.tar.xz"
 #SRC_URI="${SRC_URI} mirror://gentoo/texlive-core-upstream-patches-${TL_UPSTREAM_PATCHLEVEL}.tar.xz"
 
-TL_VERSION=2012
+TL_VERSION=2014
 EXTRA_TL_MODULES="dvips"
 EXTRA_TL_DOC_MODULES="dvips.doc"
 
@@ -32,12 +32,13 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc source"
 
-DEPEND=">=dev-libs/kpathsea-6.1.0_p20120701"
+DEPEND=">=dev-libs/kpathsea-6.2.0"
 RDEPEND="
 	!<app-text/texlive-core-2010
 	!<dev-texlive/texlive-basic-2009
 	!app-text/ptex
 	${DEPEND}"
+DEPEND="${DEPEND} virtual/pkgconfig"
 
 S=${WORKDIR}/texlive-${PV#*_p}-source/texk/${PN}
 
@@ -47,14 +48,14 @@ S=${WORKDIR}/texlive-${PV#*_p}-source/texk/${PN}
 #}
 
 src_configure() {
+	has_version '>=dev-libs/kpathsea-6.2.1' && append-cppflags "$($(tc-getPKG_CONFIG) --cflags kpathsea)"
 	econf --with-system-kpathsea
 }
 
 src_install() {
-	emake DESTDIR="${D}" prologdir="${EPREFIX}/usr/share/texmf/dvips/base" install
+	emake DESTDIR="${D}" prologdir="${EPREFIX}/usr/share/texmf-dist/dvips/base" install
 
 	dodir /usr/share # just in case
-	cp -pR "${WORKDIR}"/texmf "${ED}/usr/share/" || die "failed to install texmf trees"
 	cp -pR "${WORKDIR}"/texmf-dist "${ED}/usr/share/" || die "failed to install texmf trees"
 	if use source ; then
 		cp -pR "${WORKDIR}"/tlpkg "${ED}/usr/share/" || die "failed to install tlpkg files"

@@ -1,24 +1,24 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
+EAPI="5"
 
 TEXLIVE_MODULE_CONTENTS="accfonts afm2pl dosepsbin epstopdf fontware lcdftypetools ps2pkm pstools psutils dvipsconfig fontinst fontools mf2pt1 t1utils collection-fontutils
 "
-TEXLIVE_MODULE_DOC_CONTENTS="accfonts.doc afm2pl.doc dosepsbin.doc epstopdf.doc fontware.doc lcdftypetools.doc pstools.doc psutils.doc fontinst.doc fontools.doc mf2pt1.doc t1utils.doc "
+TEXLIVE_MODULE_DOC_CONTENTS="accfonts.doc afm2pl.doc dosepsbin.doc epstopdf.doc fontware.doc lcdftypetools.doc ps2pkm.doc pstools.doc psutils.doc fontinst.doc fontools.doc mf2pt1.doc t1utils.doc "
 TEXLIVE_MODULE_SRC_CONTENTS="dosepsbin.source fontinst.source "
 inherit  texlive-module
 DESCRIPTION="TeXLive Graphics and font utilities"
 
-LICENSE="GPL-2 Artistic GPL-1 LPPL-1.3 public-domain TeX-other-free"
+LICENSE=" Artistic GPL-1 GPL-2 LPPL-1.3 public-domain TeX-other-free "
 SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
-DEPEND=">=dev-texlive/texlive-basic-2012
+DEPEND=">=dev-texlive/texlive-basic-2014
 !dev-texlive/texlive-psutils
 !<dev-texlive/texlive-fontsextra-2009
-!<app-text/texlive-core-2009
+!<app-text/texlive-core-2013
 "
 RDEPEND="${DEPEND} "
 TEXLIVE_MODULE_BINSCRIPTS="
@@ -31,4 +31,10 @@ TEXLIVE_MODULE_BINSCRIPTS="
 	texmf-dist/scripts/fontools/ot2kpx
 	texmf-dist/scripts/mf2pt1/mf2pt1.pl
 	texmf-dist/scripts/dosepsbin/dosepsbin.pl
+	texmf-dist/scripts/texlive/fontinst.sh
+	texmf-dist/scripts/texlive/ps2frag.sh
+	texmf-dist/scripts/texlive/pslatex.sh
+"
+TEXLIVE_MODULE_BINLINKS="
+	epstopdf:repstopdf
 "
