@@ -12,16 +12,16 @@ if [[ ${PV} = 9999 ]]; then
 	EGIT_REPO_URI="git://github.com/golang/go.git"
 	inherit git-r3
 else
-	SRC_URI="https://storage.googleapis.com/golang/go${PV}.src.tar.gz"
+	SRC_URI="https://storage.googleapis.com/golang/go${PV/_/}.src.tar.gz"
 	# Upstream only supports go on amd64, arm and x86 architectures.
-	KEYWORDS="-* amd64"
+	KEYWORDS="-* ~amd64"
 fi
 
 DESCRIPTION="A concurrent garbage collected and typesafe programming language"
 HOMEPAGE="http://www.golang.org"
 
 LICENSE="BSD"
-SLOT="0/${PV}"
+SLOT="0/${PV/_rc*}"
 IUSE=""
 
 DEPEND=">=dev-lang/go-bootstrap-1.4.1"
