@@ -10,15 +10,11 @@ MY_PV=$(replace_version_separator 2 '-')
 
 SRC_URI_BASE="ftp://ftp.hp.com/pub/softlib2/software1/pubsw-linux"
 AMD64_PID="1257348637"
-AMD64_VID="77370"
-X86_PID="414707558"
-X86_VID="77371"
+AMD64_VID="80070"
 
 DESCRIPTION="HP Array Configuration Utility Command Line Interface (HPACUCLI, formerly CPQACUXE)"
 HOMEPAGE="http://h18000.www1.hp.com/products/servers/linux/documentation.html"
-SRC_URI="
-	amd64? ( ${SRC_URI_BASE}/p${AMD64_PID}/v${AMD64_VID}/${PN}-${MY_PV}.x86_64.rpm )
-	x86? ( ${SRC_URI_BASE}/p${X86_PID}/v${X86_VID}/${PN}-${MY_PV}.i386.rpm )"
+SRC_URI="amd64? ( ${SRC_URI_BASE}/p${AMD64_PID}/v${AMD64_VID}/${PN}-${MY_PV}.x86_64.rpm )"
 
 LICENSE="hp-proliant-essentials"
 SLOT="0"
