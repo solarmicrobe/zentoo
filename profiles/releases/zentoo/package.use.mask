@@ -8,7 +8,6 @@ app-emulation/docker aufs
 app-emulation/qemu tls usbredir xen
 app-emulation/virtualbox vboxwebsrv java
 app-text/docbook-xsl-stylesheets ruby
-app-text/texlive-core xetex
 dev-db/sqlite tools
 dev-java/ant testutil
 dev-lang/ghc ghcbootstrap
@@ -31,7 +30,6 @@ dev-vcs/subversion webdav-serf ruby ctypes-python java
 gnome-base/librsvg tools
 media-gfx/graphviz devil gts java
 media-gfx/imagemagick autotrace fftw raw opencl
-media-libs/harfbuzz graphite
 media-libs/libjpeg-turbo java
 media-libs/libsdl audio aalib
 media-libs/mesa xorg
@@ -68,6 +66,7 @@ app-editors/vim perl
 dev-db/postgresql perl
 dev-lang/R perl
 dev-libs/ossp-uuid perl
+media-gfx/graphite2 perl
 media-gfx/imagemagick perl
 net-analyzer/mk-livestatus perl
 net-libs/liboping perl

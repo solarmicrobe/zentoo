@@ -125,7 +125,6 @@ hesiod
 hscolour
 ibm
 icq
-icu
 ieee1394
 infinality
 interbase
