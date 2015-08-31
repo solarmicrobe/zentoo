@@ -19,3 +19,6 @@ app-admin/eselect-php fpm
 
 # lots of git tools depend on perl :-(
 dev-vcs/git perl
+
+# to make texlive happy
+media-libs/harfbuzz icu
