@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -27,6 +27,7 @@ src_unpack() {
 }
 
 src_install() {
-	insinto /
-	doins -r "${S}"/*
+	mv "${S}"/* "${D}"/ || die
+	dodir /etc/revdep-rebuild
+	echo "SEARCH_DIRS_MASK=\"/usr/lib*/insync\"" > "${D}/etc/revdep-rebuild/70${PN}" || die
 }
