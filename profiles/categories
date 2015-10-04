@@ -14,6 +14,7 @@ app-shells
 app-text
 app-vim
 dev-db
+dev-go
 dev-lang
 dev-libs
 dev-perl
