@@ -27,7 +27,7 @@ SLOT="0/${PV}"
 IUSE=""
 
 DEPEND=">=dev-lang/go-bootstrap-1.4.1"
-RDEPEND=""
+RDEPEND="!<dev-go/go-tools-0_pre20150902"
 
 # These test data objects have writable/executable stacks.
 QA_EXECSTACK="usr/lib/go/src/debug/elf/testdata/*.obj"
@@ -59,9 +59,9 @@ go_arch()
 go_arm()
 {
 	case "${1:-${CHOST}}" in
-		armv5)	echo 5;;
-		armv6)	echo 6;;
-		armv7)	echo 7;;
+		armv5*)	echo 5;;
+		armv6*)	echo 6;;
+		armv7*)	echo 7;;
 		*)
 			die "unknown GOARM for ${1:-${CHOST}}"
 			;;
