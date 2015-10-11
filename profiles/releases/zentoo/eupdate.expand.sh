@@ -9,6 +9,7 @@ app-text/docbook-sgml-dtd)               echo "=$1-3.0-r3"
                                          echo "=$1-4.1-r3";;
 app-text/docbook-xml-dtd)                echo "=$1-4.1.2-r6"
                                          echo "=$1-4.2-r2"
+                                         echo "=$1-4.3-r1"
                                          echo "=$1-4.4-r2"
                                          echo "=$1-4.5-r1";;
 app-text/docbook-xml-simple-dtd)         echo "=$1-1.0-r1"
