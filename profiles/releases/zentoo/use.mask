@@ -169,6 +169,7 @@ libedit
 libgda
 libnotify
 libproxy
+libressl
 libsamplerate
 libssh2
 libwww
