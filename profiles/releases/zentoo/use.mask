@@ -50,8 +50,8 @@ cryptsetup
 cups
 custom-cflags
 d3d
-darcs
 dane
+darcs
 db2
 dbase
 dbmaker
@@ -134,6 +134,7 @@ ipod
 irc
 isag
 iscsi
+ivorbis
 jack
 jadetex
 jai
@@ -231,6 +232,7 @@ oci8
 oci8-instant-client
 offensive
 ofx
+ogg
 old-linux
 openal
 opencl
@@ -242,6 +244,7 @@ openntpd
 openrc
 openvg
 oracle
+orc
 osc
 oscar
 oss
