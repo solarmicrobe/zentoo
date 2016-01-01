@@ -19,6 +19,10 @@ app-text/docbook-xml-simple-dtd)         echo "=$1-1.0-r1"
 sys-devel/autoconf)                      echo "$1";;
 sys-devel/automake)                      echo "$1";;
 
+# ncurses slots
+sys-libs/ncurses)                        echo "=$1-5.9-r5"
+                                         echo "$1";;
+
 # python
 dev-lang/python)                         echo "=$1-2.7.9-r1";;
 
