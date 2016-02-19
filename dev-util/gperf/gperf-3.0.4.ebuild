@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -7,7 +7,7 @@ EAPI="4"
 inherit toolchain-funcs
 
 DESCRIPTION="A perfect hash function generator"
-HOMEPAGE="http://www.gnu.org/software/gperf/gperf.html"
+HOMEPAGE="https://www.gnu.org/software/gperf/"
 SRC_URI="mirror://gnu/gperf/${P}.tar.gz"
 
 LICENSE="GPL-2"

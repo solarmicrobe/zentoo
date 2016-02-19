@@ -1,8 +1,10 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
+
+AUTOTOOLS_AUTORECONF=1
 
 inherit autotools-utils eutils flag-o-matic perl-module toolchain-funcs
 
@@ -18,24 +20,27 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="ipv6 +perl selinux ssl socks5 +proxy"
 
-CDEPEND="sys-libs/ncurses
+CDEPEND="sys-libs/ncurses:0=
 	>=dev-libs/glib-2.6.0
-	ssl? ( dev-libs/openssl )
+	ssl? ( dev-libs/openssl:= )
 	perl? ( dev-lang/perl )
 	socks5? ( >=net-proxy/dante-1.1.18 )"
-DEPEND="${CDEPEND}
+
+DEPEND="
+	${CDEPEND}
 	virtual/pkgconfig"
-RDEPEND="${CDEPEND}
+
+RDEPEND="
+	${CDEPEND}
 	selinux? ( sec-policy/selinux-irc )
 	perl? ( !net-im/silc-client )"
 
 S=${WORKDIR}/${MY_P}
 
 src_prepare() {
-	cd m4
+	pushd m4 > /dev/null || die
 	epatch "${FILESDIR}/${PN}-0.8.15-tinfo.patch"
-	cd ..
-	AUTOTOOLS_AUTORECONF=1
+	popd > /dev/null || die
 	autotools-utils_src_prepare
 }
 

@@ -1,4 +1,4 @@
 Manifest -diff
 licenses/* -diff
-*.patch -diff
+#*.patch -diff
 metadata.xml -diff

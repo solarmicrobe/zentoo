@@ -5,6 +5,7 @@
 EAPI=5
 
 PYTHON_COMPAT=( python{2_7,3_3,3_4} pypy pypy3 )
+PYTHON_REQ_USE="threads(+)"
 
 inherit eutils distutils-r1
 
@@ -12,7 +13,7 @@ MY_PN=Jinja2
 MY_P=${MY_PN}-${PV}
 
 DESCRIPTION="A small but fast and easy to use stand-alone template engine written in pure Python"
-HOMEPAGE="http://jinja.pocoo.org/ http://pypi.python.org/pypi/Jinja2"
+HOMEPAGE="http://jinja.pocoo.org/ https://pypi.python.org/pypi/Jinja2"
 SRC_URI="mirror://pypi/${MY_PN:0:1}/${MY_PN}/${MY_P}.tar.gz"
 
 LICENSE="BSD"

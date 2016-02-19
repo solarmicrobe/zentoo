@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation.
 # Distributed under the terms of the GNU General Public License, v2
-# $Header: /var/cvsroot/gentoo-x86/profiles/base/packages,v 1.67 2014/11/02 18:17:04 vapier Exp $
+# $Id$
 
 # Gentoo Base Profile
 
@@ -39,12 +39,16 @@
 #*sys-apps/debianutils
 *sys-apps/diffutils
 *sys-apps/file
-*sys-apps/findutils
+# Much of the tree relies on newer features like "-exec +".
+# Force a recent stable version so people stay up-to-date.
+*>=sys-apps/findutils-4.4
 *sys-apps/gawk
 *sys-apps/grep
 *sys-apps/kbd
 # temporary bugfix for #398295
 *sys-apps/less
+# stopgap solution for functions.sh #373219 and #504116
+*sys-apps/openrc
 #*>=sys-apps/portage-2.0.51.22
 *sys-process/procps
 *sys-process/psmisc

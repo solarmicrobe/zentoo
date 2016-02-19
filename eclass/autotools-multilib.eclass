@@ -1,5 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Id$
 
 # @ECLASS: autotools-multilib.eclass
 # @MAINTAINER:
@@ -20,6 +21,7 @@
 
 # EAPI=4 is required for meaningful MULTILIB_USEDEP.
 case ${EAPI:-0} in
+	6) die "${ECLASS}.eclass is banned in EAPI ${EAPI}";;
 	4|5) ;;
 	*) die "EAPI=${EAPI} is not supported" ;;
 esac

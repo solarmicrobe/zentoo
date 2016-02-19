@@ -5,8 +5,8 @@
 EAPI="5"
 
 DESCRIPTION="Utility to select the default PostgreSQL slot"
-HOMEPAGE="http://www.gentoo.org/"
-SRC_URI="http://dev.gentoo.org/~titanofold/${P}.tbz2"
+HOMEPAGE="https://www.gentoo.org/"
+SRC_URI="https://dev.gentoo.org/~titanofold/${P}.tbz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"

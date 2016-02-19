@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,7 +14,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="nls xinetd"
 
-RDEPEND="sys-libs/ncurses"
+RDEPEND="sys-libs/ncurses:="
 DEPEND="${RDEPEND}
 	!net-misc/netkit-telnetd
 	xinetd? ( sys-apps/xinetd )
@@ -33,7 +33,7 @@ src_configure() {
 	fi
 
 	econf
-	emake CFLAGS="${CFLAGS} $("$(tc-getPKG_CONFIG)" --libs ncurses)"
+	emake LIBS="$("$(tc-getPKG_CONFIG)" --libs ncurses)"
 }
 
 src_install() {

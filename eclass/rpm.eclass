@@ -1,5 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Id$
 
 # @ECLASS: rpm.eclass
 # @MAINTAINER:
@@ -50,7 +51,7 @@ srcrpm_unpack() {
 
 	# unpack everything
 	local a
-	for a in *.tar.{gz,bz2} *.t{gz,bz2} *.zip *.ZIP ; do
+	for a in *.tar.{gz,bz2,xz} *.t{gz,bz2,xz,pxz} *.zip *.ZIP ; do
 		unpack "./${a}"
 		rm -f "${a}"
 	done

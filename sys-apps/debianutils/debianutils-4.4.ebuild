@@ -15,8 +15,6 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="kernel_linux static"
 
-PDEPEND="|| ( >=sys-apps/coreutils-6.10-r1 sys-freebsd/freebsd-ubin )"
-
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-3.4.2-no-bs-namespace.patch
 }

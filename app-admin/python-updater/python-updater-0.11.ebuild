@@ -8,13 +8,13 @@ if [[ "${PV}" == "9999" ]]; then
 	inherit git-2
 fi
 
-DESCRIPTION="Script used to reinstall Python packages after changing of active Python versions"
-HOMEPAGE="http://www.gentoo.org/proj/en/Python/"
+DESCRIPTION="Script used to reinstall Python packages after changing active Python versions"
+HOMEPAGE="https://www.gentoo.org/proj/en/Python/"
 if [[ "${PV}" == "9999" ]]; then
 	SRC_URI=""
 	EGIT_REPO_URI="git://anongit.gentoo.org/proj/python-updater.git"
 else
-	SRC_URI="http://dev.gentoo.org/~floppym/dist/${P}.tar.bz2"
+	SRC_URI="https://dev.gentoo.org/~floppym/dist/${P}.tar.bz2"
 	KEYWORDS="amd64"
 fi
 

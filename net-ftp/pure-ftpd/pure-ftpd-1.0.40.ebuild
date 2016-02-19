@@ -25,12 +25,12 @@ DEPEND="caps? ( sys-libs/libcap )
 	mysql? ( virtual/mysql )
 	pam? ( virtual/pam )
 	postgres? ( dev-db/postgresql:= )
-	ssl? ( >=dev-libs/openssl-0.9.6g:0= )
+	ssl? ( >=dev-libs/openssl-0.9.6g:0=[-bindist] )
 	sysquota? ( sys-fs/quota[-rpc] )
 	xinetd? ( virtual/inetd )"
 
 RDEPEND="${DEPEND}
-	dev-libs/libsodium
+	dev-libs/libsodium:=
 	net-ftp/ftpbase
 	selinux? ( sec-policy/selinux-ftp )"
 

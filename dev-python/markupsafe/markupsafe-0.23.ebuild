@@ -4,14 +4,15 @@
 
 EAPI=5
 
-PYTHON_COMPAT=( python{2_7,3_3,3_4} pypy pypy3)
+PYTHON_COMPAT=( python2_7 python3_{3,4,5} pypy pypy3 )
+
 inherit distutils-r1
 
 MY_PN="MarkupSafe"
 MY_P="${MY_PN}-${PV}"
 
 DESCRIPTION="Implements a XML/HTML/XHTML Markup safe string for Python"
-HOMEPAGE="http://pypi.python.org/pypi/MarkupSafe"
+HOMEPAGE="https://pypi.python.org/pypi/MarkupSafe"
 SRC_URI="mirror://pypi/${MY_PN:0:1}/${MY_PN}/${MY_P}.tar.gz"
 
 LICENSE="BSD"

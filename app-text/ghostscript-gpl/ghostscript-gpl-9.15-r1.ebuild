@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit autotools eutils multilib versionator flag-o-matic
+inherit autotools eutils multilib versionator flag-o-matic toolchain-funcs
 
 DESCRIPTION="Ghostscript is an interpreter for the PostScript language and for PDF"
 HOMEPAGE="http://ghostscript.com/"
@@ -20,7 +20,7 @@ SRC_URI="
 LICENSE="AGPL-3 CPL-1.0"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="cups dbus djvu gtk idn linguas_de static-libs X"
+IUSE="cups dbus djvu gtk idn linguas_de static-libs tiff X"
 RESTRICT="djvu? ( bindist )"
 
 COMMON_DEPEND="
@@ -30,7 +30,6 @@ COMMON_DEPEND="
 	media-libs/jbig2dec
 	>=media-libs/lcms-2.6:2
 	>=media-libs/libpng-1.6.2:0=
-	>=media-libs/tiff-4.0.1:0=
 	>=sys-libs/zlib-1.2.7:=
 	virtual/jpeg:0
 	cups? ( >=net-print/cups-1.3.8 )
@@ -38,6 +37,7 @@ COMMON_DEPEND="
 	djvu? ( app-text/djvu )
 	gtk? ( || ( x11-libs/gtk+:3 x11-libs/gtk+:2 ) )
 	idn? ( net-dns/libidn )
+	tiff? ( >=media-libs/tiff-4.0.1:0= )
 	X? ( x11-libs/libXt x11-libs/libXext )
 "
 
@@ -89,6 +89,9 @@ src_prepare() {
 	# http://pkgs.fedoraproject.org/cgit/ghostscript.git
 	EPATCH_SUFFIX="patch" EPATCH_FORCE="yes"
 	EPATCH_SOURCE="${WORKDIR}/patches/"
+	EPATCH_EXCLUDE="
+		ghostscript-gpl-9.12-sys-zlib.patch
+	"
 	epatch
 
 	if use djvu ; then
@@ -111,6 +114,11 @@ src_prepare() {
 			-e "s:.*\$(GSSOX_XENAME)$::" \
 			"${S}"/base/unix-dll.mak || die "sed failed"
 	fi
+
+	# Force the include dirs to a neutral location.
+	sed -i \
+		-e "/^ZLIBDIR=/s:=.*:=${T}:" \
+		configure.ac || die
 
 	# search path fix
 	# put LDFLAGS after BINDIR, bug #383447
@@ -143,18 +151,21 @@ src_configure() {
 		FONTPATH="$FONTPATH${FONTPATH:+:}$path"
 	done
 
+	# We force the endian configure flags until this is fixed:
+	# http://bugs.ghostscript.com/show_bug.cgi?id=696498
+	PKGCONFIG=$(type -P $(tc-getPKG_CONFIG)) \
 	econf \
 		--enable-dynamic \
 		--enable-freetype \
 		--enable-fontconfig \
 		--enable-openjpeg \
+		--enable-$(tc-endian)-endian \
 		--disable-compile-inits \
 		--with-drivers=ALL \
 		--with-fontpath="$FONTPATH" \
 		--with-ijs \
 		--with-jbig2dec \
 		--with-libpaper \
-		--with-system-libtiff \
 		--without-lcms \
 		--without-luratech \
 		$(use_enable cups) \
@@ -162,6 +173,7 @@ src_configure() {
 		$(use_enable gtk) \
 		$(use_with cups pdftoraster) \
 		$(use_with idn libidn) \
+		$(use_with tiff system-libtiff) \
 		$(use_with X x)
 
 	if use djvu ; then
@@ -184,7 +196,7 @@ src_compile() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install-so install
+	emake -j1 DESTDIR="${D}" install-so install
 
 	if use djvu ; then
 		dobin gsdjvu
@@ -195,7 +207,7 @@ src_install() {
 	mv -f "${D}/usr/bin/gsc" "${D}/usr/bin/gs" || die
 
 	cd "${S}/ijs"
-	emake DESTDIR="${D}" install
+	emake -j1 DESTDIR="${D}" install
 
 	# rename the original cidfmap to cidfmap.GS
 	mv "${D}/usr/share/ghostscript/${PVM}/Resource/Init/cidfmap"{,.GS} || die

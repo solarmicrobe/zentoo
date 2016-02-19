@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,7 +6,7 @@ EAPI=5
 inherit eutils autotools flag-o-matic elisp-common
 
 DESCRIPTION="Scheme interpreter"
-HOMEPAGE="http://www.gnu.org/software/guile/"
+HOMEPAGE="https://www.gnu.org/software/guile/"
 SRC_URI="mirror://gnu/guile/${P}.tar.gz"
 
 LICENSE="LGPL-2.1"
@@ -15,9 +15,10 @@ IUSE="networking +regex discouraged +deprecated emacs nls debug-freelist debug-m
 RESTRICT="!regex? ( test )"
 
 RDEPEND="
-	>=dev-libs/gmp-4.1
+	>=dev-libs/gmp-4.1:0=
 	>=sys-devel/libtool-1.5.6
 	sys-devel/gettext
+	sys-libs/ncurses:0=
 	emacs? ( virtual/emacs )"
 DEPEND="${RDEPEND}
 	sys-apps/texinfo"

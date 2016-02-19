@@ -43,6 +43,9 @@ src_prepare() {
 	# valgrind works fine on linux-4, bug #543648
 	epatch "${FILESDIR}"/${PN}-3.10.1-linux-4.patch
 
+	# glibc 2.21 fix.  Bug #554808.
+	epatch "${FILESDIR}"/${PN}-3.10.1-glibc-2.21.patch
+
 	# Allow users to test their own patches
 	epatch_user
 

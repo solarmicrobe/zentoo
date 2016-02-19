@@ -7,7 +7,7 @@ EAPI="5"
 inherit autotools eutils
 
 DESCRIPTION="A file archival tool which can also read and write tar files"
-HOMEPAGE="http://www.gnu.org/software/cpio/cpio.html"
+HOMEPAGE="https://www.gnu.org/software/cpio/cpio.html"
 SRC_URI="mirror://gnu/cpio/${P}.tar.bz2"
 
 LICENSE="GPL-3"
@@ -20,6 +20,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/${P}-no-gets.patch #424974
 	epatch "${FILESDIR}"/${P}-non-gnu-compilers.patch #275295
 	epatch "${FILESDIR}"/${P}-security.patch #530512 #536010
+	epatch "${FILESDIR}"/${P}-symlink-bad-length-test.patch #554760
 	eautoreconf
 }
 

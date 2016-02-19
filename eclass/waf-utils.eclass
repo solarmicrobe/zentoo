@@ -1,5 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Id$
 
 # @ECLASS: waf-utils.eclass
 # @MAINTAINER:
@@ -14,10 +15,10 @@
 # waf-based packages much easier.
 # Its main features are support of common portage default settings.
 
-inherit base eutils multilib toolchain-funcs multiprocessing
+inherit eutils multilib toolchain-funcs multiprocessing
 
 case ${EAPI:-0} in
-	3|4|5) EXPORT_FUNCTIONS src_configure src_compile src_install ;;
+	4|5) EXPORT_FUNCTIONS src_configure src_compile src_install ;;
 	*) die "EAPI=${EAPI} is not supported" ;;
 esac
 
@@ -124,5 +125,5 @@ waf-utils_src_install() {
 	"${WAF_BINARY}" --destdir="${D}" install  || die "Make install failed"
 
 	# Manual document installation
-	base_src_install_docs
+	einstalldocs
 }

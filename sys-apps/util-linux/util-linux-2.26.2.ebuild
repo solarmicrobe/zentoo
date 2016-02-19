@@ -21,7 +21,7 @@ else
 fi
 
 DESCRIPTION="Various useful Linux utilities"
-HOMEPAGE="http://www.kernel.org/pub/linux/utils/util-linux/"
+HOMEPAGE="https://www.kernel.org/pub/linux/utils/util-linux/"
 
 LICENSE="GPL-2 LGPL-2.1 BSD-4 MIT public-domain"
 SLOT="0"
@@ -36,15 +36,15 @@ RDEPEND="!sys-process/schedutils
 	!<app-shells/bash-completion-1.3-r2
 	caps? ( sys-libs/libcap-ng )
 	cramfs? ( sys-libs/zlib )
-	ncurses? ( >=sys-libs/ncurses-5.2-r2 )
+	ncurses? ( >=sys-libs/ncurses-5.2-r2:0=[unicode?] )
 	pam? ( sys-libs/pam )
 	python? ( ${PYTHON_DEPS} )
 	selinux? ( >=sys-libs/libselinux-2.2.2-r4[${MULTILIB_USEDEP}] )
 	slang? ( sys-libs/slang )
 	systemd? ( sys-apps/systemd )
-	udev? ( virtual/libudev )
+	udev? ( virtual/libudev:= )
 	abi_x86_32? (
-		!<=app-emulation/emul-linux-x86-baselibs-20140406-r2
+		!<=app-emulation/emul-linux-x86-baselibs-20150406-r2
 		!app-emulation/emul-linux-x86-baselibs[-abi_x86_32]
 	)"
 DEPEND="${RDEPEND}
@@ -62,7 +62,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-2.25-parallel-setarch.patch #511812
 	if [[ ${PV} == 9999 ]] ; then
 		po/update-potfiles
 		eautoreconf

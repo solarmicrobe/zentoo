@@ -19,7 +19,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="kernel_FreeBSD kernel_linux oom openvz unicode vserver"
 
-RDEPEND="sys-libs/ncurses[unicode?]"
+RDEPEND="sys-libs/ncurses:0=[unicode?]"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	virtual/pkgconfig"

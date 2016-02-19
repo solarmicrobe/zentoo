@@ -3,6 +3,7 @@
 # $Header: $
 
 EAPI=5
+
 inherit eutils fcaps flag-o-matic
 
 DESCRIPTION="My TraceRoute, an Excellent network diagnostic tool"
@@ -15,7 +16,7 @@ KEYWORDS="amd64"
 IUSE="gtk ipv6"
 
 RDEPEND="
-	sys-libs/ncurses
+	sys-libs/ncurses:0=
 	gtk? (
 		dev-libs/glib:2
 		x11-libs/gtk+:2

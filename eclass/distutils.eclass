@@ -1,5 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
+# $Id$
 
 # @ECLASS: distutils.eclass
 # @MAINTAINER:
@@ -17,6 +18,9 @@ fi
 inherit multilib
 
 case "${EAPI:-0}" in
+	6)
+		die "${ECLASS}.eclass is banned in EAPI ${EAPI}"
+		;;
 	0|1)
 		EXPORT_FUNCTIONS src_unpack src_compile src_install pkg_postinst pkg_postrm
 		;;

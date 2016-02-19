@@ -2,7 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
+
+inherit eutils
 
 DESCRIPTION="A collection of tools that operate on patch files"
 HOMEPAGE="http://cyberelk.net/tim/patchutils/"
@@ -17,3 +19,7 @@ RDEPEND=""
 # The testsuite makes use of gendiff(1) that comes from rpm, thus if
 # the user wants to run tests, it should install that too.
 DEPEND="test? ( app-arch/rpm )"
+
+src_prepare() {
+	epatch "${FILESDIR}"/${P}-format-security.patch
+}

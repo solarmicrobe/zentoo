@@ -9,17 +9,17 @@ inherit flag-o-matic toolchain-funcs eutils
 DESCRIPTION="small and fast portage helper tools written in C"
 HOMEPAGE="https://wiki.gentoo.org/wiki/Portage-utils"
 SRC_URI="mirror://gentoo/${P}.tar.xz
-	http://dev.gentoo.org/~vapier/dist/${P}.tar.xz"
+	https://dev.gentoo.org/~vapier/dist/${P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="nls static"
 
-RDEPEND="dev-libs/iniparser"
+RDEPEND="dev-libs/iniparser:0"
 DEPEND="${RDEPEND}
 	app-arch/xz-utils
-	static? ( dev-libs/iniparser[static-libs] )"
+	static? ( dev-libs/iniparser:0[static-libs] )"
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-qcheck-tz.patch #551718

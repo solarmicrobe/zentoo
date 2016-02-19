@@ -5,11 +5,12 @@
 EAPI=5
 
 PYTHON_COMPAT=( python{2_7,3_3,3_4} )
+PYTHON_REQ_USE="threads(+)"
 
 inherit distutils-r1
 
 DESCRIPTION="Python Cryptography Toolkit"
-HOMEPAGE="http://www.dlitz.net/software/pycrypto/ http://pypi.python.org/pypi/pycrypto"
+HOMEPAGE="http://www.dlitz.net/software/pycrypto/ https://pypi.python.org/pypi/pycrypto"
 SRC_URI="http://ftp.dlitz.net/pub/dlitz/crypto/pycrypto/${P}.tar.gz"
 
 LICENSE="PSF-2 public-domain"
@@ -17,7 +18,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="doc +gmp"
 
-RDEPEND="gmp? ( dev-libs/gmp )"
+RDEPEND="gmp? ( dev-libs/gmp:0= )"
 DEPEND="${RDEPEND}
 	doc? ( dev-python/docutils
 		>=dev-python/epydoc-3 )"

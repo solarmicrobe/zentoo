@@ -1,5 +1,7 @@
 # skip unnecessary dependencies
 app-admin/logrotate cron
+net-libs/nghttp2 hpack-tools
+sys-apps/lm_sensors sensord
 app-admin/sysstat cron
 app-arch/dpkg nls
 app-doc/doxygen doxysearch
@@ -8,6 +10,7 @@ app-emulation/docker aufs
 app-emulation/qemu tls usbredir xen
 app-emulation/virtualbox vboxwebsrv java
 app-text/docbook-xsl-stylesheets ruby
+app-text/xmlto text
 dev-db/sqlite tools
 dev-java/ant testutil
 dev-lang/ghc ghcbootstrap
@@ -18,6 +21,7 @@ dev-libs/libnatspec python
 dev-libs/ossp-uuid php
 dev-libs/ppl lpsol
 dev-libs/protobuf java
+dev-libs/protobuf python
 dev-python/ipython smp octave matplotlib nbconvert notebook
 dev-python/psycopg mxdatetime
 dev-ruby/rubygems server

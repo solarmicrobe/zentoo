@@ -6,19 +6,20 @@ EAPI="5"
 PYTHON_COMPAT=( python2_7 )
 PYTHON_REQ_USE="threads,ssl,xml"
 
-inherit bash-completion-r1 distutils-r1 eutils flag-o-matic versionator
-
 MY_P=${PN}-${PV}
-SERIES=$(get_version_component_range 1-2)
 
 DESCRIPTION="Bazaar is a next generation distributed version control system"
 HOMEPAGE="http://bazaar-vcs.org/"
-SRC_URI="http://launchpad.net/bzr/${SERIES}/${PV}/+download/${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="curl doc +sftp test"
+PLOCALES="ar ast bs ca cs de el en_AU en_GB es fa fo fr gl he id it ja ko ms my nb nl oc pl pt_BR ro ru sco si sk sr sv tr ug uk vi zh_CN"
+
+inherit bash-completion-r1 distutils-r1 eutils flag-o-matic versionator l10n
+SERIES=$(get_version_component_range 1-2)
+SRC_URI="https://launchpad.net/bzr/${SERIES}/${PV}/+download/${MY_P}.tar.gz"
 
 RDEPEND="curl? ( dev-python/pycurl[${PYTHON_USEDEP}] )
 	sftp? ( dev-python/paramiko[${PYTHON_USEDEP}] )"
@@ -37,6 +38,10 @@ S="${WORKDIR}/${MY_P}"
 RESTRICT="test"
 
 python_configure_all() {
+	rm_loc() {
+		rm "${S}"/po/$1.po || die
+	}
+	l10n_for_each_disabled_locale_do rm_loc
 	# Generate the locales first to avoid a race condition.
 	esetup.py build_mo
 }
@@ -47,12 +52,6 @@ python_compile() {
 		append-cflags -fno-strict-aliasing
 	fi
 	distutils-r1_python_compile
-}
-
-src_test() {
-	# Race due to conflicting ports in
-	# blackbox.test_serve.TestBzrServe.test_bzr_serve*.
-	DISTUTILS_NO_PARALLEL_BUILD=1 distutils-r1_src_test
 }
 
 python_test() {

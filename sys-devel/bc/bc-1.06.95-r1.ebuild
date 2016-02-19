@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -7,7 +7,7 @@ EAPI="2"
 inherit eutils flag-o-matic toolchain-funcs
 
 DESCRIPTION="Handy console-based calculator utility"
-HOMEPAGE="http://www.gnu.org/software/bc/bc.html"
+HOMEPAGE="https://www.gnu.org/software/bc/bc.html"
 SRC_URI="mirror://gnu-alpha/bc/${P}.tar.bz2
 	mirror://gnu/bc/${P}.tar.bz2"
 
@@ -36,6 +36,10 @@ src_configure() {
 	fi
 	use static && append-ldflags -static
 	econf ${myconf}
+
+	# Do not regen docs -- configure produces a small fragment that includes
+	# the version info which causes all pages to regen (newer file). #554774
+	touch -r doc doc/*
 }
 
 src_compile() {
