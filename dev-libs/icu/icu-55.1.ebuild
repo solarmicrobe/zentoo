@@ -1,4 +1,4 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -12,7 +12,7 @@ SRC_URI="http://download.icu-project.org/files/icu4c/${PV/_/}/icu4c-${PV//./_}-s
 
 LICENSE="BSD"
 
-SLOT="0/56"
+SLOT="0/55"
 
 KEYWORDS="amd64"
 IUSE="debug doc examples static-libs"
