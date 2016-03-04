@@ -1,13 +1,13 @@
 # sane defaults
 PKGDIR="/usr/portage/packages"
 PORTAGE_BINHOST="http://mirror.zenops.net/zentoo/${ARCH}/packages"
-FEATURES="splitdebug"
+FEATURES="buildpkg splitdebug"
 
 # disable masked USE flags
 USE="${USE} -dri -vhosts"
 
 # add a bunch of global USE flags
-USE="${USE} bash-completion bzip2 caps cups fontconfig postscript idn jpeg pcre png svg syslog systemd tiff truetype urandom vim-syntax udev"
+USE="${USE} bzip2 caps fontconfig postscript idn jpeg pcre png svg syslog systemd tiff truetype urandom vim-syntax udev"
 
 # create and use binary packages
 EMERGE_DEFAULT_OPTS="--quiet --quiet-build --with-bdeps=y --binpkg-respect-use=y --rebuilt-binaries=n --keep-going"
