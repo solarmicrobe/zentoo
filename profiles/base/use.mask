@@ -391,3 +391,4 @@ openrc-force
 # Mike Gilbert <floppym@gentoo.org> (19 Oct 2014)
 # sys-libs/libapparmor
 apparmor
+
