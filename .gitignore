@@ -6,7 +6,11 @@ eix.cache.*
 etc/
 etc/make.conf
 local/
+metadata/dtd/
+metadata/glsa/
 metadata/md5-cache/
+metadata/news/
+metadata/projects.xml
 metadata/timestamp.chk
 packages/
 profiles/use.local.desc
