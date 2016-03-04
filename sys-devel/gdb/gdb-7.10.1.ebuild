@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI="5"
-PYTHON_COMPAT=( python{2_7,3_3,3_4} )
+PYTHON_COMPAT=( python{2_7,3_3,3_4,3_5} )
 
 inherit flag-o-matic eutils python-single-r1
 
@@ -57,6 +57,7 @@ SRC_URI="${SRC_URI} ${PATCH_VER:+mirror://gentoo/${P}-patches-${PATCH_VER}.tar.x
 LICENSE="GPL-2 LGPL-2"
 SLOT="0"
 if [[ ${PV} != 9999* ]] ; then
+	# alpha #562128
 	KEYWORDS="amd64"
 fi
 IUSE="+client expat lzma multitarget nls +python +server test vanilla"
