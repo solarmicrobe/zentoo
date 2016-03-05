@@ -23,8 +23,6 @@ app-shells/bash-completion
 app-text/dos2unix
 app-text/tree
 dev-python/pip
-dev-python/virtualenv
-dev-python/virtualenvwrapper
 dev-util/cscope
 dev-util/ctags
 dev-util/diffstat
