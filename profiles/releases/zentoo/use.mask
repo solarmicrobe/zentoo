@@ -281,6 +281,7 @@ rdesktop
 recode
 regression-test
 rpm
+rrdtool
 samba
 sapdb
 sasl

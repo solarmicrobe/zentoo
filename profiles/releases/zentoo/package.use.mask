@@ -40,7 +40,6 @@ media-libs/mesa xorg
 net-analyzer/nagios-plugins ups nagios-game nagios-ping snmp jabber
 net-analyzer/net-snmp netlink
 net-analyzer/nmap lua zenmap
-net-analyzer/rrdtool dbi perl ruby
 net-analyzer/tcpdump smi
 net-dns/libidn java
 net-dns/pdns opendbx sqlite
