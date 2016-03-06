@@ -54,6 +54,10 @@ sys-kernel/linux-headers)                echo "=$1-4.4";;
 app-editors/vim)                         echo "=$1-7.4.1342";;
 app-editors/vim-core)                    echo "=$1-7.4.1342";;
 
+# postgres
+dev-db/postgresql)                       echo "=$1-9.4.6"
+                                         echo "=$1-9.5.1";;
+
 dev-vcs/bzr)                             echo "=$1-2.6.0";;
 virtual/jpeg)                            echo "=$1-0-r2";;
 www-client/phantomjs)                    echo "=$1-2.0.0-r1";;
