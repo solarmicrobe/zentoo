@@ -4,6 +4,8 @@
 
 EAPI=5
 
+inherit readme.gentoo
+
 DESCRIPTION="A shell frontend for duplicity"
 HOMEPAGE="http://duply.net"
 SRC_URI="mirror://sourceforge/ftplicity/${PN}_${PV}.tgz"
@@ -22,4 +24,5 @@ src_install() {
 	dobin ${PN}
 	./${PN} txt2man > ${PN}.1 || die
 	doman ${PN}.1
+	readme.gentoo_create_doc
 }

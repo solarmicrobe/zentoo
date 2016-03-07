@@ -52,6 +52,7 @@ sys-apps/systemd http qrcode ssl terminal xkb gnuefi appamor terminal cryptsetup
 sys-devel/gcc graphite
 sys-devel/gettext java
 sys-fs/btrfs-progs debug-utils
+sys-fs/lvm2 static
 sys-fs/udev extras
 sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_bootchart dracut_modules_cifs
 sys-libs/db java
