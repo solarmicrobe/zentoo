@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -11,7 +11,7 @@ RUBY_FAKEGEM_EXTRADOC="History.txt README.md"
 
 inherit ruby-fakegem
 
-DESCRIPTION="Flexible logging library for use in Ruby programs based on the design of Java's log4j library"
+DESCRIPTION="Flexible logging library based on the design of Java's log4j library"
 HOMEPAGE="http://rubygems.org/gems/logging"
 
 LICENSE="MIT"
