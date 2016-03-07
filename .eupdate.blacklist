@@ -1,4 +1,5 @@
 app-admin/chef
+app-backup/duply
 dev-db/mysql-init-scripts
 dev-libs/protobuf
 dev-ruby/rdoc
