@@ -1,27 +1,20 @@
 # skip unnecessary dependencies
 app-admin/logrotate cron
-net-libs/nghttp2 hpack-tools
-sys-apps/lm_sensors sensord
 app-admin/sysstat cron
 app-arch/dpkg nls
 app-doc/doxygen doxysearch
-app-editors/joe xterm
 app-emulation/docker aufs
-app-emulation/qemu tls usbredir xen
-app-emulation/virtualbox vboxwebsrv java
 app-text/docbook-xsl-stylesheets ruby
 app-text/xmlto text
 dev-db/sqlite tools
 dev-java/ant testutil
-dev-lang/ghc ghcbootstrap
 dev-lang/php sqlite
 dev-libs/gecode gist
 dev-libs/glib utils systemtap
 dev-libs/libnatspec python
 dev-libs/ossp-uuid php
 dev-libs/ppl lpsol
-dev-libs/protobuf java
-dev-libs/protobuf python
+dev-libs/protobuf java python
 dev-python/ipython smp octave matplotlib nbconvert notebook
 dev-python/psycopg mxdatetime
 dev-ruby/rubygems server
@@ -30,6 +23,7 @@ dev-util/cmake system-jsoncpp
 dev-util/oprofile java
 dev-vcs/bzr curl
 dev-vcs/git cgi
+dev-vcs/mercurial bugzilla
 dev-vcs/subversion webdav-serf ruby ctypes-python java
 gnome-base/librsvg tools
 media-gfx/graphviz devil gts java
@@ -46,12 +40,14 @@ net-dns/pdns opendbx sqlite
 net-ftp/lftp verify-file
 net-ftp/pure-ftpd sysquota
 net-libs/libpcap canusb netlink
+net-libs/nghttp2 hpack-tools
 net-libs/zeromq pgm
 net-mail/dovecot lucene
 net-misc/curl metalink rtmp ssh
 net-misc/openssh ldns skey ssh1
 sys-apps/acl nfs
 sys-apps/help2man nls
+sys-apps/lm_sensors sensord
 sys-apps/systemd http qrcode ssl terminal xkb gnuefi appamor terminal cryptsetup
 sys-devel/gcc graphite
 sys-devel/gettext java

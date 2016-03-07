@@ -213,6 +213,7 @@ mule
 multislot
 musepack
 musicbrainz
+mysql
 mythtv
 nas
 neXt
