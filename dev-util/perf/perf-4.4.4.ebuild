@@ -51,6 +51,7 @@ RDEPEND="audit? ( sys-process/audit )
 	unwind? ( sys-libs/libunwind )
 	dev-libs/elfutils"
 DEPEND="${RDEPEND}
+	>=sys-kernel/linux-headers-4.4
 	${LINUX_PATCH+dev-util/patchutils}
 	sys-devel/bison
 	sys-devel/flex
@@ -74,8 +75,8 @@ pkg_setup() {
 
 src_unpack() {
 	local paths=(
-		tools/build tools/include tools/lib tools/perf tools/scripts
-		include lib "arch/*/include" "arch/*/lib"
+		tools/arch tools/build tools/include tools/lib tools/perf tools/scripts
+		include lib "arch/*/lib"
 	)
 
 	# We expect the tar implementation to support the -j option (both
@@ -107,8 +108,6 @@ src_prepare() {
 		epatch "${WORKDIR}"/${P}.patch
 	fi
 
-	epatch "${FILESDIR}"/${P}-prefix.patch
-
 	# Drop some upstream too-developer-oriented flags and fix the
 	# Makefile in general
 	sed -i \
@@ -118,15 +117,11 @@ src_prepare() {
 		-e 's:^LDFLAGS =:EXTLIBS +=:' \
 		-e '/\(PERL\|PYTHON\)_EMBED_LDOPTS/s:ALL_LDFLAGS +=:EXTLIBS +=:' \
 		-e '/-x c - /s:\$(ALL_LDFLAGS):\0 $(EXTLIBS):' \
-		-e '/^ALL_CFLAGS =/s:$: $(CFLAGS_OPTIMIZE):' \
-		-e '/^ALL_LDFLAGS =/s:$: $(LDFLAGS_OPTIMIZE):' \
-		-e 's:$(sysconfdir_SQ)/bash_completion.d:/usr/share/bash-completion:' \
-		"${S}"/Makefile || die
-	sed -i -e 's:-Werror::' "${S_K}"/tools/lib/api/Makefile || die
+		"${S}"/config/Makefile || die
 	sed -i \
-		-e '/.FORCE-PERF-VERSION-FILE/s,.FORCE-PERF-VERSION-FILE,,g' \
-		"${S}"/Makefile \
-		"${S}"/Documentation/Makefile || die
+		-e 's:$(sysconfdir_SQ)/bash_completion.d:/usr/share/bash-completion:' \
+		"${S}"/Makefile.perf || die
+	sed -i -e 's:-Werror::' "${S_K}"/tools/lib/api/Makefile || die
 
 	# Avoid the call to make kernelversion
 	echo "#define PERF_VERSION \"${MY_PV}\"" > PERF-VERSION-FILE
@@ -144,10 +139,9 @@ perf_make() {
 	# It's kind of a hack, but not that bad ...
 	local arch=$(tc-arch-kernel)
 	emake V=1 \
-		CC="$(tc-getCC)" AR="$(tc-getAR)" \
+		CC="$(tc-getCC)" AR="$(tc-getAR)" LD="$(tc-getLD)" \
 		prefix="/usr" bindir_relative="bin" \
-		CFLAGS_OPTIMIZE="${CFLAGS}" \
-		LDFLAGS_OPTIMIZE="${LDFLAGS}" \
+		EXTRA_CFLAGS="${CFLAGS}" \
 		ARCH="${arch}" \
 		NO_DEMANGLE=$(puse demangle) \
 		NO_GTK2=$(puse gtk) \
