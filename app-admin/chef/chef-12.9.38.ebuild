@@ -51,6 +51,10 @@ ruby_add_rdepend "
 
 each_ruby_prepare() {
 	ruby_fakegem_metadata_gemspec ../metadata ${RUBY_FAKEGEM_GEMSPEC}
+
+	# so much crap we don't need
+	sed -i -e '/require.*plist/d' lib/chef/provider/launchd.rb || die "Unable to fix up dependencies."
+	sed -i -e '/require.*plist/d' lib/chef/provider/user/dscl.rb || die "Unable to fix up dependencies."
 	sed -i -e '/plist/d' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
 	sed -i -e '/rspec/d' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
 	sed -i -e '/serverspec/d' ${RUBY_FAKEGEM_GEMSPEC} || die "Unable to fix up dependencies."
