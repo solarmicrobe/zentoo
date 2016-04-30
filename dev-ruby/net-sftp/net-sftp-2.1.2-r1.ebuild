@@ -2,13 +2,15 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 USE_RUBY="ruby22"
+
+RUBY_FAKEGEM_EXTRADOC="CHANGES.txt README.rdoc"
 
 inherit ruby-fakegem
 
-DESCRIPTION="A simple library to assist in enabling tunneled Net::SSH connections"
-HOMEPAGE="http://net-ssh.rubyforge.org/gateway"
+DESCRIPTION="SFTP in pure Ruby"
+HOMEPAGE="http://net-ssh.rubyforge.org/"
 
 LICENSE="GPL-2"
 SLOT="2"
@@ -16,3 +18,8 @@ KEYWORDS="amd64"
 IUSE=""
 
 ruby_add_rdepend ">=dev-ruby/net-ssh-2.6.5"
+
+ruby_add_bdepend "
+	test? (
+		>=dev-ruby/mocha-0.13
+	)"

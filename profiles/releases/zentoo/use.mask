@@ -280,6 +280,7 @@ quicktime
 racket
 radius
 rdesktop
+rdoc
 recode
 regression-test
 rpm

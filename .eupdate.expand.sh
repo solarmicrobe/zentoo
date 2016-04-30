@@ -32,19 +32,15 @@ sys-libs/ncurses)                        echo "=$1-5.9-r5"
 dev-lang/python)                         echo "=$1-2.7.10-r1";;
 
 # ruby
-dev-lang/ruby)                           echo "=$1-2.2.4";;
+dev-lang/ruby)                           echo "=$1-2.2.5";;
 app-eselect/eselect-ruby)                echo "=$1-20151229";;
-dev-ruby/activesupport)                  echo "=$1-3.2.22.1";;
+dev-ruby/hashie)                         echo "=$1-3.4.4";;
+dev-ruby/highline)                       echo "=$1-1.7.8";;
 dev-ruby/json)                           echo "=$1-1.8.3";;
+dev-ruby/net-ssh)                        echo "=$1-3.1.1";;
+dev-ruby/rake)                           echo "=$1-11.1.2";;
 dev-ruby/rubygems)                       echo "=$1-2.5.2";;
-dev-ruby/minitest)                       echo "=$1-5.8.4";;
-dev-ruby/multi_json)                     echo "=$1-1.11.1";;
-dev-ruby/net-scp)                        echo "=$1-1.2.1";;
-dev-ruby/net-ssh)                        echo "=$1-2.9.2";;
-dev-ruby/pg)                             echo "=$1-0.18.4";;
-dev-ruby/power_assert)                   echo "=$1-0.2.7";;
-dev-ruby/rake)                           echo "=$1-10.5.0";;
-dev-ruby/test-unit)                      echo "=$1-3.1.7";;
+dev-ruby/uuidtools)                      echo "=$1-2.1.5";;
 virtual/rubygems)                        echo "=$1-11";;
 
 # java
