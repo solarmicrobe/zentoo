@@ -230,6 +230,7 @@ nocxx
 nopie
 nossp
 nsplugin
+nss
 ocaml
 ocamlopt
 oci8

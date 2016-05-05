@@ -8,7 +8,7 @@ GST_ORG_MODULE="gst-plugins-base"
 inherit gstreamer
 
 DESCRIPTION="Basepack of plugins for gstreamer"
-HOMEPAGE="http://gstreamer.freedesktop.org/"
+HOMEPAGE="https://gstreamer.freedesktop.org/"
 
 LICENSE="GPL-2+ LGPL-2+"
 KEYWORDS="amd64"

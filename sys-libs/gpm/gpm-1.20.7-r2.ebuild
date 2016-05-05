@@ -29,6 +29,7 @@ DEPEND=">=sys-libs/ncurses-5.9-r3[${MULTILIB_USEDEP}]
 	virtual/yacc"
 
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-sysmacros.patch
 	# fix ABI values
 	sed -i \
 		-e '/^abi_lev=/s:=.*:=1:' \
@@ -61,7 +62,7 @@ multilib_src_install() {
 		install
 
 	dosym libgpm.so.1 /usr/$(get_libdir)/libgpm.so
-	multilib_is_native_abi && gen_usr_ldscript -a gpm
+	gen_usr_ldscript -a gpm
 }
 
 multilib_src_install_all() {

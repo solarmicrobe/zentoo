@@ -56,6 +56,7 @@ sys-fs/lvm2 static
 sys-fs/udev extras
 sys-kernel/dracut dracut_modules_biosdevname dracut_modules_dmraid dracut_modules_gensplash dracut_modules_multipath dracut_modules_iscsi dracut_modules_nbd dracut_modules_plymouth dracut_modules_bootchart dracut_modules_cifs
 sys-libs/db java
+sys-process/criu python
 www-servers/tornado curl
 www-servers/uwsgi uwsgi_plugins_rsyslog uwsgi_plugins_alarm_xmpp uwsgi_plugins_rrdtool uwsgi_plugins_rados
 

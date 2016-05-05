@@ -13,11 +13,11 @@ if [[ ${PV} == *9999* ]]; then
 	inherit autotools git-2
 else
 	KEYWORDS="amd64"
-	SRC_URI="http://pkgconfig.freedesktop.org/releases/${MY_P}.tar.gz"
+	SRC_URI="https://pkgconfig.freedesktop.org/releases/${MY_P}.tar.gz"
 fi
 
 DESCRIPTION="Package config system that manages compile/link flags"
-HOMEPAGE="http://pkgconfig.freedesktop.org/wiki/"
+HOMEPAGE="https://pkgconfig.freedesktop.org/wiki/"
 
 LICENSE="GPL-2"
 SLOT="0"

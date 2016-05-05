@@ -5,8 +5,8 @@
 EAPI=5
 
 DESCRIPTION="Data files for poppler to support uncommon encodings without xpdfrc"
-HOMEPAGE="http://poppler.freedesktop.org/"
-SRC_URI="http://poppler.freedesktop.org/${P}.tar.gz"
+HOMEPAGE="https://poppler.freedesktop.org/"
+SRC_URI="https://poppler.freedesktop.org/${P}.tar.gz"
 
 LICENSE="BSD GPL-2 MIT"
 KEYWORDS="amd64"

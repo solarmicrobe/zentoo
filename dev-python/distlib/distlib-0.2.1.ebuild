@@ -18,6 +18,8 @@ LICENSE="BSD"
 KEYWORDS="amd64"
 IUSE=""
 
+DEPEND="app-arch/unzip"
+
 python_test() {
 	sed \
 		-e '/PIP_AVAILABLE/s:True:False:g' \
