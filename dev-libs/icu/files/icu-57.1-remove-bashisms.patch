@@ -1,7 +1,7 @@
 Index: config/Makefile.inc.in
 ===================================================================
---- config/Makefile.inc.in	(revision 36912)
-+++ config/Makefile.inc.in	(working copy)
+--- a/config/Makefile.inc.in	(revision 36912)
++++ b/config/Makefile.inc.in	(working copy)
 @@ -125,12 +125,6 @@
  # with usually. Many applications will want to add $(ICULIBS_I18N) as well. 
  ICULIBS = $(ICULIBS_BASE) $(ICULIBS_I18N) $(ICULIBS_COMMON) $(ICULIBS_DATA) 
@@ -17,8 +17,8 @@ Index: config/Makefile.inc.in
  #
 Index: config/icu-config-bottom
 ===================================================================
---- config/icu-config-bottom	(revision 36912)
-+++ config/icu-config-bottom	(working copy)
+--- a/config/icu-config-bottom	(revision 36912)
++++ b/config/icu-config-bottom	(working copy)
 @@ -217,73 +217,73 @@
  	    ;;
  
@@ -171,8 +171,8 @@ Index: config/icu-config-bottom
  	--host)
 Index: configure.ac
 ===================================================================
---- configure.ac	(revision 36912)
-+++ configure.ac	(working copy)
+--- a/configure.ac	(revision 36912)
++++ b/configure.ac	(working copy)
 @@ -19,24 +19,6 @@
  PACKAGE="icu"
  AC_SUBST(PACKAGE)
@@ -200,8 +200,8 @@ Index: configure.ac
  # Get the ICU version from uversion.h or other headers
 Index: icudefs.mk.in
 ===================================================================
---- icudefs.mk.in	(revision 36912)
-+++ icudefs.mk.in	(working copy)
+--- a/icudefs.mk.in	(revision 36912)
++++ b/icudefs.mk.in	(working copy)
 @@ -155,11 +155,6 @@
  ENABLE_STATIC = @ENABLE_STATIC@
  ENABLE_SHARED = @ENABLE_SHARED@
@@ -216,8 +216,8 @@ Index: icudefs.mk.in
  COMPILE.cc=   $(CXX) $(CPPFLAGS) $(DEFS) $(CXXFLAGS) -c
 Index: test/hdrtst/Makefile.in
 ===================================================================
---- test/hdrtst/Makefile.in	(revision 36912)
-+++ test/hdrtst/Makefile.in	(working copy)
+--- a/test/hdrtst/Makefile.in	(revision 36912)
++++ b/test/hdrtst/Makefile.in	(working copy)
 @@ -33,9 +33,6 @@
  include $(shell icu-config --incfile)
  DIRS=$(prefix)/include/unicode

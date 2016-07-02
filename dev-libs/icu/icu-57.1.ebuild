@@ -1,8 +1,8 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=5
+EAPI=6
 
 inherit eutils flag-o-matic toolchain-funcs autotools multilib-minimal
 
@@ -12,7 +12,7 @@ SRC_URI="http://download.icu-project.org/files/icu4c/${PV/_/}/icu4c-${PV//./_}-s
 
 LICENSE="BSD"
 
-SLOT="0/55"
+SLOT="0/57"
 
 KEYWORDS="amd64"
 IUSE="debug doc examples static-libs"
@@ -30,13 +30,17 @@ MULTILIB_CHOST_TOOLS=(
 	/usr/bin/icu-config
 )
 
+PATCHES=(
+	"${FILESDIR}/${PN}-57.1-remove-bashisms.patch"
+)
+
 src_prepare() {
+	# apply patches
+	default
+
 	local variable
 
-	epatch "${FILESDIR}/${PN}-remove-bashisms.patch"
-	epatch_user
-
-	# Disable renaming as it is stupind thing to do
+	# Disable renaming as it is stupid thing to do
 	sed -i \
 		-e "s/#define U_DISABLE_RENAMING 0/#define U_DISABLE_RENAMING 1/" \
 		common/unicode/uconfig.h || die
@@ -55,8 +59,8 @@ src_prepare() {
 }
 
 src_configure() {
-	# Do _not_ use C++11 yet, make sure to force GNU C++ 98 standard.
-	append-cxxflags -std=gnu++98
+	# Use C++11
+	append-cxxflags -std=c++11
 
 	if tc-is-cross-compiler; then
 		mkdir "${WORKDIR}"/host || die
@@ -124,11 +128,13 @@ multilib_src_install() {
 	default
 
 	if multilib_is_native_abi && use doc; then
-		dohtml -p api -r doc/html/
+		docinto html
+		dodoc -r doc/html/*
 	fi
 }
 
 multilib_src_install_all() {
 	einstalldocs
-	dohtml ../readme.html
+	docinto html
+	dodoc ../readme.html
 }
