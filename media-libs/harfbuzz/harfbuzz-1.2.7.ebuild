@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=5
+EAPI=6
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/harfbuzz"
 [[ ${PV} == 9999 ]] && inherit git-r3 autotools
@@ -49,6 +49,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	default
+
 	xdg_environment_reset
 
 	if [[ ${CHOST} == *-darwin* || ${CHOST} == *-solaris* ]] ; then
