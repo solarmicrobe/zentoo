@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -9,8 +9,7 @@ if [[ ${PV} == "9999" ]] ; then
 	EGIT_REPO_URI="https://github.com/zfsonlinux/${PN}.git"
 	inherit git-r3
 else
-	SRC_URI="https://github.com/zfsonlinux/zfs/releases/download/zfs-${PV}/${P}.tar.gz
-		https://dev.gentoo.org/~ryao/dist/${P}-patches-p${PR#r}.tar.xz"
+	SRC_URI="https://github.com/zfsonlinux/zfs/releases/download/zfs-${PV}/${P}.tar.gz"
 	KEYWORDS="amd64"
 fi
 
@@ -40,10 +39,10 @@ pkg_setup() {
 	linux-info_pkg_setup
 	CONFIG_CHECK="
 		!DEBUG_LOCK_ALLOC
-		!GRKERNSEC_RANDSTRUCT
-		KALLSYMS
 		MODULES
+		KALLSYMS
 		!PAX_KERNEXEC_PLUGIN_METHOD_OR
+		!PAX_SIZE_OVERFLOW
 		ZLIB_DEFLATE
 		ZLIB_INFLATE
 	"
@@ -57,20 +56,12 @@ pkg_setup() {
 	kernel_is ge 2 6 32 || die "Linux 2.6.32 or newer required"
 
 	[ ${PV} != "9999" ] && \
-		{ kernel_is le 4 4 || die "Linux 4.4 is the latest supported version."; }
+		{ kernel_is le 4 6 || die "Linux 4.6 is the latest supported version."; }
 
 	check_extra_config
 }
 
 src_prepare() {
-	if [ ${PV} != "9999" ]
-	then
-		# Apply patch set
-		EPATCH_SUFFIX="patch" \
-		EPATCH_FORCE="yes" \
-		epatch "${WORKDIR}/${P}-patches"
-	fi
-
 	# Workaround for hard coded path
 	sed -i "s|/sbin/lsmod|/bin/lsmod|" "${S}/scripts/check.sh" || \
 		die "Cannot patch check.sh"
@@ -102,7 +93,7 @@ src_configure() {
 }
 
 src_install() {
-	autotools-utils_src_install
+	autotools-utils_src_install INSTALL_MOD_PATH="${INSTALL_MOD_PATH:-$EROOT}"
 }
 
 pkg_postinst() {

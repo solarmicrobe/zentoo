@@ -1,20 +1,15 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI="5"
-
-AT_M4DIR="config"
-AUTOTOOLS_AUTORECONF="1"
-AUTOTOOLS_IN_SOURCE_BUILD="1"
 
 if [ ${PV} == "9999" ]; then
 	AUTOTOOLS_AUTORECONF="1"
 	EGIT_REPO_URI="https://github.com/zfsonlinux/zfs.git"
 	inherit git-r3
 else
-	SRC_URI="https://github.com/zfsonlinux/zfs/releases/download/zfs-${PV}/zfs-${PV}.tar.gz
-		https://dev.gentoo.org/~ryao/dist/zfs-${PV}-patches-p${PR#r}.tar.xz"
+	SRC_URI="https://github.com/zfsonlinux/zfs/releases/download/zfs-${PV}/zfs-${PV}.tar.gz"
 	S="${WORKDIR}/zfs-${PV}"
 	KEYWORDS="amd64"
 fi
@@ -36,7 +31,6 @@ DEPEND="
 "
 
 RDEPEND="${DEPEND}
-	!<sys-kernel/spl-0.6.5.3-r1
 	!sys-fs/zfs-fuse
 "
 
@@ -71,20 +65,12 @@ pkg_setup() {
 	kernel_is ge 2 6 32 || die "Linux 2.6.32 or newer required"
 
 	[ ${PV} != "9999" ] && \
-		{ kernel_is le 4 4 || die "Linux 4.4 is the latest supported version."; }
+		{ kernel_is le 4 6 || die "Linux 4.6 is the latest supported version."; }
 
 	check_extra_config
 }
 
 src_prepare() {
-	if [ ${PV} != "9999" ]
-	then
-		# Apply patch set
-		EPATCH_SUFFIX="patch" \
-		EPATCH_FORCE="yes" \
-		epatch "${WORKDIR}/zfs-${PV}-patches"
-	fi
-
 	# Remove GPLv2-licensed ZPIOS unless we are debugging
 	use debug || sed -e 's/^subdir-m += zpios$//' -i "${S}/module/Makefile.in"
 
@@ -116,7 +102,7 @@ src_configure() {
 }
 
 src_install() {
-	autotools-utils_src_install
+	autotools-utils_src_install INSTALL_MOD_PATH="${INSTALL_MOD_PATH:-$EROOT}"
 }
 
 pkg_postinst() {
