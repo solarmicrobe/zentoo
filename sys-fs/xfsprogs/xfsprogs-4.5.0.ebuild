@@ -1,8 +1,8 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="4"
+EAPI=5
 
 inherit eutils toolchain-funcs multilib
 
@@ -18,16 +18,22 @@ IUSE="libedit nls readline static static-libs"
 REQUIRED_USE="static? ( static-libs )"
 
 LIB_DEPEND=">=sys-apps/util-linux-2.17.2[static-libs(+)]
-	readline? ( sys-libs/readline[static-libs(+)] )
+	readline? ( sys-libs/readline:0=[static-libs(+)] )
 	!readline? ( libedit? ( dev-libs/libedit[static-libs(+)] ) )"
 RDEPEND="!static? ( ${LIB_DEPEND//\[static-libs(+)]} )
 	!<sys-fs/xfsdump-3"
 DEPEND="${RDEPEND}
 	static? (
 		${LIB_DEPEND}
-		readline? ( sys-libs/ncurses[static-libs] )
+		readline? ( sys-libs/ncurses:0=[static-libs] )
 	)
 	nls? ( sys-devel/gettext )"
+
+PATCHES=(
+	"${FILESDIR}"/${PN}-4.3.0-sharedlibs.patch
+	"${FILESDIR}"/${PN}-4.5.0-linguas.patch
+	"${FILESDIR}"/${PN}-4.3.0-cross-compile.patch
+)
 
 pkg_setup() {
 	if use readline && use libedit ; then
@@ -37,17 +43,16 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-3.2.2-sharedlibs.patch
+	epatch "${PATCHES[@]}"
 
+	# LLDFLAGS is used for programs, so apply -all-static when USE=static is enabled.
+	# Clear out -static from all flags since we want to link against dynamic xfs libs.
 	sed -i \
 		-e "/^PKG_DOC_DIR/s:@pkg_name@:${PF}:" \
+		-e "1iLLDFLAGS += $(usex static '-all-static' '')" \
 		include/builddefs.in || die
-	sed -i \
-		-e '1iLLDFLAGS = -static' \
-		{estimate,fsr}/Makefile || die
-	sed -i \
-		-e "/LLDFLAGS/s:-static-libtool-libs:$(use static && echo -all-static):" \
-		$(find -name Makefile) || die
+	find -name Makefile -exec \
+		sed -i -r -e '/^LLDFLAGS [+]?= -static(-libtool-libs)?$/d' {} +
 
 	# libdisk has broken blkid conditional checking
 	sed -i \
@@ -88,8 +93,8 @@ src_configure() {
 
 src_install() {
 	emake DIST_ROOT="${ED}" install
-	# parallel install fails on these targets for >=xfsprogs-3.2.0
-	emake -j1 DIST_ROOT="${ED}" install-{dev,qa}
+	# parallel install fails on this target for >=xfsprogs-3.2.0
+	emake -j1 DIST_ROOT="${ED}" install-dev
 
 	# handle is for xfsdump, the rest for xfsprogs
 	gen_usr_ldscript -a xfs xlog
