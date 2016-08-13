@@ -19,3 +19,6 @@ sys-apps/systemd elfutils lz4 sysv-utils
 
 # included in sys-kernel/zentoo-image
 sys-fs/zfs kernel-builtin
+
+# repoman doesn't work if this is not in the master repo :(
+dev-java/oracle-jdk-bin headless-awt
