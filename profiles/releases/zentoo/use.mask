@@ -124,6 +124,7 @@ guile
 handbook
 hardened
 hdf5
+headless-awt
 hesiod
 hscolour
 ibm
