@@ -299,6 +299,7 @@ seccomp
 selinux
 semantic-desktop
 serial
+servletapi
 shorten
 skey
 slp
