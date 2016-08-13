@@ -141,6 +141,7 @@ ivorbis
 jack
 jadetex
 jai
+javafx
 jbig
 jce
 jingle
