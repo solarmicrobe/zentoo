@@ -73,7 +73,7 @@ net-analyzer/mk-livestatus perl
 net-libs/liboping perl
 net-nds/openldap perl
 sys-apps/util-linux perl
-www-servers/nginx nginx_modules_http_perl nginx_modules_http_security
+www-servers/nginx nginx_modules_http_perl nginx_modules_http_security nginx_modules_http_auth_ldap nginx_modules_http_security
 www-servers/uwsgi perl
 
 
