@@ -8,6 +8,7 @@ app-text/docbook-xsl-stylesheets ruby
 app-text/xmlto text
 dev-db/sqlite tools
 dev-java/ant testutil
+dev-lang/erlang java
 dev-lang/php sqlite
 dev-libs/gecode gist
 dev-libs/glib utils systemtap
