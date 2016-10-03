@@ -4,7 +4,7 @@
 
 EAPI=5
 
-MY_BUILD="255606"
+MY_BUILD="59c8927def0f"
 
 DESCRIPTION="The search engine for IT data"
 HOMEPAGE="http://www.splunk.com"
