@@ -27,21 +27,26 @@ IUSE=""
 RESTRICT="test"
 
 ruby_add_rdepend "
+	dev-ruby/addressable
+	>=dev-ruby/bundler-1.10.0
 	~dev-ruby/chef-config-${PV}
-	>=dev-ruby/chef-zero-4.5
-	>=dev-ruby/diff-lcs-1.2.4
+	>=dev-ruby/chef-zero-4.8
 	>=dev-ruby/diff-lcs-1.2.4
 	>=dev-ruby/erubis-2.7
 	>=dev-ruby/ffi-yajl-2.2
 	>=dev-ruby/highline-1.6.9
+	>=dev-ruby/iniparse-1.4
+	>=dev-ruby/mixlib-archive-0.2.0
 	>=dev-ruby/mixlib-authentication-1.4
-	>=dev-ruby/mixlib-cli-1.4
+	>=dev-ruby/mixlib-cli-1.7
 	>=dev-ruby/mixlib-log-1.3
 	>=dev-ruby/mixlib-shellout-2.0
 	>=dev-ruby/net-sftp-2.1.2
 	>=dev-ruby/net-ssh-2.9
+	<dev-ruby/net-ssh-4.0
 	>=dev-ruby/net-ssh-multi-1.1
 	>=dev-ruby/ohai-8.6.0
+	<dev-ruby/ohai-9
 	>=dev-ruby/proxifier-1.0
 	>=dev-ruby/syslog-logger-1.6
 	>=dev-ruby/uuidtools-2.1.5
